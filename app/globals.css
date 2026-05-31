@@ -1,4 +1,8 @@
 :root {
+  --font-ui:
+    "Pretendard Variable", Pretendard, Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --bg: #f4f7f8;
   --surface: #ffffff;
   --surface-muted: #edf3f5;
@@ -79,8 +83,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-ui);
   letter-spacing: 0;
 }
 
@@ -434,6 +437,9 @@ h3 {
   border-radius: 8px;
   background: var(--code-bg);
   color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
   padding: 12px;
   white-space: pre-wrap;
 }
@@ -444,12 +450,55 @@ h3 {
   grid-template-rows: auto 1fr auto;
 }
 
+.provider-shell {
+  --provider-accent: var(--accent);
+  --provider-accent-strong: var(--accent-strong);
+  --provider-soft: var(--accent-soft);
+  --provider-surface: var(--surface);
+}
+
+.provider-shell[data-provider="openai"] {
+  --provider-accent: #30343b;
+  --provider-accent-strong: #171a1f;
+  --provider-soft: #eef1f3;
+  --provider-surface: #fbfcfd;
+}
+
+.provider-shell[data-provider="gemini"] {
+  --provider-accent: #2d63b8;
+  --provider-accent-strong: #244f91;
+  --provider-soft: #e8f0ff;
+  --provider-surface: #fafdff;
+}
+
+.provider-shell[data-provider="xai"] {
+  --provider-accent: #171a1f;
+  --provider-accent-strong: #0f1115;
+  --provider-soft: #fff1d6;
+  --provider-surface: #fffdfa;
+}
+
+.provider-shell[data-provider="groq"] {
+  --provider-accent: #c24137;
+  --provider-accent-strong: #9f332d;
+  --provider-soft: #fff0ed;
+  --provider-surface: #fffafa;
+}
+
+.provider-shell[data-provider="openrouter"] {
+  --provider-accent: #5450c8;
+  --provider-accent-strong: #403ca3;
+  --provider-soft: #eeedff;
+  --provider-surface: #fbfbff;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   justify-content: space-between;
+  border-top: 3px solid var(--provider-accent);
   border-bottom: 1px solid var(--line);
   padding: 12px;
 }
@@ -458,6 +507,34 @@ h3 {
   display: flex;
   gap: 6px;
   align-items: center;
+}
+
+.provider-profile {
+  display: grid;
+  min-width: min(360px, 100%);
+  max-width: 440px;
+  gap: 2px;
+  border: 1px solid color-mix(in srgb, var(--provider-accent) 22%, var(--line));
+  border-radius: 8px;
+  background: var(--provider-soft);
+  padding: 9px 11px;
+}
+
+.provider-profile span {
+  color: var(--provider-accent-strong);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.provider-profile strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.provider-profile small {
+  color: var(--muted);
+  line-height: 1.4;
 }
 
 .select,
@@ -478,23 +555,29 @@ h3 {
   gap: 10px;
   overflow: auto;
   padding: 16px;
-  background: var(--trace-bg);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--provider-soft) 36%, transparent), transparent 240px),
+    var(--trace-bg);
 }
 
 .message {
   width: min(760px, 100%);
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--surface);
+  background: var(--provider-surface);
   padding: 12px;
   white-space: pre-wrap;
   line-height: 1.55;
 }
 
+.message > strong {
+  color: var(--provider-accent-strong);
+}
+
 .message.user {
   align-self: flex-end;
-  border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
-  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--provider-accent) 28%, var(--line));
+  background: var(--provider-soft);
 }
 
 .message.assistant {
@@ -521,8 +604,8 @@ h3 {
 }
 
 .dropzone.active {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: var(--provider-accent);
+  background: var(--provider-soft);
 }
 
 .attachment-row {
@@ -536,10 +619,10 @@ h3 {
   max-width: 100%;
   align-items: center;
   gap: 6px;
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 24%, var(--line));
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  background: var(--provider-soft, var(--accent-soft));
+  color: var(--provider-accent-strong, var(--accent-strong));
   padding: 5px 8px;
   font-size: 12px;
   font-weight: 800;
@@ -552,7 +635,7 @@ h3 {
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--provider-accent, var(--accent)) 12%, transparent);
   color: inherit;
   padding: 0;
 }

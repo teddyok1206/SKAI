@@ -4,6 +4,9 @@ import { Flame } from "lucide-react";
 import { AuthStatus } from "@/components/auth-status";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSelector } from "@/components/theme-selector";
+import "pretendard/dist/web/variable/pretendardvariable.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/600.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

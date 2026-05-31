@@ -79,6 +79,31 @@ Avoid:
 - Oversized landing-page hero treatment.
 - Competitive game UI as the main mood.
 
+## Font Direction
+
+Recommended default:
+
+- UI: Pretendard Variable.
+- Mono/evidence/code-like text: JetBrains Mono.
+- Headings: Pretendard Variable with heavier weights.
+
+Avoid adding a separate decorative display font in the demo. The product needs to feel like a serious practice surface, and the brand can come from layout, evidence handling, trace structure, and scoring language instead of typography novelty.
+
+## Provider Surface Direction
+
+Provider selection can subtly alter the chat surface, but SKAI should never look like a copied version of another model product.
+
+Use provider-inspired interaction moods:
+
+- OpenAI: minimal and quiet.
+- Gemini: exploratory and evidence-oriented.
+- xAI Grok: direct and bottleneck-oriented.
+- Groq: compact and speed-oriented.
+- OpenRouter: routing and comparison-oriented.
+- SKAI Mock: workbench default.
+
+Keep the shared SKAI structure stable across providers so prompt traces remain comparable.
+
 ## Component Language
 
 Primary components:
@@ -157,4 +182,3 @@ Good for public education and "everyone's AI" positioning. It may feel too insti
 ### AI Arena
 
 Good for ranking and Baekjoon-like competition. Not recommended as the default because SKAI should prioritize learning, research, and portfolio before competition.
-

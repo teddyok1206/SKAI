@@ -100,4 +100,5 @@ The first demo should prove as many of these as possible:
 - Materials and attachments architecture: `docs/technical/006_materials_and_attachments.md`
 - Design principles: `docs/design/000_design_principles.md`
 - Theme recommendation: `docs/design/001_theme_recommendation.md`
+- Font and provider surfaces: `docs/design/002_font_and_provider_surfaces.md`
 - Implementation plans: `docs/technical/plan/`

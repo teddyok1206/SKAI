@@ -23,6 +23,12 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
     apiKey: process.env.XAI_API_KEY,
     defaultModel: process.env.XAI_MODEL ?? "grok-4-fast",
   }),
+  gemini: createOpenAICompatibleProvider({
+    id: "gemini",
+    baseUrl: process.env.GEMINI_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+    apiKey: process.env.GEMINI_API_KEY,
+    defaultModel: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
+  }),
   openrouter: createOpenAICompatibleProvider({
     id: "openrouter",
     baseUrl: process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1",
@@ -61,4 +67,3 @@ export async function completeWithFallback(request: ProviderRequest): Promise<Pr
     };
   }
 }
-

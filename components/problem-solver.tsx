@@ -6,6 +6,7 @@ import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, 
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { budgetGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
+import { providerUiProfiles } from "@/lib/provider-ui";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
 import type { Attempt, AttemptAttachment, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
@@ -15,6 +16,7 @@ const providerOptions: Array<{ id: ProviderId; label: string; model: string }> =
   { id: "groq", label: "Groq", model: "llama-3.3-70b-versatile" },
   { id: "xai", label: "xAI Grok", model: "grok-4-fast" },
   { id: "openai", label: "OpenAI", model: "gpt-4.1-mini" },
+  { id: "gemini", label: "Gemini", model: "gemini-3.5-flash" },
   { id: "openrouter", label: "OpenRouter", model: "openai/gpt-oss-20b" },
 ];
 
@@ -78,6 +80,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     () => providerOptions.find((item) => item.id === provider) ?? providerOptions[0],
     [provider],
   );
+  const providerProfile = providerUiProfiles[provider];
   const leaderboard = getAttempts()
     .filter((item) => item.problemId === problem.id && item.scoreReport)
     .sort((a, b) => (b.scoreReport?.totalScore ?? 0) - (a.scoreReport?.totalScore ?? 0))
@@ -407,12 +410,17 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         </div>
       </aside>
 
-      <section className="panel chat-panel">
+      <section className="panel chat-panel provider-shell" data-provider={provider}>
         <div className="toolbar">
           <div className="segmented">
             <MessageSquare size={17} />
             <strong>Attempt</strong>
             <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
+          </div>
+          <div className="provider-profile" aria-live="polite">
+            <span>{providerProfile.label}</span>
+            <strong>{providerProfile.surfaceLabel}</strong>
+            <small>{providerProfile.note}</small>
           </div>
           <div className="segmented">
             <select
