@@ -22,7 +22,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
-- OpenAI, Groq, xAI, Gemini, OpenRouter provider 선택 UI가 있다.
+- 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
+- 사용자 기본 UI는 raw model selector가 아니라 SKAI Practice, ChatGPT-like, Gemini-like 환경 preset을 사용한다.
 - Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
@@ -44,7 +45,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 아직 약한 부분:
 
-- Live provider API key 검증과 실제 모델별 품질/비용/latency 비교가 필요하다.
+- Live provider API key 검증과 실제 환경별 품질/비용/latency 비교가 필요하다.
+- raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - Judge는 아직 heuristic 중심이다. LLM judge, multi-judge voting, judge disagreement 저장이 필요하다.
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
@@ -68,13 +70,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 ## Next Queue
 
-우선순위 1: live provider smoke
+우선순위 1: live environment smoke
 
 - `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다.
-- 첫 후보는 비용/속도 기준으로 Groq 또는 xAI Grok이다.
-- 같은 문제, 같은 첫 프롬프트로 Mock과 live provider 응답을 비교한다.
-- provider별 latency, token usage, failure mode를 기록한다.
-- 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다.
+- 첫 후보는 ChatGPT-like 또는 Gemini-like 환경이다.
+- 같은 문제, 같은 첫 프롬프트로 SKAI Practice와 live environment 응답을 비교한다.
+- 환경별 latency, token usage, failure mode를 기록한다.
+- 완료 조건: 적어도 하나의 live environment로 문제 풀이 1회가 end-to-end 성공한다.
 
 우선순위 2: LLM judge MVP
 
@@ -110,13 +112,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - provider/model별 단가 설정 파일을 만든다.
 - attempt별 예상 비용을 계산하고 UI에 노출한다.
 - 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다.
-- 완료 조건: live provider attempt마다 비용 추정치가 저장된다.
+- 완료 조건: live environment attempt마다 비용 추정치가 저장된다.
 
 ## Decision Gates
 
 다음 결정은 구현 전에 명확히 해야 한다:
 
-- 첫 live provider를 Groq, xAI, Gemini, OpenRouter 중 무엇으로 고정할지.
+- 첫 live user environment를 ChatGPT-like와 Gemini-like 중 무엇으로 고정할지.
+- expert/admin용 raw provider/model lab을 언제 분리할지.
 - judge model을 conversation model과 같은 provider로 둘지, 별도 저가/강한 모델로 둘지.
 - public sharing의 기본 공개 범위: workflow only, summarized prompts, full raw transcript 중 어디까지인지.
 - 자료 업로드의 MVP 한계: text/image만 우선할지, xlsx/pdf parsing까지 넣을지.
@@ -129,15 +132,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/003_supabase_auth_live_provider_baseline.md`: Supabase auth와 live provider baseline.
 - `docs/technical/plan/004_theme_selector_design_pass.md`: theme selector와 디자인 옵션.
 - `docs/technical/plan/005_fonts_provider_ui_adaptation.md`: font system과 provider별 UI surface.
+- `docs/technical/plan/006_interaction_environment_presets.md`: 사용자 기본 AI 선택을 raw provider/model에서 환경 preset으로 전환.
 
 다음 plan 후보:
 
-- `006_live_provider_smoke.md`
-- `007_llm_judge_mvp.md`
-- `008_shared_attempt_information_architecture.md`
-- `009_admin_authoring_mvp.md`
-- `010_supabase_deployment_hardening.md`
-- `011_cost_guardrails.md`
+- `007_live_environment_smoke.md`
+- `008_llm_judge_mvp.md`
+- `009_shared_attempt_information_architecture.md`
+- `010_admin_authoring_mvp.md`
+- `011_supabase_deployment_hardening.md`
+- `012_cost_guardrails.md`
 
 ## Reading Map
 

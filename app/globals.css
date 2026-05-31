@@ -509,6 +509,13 @@ h3 {
   align-items: center;
 }
 
+.environment-meta {
+  max-width: 240px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .provider-profile {
   display: grid;
   min-width: min(360px, 100%);

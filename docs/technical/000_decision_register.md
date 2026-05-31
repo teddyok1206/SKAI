@@ -42,7 +42,7 @@
 | TDR-036 | DB/Auth stack | Supabase for MVP | Accepted | Postgres, Google login, dashboard, Next.js integration을 한 번에 해결 | 2026-06-01 |
 | TDR-037 | Initial auth | Start with Google login; later add email/password, GitHub, account linking | Accepted | 초기 진입장벽을 낮추고 장기 계정 모델로 확장 | 2026-06-01 |
 | TDR-038 | Provider strategy | Multi-provider adapter architecture | Accepted | OpenAI, Gemini, xAI Grok, Groq, OpenRouter, Hugging Face 등을 지원해야 함 | 2026-06-01 |
-| TDR-039 | Model selection | Users can choose models | Accepted | 모델 선택은 프로그래밍 언어 선택과 유사한 핵심 경험 | 2026-06-01 |
+| TDR-039 | Model selection | Support model selection internally and in expert/admin modes | Accepted | 모델 선택은 중요하지만 기본 사용자 풀이 화면이 API playground처럼 보이면 안 됨 | 2026-06-01 |
 | TDR-040 | Judge separation | Separate conversation model and judge model | Accepted | 사용자 경험 모델과 평가 모델의 요구조건이 다름 | 2026-06-01 |
 | TDR-041 | Judge execution | Synchronous first, queue-ready data model | Accepted | 초기 UX는 즉시 채점이 좋고, 느려지면 queue로 전환 | 2026-06-01 |
 | TDR-042 | Leaderboard | Per-problem leaderboard required | Accepted | 백준형 구조와 문제별 비교에 필요 | 2026-06-01 |
@@ -57,6 +57,7 @@
 | TDR-051 | Material extraction MVP | Use extracted text sidecars for official files; pass text uploads directly and images as data URLs where supported | Accepted | OCR/임의 XLSX/PDF 파싱은 후속 과제로 두되 데모에서 모델이 자료를 볼 수 있어야 함 | 2026-06-01 |
 | TDR-052 | Supabase sync | Use server API routes for Supabase persistence with local fallback | Accepted | 클라이언트 직접 DB 쓰기보다 auth/cookie/RLS 흐름에 맞고 mock/local 모드도 유지됨 | 2026-06-01 |
 | TDR-053 | OAuth callback | Use `/auth/callback` for Supabase Google OAuth exchange | Accepted | Supabase session cookies를 Next.js route handler에서 안정적으로 설정해야 함 | 2026-06-01 |
+| TDR-054 | User-facing AI choice | Use interaction environment presets by default instead of raw provider/model selection | Accepted | 실제 ChatGPT/Gemini 사용 환경을 모사하는 것이 데모 교육 목표에 더 적합함 | 2026-06-01 |
 
 ## Decision Template
 

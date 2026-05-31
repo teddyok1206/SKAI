@@ -27,7 +27,7 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
     id: "gemini",
     baseUrl: process.env.GEMINI_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
     apiKey: process.env.GEMINI_API_KEY,
-    defaultModel: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
+    defaultModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
   }),
   openrouter: createOpenAICompatibleProvider({
     id: "openrouter",

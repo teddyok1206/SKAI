@@ -5,22 +5,19 @@ import Link from "next/link";
 import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { budgetGuardrails } from "@/lib/constants";
+import {
+  getInteractionEnvironment,
+  interactionEnvironments,
+  type InteractionEnvironment,
+  type InteractionEnvironmentId,
+} from "@/lib/interaction-environments";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
 import { providerUiProfiles } from "@/lib/provider-ui";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
 import type { Attempt, AttemptAttachment, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
 
-const providerOptions: Array<{ id: ProviderId; label: string; model: string }> = [
-  { id: "mock", label: "Mock", model: "mock-orchestrator" },
-  { id: "groq", label: "Groq", model: "llama-3.3-70b-versatile" },
-  { id: "xai", label: "xAI Grok", model: "grok-4-fast" },
-  { id: "openai", label: "OpenAI", model: "gpt-4.1-mini" },
-  { id: "gemini", label: "Gemini", model: "gemini-3.5-flash" },
-  { id: "openrouter", label: "OpenRouter", model: "openai/gpt-oss-20b" },
-];
-
-function newAttempt(problem: Problem): Attempt {
+function newAttempt(problem: Problem, environment: InteractionEnvironment = getInteractionEnvironment("skai-practice")): Attempt {
   const now = new Date().toISOString();
   return {
     id: crypto.randomUUID(),
@@ -28,8 +25,8 @@ function newAttempt(problem: Problem): Attempt {
     userId: "local-demo-user",
     status: "draft",
     title: `${problem.title} 풀이`,
-    provider: "mock",
-    model: "mock-orchestrator",
+    provider: environment.provider,
+    model: environment.model,
     trace: [],
     createdAt: now,
     updatedAt: now,
@@ -64,9 +61,11 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
+  const defaultEnvironment = getInteractionEnvironment("skai-practice");
   const [attempt, setAttempt] = useState<Attempt>(() => newAttempt(problem));
-  const [provider, setProvider] = useState<ProviderId>("mock");
-  const [model, setModel] = useState("mock-orchestrator");
+  const [environmentId, setEnvironmentId] = useState<InteractionEnvironmentId>(defaultEnvironment.id);
+  const [provider, setProvider] = useState<ProviderId>(defaultEnvironment.provider);
+  const [model, setModel] = useState(defaultEnvironment.model);
   const [input, setInput] = useState("");
   const [finalAnswer, setFinalAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -76,10 +75,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const selectedProvider = useMemo(
-    () => providerOptions.find((item) => item.id === provider) ?? providerOptions[0],
-    [provider],
-  );
+  const selectedEnvironment = useMemo(() => getInteractionEnvironment(environmentId), [environmentId]);
   const providerProfile = providerUiProfiles[provider];
   const leaderboard = getAttempts()
     .filter((item) => item.problemId === problem.id && item.scoreReport)
@@ -98,10 +94,11 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     void syncAttemptToSupabase(next, problem);
   }
 
-  function handleProviderChange(nextProvider: ProviderId) {
-    const option = providerOptions.find((item) => item.id === nextProvider) ?? providerOptions[0];
-    setProvider(option.id);
-    setModel(option.model);
+  function handleEnvironmentChange(nextEnvironmentId: InteractionEnvironmentId) {
+    const environment = getInteractionEnvironment(nextEnvironmentId);
+    setEnvironmentId(environment.id);
+    setProvider(environment.provider);
+    setModel(environment.model);
   }
 
   function toggleMaterialAttachment(materialId: string) {
@@ -291,7 +288,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   function restart() {
-    const next = newAttempt(problem);
+    const next = newAttempt(problem, selectedEnvironment);
     setAttempt(next);
     setFinalAnswer("");
     setInput("");
@@ -418,24 +415,27 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
           </div>
           <div className="provider-profile" aria-live="polite">
-            <span>{providerProfile.label}</span>
-            <strong>{providerProfile.surfaceLabel}</strong>
-            <small>{providerProfile.note}</small>
+            <span>{selectedEnvironment.label}</span>
+            <strong>{selectedEnvironment.surfaceLabel}</strong>
+            <small>{selectedEnvironment.description}</small>
+            <small>{selectedEnvironment.materialBehavior}</small>
           </div>
           <div className="segmented">
             <select
               className="select"
-              aria-label="Model provider"
-              value={provider}
-              onChange={(event) => handleProviderChange(event.target.value as ProviderId)}
+              aria-label="AI interaction environment"
+              value={environmentId}
+              onChange={(event) => handleEnvironmentChange(event.target.value as InteractionEnvironmentId)}
             >
-              {providerOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
+              {interactionEnvironments.map((environment) => (
+                <option key={environment.id} value={environment.id}>
+                  {environment.shortLabel}
                 </option>
               ))}
             </select>
-            <input className="input" value={model} onChange={(event) => setModel(event.target.value)} />
+            <span className="environment-meta">
+              {providerProfile.label} · {model}
+            </span>
           </div>
         </div>
 
@@ -452,7 +452,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           ) : (
             attempt.trace.map((event, index) => (
               <article className={`message ${event.role}`} key={event.id}>
-                <strong>{event.role === "user" ? "You" : `${event.provider ?? selectedProvider.label}`}</strong>
+                <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile.label}`}</strong>
                 <p>{event.content}</p>
                 {event.attachments && event.attachments.length > 0 ? (
                   <div className="attachment-row">
