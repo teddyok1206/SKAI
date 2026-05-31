@@ -2,6 +2,8 @@
 
 This folder stores detailed programming plans before implementation starts.
 
+The parent orchestration document is `docs/000_orchestration.md`. Check that file first to understand current status, next queue, and decision gates before creating a new plan.
+
 ## Naming
 
 Use zero-padded numbering and a short slug:
@@ -30,4 +32,3 @@ Each plan should include:
 ## Rule
 
 For programming work, write the plan here first, then implement from the plan. If the implementation direction changes materially, update the plan in the same branch/commit series.
-

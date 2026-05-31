@@ -87,6 +87,7 @@ The first demo should prove as many of these as possible:
 ## Open Questions Index
 
 - Project seed and legacy summary: `docs/philosophy/000_project_seed.md`
+- Project orchestration: `docs/000_orchestration.md`
 - Philosophy and direction questions: `docs/philosophy/001_foundation_questions.md`
 - Initial demo answers: `docs/philosophy/002_initial_demo_answers.md`
 - Foundation answers part 1: `docs/philosophy/003_foundation_answers_part1.md`
