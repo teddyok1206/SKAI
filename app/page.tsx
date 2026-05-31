@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, BarChart3, Clock, Layers3 } from "lucide-react";
+import { ArrowRight, BarChart3, Clock, Layers3, Palette } from "lucide-react";
 import { problems } from "@/data/problems";
+import { themeOptions } from "@/lib/themes";
 
 const categoryLabel = {
   workplace: "업무",
@@ -26,6 +27,27 @@ export default function HomePage() {
         <Link className="button primary" href={`/problems/${problems[0].id}`}>
           첫 문제 풀기 <ArrowRight size={17} />
         </Link>
+      </section>
+
+      <section className="panel" style={{ marginBottom: 16 }}>
+        <div className="panel-header">
+          <p className="eyebrow">Design Concept</p>
+          <h2>세 가지 컨셉 중 기본값은 Promethean Workbench다.</h2>
+          <p className="muted">
+            상단 선택기에서 바꿔볼 수 있다. 세 옵션 모두 SKAI의 문제해결, 자료, trace, 코칭이라는 핵심을 유지한다.
+          </p>
+        </div>
+        <div className="panel-body grid">
+          {themeOptions.map((option) => (
+            <article className="workflow-step" key={option.id}>
+              <span className="tag">
+                <Palette size={13} /> Priority {option.priority}
+              </span>
+              <h3 style={{ marginTop: 12 }}>{option.name}</h3>
+              <p className="muted">{option.description}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="grid" aria-label="Problem list">
@@ -55,4 +77,3 @@ export default function HomePage() {
     </main>
   );
 }
-
