@@ -19,6 +19,7 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 - If a long prompt is not already archived, create the next numbered markdown file before doing substantial work.
 - Philosophy, mission, positioning, and legacy thinking belong in `docs/philosophy/`.
 - Technical implementation decisions, architecture, schemas, deployment, APIs, and operations belong in `docs/technical/`.
+- Detailed programming plans belong in `docs/technical/plan/`.
 - Keep philosophy and implementation separate unless a document is explicitly a bridge between them.
 
 ## Product Principles
@@ -70,6 +71,11 @@ The first demo should prove as many of these as possible:
 ## Implementation Style
 
 - Read existing docs before adding new architecture or product direction.
+- Before starting programming work, create or update a detailed implementation plan in `docs/technical/plan/`.
+- Plan filenames should use zero-padded numbering and a short slug, such as `001_nextjs_supabase_scaffold.md`.
+- A programming plan should include scope, assumptions, affected files/modules, data model changes, implementation steps, verification steps, risks, and rollback notes.
+- During implementation, follow the saved plan and update it when the plan materially changes.
+- Do not treat the plan as a substitute for execution; it is the working contract for the code changes.
 - Keep edits scoped and preserve legacy context.
 - Add a new decision record when a technical choice becomes binding.
 - Prefer structured formats such as JSON, YAML, or typed schemas for problem definitions and attempt traces.
@@ -88,3 +94,4 @@ The first demo should prove as many of these as possible:
 - Evaluation direction: `docs/technical/003_evaluation_direction.md`
 - MVP stack baseline: `docs/technical/004_mvp_stack_recommendation.md`
 - MVP implementation baseline: `docs/technical/005_mvp_implementation_baseline.md`
+- Implementation plans: `docs/technical/plan/`
