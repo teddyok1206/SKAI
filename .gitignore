@@ -1,0 +1,21 @@
+.DS_Store
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies and build outputs
+node_modules/
+dist/
+build/
+.next/
+.vercel/
+.netlify/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+

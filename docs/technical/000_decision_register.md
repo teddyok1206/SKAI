@@ -1,0 +1,69 @@
+# SKAI Technical Decision Register
+
+이 문서는 기술 선택이 실제 구현 방향을 고정하기 시작할 때 기록하는 곳이다. 아직 결정되지 않은 항목은 `Undecided`로 둔다.
+
+| ID | Area | Decision | Status | Reason | Date |
+| --- | --- | --- | --- | --- | --- |
+| TDR-001 | Demo mode | In-app AI conversation flow | Accepted | 첫 데모는 SKAI 안에서 문제를 풀며 AI와 대화하는 경험이어야 함 | 2026-06-01 |
+| TDR-002 | Hosting | Vercel for MVP web app and API routes | Accepted | Next.js MVP와 가장 직접적으로 맞고 24시간 서버 운영 부담이 낮음 | 2026-06-01 |
+| TDR-003 | Database | Supabase Postgres for MVP storage | Accepted | 로그인, 전체 trace 저장, 공개 풀이, 댓글, 리더보드, 관리자 분석에 적합 | 2026-06-01 |
+| TDR-004 | Judge/provider | Use low-cost founder-funded provider first, with stronger judge fallback; exact first provider after spike | Accepted | 전략은 확정하되 실제 API 키/요금/품질 테스트 후 첫 provider를 고정 | 2026-06-01 |
+| TDR-005 | Trace schema | Full prompt trace must be stored | Accepted | 공유/피드백/평가의 핵심 artifact가 전체 대화 과정임 | 2026-06-01 |
+| TDR-006 | Scoring model | Total score plus multi-axis scores | Accepted | 직관적인 총점과 학습 가능한 세부 피드백을 둘 다 제공해야 함 | 2026-06-01 |
+| TDR-007 | Auth | Supabase Auth with Google login first; later email/password, GitHub, account linking | Accepted | 데모에서 사용자별 attempt 저장과 공개 풀이 관리가 필요하고 초기 진입장벽이 낮음 | 2026-06-01 |
+| TDR-008 | Privacy model | Store raw full traces; public sharing via structured default view plus expandable raw details | Accepted | 통제된 문제에는 개인정보가 불필요하지만 publish/privacy boundary는 필요 | 2026-06-01 |
+| TDR-009 | First users | University students, not university-specific | Accepted | 초기 접근성은 대학생 기준이지만 제품 문제는 범용 AI orchestration이어야 함 | 2026-06-01 |
+| TDR-010 | Demo scale | Fewer than 10 users, personal laptops, no strict time limit | Accepted | 첫 smoke/demo 검증 규모 | 2026-06-01 |
+| TDR-011 | Codex backend | Research spike only; do not assume live Codex session can be product backend | Proposed | API-based agent loop와 현재 Codex 세션 의존은 다른 문제임 | 2026-06-01 |
+| TDR-012 | Product type | Community plus education platform | Accepted | 반복 훈련과 공유를 결합한 백준형 방향 | 2026-06-01 |
+| TDR-013 | Evaluation scope | Evaluate prompt, trace, artifact, strategy, and orchestration process | Accepted | 사용자는 "싹다" 평가받아야 하며 단일 프롬프트 평가로 축소하면 안 됨 | 2026-06-01 |
+| TDR-014 | Core score axes | Framing axis plus operation axis | Accepted | 문제정의/세분화/지시문 작성과 모델선택/검증/비용관리를 구분 | 2026-06-01 |
+| TDR-015 | Goal-aware scoring | Problem/user goals should affect evaluation weights | Accepted | 좋은 AI orchestration의 기준은 정확성/속도/비용/정착 등 목표에 따라 달라짐 | 2026-06-01 |
+| TDR-016 | Structure-first credit | Reward problem structuring before asking AI for answers | Accepted | SKAI의 핵심 철학과 직접 연결됨 | 2026-06-01 |
+| TDR-017 | Process vs outcome | Evaluate process quality and final output quality separately | Accepted | 과정이 좋은 경우와 결과가 좋은 경우를 같은 점수로 뭉개면 안 됨 | 2026-06-01 |
+| TDR-018 | Problem answer model | Support both clear-answer and multi-solution problems | Accepted | 문제 유형은 사용자가 고를 수 있어야 함 | 2026-06-01 |
+| TDR-019 | Problem ambiguity | Allow variable ambiguity and intentionally missing constraints | Accepted | 현실 문제의 unclear함을 훈련해야 함 | 2026-06-01 |
+| TDR-020 | Clarifying questions | Score useful clarifying questions as uncertainty management, not question count | Accepted | 실제 불확실성을 줄이는 질문은 보상하고 실행을 미루는 질문은 보상하지 않음 | 2026-06-01 |
+| TDR-021 | Model answers | Avoid canonical model answers as the main feedback mechanism | Accepted | 개별 코칭이 목표이며 정답 풀이 끼워맞추기가 아님 | 2026-06-01 |
+| TDR-022 | Rubric visibility | Make rubrics public | Accepted | 사용자가 무엇을 연습하는지 알아야 함 | 2026-06-01 |
+| TDR-023 | Total score | Include symbolic 100-point score, but emphasize detailed axes | Accepted | 점수는 필요하지만 점수 따기가 제품 목적이 되어선 안 됨 | 2026-06-01 |
+| TDR-024 | Default score axes | Use problem definition, decomposition, instruction clarity, adaptation, verification, efficiency, final quality | Accepted | 첫 버전은 예시축으로 시작하고 이후 보정 | 2026-06-01 |
+| TDR-025 | Metrics visibility | Token/time/turn/context metrics vary by mode | Accepted | 입문자에게는 과도한 지표 노출이 오히려 방해됨 | 2026-06-01 |
+| TDR-026 | Feedback style | Coach review by default; strict rubric for verification/certification modes | Accepted | 학습과 검증은 같은 UI 톤을 쓰면 안 됨 | 2026-06-01 |
+| TDR-027 | Judge dispute | Allow users to dispute judge feedback | Accepted | LLM judge도 틀릴 수 있으므로 이의제기 경로 필요 | 2026-06-01 |
+| TDR-028 | Branch replay | Allow restart from a specific trace position | Accepted | bottleneck과 alternative prompting을 사용자가 직접 체감하게 함 | 2026-06-01 |
+| TDR-029 | Multi-judge | Include LLM judge voting as a product direction | Accepted | 평가 신뢰도와 judge disagreement 분석에 필요 | 2026-06-01 |
+| TDR-030 | Shared attempt UX | Show workflow and prompt summaries first; raw prompts/responses expandable | Accepted | 학습 가치는 원문보다 구조와 흐름에서 먼저 나옴 | 2026-06-01 |
+| TDR-031 | Sharing incentive | Published prompt traces unlock access to other published traces | Accepted | 공유자에게 명확한 이익을 제공 | 2026-06-01 |
+| TDR-032 | Certification similarity | Use DB-backed prompt similarity checks in high-stakes modes | Accepted | 수료/채용/인증에서는 본인 풀이 여부가 중요함 | 2026-06-01 |
+| TDR-033 | Community comments | Support Slack-like threads on specific prompts/trace events | Accepted | 커뮤니티 학습과 연구를 위해 프롬프트 단위 토론 필요 | 2026-06-01 |
+| TDR-034 | Community orientation | Learning, research, and portfolio first; competition secondary | Accepted | 경쟁은 자연발생시키되 제품이 과도하게 유도하지 않음 | 2026-06-01 |
+| TDR-035 | App stack | Next.js full-stack app | Accepted | 사용자가 yes로 답했고 MVP 범위에 적합 | 2026-06-01 |
+| TDR-036 | DB/Auth stack | Supabase for MVP | Accepted | Postgres, Google login, dashboard, Next.js integration을 한 번에 해결 | 2026-06-01 |
+| TDR-037 | Initial auth | Start with Google login; later add email/password, GitHub, account linking | Accepted | 초기 진입장벽을 낮추고 장기 계정 모델로 확장 | 2026-06-01 |
+| TDR-038 | Provider strategy | Multi-provider adapter architecture | Accepted | OpenAI, Gemini, xAI Grok, Groq, OpenRouter, Hugging Face 등을 지원해야 함 | 2026-06-01 |
+| TDR-039 | Model selection | Users can choose models | Accepted | 모델 선택은 프로그래밍 언어 선택과 유사한 핵심 경험 | 2026-06-01 |
+| TDR-040 | Judge separation | Separate conversation model and judge model | Accepted | 사용자 경험 모델과 평가 모델의 요구조건이 다름 | 2026-06-01 |
+| TDR-041 | Judge execution | Synchronous first, queue-ready data model | Accepted | 초기 UX는 즉시 채점이 좋고, 느려지면 queue로 전환 | 2026-06-01 |
+| TDR-042 | Leaderboard | Per-problem leaderboard required | Accepted | 백준형 구조와 문제별 비교에 필요 | 2026-06-01 |
+| TDR-043 | Admin authoring | Admin problem authoring UI required | Accepted | 기업/HR/교육 고객은 문제 출제가 필요함 | 2026-06-01 |
+| TDR-044 | Budget | Monthly cap KRW 200,000; event cap KRW 100,000 | Accepted | 저가 provider 우선, 비싼 GPT API 사용 지양 | 2026-06-01 |
+| TDR-045 | Demo success signal | User realizes AI quality depends heavily on their usage method | Accepted | 실제 사용자 피드백에서 이 인식 변화가 발견되어야 함 | 2026-06-01 |
+| TDR-046 | Demo report | Provide detailed, friendly AI-use habit and prompt-history coaching report | Accepted | 코치 코멘트가 핵심 가치를 전달함 | 2026-06-01 |
+| TDR-047 | Founder analysis | Preserve all logs for initial founder review | Accepted | 첫 smoke에서는 정성 분석이 핵심 | 2026-06-01 |
+
+## Decision Template
+
+```md
+## TDR-000: Title
+
+- Area:
+- Status: Proposed | Accepted | Rejected | Superseded
+- Date:
+- Decision:
+- Context:
+- Alternatives:
+- Reason:
+- Consequences:
+- Revisit when:
+```
