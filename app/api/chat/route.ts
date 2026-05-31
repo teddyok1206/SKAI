@@ -11,6 +11,21 @@ const chatSchema = z.object({
     z.object({
       role: z.enum(["user", "assistant", "system"]),
       content: z.string(),
+      attachments: z
+        .array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            mimeType: z.string(),
+            size: z.number(),
+            source: z.enum(["problem_material", "upload"]),
+            materialId: z.string().optional(),
+            textContent: z.string().optional(),
+            dataUrl: z.string().optional(),
+            createdAt: z.string(),
+          }),
+        )
+        .optional(),
     }),
   ),
 });
@@ -37,4 +52,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json(response);
 }
-

@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { GitBranch, MessageSquare, Play, RotateCcw, Send, Share2, Trophy } from "lucide-react";
+import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
+import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { budgetGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
-import type { Attempt, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
+import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
+import type { Attempt, AttemptAttachment, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 const providerOptions: Array<{ id: ProviderId; label: string; model: string }> = [
@@ -40,6 +42,7 @@ function makeTraceEvent(input: {
   provider?: ProviderId;
   model?: string;
   modelRun?: ModelRun;
+  attachments?: AttemptAttachment[];
 }): TraceEvent {
   return {
     id: crypto.randomUUID(),
@@ -54,6 +57,7 @@ function makeTraceEvent(input: {
     usageInputTokens: input.modelRun?.usageInputTokens,
     usageOutputTokens: input.modelRun?.usageOutputTokens,
     estimatedCostUsd: input.modelRun?.estimatedCostUsd,
+    attachments: input.attachments,
   };
 }
 
@@ -65,6 +69,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [finalAnswer, setFinalAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+  const [selectedAttachments, setSelectedAttachments] = useState<AttemptAttachment[]>([]);
+  const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? "");
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedProvider = useMemo(
     () => providerOptions.find((item) => item.id === provider) ?? providerOptions[0],
@@ -79,16 +87,43 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     (sum, event) => sum + (event.usageInputTokens ?? 0) + (event.usageOutputTokens ?? 0),
     0,
   );
+  const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
 
   function updateAttempt(next: Attempt) {
     setAttempt(next);
     saveAttempt(next);
+    void syncAttemptToSupabase(next, problem);
   }
 
   function handleProviderChange(nextProvider: ProviderId) {
     const option = providerOptions.find((item) => item.id === nextProvider) ?? providerOptions[0];
     setProvider(option.id);
     setModel(option.model);
+  }
+
+  function toggleMaterialAttachment(materialId: string) {
+    const material = problem.materials.find((item) => item.id === materialId);
+    if (!material) {
+      return;
+    }
+
+    setSelectedAttachments((current) => {
+      const exists = current.some((item) => item.materialId === material.id);
+      if (exists) {
+        return current.filter((item) => item.materialId !== material.id);
+      }
+
+      return [...current, attachmentFromMaterial(material)];
+    });
+  }
+
+  async function addFiles(files: FileList | File[]) {
+    const next = await Promise.all(Array.from(files).map((file) => attachmentFromFile(file)));
+    setSelectedAttachments((current) => [...current, ...next]);
+  }
+
+  function removeAttachment(attachmentId: string) {
+    setSelectedAttachments((current) => current.filter((item) => item.id !== attachmentId));
   }
 
   async function sendMessage() {
@@ -109,6 +144,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       content: clippedInput,
       provider,
       model,
+      attachments: selectedAttachments,
     });
     const nextTrace = [...attempt.trace, userEvent];
     const nextAttempt = {
@@ -133,6 +169,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           messages: nextTrace.map((event) => ({
             role: event.role,
             content: event.content,
+            attachments: event.attachments,
           })),
         }),
       });
@@ -157,6 +194,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         trace: [...nextTrace, assistantEvent],
         updatedAt: new Date().toISOString(),
       });
+      setSelectedAttachments([]);
     } catch (error) {
       const assistantEvent = makeTraceEvent({
         attemptId: attempt.id,
@@ -225,6 +263,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     };
 
     savePublishedAttempt(published);
+    void syncPublishedAttemptToSupabase(published);
     updateAttempt({
       ...attempt,
       status: "published",
@@ -254,6 +293,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
+    setSelectedAttachments([]);
     saveAttempt(next);
   }
 
@@ -291,6 +331,61 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             ))}
           </ul>
         </div>
+        {problem.materials.length > 0 ? (
+          <div className="panel-body">
+            <h3>자료</h3>
+            <div className="material-list">
+              {problem.materials.map((material) => {
+                const isSelected = selectedAttachments.some((item) => item.materialId === material.id);
+                return (
+                  <button
+                    className={`material-button ${activeMaterialId === material.id ? "active" : ""}`}
+                    key={material.id}
+                    onClick={() => setActiveMaterialId(material.id)}
+                    type="button"
+                  >
+                    <span>
+                      <strong>{material.title}</strong>
+                      <small>{material.fileName}</small>
+                    </span>
+                    <span className={isSelected ? "material-state selected" : "material-state"}>{isSelected ? "사용 중" : "보기"}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {activeMaterial ? (
+              <div className="material-viewer">
+                <div className="material-viewer-header">
+                  <div>
+                    <strong>{activeMaterial.title}</strong>
+                    <p className="muted">{activeMaterial.description}</p>
+                  </div>
+                  <button className="button" onClick={() => toggleMaterialAttachment(activeMaterial.id)} type="button">
+                    <Paperclip size={15} />{" "}
+                    {selectedAttachments.some((item) => item.materialId === activeMaterial.id) ? "해제" : "사용"}
+                  </button>
+                </div>
+                {activeMaterial.kind === "image" && activeMaterial.href ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img alt={activeMaterial.title} className="material-image" src={activeMaterial.href} />
+                ) : null}
+                {activeMaterial.kind !== "image" ? (
+                  <pre className="material-text">{activeMaterial.extractedText}</pre>
+                ) : (
+                  <details>
+                    <summary>추출 텍스트 보기</summary>
+                    <pre className="material-text">{activeMaterial.extractedText}</pre>
+                  </details>
+                )}
+                {activeMaterial.href ? (
+                  <a className="button" href={activeMaterial.href} download>
+                    원본 다운로드
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
         <div className="panel-body">
           <Link className="button" href="/">
             Problems
@@ -351,6 +446,16 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               <article className={`message ${event.role}`} key={event.id}>
                 <strong>{event.role === "user" ? "You" : `${event.provider ?? selectedProvider.label}`}</strong>
                 <p>{event.content}</p>
+                {event.attachments && event.attachments.length > 0 ? (
+                  <div className="attachment-row">
+                    {event.attachments.map((attachment) => (
+                      <span className="attachment-chip" key={attachment.id}>
+                        <Paperclip size={14} />
+                        {attachment.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
                 <div className="actions">
                   <button className="button" onClick={() => branchFrom(index)} title="이 지점부터 다시 시작">
                     <GitBranch size={15} /> Branch
@@ -362,6 +467,53 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         </div>
 
         <div className="composer">
+          <div
+            className={`dropzone ${isDraggingFile ? "active" : ""}`}
+            onDragEnter={(event) => {
+              event.preventDefault();
+              setIsDraggingFile(true);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setIsDraggingFile(true);
+            }}
+            onDragLeave={() => setIsDraggingFile(false)}
+            onDrop={(event) => {
+              event.preventDefault();
+              setIsDraggingFile(false);
+              void addFiles(event.dataTransfer.files);
+            }}
+          >
+            <button className="button" type="button" onClick={() => fileInputRef.current?.click()}>
+              <FilePlus2 size={16} /> 파일 추가
+            </button>
+            <span className="muted">문제 자료를 선택하거나 파일을 드래그해 다음 프롬프트에 첨부합니다.</span>
+            <input
+              ref={fileInputRef}
+              multiple
+              hidden
+              type="file"
+              onChange={(event) => {
+                if (event.target.files) {
+                  void addFiles(event.target.files);
+                  event.target.value = "";
+                }
+              }}
+            />
+          </div>
+          {selectedAttachments.length > 0 ? (
+            <div className="attachment-row">
+              {selectedAttachments.map((attachment) => (
+                <span className="attachment-chip" key={attachment.id}>
+                  <Paperclip size={14} />
+                  {attachment.name}
+                  <button aria-label={`${attachment.name} 제거`} onClick={() => removeAttachment(attachment.id)} type="button">
+                    <X size={13} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          ) : null}
           <textarea
             className="textarea"
             placeholder="AI에게 보낼 다음 지시를 작성하세요."

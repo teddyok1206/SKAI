@@ -1,0 +1,11 @@
+name: SKAI
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - nodejs=20
+  - pip
+  - pip:
+      - pillow==12.2.0
+      - openpyxl==3.1.5
+

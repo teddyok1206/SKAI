@@ -1,4 +1,5 @@
 import type { ModelProvider, ProviderRequest, ProviderResponse } from "@/lib/providers/types";
+import { buildAttachmentContext } from "@/lib/attachment-context";
 
 function includesAny(value: string, words: string[]) {
   const normalized = value.toLowerCase();
@@ -8,7 +9,18 @@ function includesAny(value: string, words: string[]) {
 function buildMockReply(request: ProviderRequest) {
   const lastUserMessage = [...request.messages].reverse().find((message) => message.role === "user");
   const last = lastUserMessage?.content ?? "";
+  const attachmentContext = buildAttachmentContext(lastUserMessage?.attachments);
   const turn = request.messages.filter((message) => message.role === "user").length;
+
+  if (attachmentContext) {
+    return [
+      "첨부된 자료를 확인했습니다. 이 자료는 모델 입력 context에 포함됩니다.",
+      "",
+      attachmentContext.slice(0, 1200),
+      "",
+      "이제 이 자료를 근거로 삼되, 파일에서 확인된 사실과 추정/가정을 분리해서 진행하는 것이 좋습니다.",
+    ].join("\n");
+  }
 
   if (turn <= 1) {
     return [
@@ -69,7 +81,7 @@ export const mockProvider: ModelProvider = {
     const startedAt = Date.now();
     const message = buildMockReply(request);
     const usageInputTokens = Math.ceil(
-      request.messages.reduce((sum, item) => sum + item.content.length, 0) / 4,
+      request.messages.reduce((sum, item) => sum + item.content.length + buildAttachmentContext(item.attachments).length, 0) / 4,
     );
     const usageOutputTokens = Math.ceil(message.length / 4);
 
@@ -87,4 +99,3 @@ export const mockProvider: ModelProvider = {
     };
   },
 };
-

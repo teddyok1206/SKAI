@@ -13,6 +13,7 @@ create table if not exists public.problems (
   constraints jsonb not null default '[]'::jsonb,
   starter_context jsonb not null default '[]'::jsonb,
   deliverables jsonb not null default '[]'::jsonb,
+  materials jsonb not null default '[]'::jsonb,
   allowed_providers jsonb not null default '["mock"]'::jsonb,
   rubric jsonb not null default '[]'::jsonb,
   is_published boolean not null default false,
@@ -47,6 +48,7 @@ create table if not exists public.trace_events (
   usage_input_tokens integer,
   usage_output_tokens integer,
   estimated_cost_usd numeric(12, 8),
+  attachments jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now()
 );
 
@@ -86,6 +88,7 @@ create table if not exists public.published_attempts (
   problem_id text not null references public.problems(id),
   title text not null,
   workflow jsonb not null default '[]'::jsonb,
+  snapshot jsonb,
   created_at timestamptz not null default now()
 );
 
@@ -102,4 +105,3 @@ create table if not exists public.prompt_comments (
 create index if not exists trace_events_attempt_id_idx on public.trace_events(attempt_id);
 create index if not exists attempts_problem_id_idx on public.attempts(problem_id);
 create index if not exists score_reports_problem_id_idx on public.score_reports(problem_id);
-

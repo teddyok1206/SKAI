@@ -2,14 +2,23 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Eye, MessageSquare, Workflow } from "lucide-react";
+import { Eye, MessageSquare, Paperclip, Workflow } from "lucide-react";
 import { getPublishedAttempt } from "@/lib/local-store";
+import { loadPublishedAttemptFromSupabase } from "@/lib/supabase-persistence";
 import type { PublishedAttempt } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const attempt = useSyncExternalStore<PublishedAttempt | null>(
-    () => () => undefined,
+    (onStoreChange) => {
+      void loadPublishedAttemptFromSupabase(attemptId).then((remoteAttempt) => {
+        if (remoteAttempt) {
+          window.localStorage.setItem("skai:publishedAttempts", JSON.stringify([remoteAttempt]));
+          onStoreChange();
+        }
+      });
+      return () => undefined;
+    },
     () => getPublishedAttempt(attemptId) ?? null,
     () => null,
   );
@@ -74,6 +83,16 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               <p className="muted">
                 {event.provider ?? "unknown"} {event.model ? `· ${event.model}` : ""}
               </p>
+              {event.attachments && event.attachments.length > 0 ? (
+                <div className="attachment-row">
+                  {event.attachments.map((attachment) => (
+                    <span className="attachment-chip" key={attachment.id}>
+                      <Paperclip size={14} />
+                      {attachment.name}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
               <p style={{ whiteSpace: "pre-wrap" }}>{event.content}</p>
             </details>
           ))}

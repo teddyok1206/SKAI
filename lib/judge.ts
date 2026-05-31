@@ -1,4 +1,5 @@
 import { defaultRubric } from "@/data/rubric";
+import { buildAttachmentContext } from "@/lib/attachment-context";
 import type { AxisScore, Bottleneck, Problem, ScoreReport, TraceEvent, WorkflowStep } from "@/lib/types";
 
 const axisLabels: Record<AxisScore["axis"], string> = {
@@ -112,7 +113,9 @@ export function judgeAttempt(input: {
   finalAnswer: string;
 }): ScoreReport {
   const userTurnCount = input.trace.filter((event) => event.role === "user").length;
-  const traceText = input.trace.map((event) => `${event.role}: ${event.content}`).join("\n");
+  const traceText = input.trace
+    .map((event) => `${event.role}: ${event.content}\n${buildAttachmentContext(event.attachments)}`)
+    .join("\n");
   const axisScores = defaultRubric.map((item) => axisScore(item.axis, traceText, input.finalAnswer, userTurnCount));
   const weightedTotal =
     axisScores.reduce((sum, score) => {
@@ -154,4 +157,3 @@ export function judgeAttempt(input: {
     createdAt: new Date().toISOString(),
   };
 }
-

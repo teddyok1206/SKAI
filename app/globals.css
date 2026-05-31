@@ -263,6 +263,83 @@ h3 {
   line-height: 1.55;
 }
 
+.material-list {
+  display: grid;
+  gap: 8px;
+}
+
+.material-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+.material-button.active {
+  border-color: var(--accent);
+  background: #eef8f5;
+}
+
+.material-button small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.material-state {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: var(--muted);
+  padding: 4px 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.material-state.selected {
+  background: #dff3ed;
+  color: var(--accent-strong);
+}
+
+.material-viewer {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.material-viewer-header {
+  display: grid;
+  gap: 8px;
+}
+
+.material-image {
+  width: 100%;
+  max-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  object-fit: contain;
+}
+
+.material-text {
+  max-height: 260px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 12px;
+  white-space: pre-wrap;
+}
+
 .chat-panel {
   display: grid;
   min-height: 720px;
@@ -331,6 +408,55 @@ h3 {
   gap: 10px;
   border-top: 1px solid var(--line);
   padding: 12px;
+}
+
+.dropzone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+}
+
+.dropzone.active {
+  border-color: var(--accent);
+  background: #eef8f5;
+}
+
+.attachment-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.attachment-chip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d7e5e1;
+  border-radius: 999px;
+  background: #eef8f5;
+  color: var(--accent-strong);
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.attachment-chip button {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 118, 110, 0.12);
+  color: inherit;
+  padding: 0;
 }
 
 .textarea {
@@ -446,4 +572,3 @@ summary {
     grid-template-columns: 92px minmax(0, 1fr) 40px;
   }
 }
-

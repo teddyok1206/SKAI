@@ -30,6 +30,7 @@ export const problems: Problem[] = [
       "발표용 리서치 브리프 초안",
       "검증 계획",
     ],
+    materials: [],
     allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
     rubric: defaultRubric,
     createdAt: "2026-06-01T00:00:00.000Z",
@@ -62,6 +63,41 @@ export const problems: Problem[] = [
       "사람 검토 지점",
       "운영 체크리스트",
       "실패 시나리오 대응책",
+    ],
+    materials: [
+      {
+        id: "receipt-001",
+        title: "영수증 사진: 문구점 소모품",
+        description: "행사 준비용 네임펜, 테이프, A4 용지 구매 영수증. 이미지 자료를 보고 정산 항목을 추출해야 한다.",
+        kind: "image",
+        fileName: "receipt-001.png",
+        mimeType: "image/png",
+        href: "/materials/club-budget/receipt-001.png",
+        extractedText:
+          "영수증 추출 텍스트\n상호: 한빛문구\n일시: 2026-05-12 18:42\n품목: 네임펜 12색 1개 8,900원 / 투명테이프 3개 6,000원 / A4 용지 1권 5,500원\n합계: 20,400원\n결제: 체크카드\n메모: 동아리 발표회 준비 소모품으로 보임. 구매자 확인 필요.",
+      },
+      {
+        id: "transfers-001",
+        title: "계좌이체 내역: 5월 행사",
+        description: "입금/지출 내역 스프레드시트. 영수증과 대조하고 누락/중복 가능성을 확인해야 한다.",
+        kind: "spreadsheet",
+        fileName: "may-transfers.xlsx",
+        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        href: "/materials/club-budget/may-transfers.xlsx",
+        extractedText:
+          "스프레드시트 추출 텍스트\n날짜,구분,내용,금액,메모\n2026-05-10,입금,참가비 김민지,15000,구글폼 12번\n2026-05-10,입금,참가비 이도윤,15000,구글폼 13번\n2026-05-12,지출,한빛문구,20400,영수증 receipt-001 대조 필요\n2026-05-13,지출,피자 주문,78000,영수증 없음\n2026-05-14,입금,참가비 박서연,15000,구글폼 누락 가능\n2026-05-15,지출,회의실 대관,50000,계약서 확인 필요",
+      },
+      {
+        id: "signup-001",
+        title: "구글폼 신청 내역 CSV",
+        description: "참가자 신청 기록. 계좌이체 입금자와 이름이 다를 수 있으므로 대조 기준이 필요하다.",
+        kind: "csv",
+        fileName: "signup-export.csv",
+        mimeType: "text/csv",
+        href: "/materials/club-budget/signup-export.csv",
+        extractedText:
+          "CSV 추출 텍스트\ntimestamp,name,student_id,paid_name\n2026-05-09 10:11,김민지,20231234,김민지\n2026-05-09 10:14,이도윤,20235555,이도윤\n2026-05-09 11:05,박서연,20230123,박서연\n2026-05-09 11:30,최현우,20239876,최현우\n주의: 최현우 입금 내역은 아직 발견되지 않음.",
+      },
     ],
     allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
     rubric: defaultRubric,
@@ -96,6 +132,7 @@ export const problems: Problem[] = [
       "우선순위와 근거",
       "추가 데이터 수집 계획",
     ],
+    materials: [],
     allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
     rubric: defaultRubric,
     createdAt: "2026-06-01T00:00:00.000Z",
@@ -105,4 +142,3 @@ export const problems: Problem[] = [
 export function getProblem(problemId: string): Problem | undefined {
   return problems.find((problem) => problem.id === problemId);
 }
-

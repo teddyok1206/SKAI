@@ -21,6 +21,7 @@ The current implementation is a Next.js MVP shell with:
 The project uses a conda environment named `SKAI`.
 
 ```bash
+conda env create -f environment.yml
 conda activate SKAI
 npm install
 npm run dev
@@ -50,3 +51,13 @@ conda run -n SKAI npm run build
 ## Environment
 
 Copy `.env.example` to `.env.local` and fill provider/Supabase keys when needed. The app runs in mock mode without keys.
+
+## Demo Materials
+
+The budget workflow problem includes fixture files under `public/materials/club-budget/`.
+
+To regenerate them:
+
+```bash
+conda run -n SKAI python scripts/generate_demo_materials.py
+```

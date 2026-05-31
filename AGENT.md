@@ -58,6 +58,8 @@ The first demo should prove as many of these as possible:
 - Separate raw private traces from public/shared traces.
 - Record the model, provider, timestamp, token usage if available, cost estimate, latency, problem ID, and rubric version for every judged attempt.
 - Treat problem statements, rubrics, hidden judge criteria, prompt traces, model outputs, and score results as separate entities.
+- Treat official problem materials and user-uploaded attachments as first-class attempt context.
+- When a user selects or uploads files during solving, include a normalized representation of those files in the model request where feasible.
 - Every score should be tied to a rubric version and judge version.
 
 ## Evaluation Principles
@@ -94,4 +96,5 @@ The first demo should prove as many of these as possible:
 - Evaluation direction: `docs/technical/003_evaluation_direction.md`
 - MVP stack baseline: `docs/technical/004_mvp_stack_recommendation.md`
 - MVP implementation baseline: `docs/technical/005_mvp_implementation_baseline.md`
+- Materials and attachments architecture: `docs/technical/006_materials_and_attachments.md`
 - Implementation plans: `docs/technical/plan/`

@@ -31,6 +31,31 @@ export type AttemptStatus = "draft" | "submitted" | "judged" | "published";
 
 export type JudgeRunStatus = "pending" | "running" | "succeeded" | "failed" | "cancelled";
 
+export type MaterialKind = "image" | "spreadsheet" | "csv" | "text" | "pdf" | "other";
+
+export interface ProblemMaterial {
+  id: string;
+  title: string;
+  description: string;
+  kind: MaterialKind;
+  fileName: string;
+  mimeType: string;
+  href?: string;
+  extractedText: string;
+}
+
+export interface AttemptAttachment {
+  id: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  source: "problem_material" | "upload";
+  materialId?: string;
+  textContent?: string;
+  dataUrl?: string;
+  createdAt: string;
+}
+
 export interface RubricItem {
   axis: ScoreAxis;
   label: string;
@@ -51,6 +76,7 @@ export interface Problem {
   constraints: string[];
   starterContext: string[];
   deliverables: string[];
+  materials: ProblemMaterial[];
   allowedProviders: ProviderId[];
   rubric: RubricItem[];
   createdAt: string;
@@ -70,6 +96,7 @@ export interface TraceEvent {
   usageInputTokens?: number;
   usageOutputTokens?: number;
   estimatedCostUsd?: number;
+  attachments?: AttemptAttachment[];
 }
 
 export interface ModelRun {
@@ -85,6 +112,7 @@ export interface ModelRun {
 export interface ChatMessage {
   role: TraceRole;
   content: string;
+  attachments?: AttemptAttachment[];
 }
 
 export interface Attempt {
@@ -161,4 +189,3 @@ export interface LeaderboardEntry {
   provider: ProviderId;
   createdAt: string;
 }
-

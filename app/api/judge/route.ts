@@ -17,6 +17,21 @@ const traceEventSchema = z.object({
   usageInputTokens: z.number().optional(),
   usageOutputTokens: z.number().optional(),
   estimatedCostUsd: z.number().optional(),
+  attachments: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        mimeType: z.string(),
+        size: z.number(),
+        source: z.enum(["problem_material", "upload"]),
+        materialId: z.string().optional(),
+        textContent: z.string().optional(),
+        dataUrl: z.string().optional(),
+        createdAt: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 const judgeSchema = z.object({
@@ -48,4 +63,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json(report);
 }
-

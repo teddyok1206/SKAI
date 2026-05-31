@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Flame } from "lucide-react";
+import { AuthStatus } from "@/components/auth-status";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <nav className="nav" aria-label="Primary">
                 <Link href="/">Problems</Link>
                 <Link href="/admin">Admin</Link>
+                <AuthStatus />
               </nav>
             </div>
           </header>
@@ -33,4 +35,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-

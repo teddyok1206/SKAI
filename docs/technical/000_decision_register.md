@@ -51,6 +51,10 @@
 | TDR-045 | Demo success signal | User realizes AI quality depends heavily on their usage method | Accepted | 실제 사용자 피드백에서 이 인식 변화가 발견되어야 함 | 2026-06-01 |
 | TDR-046 | Demo report | Provide detailed, friendly AI-use habit and prompt-history coaching report | Accepted | 코치 코멘트가 핵심 가치를 전달함 | 2026-06-01 |
 | TDR-047 | Founder analysis | Preserve all logs for initial founder review | Accepted | 첫 smoke에서는 정성 분석이 핵심 | 2026-06-01 |
+| TDR-048 | Problem materials | Treat official materials and user-uploaded files as first-class problem context | Accepted | 현실 문제에서는 영수증, 스프레드시트, 로그, 이미지 같은 자료 활용 능력이 핵심임 | 2026-06-01 |
+| TDR-049 | Material viewer | Provide a side material list and tab-like viewer in the solving UI | Accepted | 사용자가 자료를 보고 선택하는 과정 자체가 평가 대상임 | 2026-06-01 |
+| TDR-050 | Attachment-to-model path | Selected materials/uploads must be included in backend model context | Accepted | 파일 선택 행위가 실제 모델 입력에 반영되어야 함 | 2026-06-01 |
+| TDR-051 | Material extraction MVP | Use extracted text sidecars for official files; pass text uploads directly and images as data URLs where supported | Accepted | OCR/임의 XLSX/PDF 파싱은 후속 과제로 두되 데모에서 모델이 자료를 볼 수 있어야 함 | 2026-06-01 |
 
 ## Decision Template
 
