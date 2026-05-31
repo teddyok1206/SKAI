@@ -19,6 +19,7 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 - If a long prompt is not already archived, create the next numbered markdown file before doing substantial work.
 - Philosophy, mission, positioning, and legacy thinking belong in `docs/philosophy/`.
 - Technical implementation decisions, architecture, schemas, deployment, APIs, and operations belong in `docs/technical/`.
+- Design principles, visual direction, interaction patterns, and theme decisions belong in `docs/design/`.
 - Detailed programming plans belong in `docs/technical/plan/`.
 - Keep philosophy and implementation separate unless a document is explicitly a bridge between them.
 
@@ -97,4 +98,6 @@ The first demo should prove as many of these as possible:
 - MVP stack baseline: `docs/technical/004_mvp_stack_recommendation.md`
 - MVP implementation baseline: `docs/technical/005_mvp_implementation_baseline.md`
 - Materials and attachments architecture: `docs/technical/006_materials_and_attachments.md`
+- Design principles: `docs/design/000_design_principles.md`
+- Theme recommendation: `docs/design/001_theme_recommendation.md`
 - Implementation plans: `docs/technical/plan/`
