@@ -10,6 +10,7 @@ node_modules/
 dist/
 build/
 .next/
+*.tsbuildinfo
 .vercel/
 .netlify/
 
@@ -18,4 +19,3 @@ build/
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
-

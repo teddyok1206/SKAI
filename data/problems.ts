@@ -1,0 +1,108 @@
+import { defaultRubric } from "@/data/rubric";
+import type { Problem } from "@/lib/types";
+
+export const problems: Problem[] = [
+  {
+    id: "ambiguous-research-brief",
+    title: "흐릿한 자료조사 요청을 실행 가능한 리서치 브리프로 바꾸기",
+    subtitle: "AI가 헛소리하지 않도록 목표, 검증 기준, 산출물 구조를 먼저 설계한다.",
+    category: "research",
+    difficulty: "intro",
+    goalProfile: "learning_oriented",
+    estimatedMinutes: 20,
+    statement:
+      "지인이 '요즘 생성형 AI가 교육에 미치는 영향 좀 조사해줘. 발표에 쓸 거야.'라고만 말했다. 이 요청을 바로 검색/요약하지 말고, AI와 대화하면서 조사 목표, 범위, 산출물 구조, 검증 전략을 설계한 뒤 발표 준비에 쓸 수 있는 리서치 브리프 초안을 만들어라.",
+    userGoal:
+      "불명확한 요청을 구조화하고, AI에게 단계적으로 task를 배분하여 신뢰 가능한 발표용 리서치 브리프를 만든다.",
+    constraints: [
+      "처음부터 최종 답만 요구하지 말고 문제를 재정의해야 한다.",
+      "최소 1번 이상 누락된 조건이나 가정을 명시해야 한다.",
+      "최종 산출물에는 조사 질문, 핵심 주장 후보, 검증할 출처 유형, 발표 구조가 포함되어야 한다.",
+      "AI 응답의 한계나 추가 검증 필요 지점을 명시해야 한다.",
+    ],
+    starterContext: [
+      "발표 대상, 발표 시간, 학년/전공, 최신 자료 필요 여부는 아직 불명확하다.",
+      "이 문제는 정확성보다 문제정의와 세분화를 우선 평가한다.",
+    ],
+    deliverables: [
+      "정제된 문제정의",
+      "AI에게 배분한 하위 task 목록",
+      "발표용 리서치 브리프 초안",
+      "검증 계획",
+    ],
+    allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
+    rubric: defaultRubric,
+    createdAt: "2026-06-01T00:00:00.000Z",
+  },
+  {
+    id: "club-budget-workflow",
+    title: "동아리 예산 혼란을 AI 업무흐름으로 정리하기",
+    subtitle: "사람, 문서, AI가 나눠 맡을 일을 설계한다.",
+    category: "strategy",
+    difficulty: "standard",
+    goalProfile: "workflow_adoption",
+    estimatedMinutes: 25,
+    statement:
+      "동아리 회계 담당자가 영수증 사진, 계좌이체 내역, 구글폼 신청 내역이 뒤섞여 예산 정산을 못 하고 있다. AI를 활용해 정산 업무를 안정적으로 처리하는 workflow를 설계하고, 실제 담당자가 따라 할 수 있는 운영 절차를 만들어라.",
+    userGoal:
+      "현실 업무의 혼란을 AI task, 사람 검토, 데이터 구조로 나누고 재사용 가능한 workflow로 만든다.",
+    constraints: [
+      "AI가 하면 안 되는 판단과 사람이 검토해야 할 지점을 분리해야 한다.",
+      "개인정보나 계좌정보 처리 주의사항을 포함해야 한다.",
+      "반복 운영 가능한 체크리스트 또는 템플릿을 만들어야 한다.",
+      "최소 1개 이상의 실패 시나리오와 대응책을 포함해야 한다.",
+    ],
+    starterContext: [
+      "입력 자료는 완전히 정리되어 있지 않다.",
+      "담당자는 개발자가 아니며, 설치 없이 따라 할 수 있어야 한다.",
+    ],
+    deliverables: [
+      "업무 분해도",
+      "AI task 분배안",
+      "사람 검토 지점",
+      "운영 체크리스트",
+      "실패 시나리오 대응책",
+    ],
+    allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
+    rubric: defaultRubric,
+    createdAt: "2026-06-01T00:00:00.000Z",
+  },
+  {
+    id: "counterfactual-product-review",
+    title: "그럴듯하지만 약한 제품 리뷰 분석 바로잡기",
+    subtitle: "AI의 약한 분석을 잡아내고 더 강한 검증 프롬프트로 되돌린다.",
+    category: "data_analysis",
+    difficulty: "advanced",
+    goalProfile: "accuracy_first",
+    estimatedMinutes: 30,
+    statement:
+      "가상의 앱 리뷰 12개를 보고 AI에게 개선 우선순위를 뽑게 해야 한다. 단, 리뷰 수가 적고 편향되어 있을 수 있다. AI가 성급하게 결론내리지 않도록 분석 계획, 한계, 검증 질문, 최종 우선순위를 설계하라.",
+    userGoal:
+      "작은 데이터에서 AI가 과잉 일반화하지 않도록 제약을 걸고 검증 중심의 분석을 만든다.",
+    constraints: [
+      "데이터 한계를 명시해야 한다.",
+      "분석 기준을 먼저 만들고 리뷰를 분류해야 한다.",
+      "AI가 만든 우선순위에 대한 반례나 리스크를 검토해야 한다.",
+      "최종 답은 실행 우선순위와 추가 수집 데이터로 나뉘어야 한다.",
+    ],
+    starterContext: [
+      "리뷰 데이터는 대표성이 보장되지 않는다.",
+      "이 문제는 검증력과 적응력을 강하게 평가한다.",
+    ],
+    deliverables: [
+      "분석 기준",
+      "리뷰 분류 전략",
+      "AI 출력 검증 질문",
+      "우선순위와 근거",
+      "추가 데이터 수집 계획",
+    ],
+    allowedProviders: ["mock", "groq", "xai", "openai", "openrouter", "gemini"],
+    rubric: defaultRubric,
+    createdAt: "2026-06-01T00:00:00.000Z",
+  },
+];
+
+export function getProblem(problemId: string): Problem | undefined {
+  return problems.find((problem) => problem.id === problemId);
+}
+
