@@ -52,6 +52,49 @@ conda run -n SKAI npm run build
 
 Copy `.env.example` to `.env.local` and fill provider/Supabase keys when needed. The app runs in mock mode without keys.
 
+### Supabase
+
+Create a Supabase project, run the migrations in `supabase/migrations/`, then set:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+For Google login, configure Google OAuth in Supabase and add this redirect URL in the Supabase Auth settings:
+
+```text
+http://localhost:3000/auth/callback
+```
+
+For production, also add the deployed callback URL:
+
+```text
+https://YOUR_DOMAIN/auth/callback
+```
+
+### Live Model Provider
+
+The app runs with `SKAI_DEFAULT_PROVIDER=mock` until a real provider key is set.
+
+For Groq:
+
+```bash
+SKAI_DEFAULT_PROVIDER=groq
+SKAI_DEFAULT_MODEL=llama-3.3-70b-versatile
+GROQ_API_KEY=
+```
+
+For xAI Grok:
+
+```bash
+SKAI_DEFAULT_PROVIDER=xai
+SKAI_DEFAULT_MODEL=grok-4-fast
+XAI_API_KEY=
+```
+
+After changing `.env.local`, restart the dev server.
+
 ## Demo Materials
 
 The budget workflow problem includes fixture files under `public/materials/club-budget/`.

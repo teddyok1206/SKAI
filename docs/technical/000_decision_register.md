@@ -55,6 +55,8 @@
 | TDR-049 | Material viewer | Provide a side material list and tab-like viewer in the solving UI | Accepted | 사용자가 자료를 보고 선택하는 과정 자체가 평가 대상임 | 2026-06-01 |
 | TDR-050 | Attachment-to-model path | Selected materials/uploads must be included in backend model context | Accepted | 파일 선택 행위가 실제 모델 입력에 반영되어야 함 | 2026-06-01 |
 | TDR-051 | Material extraction MVP | Use extracted text sidecars for official files; pass text uploads directly and images as data URLs where supported | Accepted | OCR/임의 XLSX/PDF 파싱은 후속 과제로 두되 데모에서 모델이 자료를 볼 수 있어야 함 | 2026-06-01 |
+| TDR-052 | Supabase sync | Use server API routes for Supabase persistence with local fallback | Accepted | 클라이언트 직접 DB 쓰기보다 auth/cookie/RLS 흐름에 맞고 mock/local 모드도 유지됨 | 2026-06-01 |
+| TDR-053 | OAuth callback | Use `/auth/callback` for Supabase Google OAuth exchange | Accepted | Supabase session cookies를 Next.js route handler에서 안정적으로 설정해야 함 | 2026-06-01 |
 
 ## Decision Template
 
