@@ -57,7 +57,8 @@
 | TDR-051 | Material extraction MVP | Use extracted text sidecars for official files; pass text uploads directly and images as data URLs where supported | Accepted | OCR/임의 XLSX/PDF 파싱은 후속 과제로 두되 데모에서 모델이 자료를 볼 수 있어야 함 | 2026-06-01 |
 | TDR-052 | Supabase sync | Use server API routes for Supabase persistence with local fallback | Accepted | 클라이언트 직접 DB 쓰기보다 auth/cookie/RLS 흐름에 맞고 mock/local 모드도 유지됨 | 2026-06-01 |
 | TDR-053 | OAuth callback | Use `/auth/callback` for Supabase Google OAuth exchange | Accepted | Supabase session cookies를 Next.js route handler에서 안정적으로 설정해야 함 | 2026-06-01 |
-| TDR-054 | User-facing AI choice | Use interaction environment presets by default instead of raw provider/model selection | Accepted | 실제 ChatGPT/Gemini 사용 환경을 모사하는 것이 데모 교육 목표에 더 적합함 | 2026-06-01 |
+| TDR-054 | User-facing AI choice | Choose one interaction environment before attempt start; no raw provider/model switching inside demo solve | Accepted | 코딩 문제의 언어 선택처럼 attempt 설정으로 모델을 고르는 것이 실제 학습/비교에 더 적합함 | 2026-06-01 |
+| TDR-055 | Solving modes | Demo supports single-model attempts; future versions should support multi-AI and harness modes | Accepted | SKAI의 장기 방향은 여러 AI를 task별로 배분하는 오케스트레이션 훈련까지 포함해야 함 | 2026-06-01 |
 
 ## Decision Template
 

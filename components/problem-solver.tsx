@@ -62,7 +62,7 @@ function makeTraceEvent(input: {
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
   const defaultEnvironment = getInteractionEnvironment("skai-practice");
-  const [attempt, setAttempt] = useState<Attempt>(() => newAttempt(problem));
+  const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [environmentId, setEnvironmentId] = useState<InteractionEnvironmentId>(defaultEnvironment.id);
   const [provider, setProvider] = useState<ProviderId>(defaultEnvironment.provider);
   const [model, setModel] = useState(defaultEnvironment.model);
@@ -82,10 +82,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     .sort((a, b) => (b.scoreReport?.totalScore ?? 0) - (a.scoreReport?.totalScore ?? 0))
     .slice(0, 5);
 
-  const totalTokens = attempt.trace.reduce(
+  const totalTokens = attempt?.trace.reduce(
     (sum, event) => sum + (event.usageInputTokens ?? 0) + (event.usageOutputTokens ?? 0),
     0,
-  );
+  ) ?? 0;
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
 
   function updateAttempt(next: Attempt) {
@@ -99,6 +99,16 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setEnvironmentId(environment.id);
     setProvider(environment.provider);
     setModel(environment.model);
+  }
+
+  function startAttempt() {
+    const next = newAttempt(problem, selectedEnvironment);
+    setAttempt(next);
+    setFinalAnswer("");
+    setInput("");
+    setShareUrl("");
+    setSelectedAttachments([]);
+    saveAttempt(next);
   }
 
   function toggleMaterialAttachment(materialId: string) {
@@ -127,7 +137,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   async function sendMessage() {
-    if (!input.trim() || isLoading) {
+    if (!attempt || !input.trim() || isLoading) {
       return;
     }
 
@@ -215,6 +225,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   async function submitAttempt() {
+    if (!attempt) {
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -247,6 +261,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   function publishAttempt() {
+    if (!attempt) {
+      return;
+    }
+
     if (!attempt.scoreReport) {
       return;
     }
@@ -274,6 +292,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   function branchFrom(index: number) {
+    if (!attempt) {
+      return;
+    }
+
     const nextTrace = attempt.trace.slice(0, index + 1);
     updateAttempt({
       ...attempt,
@@ -288,21 +310,132 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   function restart() {
-    const next = newAttempt(problem, selectedEnvironment);
-    setAttempt(next);
+    setAttempt(null);
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
     setSelectedAttachments([]);
-    saveAttempt(next);
   }
 
   function loadLastAttempt() {
+    if (!attempt) {
+      return;
+    }
+
     const saved = getAttempt(attempt.id);
     if (saved) {
       setAttempt(saved);
       setFinalAnswer(saved.finalAnswer ?? "");
     }
+  }
+
+  if (!attempt) {
+    return (
+      <div className="pre-attempt-layout">
+        <section className="panel pre-attempt-panel provider-shell" data-provider={provider}>
+          <div className="panel-header">
+            <p className="eyebrow">Attempt setup</p>
+            <h2>{problem.title}</h2>
+            <p className="muted">{problem.subtitle}</p>
+          </div>
+          <div className="panel-body pre-attempt-body">
+            <div>
+              <h3>모델 환경 선택</h3>
+              <p className="muted">
+                코딩 문제를 풀기 전에 언어를 고르듯, 이 attempt에서 사용할 AI 환경을 먼저 고릅니다. 데모에서는 한 attempt가 하나의 모델 환경에 고정됩니다.
+              </p>
+            </div>
+            <div className="environment-grid">
+              {interactionEnvironments.map((environment) => (
+                <button
+                  className={`environment-card ${environment.id === environmentId ? "active" : ""}`}
+                  data-provider={environment.provider}
+                  key={environment.id}
+                  onClick={() => handleEnvironmentChange(environment.id)}
+                  type="button"
+                >
+                  <span>{environment.label}</span>
+                  <strong>{environment.surfaceLabel}</strong>
+                  <small>{environment.description}</small>
+                  <em>
+                    {providerUiProfiles[environment.provider].label} · {environment.model}
+                  </em>
+                </button>
+              ))}
+            </div>
+            <div className="pre-attempt-selected">
+              <div>
+                <strong>{selectedEnvironment.shortLabel}</strong>
+                <p className="muted">{selectedEnvironment.materialBehavior}</p>
+              </div>
+              <button className="button primary" onClick={startAttempt} type="button">
+                <Play size={16} /> Start Attempt
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <aside className="panel">
+          <div className="panel-header">
+            <p className="eyebrow">{problem.category}</p>
+            <h2>문제 확인</h2>
+          </div>
+          <div className="panel-body">
+            <h3>문제</h3>
+            <p className="muted">{problem.statement}</p>
+            <h3>제약</h3>
+            <ul className="constraint-list">
+              {problem.constraints.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="panel-body">
+            <h3>자료</h3>
+            {problem.materials.length === 0 ? (
+              <p className="muted">제공 자료가 없습니다.</p>
+            ) : (
+              <div className="material-list">
+                {problem.materials.map((material) => (
+                  <button
+                    className={`material-button ${activeMaterialId === material.id ? "active" : ""}`}
+                    key={material.id}
+                    onClick={() => setActiveMaterialId(material.id)}
+                    type="button"
+                  >
+                    <span>
+                      <strong>{material.title}</strong>
+                      <small>{material.fileName}</small>
+                    </span>
+                    <span className="material-state">보기</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            {activeMaterial ? (
+              <div className="material-viewer">
+                <div>
+                  <strong>{activeMaterial.title}</strong>
+                  <p className="muted">{activeMaterial.description}</p>
+                </div>
+                {activeMaterial.kind === "image" && activeMaterial.href ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img alt={activeMaterial.title} className="material-image" src={activeMaterial.href} />
+                ) : null}
+                {activeMaterial.kind !== "image" ? (
+                  <pre className="material-text">{activeMaterial.extractedText}</pre>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+          <div className="panel-body">
+            <Link className="button" href="/">
+              Problems
+            </Link>
+          </div>
+        </aside>
+      </div>
+    );
   }
 
   return (
@@ -420,19 +553,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <small>{selectedEnvironment.description}</small>
             <small>{selectedEnvironment.materialBehavior}</small>
           </div>
-          <div className="segmented">
-            <select
-              className="select"
-              aria-label="AI interaction environment"
-              value={environmentId}
-              onChange={(event) => handleEnvironmentChange(event.target.value as InteractionEnvironmentId)}
-            >
-              {interactionEnvironments.map((environment) => (
-                <option key={environment.id} value={environment.id}>
-                  {environment.shortLabel}
-                </option>
-              ))}
-            </select>
+          <div className="segmented locked-environment">
+            <span className="lock-dot" aria-hidden="true" />
+            <strong>{selectedEnvironment.shortLabel}</strong>
             <span className="environment-meta">
               {providerProfile.label} · {model}
             </span>

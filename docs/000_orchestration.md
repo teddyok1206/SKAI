@@ -23,7 +23,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
-- 사용자 기본 UI는 raw model selector가 아니라 SKAI Practice, ChatGPT-like, Gemini-like 환경 preset을 사용한다.
+- 사용자 기본 UI는 raw model selector가 아니라 풀이 시작 전 SKAI Practice, ChatGPT-like, Gemini-like 환경 preset을 고르게 한다.
+- 데모에서는 하나의 attempt가 하나의 AI 환경/모델에 고정된다.
 - Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
@@ -47,6 +48,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - Live provider API key 검증과 실제 환경별 품질/비용/latency 비교가 필요하다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
+- 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 아직 heuristic 중심이다. LLM judge, multi-judge voting, judge disagreement 저장이 필요하다.
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
@@ -120,6 +122,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - 첫 live user environment를 ChatGPT-like와 Gemini-like 중 무엇으로 고정할지.
 - expert/admin용 raw provider/model lab을 언제 분리할지.
+- multi-AI solving mode를 언제부터 설계/노출할지.
 - judge model을 conversation model과 같은 provider로 둘지, 별도 저가/강한 모델로 둘지.
 - public sharing의 기본 공개 범위: workflow only, summarized prompts, full raw transcript 중 어디까지인지.
 - 자료 업로드의 MVP 한계: text/image만 우선할지, xlsx/pdf parsing까지 넣을지.
@@ -133,15 +136,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/004_theme_selector_design_pass.md`: theme selector와 디자인 옵션.
 - `docs/technical/plan/005_fonts_provider_ui_adaptation.md`: font system과 provider별 UI surface.
 - `docs/technical/plan/006_interaction_environment_presets.md`: 사용자 기본 AI 선택을 raw provider/model에서 환경 preset으로 전환.
+- `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 모델 환경 선택과 attempt 단위 모델 고정.
 
 다음 plan 후보:
 
-- `007_live_environment_smoke.md`
-- `008_llm_judge_mvp.md`
-- `009_shared_attempt_information_architecture.md`
-- `010_admin_authoring_mvp.md`
-- `011_supabase_deployment_hardening.md`
-- `012_cost_guardrails.md`
+- `008_live_environment_smoke.md`
+- `009_llm_judge_mvp.md`
+- `010_shared_attempt_information_architecture.md`
+- `011_admin_authoring_mvp.md`
+- `012_supabase_deployment_hardening.md`
+- `013_cost_guardrails.md`
 
 ## Reading Map
 

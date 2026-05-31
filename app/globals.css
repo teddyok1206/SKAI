@@ -340,6 +340,98 @@ h3 {
   align-items: start;
 }
 
+.pre-attempt-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 16px;
+  align-items: start;
+}
+
+.pre-attempt-panel {
+  overflow: hidden;
+}
+
+.pre-attempt-body {
+  display: grid;
+  gap: 18px;
+}
+
+.environment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.environment-card {
+  display: grid;
+  min-height: 190px;
+  gap: 8px;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 14px;
+  text-align: left;
+}
+
+.environment-card[data-provider="mock"] {
+  --card-provider-accent: var(--accent);
+  --card-provider-soft: var(--accent-soft);
+}
+
+.environment-card[data-provider="openai"] {
+  --card-provider-accent: #30343b;
+  --card-provider-soft: #eef1f3;
+}
+
+.environment-card[data-provider="gemini"] {
+  --card-provider-accent: #2d63b8;
+  --card-provider-soft: #e8f0ff;
+}
+
+.environment-card.active {
+  border-color: var(--card-provider-accent);
+  background: var(--card-provider-soft);
+  box-shadow: inset 0 3px 0 var(--card-provider-accent);
+}
+
+.environment-card span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.environment-card strong {
+  font-size: 17px;
+}
+
+.environment-card small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.environment-card em {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.pre-attempt-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid color-mix(in srgb, var(--provider-accent) 22%, var(--line));
+  border-radius: 8px;
+  background: var(--provider-soft);
+  padding: 12px;
+}
+
 .panel {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -514,6 +606,20 @@ h3 {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+}
+
+.locked-environment {
+  border: 1px solid color-mix(in srgb, var(--provider-accent) 22%, var(--line));
+  border-radius: 8px;
+  background: var(--provider-soft);
+  padding: 8px 10px;
+}
+
+.lock-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--provider-accent);
 }
 
 .provider-profile {
@@ -739,8 +845,13 @@ summary {
 @media (max-width: 900px) {
   .grid,
   .solve-layout,
+  .pre-attempt-layout,
   .page-header,
   .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .environment-grid {
     grid-template-columns: 1fr;
   }
 
