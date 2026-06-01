@@ -72,6 +72,7 @@
 | TDR-066 | Counterfactual judge | Store parent/child branch diff and counterfactual judge report separately from the original score report | Accepted | replay의 학습 가치는 기존 점수를 덮는 것이 아니라 병목 변경의 인과 효과를 별도 평가하는 데 있음 | 2026-06-02 |
 | TDR-067 | Mode/model separation | Select solving mode and model independently before attempt start | Accepted | 모델은 실행 엔진이고 모드는 사용자의 연습/평가 렌즈이므로 Gemini=자료탐색형, OpenAI=일반대화형처럼 묶으면 사용자 오케스트레이션 선택권이 흐려짐 | 2026-06-02 |
 | TDR-068 | Problem prompt playbooks | Every problem must have a paste-ready prompt playbook | Accepted | strict cold-start live chat에서는 모델이 숨은 문제 맥락을 모르므로 출제자는 실제로 어떤 프롬프트 trace가 가능한지 검증해야 함 | 2026-06-02 |
+| TDR-069 | Graph workspace | Show the derived 3D dual graph as an operational solving tab | Accepted | SKAI의 핵심 artifact는 flat chat이 아니라 prompt graph, response graph, task-status layer이므로 사용자가 풀이 중 구조를 보고 branch를 만들 수 있어야 함 | 2026-06-02 |
 
 ## Decision Template
 

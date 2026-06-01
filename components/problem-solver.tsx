@@ -3,9 +3,10 @@
 import { useMemo, useRef, useState } from "react";
 import type { DragEvent } from "react";
 import Link from "next/link";
-import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
+import { FilePlus2, GitBranch, MessageSquare, Network, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
+import { buildConversationGraph } from "@/lib/conversation-graph";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
 import { getModelOption, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
@@ -23,6 +24,7 @@ import type {
   SolvingModeId,
   TraceEvent,
 } from "@/lib/types";
+import { ConversationGraphView } from "@/components/conversation-graph-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 
@@ -95,6 +97,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? "");
   const [isDraggingAttachment, setIsDraggingAttachment] = useState(false);
   const [attachmentNotice, setAttachmentNotice] = useState("");
+  const [workspaceTab, setWorkspaceTab] = useState<"chat" | "graph">("chat");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedSolvingMode = useMemo(() => getSolvingMode(solvingModeId), [solvingModeId]);
@@ -116,6 +119,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
   const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
+  const conversationGraph = useMemo(
+    () => (attempt ? buildConversationGraph(attempt.trace, attempt.scoreReport, attempt.branch) : null),
+    [attempt],
+  );
 
   function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {
     const next = [...current];
@@ -422,6 +429,18 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setShareUrl("");
     setSelectedAttachments([]);
     setAttachmentNotice("");
+    setWorkspaceTab("chat");
+  }
+
+  function branchFromTraceEvent(traceEventId: string) {
+    if (!attempt) {
+      return;
+    }
+
+    const traceIndex = attempt.trace.findIndex((event) => event.id === traceEventId);
+    if (traceIndex >= 0) {
+      branchFrom(traceIndex);
+    }
   }
 
   function restart() {
@@ -727,9 +746,25 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
       <section className="panel chat-panel provider-shell" data-provider={provider}>
         <div className="toolbar">
-          <div className="segmented">
-            <MessageSquare size={17} />
-            <strong>Attempt</strong>
+          <div className="workspace-tabs" role="tablist" aria-label="Attempt workspace">
+            <button
+              aria-selected={workspaceTab === "chat"}
+              className={workspaceTab === "chat" ? "active" : ""}
+              onClick={() => setWorkspaceTab("chat")}
+              role="tab"
+              type="button"
+            >
+              <MessageSquare size={16} /> Chat
+            </button>
+            <button
+              aria-selected={workspaceTab === "graph"}
+              className={workspaceTab === "graph" ? "active" : ""}
+              onClick={() => setWorkspaceTab("graph")}
+              role="tab"
+              type="button"
+            >
+              <Network size={16} /> Graph
+            </button>
             <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
           </div>
           <div className="segmented locked-environment">
@@ -748,45 +783,53 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           ) : null}
         </div>
 
-        <div className="chat-log" aria-live="polite">
-          {attempt.trace.length === 0 ? (
-            <div className="empty">
-              <div>
-                <p>
-                  첫 프롬프트에서 정답을 바로 요구하기보다 목표, 제약, 산출물, 검증 기준을 먼저 잡아보세요.
-                </p>
-                <p className="muted">Mock provider는 API key 없이 동작합니다.</p>
-              </div>
-            </div>
-          ) : (
-            attempt.trace.map((event, index) => (
-              <article className={`message ${event.role}`} key={event.id}>
-                <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile.label}`}</strong>
-                {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
-                  <span className="trace-warning breakpoint">
-                    <GitBranch size={14} /> breakpoint
-                  </span>
-                ) : null}
-                <MarkdownContent content={event.content} />
-                {event.attachments && event.attachments.length > 0 ? (
-                  <div className="attachment-row">
-                    {event.attachments.map((attachment) => (
-                      <span className="attachment-chip" key={attachment.id}>
-                        <Paperclip size={14} />
-                        {attachment.name}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-                <div className="actions">
-                  <button className="button" onClick={() => branchFrom(index)} title="이 지점에서 replay branch 생성">
-                    <GitBranch size={15} /> Branch
-                  </button>
+        {workspaceTab === "chat" ? (
+          <div className="chat-log" aria-live="polite">
+            {attempt.trace.length === 0 ? (
+              <div className="empty">
+                <div>
+                  <p>
+                    첫 프롬프트에서 정답을 바로 요구하기보다 목표, 제약, 산출물, 검증 기준을 먼저 잡아보세요.
+                  </p>
+                  <p className="muted">Mock provider는 API key 없이 동작합니다.</p>
                 </div>
-              </article>
-            ))
-          )}
-        </div>
+              </div>
+            ) : (
+              attempt.trace.map((event, index) => (
+                <article className={`message ${event.role}`} key={event.id}>
+                  <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile.label}`}</strong>
+                  {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
+                    <span className="trace-warning breakpoint">
+                      <GitBranch size={14} /> breakpoint
+                    </span>
+                  ) : null}
+                  <MarkdownContent content={event.content} />
+                  {event.attachments && event.attachments.length > 0 ? (
+                    <div className="attachment-row">
+                      {event.attachments.map((attachment) => (
+                        <span className="attachment-chip" key={attachment.id}>
+                          <Paperclip size={14} />
+                          {attachment.name}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+                  <div className="actions">
+                    <button className="button" onClick={() => branchFrom(index)} title="이 지점에서 replay branch 생성">
+                      <GitBranch size={15} /> Branch
+                    </button>
+                  </div>
+                </article>
+              ))
+            )}
+          </div>
+        ) : (
+          <div className="graph-tab-panel">
+            {conversationGraph ? (
+              <ConversationGraphView graph={conversationGraph} trace={attempt.trace} onBranchTraceEvent={branchFromTraceEvent} />
+            ) : null}
+          </div>
+        )}
 
         <div className="composer">
           <div

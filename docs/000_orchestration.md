@@ -45,6 +45,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
+- 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
+- Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 
@@ -74,6 +76,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
+- Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
@@ -173,15 +176,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/015_context_compiler_and_counterfactuals.md`: immutable trace 기반 context compiler와 branch diff/counterfactual judge 방향.
 - `docs/technical/plan/016_branch_diff_counterfactual_judge.md`: parent/child branch diff와 counterfactual judge 구현.
 - `docs/technical/plan/020_problem_prompt_playbooks.md`: 문제별 paste-ready prompt playbook.
+- `docs/technical/plan/021_conversation_graph_visual_tabs.md`: 풀이 화면 3D dual graph tab.
 
 다음 plan 후보:
 
-- `021_live_environment_smoke.md`
-- `022_llm_judge_calibration.md`
-- `023_admin_authoring_mvp.md`
-- `024_supabase_deployment_hardening.md`
-- `025_cost_guardrails.md`
-- `026_comment_moderation_and_privacy.md`
+- `022_live_environment_smoke.md`
+- `023_llm_judge_calibration.md`
+- `024_admin_authoring_mvp.md`
+- `025_supabase_deployment_hardening.md`
+- `026_cost_guardrails.md`
+- `027_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
