@@ -1,36 +1,37 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { operationGuardrails } from "@/lib/constants";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 const providerSchema = z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]);
 
 const attachmentSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  mimeType: z.string(),
-  size: z.number(),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(180),
+  mimeType: z.string().min(1).max(160),
+  size: z.number().nonnegative().max(operationGuardrails.maxUploadBytes),
   source: z.enum(["problem_material", "upload"]),
-  materialId: z.string().optional(),
-  textContent: z.string().optional(),
-  dataUrl: z.string().optional(),
+  materialId: z.string().max(120).optional(),
+  textContent: z.string().max(operationGuardrails.maxAttachmentTextChars + 128).optional(),
+  dataUrl: z.string().max(operationGuardrails.maxAttachmentDataUrlChars).optional(),
   createdAt: z.string(),
 });
 
 const traceEventSchema = z.object({
-  id: z.string(),
-  attemptId: z.string(),
-  problemId: z.string(),
+  id: z.string().min(1).max(120),
+  attemptId: z.string().min(1).max(120),
+  problemId: z.string().min(1).max(120),
   role: z.enum(["user", "assistant", "system"]),
-  content: z.string(),
-  summary: z.string().optional(),
+  content: z.string().max(operationGuardrails.maxMessageContentChars),
+  summary: z.string().max(600).optional(),
   provider: providerSchema.optional(),
-  model: z.string().optional(),
+  model: z.string().max(operationGuardrails.maxModelNameChars).optional(),
   createdAt: z.string(),
   latencyMs: z.number().optional(),
   usageInputTokens: z.number().optional(),
   usageOutputTokens: z.number().optional(),
   estimatedCostUsd: z.number().optional(),
-  attachments: z.array(attachmentSchema).optional(),
+  attachments: z.array(attachmentSchema).max(operationGuardrails.maxAttachmentsPerMessage).optional(),
 });
 
 const judgeRunSchema = z.object({
@@ -38,13 +39,13 @@ const judgeRunSchema = z.object({
   attemptId: z.string(),
   status: z.enum(["pending", "running", "succeeded", "failed", "cancelled"]),
   judgeProvider: providerSchema,
-  judgeModel: z.string(),
+  judgeModel: z.string().max(operationGuardrails.maxModelNameChars),
   judgeKind: z.enum(["heuristic", "llm"]),
   rubricVersion: z.string(),
   latencyMs: z.number().optional(),
   totalScore: z.number().optional(),
   axisScores: z.array(z.unknown()).optional(),
-  error: z.string().optional(),
+  error: z.string().max(1000).optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -54,50 +55,50 @@ const scoreReportSchema = z.object({
   attemptId: z.string(),
   problemId: z.string(),
   totalScore: z.number(),
-  axisScores: z.array(z.unknown()),
-  coachSummary: z.string(),
-  strengths: z.array(z.string()),
-  improvements: z.array(z.string()),
-  bottlenecks: z.array(z.unknown()),
-  workflow: z.array(z.unknown()),
-  nextPracticeTargets: z.array(z.string()),
+  axisScores: z.array(z.unknown()).max(12),
+  coachSummary: z.string().max(4000),
+  strengths: z.array(z.string().max(1200)).max(8),
+  improvements: z.array(z.string().max(1200)).max(8),
+  bottlenecks: z.array(z.unknown()).max(12),
+  workflow: z.array(z.unknown()).max(20),
+  nextPracticeTargets: z.array(z.string().max(1200)).max(8),
   judgeProvider: providerSchema,
-  judgeModel: z.string(),
+  judgeModel: z.string().max(operationGuardrails.maxModelNameChars),
   judgeMode: z.enum(["heuristic", "llm", "ensemble"]).optional(),
-  judgeRuns: z.array(judgeRunSchema).optional(),
-  judgeDisagreement: z.array(z.string()).optional(),
+  judgeRuns: z.array(judgeRunSchema).max(8).optional(),
+  judgeDisagreement: z.array(z.string().max(1200)).max(8).optional(),
   createdAt: z.string(),
 });
 
 const problemSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  subtitle: z.string(),
+  id: z.string().min(1).max(120),
+  title: z.string().min(1).max(220),
+  subtitle: z.string().max(500),
   category: z.string(),
   difficulty: z.string(),
   goalProfile: z.string(),
   estimatedMinutes: z.number(),
-  statement: z.string(),
-  userGoal: z.string(),
-  constraints: z.array(z.string()),
-  starterContext: z.array(z.string()),
-  deliverables: z.array(z.string()),
-  materials: z.array(z.unknown()),
-  allowedProviders: z.array(providerSchema),
-  rubric: z.array(z.unknown()),
+  statement: z.string().max(8000),
+  userGoal: z.string().max(4000),
+  constraints: z.array(z.string().max(1200)).max(20),
+  starterContext: z.array(z.string().max(1200)).max(20),
+  deliverables: z.array(z.string().max(1200)).max(20),
+  materials: z.array(z.unknown()).max(20),
+  allowedProviders: z.array(providerSchema).max(8),
+  rubric: z.array(z.unknown()).max(20),
   createdAt: z.string(),
 });
 
 const attemptSchema = z.object({
-  id: z.string(),
-  problemId: z.string(),
-  userId: z.string(),
+  id: z.string().min(1).max(120),
+  problemId: z.string().min(1).max(120),
+  userId: z.string().min(1).max(120),
   status: z.enum(["draft", "submitted", "judged", "published"]),
-  title: z.string(),
+  title: z.string().min(1).max(220),
   provider: providerSchema,
-  model: z.string(),
-  trace: z.array(traceEventSchema),
-  finalAnswer: z.string().optional(),
+  model: z.string().max(operationGuardrails.maxModelNameChars),
+  trace: z.array(traceEventSchema).max(operationGuardrails.maxTraceEventsPerJudge),
+  finalAnswer: z.string().max(operationGuardrails.maxFinalAnswerChars).optional(),
   scoreReport: scoreReportSchema.optional(),
   publishedAt: z.string().optional(),
   createdAt: z.string(),
@@ -110,7 +111,14 @@ const syncSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const parsed = syncSchema.safeParse(await request.json());
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = syncSchema.safeParse(body);
 
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });

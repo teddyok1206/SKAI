@@ -28,6 +28,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
+- 문제 자료 카드를 composer로 드래그하면 다음 프롬프트 첨부로 들어간다.
+- API route에는 message/trace/attachment/comment 크기 제한과 provider 허용 검사가 들어갔다.
 - 영수증 이미지, 이체 내역, CSV 같은 demo material이 있다.
 - 특정 trace 지점에서 branch restart가 가능하다.
 - theme selector와 3개 디자인 옵션이 있다.
@@ -59,6 +61,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
+- SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
@@ -141,15 +144,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/009_judge_system_foundation.md`: heuristic/LLM/ensemble judge pipeline과 judge metadata 준비.
 - `docs/technical/plan/010_shared_attempt_information_architecture.md`: 공유 풀이 화면의 workflow, prompt skeleton, bottleneck, raw transcript 정보 구조 강화.
 - `docs/technical/plan/011_shared_attempt_discussion.md`: prompt skeleton 카드별 댓글과 답글 thread 구현.
+- `docs/technical/plan/012_material_drag_drop_and_saas_hardening.md`: 자료 drag-and-drop 첨부와 API/업로드/comment guardrail 보강.
 
 다음 plan 후보:
 
-- `012_live_environment_smoke.md`
-- `013_llm_judge_calibration.md`
-- `014_admin_authoring_mvp.md`
-- `015_supabase_deployment_hardening.md`
-- `016_cost_guardrails.md`
-- `017_comment_moderation_and_privacy.md`
+- `013_live_environment_smoke.md`
+- `014_llm_judge_calibration.md`
+- `015_admin_authoring_mvp.md`
+- `016_supabase_deployment_hardening.md`
+- `017_cost_guardrails.md`
+- `018_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

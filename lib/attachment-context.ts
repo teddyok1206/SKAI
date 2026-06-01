@@ -1,4 +1,11 @@
 import type { AttemptAttachment, ProblemMaterial } from "@/lib/types";
+import { operationGuardrails } from "@/lib/constants";
+
+function clippedText(value: string) {
+  return value.length > operationGuardrails.maxAttachmentTextChars
+    ? `${value.slice(0, operationGuardrails.maxAttachmentTextChars)}\n[SKAI clipped attachment text for safety.]`
+    : value;
+}
 
 export function attachmentFromMaterial(material: ProblemMaterial): AttemptAttachment {
   return {
@@ -8,7 +15,7 @@ export function attachmentFromMaterial(material: ProblemMaterial): AttemptAttach
     size: material.extractedText.length,
     source: "problem_material",
     materialId: material.id,
-    textContent: material.extractedText,
+    textContent: clippedText(material.extractedText),
     createdAt: new Date().toISOString(),
   };
 }
@@ -46,6 +53,10 @@ export function isTextLikeFile(file: File) {
 }
 
 export async function attachmentFromFile(file: File): Promise<AttemptAttachment> {
+  if (file.size > operationGuardrails.maxUploadBytes) {
+    throw new Error(`${file.name} is larger than the SKAI demo upload limit.`);
+  }
+
   const base = {
     id: crypto.randomUUID(),
     name: file.name,
@@ -58,7 +69,7 @@ export async function attachmentFromFile(file: File): Promise<AttemptAttachment>
   if (isTextLikeFile(file)) {
     return {
       ...base,
-      textContent: await file.text(),
+      textContent: clippedText(await file.text()),
     };
   }
 
@@ -70,6 +81,10 @@ export async function attachmentFromFile(file: File): Promise<AttemptAttachment>
       reader.readAsDataURL(file);
     });
 
+    if (dataUrl.length > operationGuardrails.maxAttachmentDataUrlChars) {
+      throw new Error(`${file.name} image payload is too large for this demo.`);
+    }
+
     return {
       ...base,
       dataUrl,
@@ -79,7 +94,8 @@ export async function attachmentFromFile(file: File): Promise<AttemptAttachment>
 
   return {
     ...base,
-    textContent: `[Uploaded binary file: ${file.name}, ${file.type || "unknown MIME"}, ${file.size} bytes. Parser not yet available in MVP.]`,
+    textContent: clippedText(
+      `[Uploaded binary file: ${file.name}, ${file.type || "unknown MIME"}, ${file.size} bytes. Parser not yet available in MVP.]`,
+    ),
   };
 }
-

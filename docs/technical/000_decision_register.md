@@ -62,6 +62,8 @@
 | TDR-056 | Judge architecture | Build a repeatable judge pipeline before any Codex-backed agent judge | Accepted | 채점은 반복 가능성, 구조화 출력, judge run 기록, disagreement 추적이 우선이며 Codex judge는 local research spike로 분리해야 함 | 2026-06-01 |
 | TDR-057 | Shared attempt IA | Show workflow, prompt skeleton, and bottlenecks before raw transcript | Accepted | SKAI 공유 화면은 프롬프트 원문보다 문제 구조화와 task 배분 흐름을 먼저 학습시키는 공간이어야 함 | 2026-06-01 |
 | TDR-058 | Prompt discussion anchor | Attach comments to trace events, not only whole attempts | Accepted | 학습 커뮤니티의 핵심 질문은 특정 프롬프트 지점의 문제정의, 세분화, 검증, 수정 판단에 달려 있음 | 2026-06-01 |
+| TDR-059 | Material drag attachment | Official materials can be dragged into the composer as prompt attachments | Accepted | 자료를 선택하는 행위 자체가 현실 문제 풀이와 평가 trace의 일부이므로 AI workspace처럼 자연스러워야 함 | 2026-06-01 |
+| TDR-060 | MVP API guardrails | Reject oversized or invalid request shapes before model/provider/database paths | Accepted | SaaS 운영 관점에서 데모라도 payload, attachment, provider, comment target 검증은 초기에 넣어야 함 | 2026-06-01 |
 
 ## Decision Template
 

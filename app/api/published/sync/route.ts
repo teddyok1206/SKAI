@@ -1,22 +1,30 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { operationGuardrails } from "@/lib/constants";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 const publishedSchema = z.object({
   published: z.object({
-    id: z.string(),
-    attemptId: z.string(),
-    problemId: z.string(),
-    title: z.string(),
-    workflow: z.array(z.unknown()),
-    trace: z.array(z.unknown()),
+    id: z.string().min(1).max(120),
+    attemptId: z.string().min(1).max(120),
+    problemId: z.string().min(1).max(120),
+    title: z.string().min(1).max(220),
+    workflow: z.array(z.unknown()).max(20),
+    trace: z.array(z.unknown()).max(operationGuardrails.maxTraceEventsPerJudge),
     scoreReport: z.unknown(),
     createdAt: z.string(),
   }),
 });
 
 export async function POST(request: Request) {
-  const parsed = publishedSchema.safeParse(await request.json());
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = publishedSchema.safeParse(body);
 
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
@@ -37,6 +45,11 @@ export async function POST(request: Request) {
   }
 
   const { published } = parsed.data;
+
+  if (JSON.stringify(published).length > operationGuardrails.maxPublishedSnapshotChars) {
+    return NextResponse.json({ error: "Published attempt snapshot is too large." }, { status: 413 });
+  }
+
   const result = await supabase.from("published_attempts").upsert({
     id: published.id,
     attempt_id: published.attemptId,
@@ -53,4 +66,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ mode: "supabase", synced: true });
 }
-

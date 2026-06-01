@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import type { DragEvent } from "react";
 import Link from "next/link";
 import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
-import { budgetGuardrails } from "@/lib/constants";
+import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import {
   getInteractionEnvironment,
   interactionEnvironments,
@@ -16,6 +17,8 @@ import { providerUiProfiles } from "@/lib/provider-ui";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
 import type { Attempt, AttemptAttachment, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
+
+const materialDragDataType = "application/x-skai-material-id";
 
 function newAttempt(problem: Problem, environment: InteractionEnvironment = getInteractionEnvironment("skai-practice")): Attempt {
   const now = new Date().toISOString();
@@ -72,7 +75,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [shareUrl, setShareUrl] = useState("");
   const [selectedAttachments, setSelectedAttachments] = useState<AttemptAttachment[]>([]);
   const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? "");
-  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const [isDraggingAttachment, setIsDraggingAttachment] = useState(false);
+  const [attachmentNotice, setAttachmentNotice] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedEnvironment = useMemo(() => getInteractionEnvironment(environmentId), [environmentId]);
@@ -87,6 +91,30 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     0,
   ) ?? 0;
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
+
+  function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {
+    const next = [...current];
+
+    for (const attachment of incoming) {
+      const alreadySelected =
+        attachment.source === "problem_material" && attachment.materialId
+          ? next.some((item) => item.source === "problem_material" && item.materialId === attachment.materialId)
+          : next.some((item) => item.id === attachment.id);
+
+      if (alreadySelected) {
+        continue;
+      }
+
+      if (next.length >= operationGuardrails.maxAttachmentsPerMessage) {
+        setAttachmentNotice(`첨부는 한 번에 최대 ${operationGuardrails.maxAttachmentsPerMessage}개까지 가능합니다.`);
+        break;
+      }
+
+      next.push(attachment);
+    }
+
+    return next;
+  }
 
   function updateAttempt(next: Attempt) {
     setAttempt(next);
@@ -123,17 +151,58 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         return current.filter((item) => item.materialId !== material.id);
       }
 
-      return [...current, attachmentFromMaterial(material)];
+      setAttachmentNotice("");
+      return mergeAttachments(current, [attachmentFromMaterial(material)]);
     });
   }
 
+  function addMaterialAttachment(materialId: string) {
+    const material = problem.materials.find((item) => item.id === materialId);
+    if (!material) {
+      return;
+    }
+
+    setAttachmentNotice("");
+    setSelectedAttachments((current) => mergeAttachments(current, [attachmentFromMaterial(material)]));
+  }
+
   async function addFiles(files: FileList | File[]) {
-    const next = await Promise.all(Array.from(files).map((file) => attachmentFromFile(file)));
-    setSelectedAttachments((current) => [...current, ...next]);
+    const incomingFiles = Array.from(files);
+
+    if (incomingFiles.length === 0) {
+      return;
+    }
+
+    try {
+      setAttachmentNotice("");
+      const next = await Promise.all(incomingFiles.map((file) => attachmentFromFile(file)));
+      setSelectedAttachments((current) => mergeAttachments(current, next));
+    } catch (error) {
+      setAttachmentNotice(error instanceof Error ? error.message : "파일을 첨부하지 못했습니다.");
+    }
   }
 
   function removeAttachment(attachmentId: string) {
     setSelectedAttachments((current) => current.filter((item) => item.id !== attachmentId));
+  }
+
+  function dragMaterial(event: DragEvent, materialId: string) {
+    event.dataTransfer.effectAllowed = "copy";
+    event.dataTransfer.setData(materialDragDataType, materialId);
+    event.dataTransfer.setData("text/plain", materialId);
+  }
+
+  function handleAttachmentDrop(event: DragEvent) {
+    event.preventDefault();
+    setIsDraggingAttachment(false);
+
+    const materialId = event.dataTransfer.getData(materialDragDataType);
+    if (materialId) {
+      addMaterialAttachment(materialId);
+      return;
+    }
+
+    void addFiles(event.dataTransfer.files);
   }
 
   async function sendMessage() {
@@ -472,8 +541,11 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 return (
                   <button
                     className={`material-button ${activeMaterialId === material.id ? "active" : ""}`}
+                    draggable
                     key={material.id}
                     onClick={() => setActiveMaterialId(material.id)}
+                    onDragEnd={() => setIsDraggingAttachment(false)}
+                    onDragStart={(event) => dragMaterial(event, material.id)}
                     type="button"
                   >
                     <span>
@@ -592,26 +664,26 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
         <div className="composer">
           <div
-            className={`dropzone ${isDraggingFile ? "active" : ""}`}
+            className={`dropzone ${isDraggingAttachment ? "active" : ""}`}
             onDragEnter={(event) => {
               event.preventDefault();
-              setIsDraggingFile(true);
+              setIsDraggingAttachment(true);
             }}
             onDragOver={(event) => {
               event.preventDefault();
-              setIsDraggingFile(true);
+              event.dataTransfer.dropEffect = "copy";
+              setIsDraggingAttachment(true);
             }}
-            onDragLeave={() => setIsDraggingFile(false)}
-            onDrop={(event) => {
-              event.preventDefault();
-              setIsDraggingFile(false);
-              void addFiles(event.dataTransfer.files);
-            }}
+            onDragLeave={() => setIsDraggingAttachment(false)}
+            onDrop={handleAttachmentDrop}
           >
             <button className="button" type="button" onClick={() => fileInputRef.current?.click()}>
               <FilePlus2 size={16} /> 파일 추가
             </button>
-            <span className="muted">문제 자료를 선택하거나 파일을 드래그해 다음 프롬프트에 첨부합니다.</span>
+            <span className="muted">
+              자료 카드를 끌어오거나 파일을 드래그해 다음 프롬프트에 첨부합니다. 최대 {operationGuardrails.maxAttachmentsPerMessage}개 · 파일당{" "}
+              {Math.round(operationGuardrails.maxUploadBytes / 1_000_000)}MB
+            </span>
             <input
               ref={fileInputRef}
               multiple
@@ -625,6 +697,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               }}
             />
           </div>
+          {attachmentNotice ? <p className="attachment-notice">{attachmentNotice}</p> : null}
           {selectedAttachments.length > 0 ? (
             <div className="attachment-row">
               {selectedAttachments.map((attachment) => (
