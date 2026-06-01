@@ -57,18 +57,22 @@ export function createOpenAICompatibleProvider(options: OpenAICompatibleProvider
 
       const startedAt = Date.now();
       const messages: OpenAICompatibleMessage[] = [
-        {
-          role: "system",
-          content:
-            request.systemPrompt ??
-            "You are the in-app assistant for SKAI, a platform for practicing AI orchestration. Help the user define, decompose, delegate, verify, and produce the requested artifact. Be concrete and structured. If files are attached, explicitly separate file evidence from assumptions.",
-        },
-        {
-          role: "user",
-          content:
-            request.contextMessage ??
-            `Problem:\n${request.problem.statement}\n\nConstraints:\n${request.problem.constraints.join("\n")}`,
-        },
+        ...(request.systemPrompt
+          ? [
+              {
+                role: "system" as const,
+                content: request.systemPrompt,
+              },
+            ]
+          : []),
+        ...(request.contextMessage
+          ? [
+              {
+                role: "user" as const,
+                content: request.contextMessage,
+              },
+            ]
+          : []),
         ...request.messages.map((message): OpenAICompatibleMessage => {
           const attachmentContext = buildAttachmentContext(message.attachments);
           const text = attachmentContext

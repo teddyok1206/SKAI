@@ -8,28 +8,37 @@ AI API context is not storage.
 
 SKAI's canonical state is the immutable attempt trace plus branch metadata. Every provider call should receive a freshly materialized context compiled from that state.
 
-This means "delete" and "restore" are runtime compilation behaviors:
+For live user chat, "compiled context" means selected visible trace messages only. SKAI does not add hidden system prompts or hidden problem background to the learner's model call.
+
+## Live Chat Contract
+
+`/api/chat` sends the provider only:
+
+- visible user and assistant messages from the current attempt or branch path,
+- files/materials the user explicitly attached to those messages,
+- image parts for attached images when the provider adapter supports multimodal input.
+
+`/api/chat` does not send:
+
+- SKAI system prompt,
+- problem statement,
+- starter context,
+- rubric,
+- material catalog unless the user attached that material,
+- branch metadata as natural-language prompt text.
+
+This makes Gemini/Groq/xAI behave like a real cold-start LLM conversation from the user's perspective.
+
+## Context Management
+
+SKAI still manages context outside the live model prompt:
 
 - Delete: do not include events outside the current attempt/branch path in the provider request.
 - Restore: recompile the provider request from the selected attempt trace.
+- Breakpoint replay: create a child trace that represents the branch path, then send that child trace.
+- Pruning: send only the newest bounded visible trace messages.
 
 The underlying trace is not deleted or rewritten.
-
-## Cold-Start Definition
-
-Cold-start in SKAI means the provider should not rely on hidden provider-side memory, account personalization, or opaque threads.
-
-It does not mean the model receives an empty prompt. SKAI intentionally materializes declared exercise context so that the model can solve the selected problem:
-
-- problem statement,
-- user goal,
-- constraints,
-- deliverables,
-- starter context,
-- material catalog,
-- branch and lineage metadata.
-
-The critical product rule is transparency: the user should be able to inspect the exact context SKAI added before the latest prompt.
 
 ## Why
 
@@ -43,7 +52,7 @@ Provider-native threads are convenient, but they are the wrong canonical state f
 - provider switching,
 - cold-start comparability.
 
-SKAI should be able to reconstruct a provider request without relying on hidden provider memory.
+SKAI should be able to reconstruct a provider request without relying on hidden provider memory, while also avoiding hidden SKAI steering in the learner's live model call.
 
 ## MVP Compiler
 
@@ -53,63 +62,51 @@ Current module:
 
 Inputs:
 
-- problem,
-- trace-like chat messages,
-- optional branch metadata.
+- visible trace-like chat messages,
+- optional branch metadata for SKAI-side compile metadata.
 
 Outputs:
 
-- system prompt,
-- context message marked as `SKAI BACKGROUND CONTEXT`,
 - bounded provider messages,
 - compile metadata.
-- debug snapshot for UI inspection.
 
-The context message includes:
+The metadata includes:
 
-- an instruction that this is background, not the active user request,
-- problem statement,
-- user goal,
-- constraints,
-- deliverables,
-- starter context,
-- material catalog,
-- branch replay metadata,
-- source trace lineage for copied/replacement events,
-- explicit pruning notice if older messages were excluded.
+- materialized timestamp,
+- source message count,
+- provider message count,
+- omitted message count,
+- branch ids for SKAI-side debugging and analytics.
 
-The provider message order is:
+## Internal Judge Exception
 
-1. SKAI system prompt.
-2. SKAI background context as a user-role message for broad provider compatibility.
-3. Attempt trace messages, where the latest user message is the active instruction.
+Judge and counterfactual judge flows are not the learner's live model conversation. They may still use explicit system/context prompts because their job is to evaluate an attempt against a rubric.
 
-The adapter may append normalized attachment text to user trace messages and may pass image attachments as multimodal image parts.
+This exception must not leak into `/api/chat`.
 
 ## Branch Replay Semantics
 
 In a branch attempt, the compiler receives only the child attempt trace. Parent trace events are not restored from provider memory.
 
-Parent linkage appears as metadata:
+Parent linkage remains in SKAI storage:
 
 - `branch.parentAttemptId`
 - `branch.parentTraceEventId`
 - `message.sourceTraceEventId`
 - `message.branchId`
 
-This lets the model know whether the current prompt is replacing a parent prompt or reacting to a copied parent response, while the provider only sees the current branch path.
+The live provider does not need this metadata unless it appears in visible user text.
 
 ## Complexity
 
-- Compile time: `O(n + m)`.
-- Message lookup: array pass only.
+- Compile time: `O(n)`.
+- Message lookup: array slice only.
 - Storage: no new provider context storage.
-- Runtime memory: bounded by max provider messages and material catalog size.
+- Runtime memory: bounded by max provider messages and attached material size.
 
 Later, the compiler can add:
 
-- graph-aware compression,
-- checkpoint summaries,
-- material node selection,
-- provider-specific context packing,
-- token-budget-aware pruning.
+- graph-aware compression of visible prior turns,
+- checkpoint summaries generated from visible trace,
+- material node selection controlled by user attachment,
+- provider-specific token-budget packing.

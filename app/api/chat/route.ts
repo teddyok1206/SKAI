@@ -68,7 +68,6 @@ export async function POST(request: Request) {
 
   try {
     const compiledContext = compileProviderContext({
-      problem,
       messages: parsed.data.messages,
       branch: parsed.data.branch,
     });
@@ -77,14 +76,9 @@ export async function POST(request: Request) {
       model: parsed.data.model,
       problem,
       messages: compiledContext.messages,
-      systemPrompt: compiledContext.systemPrompt,
-      contextMessage: compiledContext.contextMessage,
     });
 
-    return NextResponse.json({
-      ...response,
-      contextDebug: compiledContext.debugSnapshot,
-    });
+    return NextResponse.json(response);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Provider request failed." },

@@ -2,6 +2,8 @@
 
 Date: 2026-06-02
 
+Status: Superseded by `018_strict_cold_start_chat_context.md` for the live chat runtime. Markdown/LaTeX rendering remains valid, but user-facing context debug and hidden SKAI background injection were rejected as product behavior.
+
 ## Goal
 
 Fix two smoke-test issues found in a live problem attempt:

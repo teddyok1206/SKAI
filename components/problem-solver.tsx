@@ -19,7 +19,6 @@ import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/sup
 import type {
   Attempt,
   AttemptAttachment,
-  ContextDebugSnapshot,
   CounterfactualJudgeReport,
   ModelRun,
   Problem,
@@ -27,7 +26,6 @@ import type {
   ScoreReport,
   TraceEvent,
 } from "@/lib/types";
-import { ContextDebugPanel } from "@/components/context-debug-panel";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 
@@ -60,7 +58,6 @@ function makeTraceEvent(input: {
   attachments?: AttemptAttachment[];
   sourceTraceEventId?: string;
   branchId?: string;
-  contextDebug?: ContextDebugSnapshot;
 }): TraceEvent {
   return {
     id: crypto.randomUUID(),
@@ -78,7 +75,6 @@ function makeTraceEvent(input: {
     attachments: input.attachments,
     sourceTraceEventId: input.sourceTraceEventId,
     branchId: input.branchId,
-    contextDebug: input.contextDebug,
   };
 }
 
@@ -291,7 +287,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         throw new Error(await response.text());
       }
 
-      const data = (await response.json()) as { message: string; modelRun: ModelRun; contextDebug?: ContextDebugSnapshot };
+      const data = (await response.json()) as { message: string; modelRun: ModelRun };
       const assistantEvent = makeTraceEvent({
         attemptId: attempt.id,
         problemId: problem.id,
@@ -301,7 +297,6 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         model: data.modelRun.model,
         modelRun: data.modelRun,
         branchId: attempt.branch?.id,
-        contextDebug: data.contextDebug,
       });
 
       updateAttempt({
@@ -377,7 +372,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     }
 
     const publicTrace = attempt.trace.map((event) => {
-      const publicEvent = { ...event };
+      const publicEvent: TraceEvent & { contextDebug?: unknown } = { ...event };
       delete publicEvent.contextDebug;
       return publicEvent;
     });
@@ -737,7 +732,6 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   </span>
                 ) : null}
                 <MarkdownContent content={event.content} />
-                {event.role === "assistant" ? <ContextDebugPanel snapshot={event.contextDebug} /> : null}
                 {event.attachments && event.attachments.length > 0 ? (
                   <div className="attachment-row">
                     {event.attachments.map((attachment) => (
