@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Paperclip, Route, Send, Workflow } from "lucide-react";
 import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
+import { buildConversationGraph } from "@/lib/conversation-graph";
 import {
   createPromptCommentInSupabase,
   loadPromptCommentsFromSupabase,
@@ -93,6 +94,14 @@ function mergeComments(comments: PromptComment[]) {
   );
 }
 
+const taskStatusLabels = {
+  pending: "Pending",
+  responded: "Responded",
+  material_used: "Material",
+  verification: "Verification",
+  bottleneck: "Bottleneck",
+} as const;
+
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const attempt = useSyncExternalStore<PublishedAttempt | null>(
     (onStoreChange) => {
@@ -166,6 +175,14 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const assistantEvents = publishedAttempt.trace.filter((event) => event.role === "assistant");
   const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
   const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
+  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport);
+  const graphNodeById = new Map(
+    [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
+  );
+  const graphStatusCounts = conversationGraph.pairs.reduce<Record<string, number>>((counts, pair) => {
+    counts[pair.status] = (counts[pair.status] ?? 0) + 1;
+    return counts;
+  }, {});
 
   async function submitComment(input: { traceEventId: string; parentId?: string }, event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -235,6 +252,74 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           <strong>{attempt.scoreReport.totalScore}</strong>
           <span>coach score</span>
         </div>
+      </section>
+
+      <section className="panel" style={{ marginTop: 16 }}>
+        <div className="panel-header">
+          <h2>
+            <GitBranch size={20} /> Dual Graph
+          </h2>
+          <p className="muted">Prompt nodes, response edges, response nodes, prompt edges, and task-status layer are derived from this trace.</p>
+        </div>
+        <div className="panel-body graph-overview">
+          <div className="graph-stat">
+            <strong>{conversationGraph.promptNodes.filter((node) => !node.synthetic).length}</strong>
+            <span>prompt nodes</span>
+          </div>
+          <div className="graph-stat">
+            <strong>{conversationGraph.responseNodes.filter((node) => !node.synthetic).length}</strong>
+            <span>response nodes</span>
+          </div>
+          <div className="graph-stat">
+            <strong>{conversationGraph.promptEdges.length + conversationGraph.responseEdges.length}</strong>
+            <span>dual edges</span>
+          </div>
+          <div className="graph-stat">
+            <strong>{conversationGraph.statusNodes.length}</strong>
+            <span>status layer</span>
+          </div>
+        </div>
+        <div className="panel-body graph-pair-list">
+          {conversationGraph.pairs.length === 0 ? (
+            <p className="muted">아직 graph로 변환할 prompt-response pair가 없습니다.</p>
+          ) : (
+            conversationGraph.pairs.map((pair) => {
+              const promptNode = graphNodeById.get(pair.promptNodeId);
+              const responseNode = pair.responseNodeId ? graphNodeById.get(pair.responseNodeId) : undefined;
+
+              return (
+                <article className="graph-pair" key={pair.id}>
+                  <div className="graph-pair-main">
+                    <span className={`graph-status ${pair.status}`}>{taskStatusLabels[pair.status]}</span>
+                    <div>
+                      <strong>{promptNode?.label ?? "Prompt"}</strong>
+                      <p>{promptNode?.summary}</p>
+                    </div>
+                    <span className="graph-arrow">→</span>
+                    <div>
+                      <strong>{responseNode?.label ?? "No response"}</strong>
+                      <p>{responseNode?.summary ?? "이 prompt에는 아직 response node가 없습니다."}</p>
+                    </div>
+                  </div>
+                  <p className="muted">
+                    sparse incidence: {conversationGraph.index.incidence[pair.promptNodeId]?.outgoing.length ?? 0} outgoing prompt edges ·{" "}
+                    {pair.responseNodeId ? (conversationGraph.index.incidence[pair.responseNodeId]?.incoming.length ?? 0) : 0} incoming response edges
+                  </p>
+                  {pair.statusReasons.length > 0 ? <p className="graph-reason">{pair.statusReasons.join(" / ")}</p> : null}
+                </article>
+              );
+            })
+          )}
+        </div>
+        {Object.keys(graphStatusCounts).length > 0 ? (
+          <div className="panel-body signal-row">
+            {Object.entries(graphStatusCounts).map(([status, count]) => (
+              <span className="signal-chip" key={status}>
+                {taskStatusLabels[status as keyof typeof taskStatusLabels] ?? status}: {count}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       <section className="panel">

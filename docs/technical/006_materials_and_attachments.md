@@ -19,6 +19,7 @@ Problem materials:
 - Are shown in the problem sidebar.
 - Can be opened in a viewer.
 - Can be selected for use in the next prompt.
+- Can be dragged into the composer dropzone as a visible next-prompt attachment.
 - Include extracted text so the backend can send the relevant content to mock and text-only providers.
 
 User uploads:
@@ -70,7 +71,21 @@ Add material-use scoring later. It should evaluate:
 - Whether extracted facts were verified.
 - Whether the user separated evidence from assumptions.
 
+## Graph Relationship
+
+Material attachments should be represented in the derived conversation graph.
+
+MVP behavior:
+
+- Materials are metadata on prompt nodes through `AttemptAttachment[]`.
+- Prompt-response pairs with attachments receive `material_used` task status unless a higher-priority status such as `bottleneck` or `verification` applies.
+
+Future behavior:
+
+- Official materials can become first-class graph nodes.
+- Edges can connect material nodes to prompt nodes that used them.
+- Judge reports can evaluate whether a material edge was relevant, missing, or misused.
+
 ## Current Limitation
 
 The MVP uses extracted text sidecars for official problem files. Full production-grade parsing for arbitrary PDFs, spreadsheets, and OCR is deferred.
-

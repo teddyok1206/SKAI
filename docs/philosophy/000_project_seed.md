@@ -51,6 +51,7 @@ If users can repeatedly solve realistic AI orchestration problems, receive struc
 - Users should be able to choose models like programmers choose languages.
 - Cold-start comparability matters.
 - Prompt traces can become shareable learning artifacts.
+- Prompt traces can be studied as directed orchestration graphs, where user prompts, model responses, task status, materials, and judge results form analyzable structure rather than disposable chat logs.
 - Quantification should be used where it is honest: token usage, elapsed time, context switches, schema validity, turn count, cost, and judge votes.
 - Not everything should be forced into a numeric score.
 - The incentive structure should eventually work for learners, developers, startups, big tech, HR teams, and business practitioners.
@@ -74,4 +75,3 @@ Everything else is secondary until this loop works.
 - Do not leak private prompt traces by default.
 - Do not build a beautiful platform before the judge loop works.
 - Do not make installation or account setup the first barrier for beginners.
-

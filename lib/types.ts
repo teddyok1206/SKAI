@@ -211,6 +211,66 @@ export interface PromptComment {
   createdAt: string;
 }
 
+export type ConversationGraphNodeKind = "prompt" | "response" | "task_status";
+export type ConversationGraphProjection = "prompt_graph" | "response_graph" | "status_layer";
+export type ConversationTaskStatus = "pending" | "responded" | "material_used" | "verification" | "bottleneck";
+
+export interface ConversationGraphNode {
+  id: string;
+  kind: ConversationGraphNodeKind;
+  traceEventId?: string;
+  pairId?: string;
+  label: string;
+  summary: string;
+  sequence: number;
+  synthetic?: boolean;
+}
+
+export interface ConversationGraphEdge {
+  id: string;
+  projection: ConversationGraphProjection;
+  sourceNodeId: string;
+  targetNodeId: string;
+  traceEventId?: string;
+  pairId?: string;
+  dualNodeId?: string;
+  label: string;
+  sequence: number;
+}
+
+export interface ConversationGraphPair {
+  id: string;
+  sequence: number;
+  promptNodeId: string;
+  responseNodeId?: string;
+  statusNodeId: string;
+  promptTraceEventId: string;
+  responseTraceEventId?: string;
+  status: ConversationTaskStatus;
+  statusReasons: string[];
+}
+
+export interface ConversationGraphIndex {
+  promptNodeByTraceEventId: Record<string, string>;
+  responseNodeByTraceEventId: Record<string, string>;
+  pairByPromptTraceEventId: Record<string, string>;
+  pairByResponseTraceEventId: Record<string, string>;
+  adjacency: Record<string, string[]>;
+  incidence: Record<string, { incoming: string[]; outgoing: string[] }>;
+}
+
+export interface ConversationGraph {
+  attemptId: string;
+  promptNodes: ConversationGraphNode[];
+  responseNodes: ConversationGraphNode[];
+  statusNodes: ConversationGraphNode[];
+  promptEdges: ConversationGraphEdge[];
+  responseEdges: ConversationGraphEdge[];
+  statusEdges: ConversationGraphEdge[];
+  pairs: ConversationGraphPair[];
+  index: ConversationGraphIndex;
+}
+
 export interface LeaderboardEntry {
   attemptId: string;
   problemId: string;

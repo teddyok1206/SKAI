@@ -64,6 +64,8 @@
 | TDR-058 | Prompt discussion anchor | Attach comments to trace events, not only whole attempts | Accepted | 학습 커뮤니티의 핵심 질문은 특정 프롬프트 지점의 문제정의, 세분화, 검증, 수정 판단에 달려 있음 | 2026-06-01 |
 | TDR-059 | Material drag attachment | Official materials can be dragged into the composer as prompt attachments | Accepted | 자료를 선택하는 행위 자체가 현실 문제 풀이와 평가 trace의 일부이므로 AI workspace처럼 자연스러워야 함 | 2026-06-01 |
 | TDR-060 | MVP API guardrails | Reject oversized or invalid request shapes before model/provider/database paths | Accepted | SaaS 운영 관점에서 데모라도 payload, attachment, provider, comment target 검증은 초기에 넣어야 함 | 2026-06-01 |
+| TDR-061 | Controlled attachment drop | Only the composer dropzone accepts material/file drop; prompt textarea drop is blocked | Accepted | 첨부 행위는 traceable UI action이어야 하며 textarea에 material id나 파일명이 우발적으로 삽입되면 평가 trace가 흐려짐 | 2026-06-01 |
+| TDR-062 | Dual graph trace model | Derive prompt graph, response graph, and task-status layer from flat traces | Accepted | SKAI의 핵심 학습 대상은 단일 프롬프트가 아니라 사용자의 directed orchestration flow이므로 graph 표현이 연구와 시각화에 적합함 | 2026-06-01 |
 
 ## Decision Template
 

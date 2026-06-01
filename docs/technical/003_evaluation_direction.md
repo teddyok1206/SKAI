@@ -117,6 +117,26 @@ Judge runs should store enough metadata to audit the result:
 - error if any,
 - disagreement notes across judge runs.
 
+## Graph-Based Evaluation
+
+SKAI attempts should be evaluable as a dual graph, not only as a transcript.
+
+Initial graph alignment:
+
+- Prompt nodes can receive process-quality annotations: framing, decomposition, instruction clarity, verification, adaptation.
+- Response nodes can receive output-quality annotations: usefulness, correctness, drift, missing constraints, hallucination risk.
+- Prompt-response pair status nodes can receive task-progress annotations: pending, responded, material-used, verification, bottleneck.
+
+Research direction:
+
+- Correlate graph motifs with rubric scores.
+- Detect high-cost context switching by repeated prompt-state resets.
+- Detect strong interventions by comparing response graph drift before and after user correction.
+- Compare models on the same prompt graph by response-node stability and quality.
+- Use graph branches for counterfactual evaluation and replay.
+
+The flat trace remains the canonical raw record. The graph is a derived evaluation and visualization layer until persistence is proven useful.
+
 ## Difficulty
 
 Difficulty can combine:

@@ -205,6 +205,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     void addFiles(event.dataTransfer.files);
   }
 
+  function blockPromptTextDrop(event: DragEvent<HTMLTextAreaElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer.dropEffect = "none";
+    setIsDraggingAttachment(false);
+  }
+
   async function sendMessage() {
     if (!attempt || !input.trim() || isLoading) {
       return;
@@ -716,6 +723,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             placeholder="AI에게 보낼 다음 지시를 작성하세요."
             value={input}
             onChange={(event) => setInput(event.target.value)}
+            onDragEnter={blockPromptTextDrop}
+            onDragOver={blockPromptTextDrop}
+            onDrop={blockPromptTextDrop}
             onKeyDown={(event) => {
               if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
                 void sendMessage();

@@ -29,6 +29,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
 - 문제 자료 카드를 composer로 드래그하면 다음 프롬프트 첨부로 들어간다.
+- 첨부 drag-and-drop은 composer dropzone에서만 처리되고 prompt textarea drop은 차단된다.
 - API route에는 message/trace/attachment/comment 크기 제한과 provider 허용 검사가 들어갔다.
 - 영수증 이미지, 이체 내역, CSV 같은 demo material이 있다.
 - 특정 trace 지점에서 branch restart가 가능하다.
@@ -40,11 +41,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
+- 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 
 현재 데모가 증명하는 것:
 
 - SKAI 안에서 문제를 풀며 AI와 대화하는 경험.
 - 전체 대화 trace를 평가 대상으로 삼는 구조.
+- flat trace를 prompt graph, response graph, status layer로 파생하는 구조.
 - 자료를 보고 선택하고 모델 입력에 포함하는 흐름.
 - process score와 final output score를 분리할 수 있는 기본 구조.
 - 공유 화면에서 workflow를 원문보다 먼저 보여주는 방향.
@@ -145,15 +148,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/010_shared_attempt_information_architecture.md`: 공유 풀이 화면의 workflow, prompt skeleton, bottleneck, raw transcript 정보 구조 강화.
 - `docs/technical/plan/011_shared_attempt_discussion.md`: prompt skeleton 카드별 댓글과 답글 thread 구현.
 - `docs/technical/plan/012_material_drag_drop_and_saas_hardening.md`: 자료 drag-and-drop 첨부와 API/업로드/comment guardrail 보강.
+- `docs/technical/plan/013_prompt_response_dual_graph.md`: textarea drop 차단과 prompt-response dual graph 파생 모델 구현.
 
 다음 plan 후보:
 
-- `013_live_environment_smoke.md`
-- `014_llm_judge_calibration.md`
-- `015_admin_authoring_mvp.md`
-- `016_supabase_deployment_hardening.md`
-- `017_cost_guardrails.md`
-- `018_comment_moderation_and_privacy.md`
+- `014_live_environment_smoke.md`
+- `015_llm_judge_calibration.md`
+- `016_admin_authoring_mvp.md`
+- `017_supabase_deployment_hardening.md`
+- `018_cost_guardrails.md`
+- `019_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
@@ -168,6 +172,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/000_decision_register.md`
 - `docs/technical/005_mvp_implementation_baseline.md`
 - `docs/technical/006_materials_and_attachments.md`
+- `docs/technical/007_dual_graph_trace_model.md`
 
 디자인:
 
