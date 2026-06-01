@@ -16,7 +16,16 @@ import {
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
 import { providerUiProfiles } from "@/lib/provider-ui";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
-import type { Attempt, AttemptAttachment, ModelRun, Problem, ProviderId, ScoreReport, TraceEvent } from "@/lib/types";
+import type {
+  Attempt,
+  AttemptAttachment,
+  CounterfactualJudgeReport,
+  ModelRun,
+  Problem,
+  ProviderId,
+  ScoreReport,
+  TraceEvent,
+} from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 const materialDragDataType = "application/x-skai-material-id";
@@ -96,6 +105,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     0,
   ) ?? 0;
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
+  const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
 
   function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {
     const next = [...current];
@@ -246,6 +256,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       provider,
       model,
       trace: nextTrace,
+      counterfactualReport: undefined,
       updatedAt: new Date().toISOString(),
     };
     updateAttempt(nextAttempt);
@@ -342,6 +353,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         status: "judged",
         finalAnswer,
         scoreReport,
+        counterfactualReport: undefined,
         updatedAt: new Date().toISOString(),
       });
     } finally {
@@ -367,6 +379,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       trace: attempt.trace,
       scoreReport: attempt.scoreReport,
       branch: attempt.branch,
+      counterfactualReport: attempt.counterfactualReport,
       createdAt: new Date().toISOString(),
     };
 
@@ -412,6 +425,48 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     if (saved) {
       setAttempt(saved);
       setFinalAnswer(saved.finalAnswer ?? "");
+    }
+  }
+
+  async function runCounterfactualJudge() {
+    if (!attempt?.branch) {
+      return;
+    }
+
+    const parent = getAttempt(attempt.branch.parentAttemptId);
+
+    if (!parent) {
+      setAttachmentNotice("Parent attempt를 찾을 수 없어 counterfactual judge를 실행할 수 없습니다.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/counterfactual-judge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          problemId: problem.id,
+          parentAttempt: parent,
+          childAttempt: attempt,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const report = (await response.json()) as CounterfactualJudgeReport;
+      updateAttempt({
+        ...attempt,
+        counterfactualReport: report,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      setAttachmentNotice(error instanceof Error ? error.message : "Counterfactual judge failed.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -802,6 +857,68 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             ) : null}
           </div>
         </div>
+      ) : null}
+
+      {attempt.branch ? (
+        <section className="panel" style={{ gridColumn: "1 / -1" }}>
+          <div className="panel-header">
+            <h2>
+              <GitBranch size={20} /> Branch Diff
+            </h2>
+            <p className="muted">parent attempt와 이 replay branch를 비교해 병목이 실제로 개선됐는지 봅니다.</p>
+          </div>
+          <div className="panel-body">
+            {parentAttempt ? (
+              <div className="branch-diff-grid">
+                <div className="diff-stat">
+                  <strong>Parent</strong>
+                  <span>{parentAttempt.trace.length} events · {parentAttempt.scoreReport?.totalScore ?? "unjudged"} score</span>
+                </div>
+                <div className="diff-stat">
+                  <strong>Child</strong>
+                  <span>{attempt.trace.length} events · {attempt.scoreReport?.totalScore ?? "unjudged"} score</span>
+                </div>
+                <div className="diff-stat">
+                  <strong>Breakpoint</strong>
+                  <span>trace {attempt.branch.parentTraceIndex + 1}</span>
+                </div>
+              </div>
+            ) : (
+              <p className="muted">Parent attempt를 local storage에서 찾을 수 없습니다.</p>
+            )}
+            <div className="actions" style={{ marginTop: 12 }}>
+              <button className="button primary" disabled={isLoading || !parentAttempt} onClick={() => void runCounterfactualJudge()}>
+                <GitBranch size={16} /> Run Counterfactual Judge
+              </button>
+            </div>
+          </div>
+          {attempt.counterfactualReport ? (
+            <div className="panel-body counterfactual-report">
+              <div className={`verdict-pill ${attempt.counterfactualReport.verdict}`}>
+                {attempt.counterfactualReport.verdict} · {attempt.counterfactualReport.confidence}% confidence
+              </div>
+              <p>{attempt.counterfactualReport.summary}</p>
+              <div className="branch-diff-grid">
+                <div className="diff-card">
+                  <strong>Prompt before</strong>
+                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? "No parent prompt found."}</p>
+                </div>
+                <div className="diff-card">
+                  <strong>Prompt after</strong>
+                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found yet."}</p>
+                </div>
+              </div>
+              <div className="signal-row">
+                {attempt.counterfactualReport.causalClaims.map((claim) => (
+                  <span className={`signal-chip claim-${claim.effect}`} key={`${claim.label}-${claim.effect}`}>
+                    {claim.label}: {claim.effect}
+                  </span>
+                ))}
+              </div>
+              <p className="muted">{attempt.counterfactualReport.nextReplaySuggestion}</p>
+            </div>
+          ) : null}
+        </section>
       ) : null}
     </div>
   );

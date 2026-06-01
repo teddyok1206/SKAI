@@ -13,6 +13,7 @@ const publishedSchema = z.object({
     trace: z.array(z.unknown()).max(operationGuardrails.maxTraceEventsPerJudge),
     scoreReport: z.unknown(),
     branch: z.unknown().optional(),
+    counterfactualReport: z.unknown().optional(),
     createdAt: z.string(),
   }),
 });

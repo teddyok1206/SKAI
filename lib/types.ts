@@ -133,6 +133,7 @@ export interface Attempt {
   finalAnswer?: string;
   scoreReport?: ScoreReport;
   branch?: AttemptBranch;
+  counterfactualReport?: CounterfactualJudgeReport;
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -217,6 +218,94 @@ export interface PublishedAttempt {
   trace: TraceEvent[];
   scoreReport: ScoreReport;
   branch?: AttemptBranch;
+  counterfactualReport?: CounterfactualJudgeReport;
+  createdAt: string;
+}
+
+export type CounterfactualVerdict = "improved" | "regressed" | "mixed" | "inconclusive";
+export type CounterfactualJudgeMode = "heuristic" | "llm";
+export type CounterfactualClaimEffect = "positive" | "negative" | "neutral" | "unknown";
+
+export interface BranchPromptChange {
+  beforeTraceEventId?: string;
+  afterTraceEventId?: string;
+  before?: string;
+  after?: string;
+  semanticDelta: string[];
+}
+
+export interface BranchResponseChange {
+  beforeTraceEventId?: string;
+  afterTraceEventId?: string;
+  before?: string;
+  after?: string;
+  observedChange: string[];
+}
+
+export interface BranchProcessDelta {
+  parentUserTurns: number;
+  childUserTurns: number;
+  turnDelta: number;
+  parentTokenEstimate: number;
+  childTokenEstimate: number;
+  tokenDelta: number;
+  parentAttachmentCount: number;
+  childAttachmentCount: number;
+  materialUseChanged: boolean;
+  verificationMovedEarlier: boolean;
+}
+
+export interface BranchAxisDelta {
+  axis: ScoreAxis;
+  label: string;
+  parentScore?: number;
+  childScore?: number;
+  delta?: number;
+}
+
+export interface BranchScoreDelta {
+  parentTotalScore?: number;
+  childTotalScore?: number;
+  totalDelta?: number;
+  axisDeltas: BranchAxisDelta[];
+}
+
+export interface BranchDiff {
+  id: string;
+  parentAttemptId: string;
+  childAttemptId: string;
+  breakpointTraceEventId: string;
+  breakpointRole?: TraceRole;
+  parentPairId?: string;
+  childPairId?: string;
+  promptChange?: BranchPromptChange;
+  responseChange?: BranchResponseChange;
+  processDelta: BranchProcessDelta;
+  scoreDelta?: BranchScoreDelta;
+  createdAt: string;
+}
+
+export interface CounterfactualCausalClaim {
+  label: string;
+  effect: CounterfactualClaimEffect;
+  evidence: string;
+}
+
+export interface CounterfactualJudgeReport {
+  id: string;
+  parentAttemptId: string;
+  childAttemptId: string;
+  diffId: string;
+  verdict: CounterfactualVerdict;
+  confidence: number;
+  judgeMode: CounterfactualJudgeMode;
+  judgeProvider: ProviderId;
+  judgeModel: string;
+  summary: string;
+  causalClaims: CounterfactualCausalClaim[];
+  risks: string[];
+  nextReplaySuggestion: string;
+  branchDiff: BranchDiff;
   createdAt: string;
 }
 

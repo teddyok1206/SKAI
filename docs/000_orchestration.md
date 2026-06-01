@@ -45,6 +45,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
+- parent/child branch diff와 counterfactual judge baseline이 있다.
 
 현재 데모가 증명하는 것:
 
@@ -54,6 +55,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - graph lookup을 위해 trace-event/node/pair dictionary와 sparse incidence index를 쓰는 구조.
 - breakpoint replay branch를 기존 3D dual graph의 prompt-response pair anchor로 표시하는 구조.
 - provider API context는 현재 attempt/branch path에서 재컴파일하는 구조.
+- branch attempt가 parent attempt와 비교되어 prompt/response/process/score delta를 산출하는 구조.
 - 자료를 보고 선택하고 모델 입력에 포함하는 흐름.
 - process score와 final output score를 분리할 수 있는 기본 구조.
 - 공유 화면에서 workflow를 원문보다 먼저 보여주는 방향.
@@ -70,8 +72,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
-- parent/child branch diff와 branch tree explorer는 아직 없다.
-- counterfactual judge는 아직 설계 문서 단계이며 endpoint/UI는 없다.
+- branch tree explorer는 아직 없다.
+- counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
@@ -129,12 +131,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다.
 - 완료 조건: live environment attempt마다 비용 추정치가 저장된다.
 
-우선순위 6: branch diff and counterfactual judge
+우선순위 6: branch tree explorer
 
-- parent/child branch pair를 찾아 orchestration diff를 계산한다.
-- breakpoint 전후 prompt change, response change, material use, verification timing, score delta를 구조화한다.
-- LLM judge가 "branch가 실제로 병목을 해결했는지"를 coach/strict mode로 평가하게 한다.
-- 완료 조건: 같은 parent attempt에서 나온 branch 1개에 대해 diff report가 생성된다.
+- parent attempt 아래의 여러 child branch를 한 화면에서 비교한다.
+- 어떤 breakpoint에서 어떤 branch가 갈라졌는지 tree/lineage로 보여준다.
+- 완료 조건: 한 parent에서 생성된 branch 2개 이상을 lineage view로 탐색한다.
 
 ## Decision Gates
 
@@ -166,15 +167,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/013_prompt_response_dual_graph.md`: textarea drop 차단과 prompt-response dual graph 파생 모델 구현.
 - `docs/technical/plan/014_breakpoint_branch_replay.md`: GDB-like breakpoint replay branch와 graph anchor 구현.
 - `docs/technical/plan/015_context_compiler_and_counterfactuals.md`: immutable trace 기반 context compiler와 branch diff/counterfactual judge 방향.
+- `docs/technical/plan/016_branch_diff_counterfactual_judge.md`: parent/child branch diff와 counterfactual judge 구현.
 
 다음 plan 후보:
 
-- `016_live_environment_smoke.md`
-- `017_llm_judge_calibration.md`
-- `018_admin_authoring_mvp.md`
-- `019_supabase_deployment_hardening.md`
-- `020_cost_guardrails.md`
-- `021_comment_moderation_and_privacy.md`
+- `017_live_environment_smoke.md`
+- `018_llm_judge_calibration.md`
+- `019_admin_authoring_mvp.md`
+- `020_supabase_deployment_hardening.md`
+- `021_cost_guardrails.md`
+- `022_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

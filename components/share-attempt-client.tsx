@@ -564,6 +564,41 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         </div>
       </section>
 
+      {attempt.counterfactualReport ? (
+        <section className="panel" style={{ marginTop: 16 }}>
+          <div className="panel-header">
+            <h2>
+              <GitBranch size={20} /> Counterfactual Judge
+            </h2>
+            <p className="muted">이 branch가 parent attempt의 병목을 실제로 바꿨는지 비교한 결과입니다.</p>
+          </div>
+          <div className="panel-body counterfactual-report">
+            <div className={`verdict-pill ${attempt.counterfactualReport.verdict}`}>
+              {attempt.counterfactualReport.verdict} · {attempt.counterfactualReport.confidence}% confidence
+            </div>
+            <p>{attempt.counterfactualReport.summary}</p>
+            <div className="branch-diff-grid">
+              <div className="diff-card">
+                <strong>Prompt before</strong>
+                <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? "No parent prompt found."}</p>
+              </div>
+              <div className="diff-card">
+                <strong>Prompt after</strong>
+                <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found."}</p>
+              </div>
+            </div>
+            <div className="signal-row">
+              {attempt.counterfactualReport.causalClaims.map((claim) => (
+                <span className={`signal-chip claim-${claim.effect}`} key={`${claim.label}-${claim.effect}`}>
+                  {claim.label}: {claim.effect}
+                </span>
+              ))}
+            </div>
+            <p className="muted">{attempt.counterfactualReport.nextReplaySuggestion}</p>
+          </div>
+        </section>
+      ) : null}
+
       <div style={{ marginTop: 16 }}>
         <ScoreReportCard report={attempt.scoreReport} showBottlenecks={false} />
       </div>

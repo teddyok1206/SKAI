@@ -90,16 +90,27 @@ Strict mode:
 
 ## Architecture
 
-MVP path:
+Current MVP path:
 
 1. Build parent graph.
 2. Build child graph.
 3. Locate breakpoint pair through `sourceTraceEventId`.
 4. Generate deterministic diff metrics.
-5. Ask LLM judge to explain the changed orchestration.
-6. Store diff/judge metadata separately from the original score report.
+5. Run heuristic counterfactual judge.
+6. Optionally run LLM counterfactual judge when `SKAI_COUNTERFACTUAL_JUDGE_MODE=llm`.
+7. Store diff/judge metadata separately from the original score report.
 
 The original judge report remains immutable. Counterfactual judge is a second-order evaluation over two attempts.
+
+## Current Implementation
+
+- `lib/branch-diff.ts`
+- `lib/counterfactual-judge.ts`
+- `app/api/counterfactual-judge/route.ts`
+- solve UI branch diff section
+- shared attempt counterfactual judge section
+
+The heuristic report works without API keys. LLM mode is opt-in and falls back to the heuristic report if the configured provider fails.
 
 ## Research Value
 

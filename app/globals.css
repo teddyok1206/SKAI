@@ -1004,6 +1004,81 @@ h3 {
   color: #705313;
 }
 
+.branch-diff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.diff-stat,
+.diff-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 12px;
+}
+
+.diff-stat strong,
+.diff-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.diff-stat span,
+.diff-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.counterfactual-report {
+  display: grid;
+  gap: 12px;
+}
+
+.verdict-pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.verdict-pill.improved {
+  border-color: color-mix(in srgb, var(--success) 28%, var(--line));
+  background: color-mix(in srgb, #e7f5ee 60%, #fff);
+  color: var(--success);
+}
+
+.verdict-pill.regressed {
+  border-color: color-mix(in srgb, var(--red) 28%, var(--line));
+  background: #fff0ed;
+  color: var(--red);
+}
+
+.verdict-pill.mixed {
+  border-color: color-mix(in srgb, var(--gold) 32%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 55%, #fff);
+  color: #705313;
+}
+
+.claim-positive {
+  background: color-mix(in srgb, #e7f5ee 70%, #fff);
+  color: var(--success);
+}
+
+.claim-negative {
+  background: #fff0ed;
+  color: var(--red);
+}
+
 .timeline-step,
 .prompt-skeleton {
   display: grid;
@@ -1286,6 +1361,10 @@ summary {
 
   .graph-overview {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .branch-diff-grid {
+    grid-template-columns: 1fr;
   }
 
   .graph-pair-main {
