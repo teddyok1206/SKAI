@@ -119,12 +119,30 @@ The graph stores sparse lookup structures:
 
 This gives the project the benefits of incidence matrices and dictionaries without forcing a heavy graph database in the demo.
 
+## Branch And Replay Compatibility
+
+Breakpoint replay must preserve this graph model.
+
+When a user branches from a trace event, SKAI creates a new child attempt with a copied trace prefix. The child trace events receive fresh IDs, while `sourceTraceEventId` points back to the parent trace event.
+
+User-prompt breakpoints stop before the selected prompt. The first replacement prompt in the child branch receives `sourceTraceEventId` pointing back to the parent prompt, which lets the graph mark the replacement pair as the breakpoint pair.
+
+The child attempt still builds the same three projections:
+
+- prompt graph,
+- response graph,
+- task-status layer.
+
+The breakpoint is marked on the matching prompt-response pair with `isBreakpoint`. It is not a fourth graph layer in the main attempt graph.
+
+This keeps the user-facing model stable while allowing later inter-attempt branch lineage analysis.
+
 ## MVP Implementation
 
 Current code:
 
 - `lib/conversation-graph.ts`
-- `buildConversationGraph(trace, scoreReport)`
+- `buildConversationGraph(trace, scoreReport, branch?)`
 - shared attempt page compact graph section
 
 The builder is intentionally sparse and single-pass oriented:
@@ -170,6 +188,7 @@ This representation can support prompt-engineering and harness-engineering resea
 - Compare models by response graph stability under the same prompt graph.
 - Locate high-impact user interventions.
 - Build counterfactual replay from graph branches.
+- Mark breakpoint replay anchors without changing the core prompt/response/status projections.
 - Cluster prompt strategies across users solving the same problem.
 
 ## Future Persistence

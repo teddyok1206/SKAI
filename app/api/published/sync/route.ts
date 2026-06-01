@@ -12,6 +12,7 @@ const publishedSchema = z.object({
     workflow: z.array(z.unknown()).max(20),
     trace: z.array(z.unknown()).max(operationGuardrails.maxTraceEventsPerJudge),
     scoreReport: z.unknown(),
+    branch: z.unknown().optional(),
     createdAt: z.string(),
   }),
 });

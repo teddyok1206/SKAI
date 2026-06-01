@@ -33,6 +33,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - API route에는 message/trace/attachment/comment 크기 제한과 provider 허용 검사가 들어갔다.
 - 영수증 이미지, 이체 내역, CSV 같은 demo material이 있다.
 - 특정 trace 지점에서 branch restart가 가능하다.
+- branch restart는 parent attempt를 파괴하지 않고 새 breakpoint replay attempt를 만든다.
 - theme selector와 3개 디자인 옵션이 있다.
 - Pretendard Variable + JetBrains Mono font system이 적용됐다.
 - provider별 chat surface mood가 적용됐다.
@@ -50,6 +51,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 전체 대화 trace를 평가 대상으로 삼는 구조.
 - flat trace를 prompt graph, response graph, status layer로 파생하는 구조.
 - graph lookup을 위해 trace-event/node/pair dictionary와 sparse incidence index를 쓰는 구조.
+- breakpoint replay branch를 기존 3D dual graph의 prompt-response pair anchor로 표시하는 구조.
 - 자료를 보고 선택하고 모델 입력에 포함하는 흐름.
 - process score와 final output score를 분리할 수 있는 기본 구조.
 - 공유 화면에서 workflow를 원문보다 먼저 보여주는 방향.
@@ -66,6 +68,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
+- parent/child branch diff와 branch tree explorer는 아직 없다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
@@ -151,15 +154,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/011_shared_attempt_discussion.md`: prompt skeleton 카드별 댓글과 답글 thread 구현.
 - `docs/technical/plan/012_material_drag_drop_and_saas_hardening.md`: 자료 drag-and-drop 첨부와 API/업로드/comment guardrail 보강.
 - `docs/technical/plan/013_prompt_response_dual_graph.md`: textarea drop 차단과 prompt-response dual graph 파생 모델 구현.
+- `docs/technical/plan/014_breakpoint_branch_replay.md`: GDB-like breakpoint replay branch와 graph anchor 구현.
 
 다음 plan 후보:
 
-- `014_live_environment_smoke.md`
-- `015_llm_judge_calibration.md`
-- `016_admin_authoring_mvp.md`
-- `017_supabase_deployment_hardening.md`
-- `018_cost_guardrails.md`
-- `019_comment_moderation_and_privacy.md`
+- `015_live_environment_smoke.md`
+- `016_llm_judge_calibration.md`
+- `017_admin_authoring_mvp.md`
+- `018_supabase_deployment_hardening.md`
+- `019_cost_guardrails.md`
+- `020_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
@@ -175,6 +179,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/005_mvp_implementation_baseline.md`
 - `docs/technical/006_materials_and_attachments.md`
 - `docs/technical/007_dual_graph_trace_model.md`
+- `docs/technical/008_breakpoint_branch_replay.md`
 
 디자인:
 

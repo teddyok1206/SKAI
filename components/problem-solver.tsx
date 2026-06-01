@@ -5,6 +5,7 @@ import type { DragEvent } from "react";
 import Link from "next/link";
 import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
+import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import {
   getInteractionEnvironment,
@@ -45,6 +46,8 @@ function makeTraceEvent(input: {
   model?: string;
   modelRun?: ModelRun;
   attachments?: AttemptAttachment[];
+  sourceTraceEventId?: string;
+  branchId?: string;
 }): TraceEvent {
   return {
     id: crypto.randomUUID(),
@@ -60,6 +63,8 @@ function makeTraceEvent(input: {
     usageOutputTokens: input.modelRun?.usageOutputTokens,
     estimatedCostUsd: input.modelRun?.estimatedCostUsd,
     attachments: input.attachments,
+    sourceTraceEventId: input.sourceTraceEventId,
+    branchId: input.branchId,
   };
 }
 
@@ -223,6 +228,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     }
 
     const clippedInput = input.slice(0, budgetGuardrails.maxInputCharsPerTurn);
+    const sourceTraceEventId = sourceTraceEventIdForNextBranchEvent(attempt, "user");
     const userEvent = makeTraceEvent({
       attemptId: attempt.id,
       problemId: problem.id,
@@ -231,6 +237,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       provider,
       model,
       attachments: selectedAttachments,
+      sourceTraceEventId,
+      branchId: attempt.branch?.id,
     });
     const nextTrace = [...attempt.trace, userEvent];
     const nextAttempt = {
@@ -273,6 +281,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         provider: data.modelRun.provider,
         model: data.modelRun.model,
         modelRun: data.modelRun,
+        branchId: attempt.branch?.id,
       });
 
       updateAttempt({
@@ -289,6 +298,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         content: `모델 호출에 실패했습니다.\n\n${error instanceof Error ? error.message : "Unknown error"}`,
         provider: "mock",
         model: "error",
+        branchId: attempt.branch?.id,
       });
       updateAttempt({
         ...nextAttempt,
@@ -353,6 +363,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       workflow: attempt.scoreReport.workflow,
       trace: attempt.trace,
       scoreReport: attempt.scoreReport,
+      branch: attempt.branch,
       createdAt: new Date().toISOString(),
     };
 
@@ -372,17 +383,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
-    const nextTrace = attempt.trace.slice(0, index + 1);
-    updateAttempt({
-      ...attempt,
-      status: "draft",
-      trace: nextTrace,
-      scoreReport: undefined,
-      finalAnswer: undefined,
-      updatedAt: new Date().toISOString(),
-    });
+    const nextAttempt = createBreakpointReplayAttempt({ attempt, traceIndex: index });
+    updateAttempt(nextAttempt);
     setFinalAnswer("");
+    setInput("");
     setShareUrl("");
+    setSelectedAttachments([]);
+    setAttachmentNotice("");
   }
 
   function restart() {
@@ -632,6 +639,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               {providerProfile.label} · {model}
             </span>
           </div>
+          {attempt.branch ? (
+            <div className="segmented branch-segment">
+              <GitBranch size={16} />
+              <strong>Breakpoint</strong>
+              <span className="environment-meta">trace {attempt.branch.parentTraceIndex + 1}</span>
+            </div>
+          ) : null}
         </div>
 
         <div className="chat-log" aria-live="polite">
@@ -648,6 +662,11 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             attempt.trace.map((event, index) => (
               <article className={`message ${event.role}`} key={event.id}>
                 <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile.label}`}</strong>
+                {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
+                  <span className="trace-warning breakpoint">
+                    <GitBranch size={14} /> breakpoint
+                  </span>
+                ) : null}
                 <p>{event.content}</p>
                 {event.attachments && event.attachments.length > 0 ? (
                   <div className="attachment-row">
@@ -660,7 +679,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   </div>
                 ) : null}
                 <div className="actions">
-                  <button className="button" onClick={() => branchFrom(index)} title="이 지점부터 다시 시작">
+                  <button className="button" onClick={() => branchFrom(index)} title="이 지점에서 replay branch 생성">
                     <GitBranch size={15} /> Branch
                   </button>
                 </div>

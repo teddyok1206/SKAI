@@ -1,5 +1,7 @@
 import type {
+  AttemptBranch,
   ConversationGraph,
+  ConversationGraphBranch,
   ConversationGraphEdge,
   ConversationGraphIndex,
   ConversationGraphNode,
@@ -76,12 +78,16 @@ function inferTaskStatus(
 
 function node(
   input: Pick<ConversationGraphNode, "id" | "kind" | "label" | "summary" | "sequence"> &
-    Partial<Pick<ConversationGraphNode, "traceEventId" | "pairId" | "synthetic">>,
+    Partial<Pick<ConversationGraphNode, "traceEventId" | "sourceTraceEventId" | "branchId" | "pairId" | "synthetic">>,
 ): ConversationGraphNode {
   return input;
 }
 
-export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreReport): ConversationGraph {
+export function buildConversationGraph(
+  trace: TraceEvent[],
+  scoreReport?: ScoreReport,
+  branch?: AttemptBranch,
+): ConversationGraph {
   const attemptId = trace[0]?.attemptId ?? scoreReport?.attemptId ?? "unknown-attempt";
   const promptNodes: ConversationGraphNode[] = [];
   const responseNodes: ConversationGraphNode[] = [];
@@ -122,6 +128,19 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
     synthetic: true,
   });
 
+  function isBranchBreakpoint(promptEvent: TraceEvent, responseEvent?: TraceEvent) {
+    if (!branch) {
+      return false;
+    }
+
+    return (
+      promptEvent.sourceTraceEventId === branch.parentTraceEventId ||
+      responseEvent?.sourceTraceEventId === branch.parentTraceEventId ||
+      promptEvent.id === branch.parentTraceEventId ||
+      responseEvent?.id === branch.parentTraceEventId
+    );
+  }
+
   function finalizePrompt(input: {
     promptEvent: TraceEvent;
     promptNodeId: string;
@@ -142,7 +161,9 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
     } = input;
     const pairId = `pair:${promptEvent.id}:${responseEvent?.id ?? "pending"}`;
     const inferred = inferTaskStatus(promptEvent, responseEvent, bottleneckByTraceEventId);
+    const isBreakpoint = isBranchBreakpoint(promptEvent, responseEvent);
     const statusNodeId = `status:${pairId}`;
+    const statusReasons = isBreakpoint ? [...inferred.reasons, "breakpoint replay anchor"] : inferred.reasons;
 
     statusNodes.push(
       node({
@@ -150,7 +171,7 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
         kind: "task_status",
         pairId,
         label: inferred.status,
-        summary: inferred.reasons.join("; "),
+        summary: statusReasons.join("; "),
         sequence: input.sequence,
       }),
     );
@@ -164,7 +185,8 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
       promptTraceEventId: promptEvent.id,
       responseTraceEventId: responseEvent?.id,
       status: inferred.status satisfies ConversationTaskStatus,
-      statusReasons: inferred.reasons,
+      statusReasons,
+      isBreakpoint,
     });
     pairByPromptTraceEventId[promptEvent.id] = pairId;
     if (responseEvent) {
@@ -229,6 +251,8 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
           id: promptNodeId,
           kind: "prompt",
           traceEventId: event.id,
+          sourceTraceEventId: event.sourceTraceEventId,
+          branchId: event.branchId,
           label: `Prompt ${promptSequence + 1}`,
           summary: compact(event.content),
           sequence: promptSequence,
@@ -264,6 +288,8 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
           id: responseNodeId,
           kind: "response",
           traceEventId: event.id,
+          sourceTraceEventId: event.sourceTraceEventId,
+          branchId: event.branchId,
           label: `Response ${responseSequence + 1}`,
           summary: compact(event.content),
           sequence: responseSequence,
@@ -319,6 +345,36 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
   [...allPromptNodes, ...allResponseNodes, ...statusNodes].forEach((item) => ensureIncidence(index, item.id));
   [...promptEdges, ...responseEdges, ...statusEdges].forEach((edge) => addEdgeToIndex(index, edge));
 
+  let branchGraph: ConversationGraphBranch | undefined;
+
+  if (branch) {
+    const clonedTraceEventIds = trace.reduce<Record<string, string>>((acc, event) => {
+      if (event.sourceTraceEventId) {
+        acc[event.id] = event.sourceTraceEventId;
+      }
+
+      return acc;
+    }, {});
+    const breakpointEvent = trace.find(
+      (event) => event.sourceTraceEventId === branch.parentTraceEventId || event.id === branch.parentTraceEventId,
+    );
+    const breakpointTraceEventId = breakpointEvent?.id;
+    const breakpointNodeId = breakpointTraceEventId
+      ? promptNodeByTraceEventId[breakpointTraceEventId] ?? responseNodeByTraceEventId[breakpointTraceEventId]
+      : undefined;
+    const breakpointPairId = breakpointTraceEventId
+      ? pairByPromptTraceEventId[breakpointTraceEventId] ?? pairByResponseTraceEventId[breakpointTraceEventId]
+      : undefined;
+
+    branchGraph = {
+      ...branch,
+      breakpointTraceEventId,
+      breakpointNodeId,
+      breakpointPairId,
+      clonedTraceEventIds,
+    };
+  }
+
   return {
     attemptId,
     promptNodes: allPromptNodes,
@@ -329,5 +385,6 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
     statusEdges,
     pairs,
     index,
+    branch: branchGraph,
   };
 }

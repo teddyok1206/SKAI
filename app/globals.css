@@ -679,6 +679,14 @@ h3 {
   padding: 8px 10px;
 }
 
+.branch-segment {
+  border: 1px solid color-mix(in srgb, var(--gold) 36%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--gold-soft) 54%, #fff);
+  color: #705313;
+  padding: 8px 10px;
+}
+
 .lock-dot {
   width: 9px;
   height: 9px;
@@ -951,6 +959,12 @@ h3 {
   align-items: center;
 }
 
+.graph-status-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .graph-pair-main p,
 .graph-reason {
   margin-bottom: 0;
@@ -981,6 +995,13 @@ h3 {
 .graph-status.bottleneck {
   background: #fff0ed;
   color: var(--red);
+}
+
+.graph-status.breakpoint,
+.trace-warning.breakpoint {
+  border-color: color-mix(in srgb, var(--gold) 34%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 58%, #fff);
+  color: #705313;
 }
 
 .timeline-step,

@@ -67,6 +67,7 @@
 | TDR-061 | Controlled attachment drop | Only the composer dropzone accepts material/file drop; prompt textarea drop is blocked | Accepted | 첨부 행위는 traceable UI action이어야 하며 textarea에 material id나 파일명이 우발적으로 삽입되면 평가 trace가 흐려짐 | 2026-06-01 |
 | TDR-062 | Dual graph trace model | Derive prompt graph, response graph, and task-status layer from flat traces | Accepted | SKAI의 핵심 학습 대상은 단일 프롬프트가 아니라 사용자의 directed orchestration flow이므로 graph 표현이 연구와 시각화에 적합함 | 2026-06-01 |
 | TDR-063 | Graph builder complexity | Build derived conversation graphs with a single trace pass and sparse indexes | Accepted | graph 모델은 의미론뿐 아니라 backend lookup/build 비용을 낮춰야 하므로 `O(n + b + e)` build와 `O(V + E)` storage를 목표로 함 | 2026-06-02 |
+| TDR-064 | Breakpoint replay branch | Branch from a trace event by creating a child attempt with source trace lineage, and mark the breakpoint on the existing prompt-response pair | Accepted | GDB-like replay는 bottleneck을 체감하게 하지만 3D dual graph를 4번째 차원으로 흔들면 안 되므로 branch는 inter-attempt metadata와 pair anchor로 다룸 | 2026-06-02 |
 
 ## Decision Template
 

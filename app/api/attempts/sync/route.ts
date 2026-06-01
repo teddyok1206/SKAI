@@ -32,6 +32,19 @@ const traceEventSchema = z.object({
   usageOutputTokens: z.number().optional(),
   estimatedCostUsd: z.number().optional(),
   attachments: z.array(attachmentSchema).max(operationGuardrails.maxAttachmentsPerMessage).optional(),
+  sourceTraceEventId: z.string().min(1).max(120).optional(),
+  branchId: z.string().min(1).max(120).optional(),
+});
+
+const branchSchema = z.object({
+  id: z.string().min(1).max(120),
+  mode: z.enum(["breakpoint_replay"]),
+  parentAttemptId: z.string().min(1).max(120),
+  parentTraceEventId: z.string().min(1).max(120),
+  parentTraceIndex: z.number().int().nonnegative(),
+  parentPairId: z.string().max(240).optional(),
+  label: z.string().min(1).max(220),
+  createdAt: z.string(),
 });
 
 const judgeRunSchema = z.object({
@@ -100,6 +113,7 @@ const attemptSchema = z.object({
   trace: z.array(traceEventSchema).max(operationGuardrails.maxTraceEventsPerJudge),
   finalAnswer: z.string().max(operationGuardrails.maxFinalAnswerChars).optional(),
   scoreReport: scoreReportSchema.optional(),
+  branch: branchSchema.optional(),
   publishedAt: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -173,6 +187,7 @@ export async function POST(request: Request) {
     provider: attempt.provider,
     model: attempt.model,
     final_answer: attempt.finalAnswer ?? null,
+    branch_metadata: attempt.branch ?? null,
     published_at: attempt.publishedAt ?? null,
     created_at: attempt.createdAt,
     updated_at: attempt.updatedAt,
@@ -198,6 +213,8 @@ export async function POST(request: Request) {
         usage_output_tokens: event.usageOutputTokens ?? null,
         estimated_cost_usd: event.estimatedCostUsd ?? null,
         attachments: event.attachments ?? [],
+        source_trace_event_id: event.sourceTraceEventId ?? null,
+        branch_id: event.branchId ?? null,
         created_at: event.createdAt,
       })),
     );

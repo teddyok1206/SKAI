@@ -33,6 +33,8 @@ export type JudgeRunStatus = "pending" | "running" | "succeeded" | "failed" | "c
 
 export type MaterialKind = "image" | "spreadsheet" | "csv" | "text" | "pdf" | "other";
 
+export type AttemptBranchMode = "breakpoint_replay";
+
 export interface ProblemMaterial {
   id: string;
   title: string;
@@ -97,6 +99,8 @@ export interface TraceEvent {
   usageOutputTokens?: number;
   estimatedCostUsd?: number;
   attachments?: AttemptAttachment[];
+  sourceTraceEventId?: string;
+  branchId?: string;
 }
 
 export interface ModelRun {
@@ -126,9 +130,21 @@ export interface Attempt {
   trace: TraceEvent[];
   finalAnswer?: string;
   scoreReport?: ScoreReport;
+  branch?: AttemptBranch;
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AttemptBranch {
+  id: string;
+  mode: AttemptBranchMode;
+  parentAttemptId: string;
+  parentTraceEventId: string;
+  parentTraceIndex: number;
+  parentPairId?: string;
+  label: string;
+  createdAt: string;
 }
 
 export interface AxisScore {
@@ -198,6 +214,7 @@ export interface PublishedAttempt {
   workflow: WorkflowStep[];
   trace: TraceEvent[];
   scoreReport: ScoreReport;
+  branch?: AttemptBranch;
   createdAt: string;
 }
 
@@ -219,6 +236,8 @@ export interface ConversationGraphNode {
   id: string;
   kind: ConversationGraphNodeKind;
   traceEventId?: string;
+  sourceTraceEventId?: string;
+  branchId?: string;
   pairId?: string;
   label: string;
   summary: string;
@@ -248,6 +267,7 @@ export interface ConversationGraphPair {
   responseTraceEventId?: string;
   status: ConversationTaskStatus;
   statusReasons: string[];
+  isBreakpoint?: boolean;
 }
 
 export interface ConversationGraphIndex {
@@ -257,6 +277,21 @@ export interface ConversationGraphIndex {
   pairByResponseTraceEventId: Record<string, string>;
   adjacency: Record<string, string[]>;
   incidence: Record<string, { incoming: string[]; outgoing: string[] }>;
+}
+
+export interface ConversationGraphBranch {
+  id: string;
+  mode: AttemptBranchMode;
+  parentAttemptId: string;
+  parentTraceEventId: string;
+  parentTraceIndex: number;
+  parentPairId?: string;
+  label: string;
+  createdAt: string;
+  breakpointTraceEventId?: string;
+  breakpointNodeId?: string;
+  breakpointPairId?: string;
+  clonedTraceEventIds: Record<string, string>;
 }
 
 export interface ConversationGraph {
@@ -269,6 +304,7 @@ export interface ConversationGraph {
   statusEdges: ConversationGraphEdge[];
   pairs: ConversationGraphPair[];
   index: ConversationGraphIndex;
+  branch?: ConversationGraphBranch;
 }
 
 export interface LeaderboardEntry {

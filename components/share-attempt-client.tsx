@@ -175,7 +175,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const assistantEvents = publishedAttempt.trace.filter((event) => event.role === "assistant");
   const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
   const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
-  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport);
+  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch);
   const graphNodeById = new Map(
     [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
   );
@@ -260,6 +260,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
             <GitBranch size={20} /> Dual Graph
           </h2>
           <p className="muted">Prompt nodes, response edges, response nodes, prompt edges, and task-status layer are derived from this trace.</p>
+          {conversationGraph.branch ? (
+            <p className="muted">
+              Breakpoint replay from parent trace {conversationGraph.branch.parentTraceIndex + 1}
+              {conversationGraph.branch.breakpointPairId ? ` · pair ${conversationGraph.branch.breakpointPairId.slice(0, 18)}` : ""}
+            </p>
+          ) : null}
         </div>
         <div className="panel-body graph-overview">
           <div className="graph-stat">
@@ -278,6 +284,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
             <strong>{conversationGraph.statusNodes.length}</strong>
             <span>status layer</span>
           </div>
+          {conversationGraph.branch ? (
+            <div className="graph-stat">
+              <strong>{conversationGraph.branch.breakpointPairId ? "1" : "0"}</strong>
+              <span>breakpoint</span>
+            </div>
+          ) : null}
         </div>
         <div className="panel-body graph-pair-list">
           {conversationGraph.pairs.length === 0 ? (
@@ -290,7 +302,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               return (
                 <article className="graph-pair" key={pair.id}>
                   <div className="graph-pair-main">
-                    <span className={`graph-status ${pair.status}`}>{taskStatusLabels[pair.status]}</span>
+                    <div className="graph-status-group">
+                      <span className={`graph-status ${pair.status}`}>{taskStatusLabels[pair.status]}</span>
+                      {pair.isBreakpoint ? <span className="graph-status breakpoint">Breakpoint</span> : null}
+                    </div>
                     <div>
                       <strong>{promptNode?.label ?? "Prompt"}</strong>
                       <p>{promptNode?.summary}</p>
@@ -398,6 +413,11 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                         <p className="eyebrow">Prompt {userIndex + 1}</p>
                         <h3>{promptIntent(event, userIndex)}</h3>
                       </div>
+                      {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
+                        <span className="trace-warning breakpoint">
+                          <GitBranch size={14} /> breakpoint
+                        </span>
+                      ) : null}
                       {relatedEventIds.has(event.id) ? (
                         <span className="trace-warning">
                           <AlertTriangle size={14} /> bottleneck
