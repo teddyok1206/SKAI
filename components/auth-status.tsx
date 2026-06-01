@@ -48,7 +48,19 @@ export function AuthStatus() {
   }, [router, supabase]);
 
   if (!isConfigured || !supabase) {
-    return <span className="tag">Local demo</span>;
+    return (
+      <>
+        <button
+          className="button"
+          onClick={() => router.push("/?auth=not_configured")}
+          title="Supabase URL과 anon key를 .env.local에 넣으면 Google 로그인이 활성화됩니다."
+          type="button"
+        >
+          <LogIn size={16} /> Google 로그인
+        </button>
+        <span className="tag">Local demo</span>
+      </>
+    );
   }
 
   const signInWithGoogle = async () => {

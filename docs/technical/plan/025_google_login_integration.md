@@ -54,15 +54,16 @@ It now treats `next` as a local-only redirect path.
 
 1. Update `AuthStatus` to compute `next` from the current path/search params.
 2. Build a callback URL with `next` embedded.
-3. Add pending/error UI states for sign-in/sign-out actions.
-4. Refresh the router after auth state changes and sign-out.
-5. Harden `/auth/callback`:
+3. Keep the Google login control visible even when Supabase is not configured, with an explicit setup notice path.
+4. Add pending/error UI states for sign-in/sign-out actions.
+5. Refresh the router after auth state changes and sign-out.
+6. Harden `/auth/callback`:
    - handle OAuth `error`,
    - require `code`,
    - sanitize `next`,
    - redirect with a compact auth status query on failure.
-6. Update README with exact Supabase/Google redirect settings.
-7. Update `docs/000_orchestration.md` current state/gap wording.
+7. Update README with exact Supabase/Google redirect settings.
+8. Update `docs/000_orchestration.md` current state/gap wording.
 
 ## Verification Steps
 

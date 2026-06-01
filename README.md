@@ -85,6 +85,13 @@ https://YOUR_DOMAIN/auth/callback
 
 The SKAI login button sends users through `/auth/callback?next=...`, so Supabase must allow the callback URL. After changing auth or env settings, restart the dev server.
 
+If the topbar shows `Local demo`, the Google login button is visible but will only show the setup notice until these two values are present in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
 ### Live Model Provider
 
 The app runs with `SKAI_DEFAULT_PROVIDER=mock` until a real provider key is set.
