@@ -25,6 +25,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
+- 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
 - Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
@@ -79,6 +80,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
+- Playbook prompt를 UI에서 원클릭 삽입하는 기능은 아직 없다.
 
 ## Execution Rules
 
@@ -97,6 +99,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 우선순위 1: live environment smoke
 
 - `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다.
+- `docs/problem_playbooks/`의 paste-ready prompts로 손타이핑 없이 sample attempt를 만든다.
 - 첫 후보는 Gemini Flash-Lite, Groq Llama, xAI Grok Fast 중 API key와 비용이 가장 현실적인 모델이다.
 - 같은 문제, 같은 첫 프롬프트로 SKAI Practice와 live environment 응답을 비교한다.
 - 모델별 latency, token usage, failure mode를 기록한다.
@@ -169,15 +172,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/014_breakpoint_branch_replay.md`: GDB-like breakpoint replay branch와 graph anchor 구현.
 - `docs/technical/plan/015_context_compiler_and_counterfactuals.md`: immutable trace 기반 context compiler와 branch diff/counterfactual judge 방향.
 - `docs/technical/plan/016_branch_diff_counterfactual_judge.md`: parent/child branch diff와 counterfactual judge 구현.
+- `docs/technical/plan/020_problem_prompt_playbooks.md`: 문제별 paste-ready prompt playbook.
 
 다음 plan 후보:
 
-- `017_live_environment_smoke.md`
-- `018_llm_judge_calibration.md`
-- `019_admin_authoring_mvp.md`
-- `020_supabase_deployment_hardening.md`
-- `021_cost_guardrails.md`
-- `022_comment_moderation_and_privacy.md`
+- `021_live_environment_smoke.md`
+- `022_llm_judge_calibration.md`
+- `023_admin_authoring_mvp.md`
+- `024_supabase_deployment_hardening.md`
+- `025_cost_guardrails.md`
+- `026_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

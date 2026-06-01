@@ -21,6 +21,7 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 - Technical implementation decisions, architecture, schemas, deployment, APIs, and operations belong in `docs/technical/`.
 - Design principles, visual direction, interaction patterns, and theme decisions belong in `docs/design/`.
 - Detailed programming plans belong in `docs/technical/plan/`.
+- Problem prompt playbooks belong in `docs/problem_playbooks/`.
 - Keep philosophy and implementation separate unless a document is explicitly a bridge between them.
 
 ## Product Principles
@@ -62,6 +63,16 @@ The first demo should prove as many of these as possible:
 - Treat official problem materials and user-uploaded attachments as first-class attempt context.
 - When a user selects or uploads files during solving, include a normalized representation of those files in the model request where feasible.
 - Every score should be tied to a rubric version and judge version.
+
+## Problem Authoring Rules
+
+- Every problem in `data/problems.ts` must have a matching paste-ready playbook in `docs/problem_playbooks/`.
+- The playbook filename should match the problem id, such as `ambiguous-research-brief.md`.
+- The playbook is not a canonical answer. It is a founder/operator script for smoke tests, judge calibration, and authoring validation.
+- Because live chat is strict cold-start, the first prompt in a playbook must be self-contained enough for the selected model to understand the task without hidden SKAI context.
+- If a problem has official materials, the playbook must say exactly which materials to attach before each relevant prompt.
+- Include an optional final-answer field draft when it helps run end-to-end judge tests quickly.
+- When adding or materially editing a problem, update its playbook in the same task.
 
 ## Evaluation Principles
 
