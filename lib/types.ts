@@ -117,6 +117,8 @@ export interface ChatMessage {
   role: TraceRole;
   content: string;
   attachments?: AttemptAttachment[];
+  sourceTraceEventId?: string;
+  branchId?: string;
 }
 
 export interface Attempt {

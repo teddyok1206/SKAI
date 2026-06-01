@@ -260,10 +260,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           problemId: problem.id,
           provider,
           model,
+          branch: attempt.branch,
           messages: nextTrace.map((event) => ({
             role: event.role,
             content: event.content,
             attachments: event.attachments,
+            sourceTraceEventId: event.sourceTraceEventId,
+            branchId: event.branchId,
           })),
         }),
       });

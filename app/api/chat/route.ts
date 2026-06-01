@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProblem } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
+import { compileProviderContext } from "@/lib/context-compiler";
 import { completeWithFallback } from "@/lib/providers";
 
 const attachmentSchema = z.object({
@@ -20,13 +21,25 @@ const chatSchema = z.object({
   problemId: z.string().min(1).max(120),
   provider: z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]).default("mock"),
   model: z.string().min(1).max(operationGuardrails.maxModelNameChars).default("mock-orchestrator"),
+  branch: z.object({
+    id: z.string().min(1).max(120),
+    mode: z.enum(["breakpoint_replay"]),
+    parentAttemptId: z.string().min(1).max(120),
+    parentTraceEventId: z.string().min(1).max(120),
+    parentTraceIndex: z.number().int().nonnegative(),
+    parentPairId: z.string().max(240).optional(),
+    label: z.string().min(1).max(220),
+    createdAt: z.string(),
+  }).optional(),
   messages: z.array(
     z.object({
       role: z.enum(["user", "assistant"]),
       content: z.string().max(operationGuardrails.maxMessageContentChars),
       attachments: z.array(attachmentSchema).max(operationGuardrails.maxAttachmentsPerMessage).optional(),
+      sourceTraceEventId: z.string().min(1).max(120).optional(),
+      branchId: z.string().min(1).max(120).optional(),
     }),
-  ).min(1).max(operationGuardrails.maxMessagesPerRequest),
+  ).min(1).max(operationGuardrails.maxTraceEventsPerJudge),
 });
 
 export async function POST(request: Request) {
@@ -54,11 +67,18 @@ export async function POST(request: Request) {
   }
 
   try {
+    const compiledContext = compileProviderContext({
+      problem,
+      messages: parsed.data.messages,
+      branch: parsed.data.branch,
+    });
     const response = await completeWithFallback({
       provider: parsed.data.provider,
       model: parsed.data.model,
       problem,
-      messages: parsed.data.messages,
+      messages: compiledContext.messages,
+      systemPrompt: compiledContext.systemPrompt,
+      contextMessage: compiledContext.contextMessage,
     });
 
     return NextResponse.json(response);

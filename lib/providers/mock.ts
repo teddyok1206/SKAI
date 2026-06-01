@@ -81,7 +81,11 @@ export const mockProvider: ModelProvider = {
     const startedAt = Date.now();
     const message = buildMockReply(request);
     const usageInputTokens = Math.ceil(
-      request.messages.reduce((sum, item) => sum + item.content.length + buildAttachmentContext(item.attachments).length, 0) / 4,
+      (
+        (request.systemPrompt?.length ?? 0) +
+        (request.contextMessage?.length ?? 0) +
+        request.messages.reduce((sum, item) => sum + item.content.length + buildAttachmentContext(item.attachments).length, 0)
+      ) / 4,
     );
     const usageOutputTokens = Math.ceil(message.length / 4);
 
