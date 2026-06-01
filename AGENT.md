@@ -84,6 +84,18 @@ The first demo should prove as many of these as possible:
 - Prefer structured formats such as JSON, YAML, or typed schemas for problem definitions and attempt traces.
 - Do not build a large framework before the first judged demo attempt works end to end.
 
+## End-Of-Task Philosophy Check
+
+- At the end of every task, perform a SKAI philosophy check before finalizing the work.
+- The check must ask whether the work still advances SKAI's core direction: training real AI orchestration skill through problem definition, decomposition, task assignment, material use, trace capture, verification, feedback, and sharing.
+- The check must also ask whether the work accidentally drifts toward any anti-goal: generic chatbot, prompt gallery, API playground, score grinder, decorative landing page, fake precision, or model benchmark detached from human orchestration.
+- Scale the length of the check to the task size:
+  - Tiny task: one short sentence in the final response is enough.
+  - Small task: two or three bullets covering alignment and residual risk.
+  - Medium task: a short `Philosophy Check` section covering alignment, tradeoff, and next watchpoint.
+  - Large or direction-changing task: update the relevant docs if needed and include a more explicit final check.
+- If the check reveals meaningful drift, fix it before finalizing when feasible. If it cannot be fixed in the same task, record it in `docs/000_orchestration.md` as a gap or decision gate.
+
 ## Open Questions Index
 
 - Project seed and legacy summary: `docs/philosophy/000_project_seed.md`
