@@ -49,6 +49,10 @@ function statusClass(pair?: ConversationGraphPair) {
   return pair ? `graph-status ${pair.status} ${pair.isBreakpoint ? "breakpoint" : ""}` : "graph-status";
 }
 
+function degreeLabel(incoming = 0, outgoing = 0) {
+  return `in ${incoming} · out ${outgoing}`;
+}
+
 function nodeToken(node: ConversationGraphNode) {
   if (node.synthetic) {
     return node.kind === "prompt" ? "PT" : "RO";
@@ -116,8 +120,10 @@ function EdgeList({ edges }: { edges: ConversationGraphEdge[] }) {
       {edges.map((edge) => (
         <div className="graph-edge-chip" key={edge.id}>
           <Route size={14} />
+          <em>source</em>
           <span>{edge.sourceNodeId}</span>
           <strong>→</strong>
+          <em>target</em>
           <span>{edge.targetNodeId}</span>
           <small>{edge.label}</small>
         </div>
@@ -189,6 +195,10 @@ export function ConversationGraphView({
 
           return (
             <div className={`graph-lane-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
+              <div className="graph-flow-index">
+                <span>{pair.sequence + 1}</span>
+                <small>flow</small>
+              </div>
               <div className="graph-node-slot">
                 <GraphNodeButton
                   node={promptNode}
@@ -199,9 +209,9 @@ export function ConversationGraphView({
               </div>
               <div className="graph-lane-link">
                 <span aria-hidden="true" className="graph-connector" />
-                <small>prompt</small>
+                <small>prompt out</small>
                 <span className={statusClass(pair)}>{pair.status}</span>
-                <small>status</small>
+                <small>status in</small>
               </div>
               <div className="graph-node-slot">
                 <GraphNodeButton
@@ -213,7 +223,7 @@ export function ConversationGraphView({
               </div>
               <div className="graph-lane-link response-link">
                 <span aria-hidden="true" className="graph-connector" />
-                <small>dual</small>
+                <small>response in</small>
               </div>
               <div className="graph-node-slot">
                 {responseNode ? (
@@ -224,7 +234,7 @@ export function ConversationGraphView({
                     onSelect={selectNode}
                   />
                 ) : (
-                <div className="graph-node missing">wait</div>
+                  <div className="graph-node missing">wait</div>
                 )}
               </div>
             </div>
@@ -299,13 +309,13 @@ export function ConversationGraphView({
         <div className="graph-index-detail">
           <strong>Selected incidence</strong>
           <p className="muted">{selectedNode?.id ?? "No node selected"}</p>
-          <div className="graph-edge-list">
+        <div className="graph-edge-list">
             <div className="graph-edge-chip">
-              <span>incoming</span>
+              <span>target/incoming</span>
               <small>{selectedIncoming.length > 0 ? selectedIncoming.join(", ") : "none"}</small>
             </div>
             <div className="graph-edge-chip">
-              <span>outgoing</span>
+              <span>source/outgoing</span>
               <small>{selectedOutgoing.length > 0 ? selectedOutgoing.join(", ") : "none"}</small>
             </div>
           </div>
@@ -390,9 +400,10 @@ export function ConversationGraphView({
           ) : null}
           {selectedIncidence ? (
             <div className="graph-reason-list">
-              <strong>Incidence</strong>
-              <span>incoming: {selectedIncidence.incoming.length}</span>
-              <span>outgoing: {selectedIncidence.outgoing.length}</span>
+              <strong>Directed incidence</strong>
+              <span>{degreeLabel(selectedIncidence.incoming.length, selectedIncidence.outgoing.length)}</span>
+              <span>incoming means this node is an edge target</span>
+              <span>outgoing means this node is an edge source</span>
             </div>
           ) : null}
           {onBranchTraceEvent && branchTraceEventId ? (

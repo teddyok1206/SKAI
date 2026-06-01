@@ -1201,7 +1201,7 @@ h3 {
 .graph-lane-head,
 .graph-lane-row {
   display: grid;
-  grid-template-columns: minmax(78px, 1fr) minmax(84px, 120px) minmax(78px, 1fr) minmax(58px, 86px) minmax(78px, 1fr);
+  grid-template-columns: 42px minmax(78px, 1fr) minmax(96px, 136px) minmax(78px, 1fr) minmax(72px, 96px) minmax(78px, 1fr);
   gap: 8px;
   align-items: center;
 }
@@ -1214,11 +1214,15 @@ h3 {
 }
 
 .graph-lane-head span:nth-child(2) {
-  grid-column: 3;
+  grid-column: 4;
 }
 
 .graph-lane-head span:nth-child(3) {
-  grid-column: 5;
+  grid-column: 6;
+}
+
+.graph-lane-head::before {
+  content: "Step";
 }
 
 .graph-lane-row {
@@ -1250,6 +1254,32 @@ h3 {
   text-align: center;
 }
 
+.graph-flow-index {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: var(--muted);
+}
+
+.graph-flow-index span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 24%, var(--line));
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--provider-accent-strong, var(--accent-strong));
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.graph-flow-index small {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .graph-lane-link.response-link {
   opacity: 0.72;
 }
@@ -1267,22 +1297,29 @@ h3 {
   white-space: nowrap;
 }
 
+.graph-lane-link .graph-status {
+  position: absolute;
+  z-index: 2;
+  top: calc(50% + 13px);
+  max-width: 96px;
+}
+
 .graph-connector {
   position: absolute;
   right: 0;
   left: 0;
-  height: 2px;
+  height: 3px;
   background: color-mix(in srgb, var(--provider-accent, var(--accent)) 30%, var(--line));
 }
 
 .graph-connector::after {
   position: absolute;
   top: 50%;
-  right: -1px;
-  width: 7px;
-  height: 7px;
-  border-top: 2px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 42%, var(--line));
-  border-right: 2px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 42%, var(--line));
+  right: -2px;
+  width: 11px;
+  height: 11px;
+  border-top: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 56%, var(--line));
+  border-right: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 56%, var(--line));
   content: "";
   transform: translateY(-50%) rotate(45deg);
 }
@@ -1358,6 +1395,14 @@ h3 {
     0 8px 18px rgba(23, 26, 31, 0.06);
 }
 
+.graph-node.selected::after {
+  color: var(--provider-accent-strong, var(--accent-strong));
+  content: "selected";
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .graph-node.breakpoint {
   border-color: color-mix(in srgb, var(--gold) 42%, var(--line));
 }
@@ -1421,6 +1466,22 @@ h3 {
   color: var(--muted);
   padding: 8px;
   font-size: 12px;
+}
+
+.graph-edge-chip em {
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 2px 6px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.graph-edge-chip strong {
+  color: var(--provider-accent-strong, var(--accent-strong));
+  font-size: 16px;
 }
 
 .graph-edge-chip span {
