@@ -26,7 +26,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
-- Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
+- Supabase Auth, Google OAuth sign-in/callback/sign-out flow, Supabase persistence baseline이 있다.
+- Google OAuth callback은 현재 page 복귀용 `next` 값을 local path로 sanitize한다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
 - 문제 자료 카드를 composer로 드래그하면 다음 프롬프트 첨부로 들어간다.
@@ -72,7 +73,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. 실제 API key로 LLM judge 품질을 smoke/calibration해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
-- Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
+- Supabase RLS, sync path, deployed Google OAuth settings는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
@@ -229,18 +230,19 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/022_compact_graph_nodes.md`: graph node를 compact token 중심으로 정리.
 - `docs/technical/plan/023_directed_graph_affordance.md`: directed graph flow와 source/target affordance 강화.
 - `docs/technical/plan/024_post_graph_demo_execution_plan.md`: 설계/계획/철학/진척도 분석 기반 post-graph 실행 로드맵.
+- `docs/technical/plan/025_google_login_integration.md`: Google OAuth sign-in/callback/sign-out hardening.
 
 다음 plan 후보:
 
-- `025_live_environment_smoke.md`
-- `026_golden_attempts_judge_calibration.md`
-- `027_playbook_insertion_operator_ux.md`
-- `028_cost_guardrails.md`
-- `029_supabase_deployment_hardening.md`
-- `030_admin_authoring_mvp.md`
-- `031_branch_tree_explorer.md`
-- `032_founder_review_dashboard.md`
-- `033_comment_moderation_and_privacy.md`
+- `026_live_environment_smoke.md`
+- `027_golden_attempts_judge_calibration.md`
+- `028_playbook_insertion_operator_ux.md`
+- `029_cost_guardrails.md`
+- `030_supabase_deployment_hardening.md`
+- `031_admin_authoring_mvp.md`
+- `032_branch_tree_explorer.md`
+- `033_founder_review_dashboard.md`
+- `034_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

@@ -270,6 +270,17 @@ h3 {
   justify-content: center;
 }
 
+.auth-notice {
+  border: 1px solid color-mix(in srgb, var(--red) 24%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--red) 7%, var(--surface));
+  color: var(--red);
+  margin: -14px 0 28px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .section-heading {
   margin-bottom: 14px;
   scroll-margin-top: 88px;

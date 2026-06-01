@@ -61,17 +61,29 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
-For Google login, configure Google OAuth in Supabase and add this redirect URL in the Supabase Auth settings:
+For Google login:
+
+1. Create a Google OAuth web client.
+2. In Google Cloud, add the Supabase auth callback as an authorized redirect URI:
+
+```text
+https://YOUR_SUPABASE_PROJECT_REF.supabase.co/auth/v1/callback
+```
+
+3. In Supabase Auth provider settings, enable Google and paste the Google client ID/secret.
+4. In Supabase Auth URL settings, add this local app redirect URL:
 
 ```text
 http://localhost:3000/auth/callback
 ```
 
-For production, also add the deployed callback URL:
+For production, also add the deployed app callback URL:
 
 ```text
 https://YOUR_DOMAIN/auth/callback
 ```
+
+The SKAI login button sends users through `/auth/callback?next=...`, so Supabase must allow the callback URL. After changing auth or env settings, restart the dev server.
 
 ### Live Model Provider
 

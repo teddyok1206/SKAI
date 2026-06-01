@@ -11,7 +11,37 @@ const categoryLabel = {
   strategy: "전략",
 };
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams?: Promise<{
+    auth?: string;
+    message?: string;
+  }>;
+};
+
+function authNotice(auth?: string, message?: string) {
+  if (!auth) {
+    return null;
+  }
+
+  if (auth === "missing_code") {
+    return "로그인 callback에 인증 코드가 없습니다. Google 로그인을 다시 시도해 주세요.";
+  }
+
+  if (auth === "not_configured") {
+    return "Supabase 환경 변수가 없어 Google 로그인을 사용할 수 없습니다.";
+  }
+
+  if (auth === "error") {
+    return message ? `Google 로그인 실패: ${message}` : "Google 로그인에 실패했습니다.";
+  }
+
+  return null;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const notice = authNotice(params?.auth, params?.message);
+
   return (
     <main className="container">
       <section className="home-hero">
@@ -29,6 +59,7 @@ export default function HomePage() {
           </a>
         </div>
       </section>
+      {notice ? <p className="auth-notice">{notice}</p> : null}
 
       <section className="section-heading" id="problems">
         <p className="eyebrow">Problems</p>
