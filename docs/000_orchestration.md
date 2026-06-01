@@ -36,6 +36,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 홈과 풀이 시작 화면은 내부 설명을 줄이고 현재 행동 중심의 미니멀 UI로 정리됐다.
 - Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
+- 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 
 현재 데모가 증명하는 것:
 
@@ -56,7 +57,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
-- 공개 풀이의 prompt summary, 원문 접기/펼치기, 댓글 thread가 아직 충분하지 않다.
+- 공개 풀이의 댓글 thread와 trace event별 discussion은 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
@@ -92,12 +93,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - coach review와 strict rubric mode를 분리할 준비를 한다.
 - 완료 조건: 최소 3개 sample attempt에서 LLM judge 결과를 founder가 정성 검토한다.
 
-우선순위 3: share page 정보 구조 강화
+우선순위 3: shared attempt discussion
 
-- 공유 화면에서 workflow, prompt skeleton, bottleneck, raw transcript를 분리한다.
-- 원문 프롬프트/응답은 기본 접힘 상태로 둔다.
 - 특정 trace event에 댓글을 달 수 있는 data model과 UI 초안을 만든다.
-- 완료 조건: 다른 사람이 풀이를 봤을 때 "접근 순서"를 먼저 배울 수 있다.
+- prompt skeleton 카드와 댓글 thread를 연결한다.
+- 공개 범위와 moderation 기준을 정한다.
+- 완료 조건: 다른 사람이 특정 프롬프트 지점에 질문/피드백을 남길 수 있다.
 
 우선순위 4: admin authoring MVP
 
@@ -144,15 +145,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 모델 환경 선택과 attempt 단위 모델 고정.
 - `docs/technical/plan/008_minimal_interface_pass.md`: 홈/풀이 시작/풀이 화면을 명료한 미니멀 UI로 정리.
 - `docs/technical/plan/009_judge_system_foundation.md`: heuristic/LLM/ensemble judge pipeline과 judge metadata 준비.
+- `docs/technical/plan/010_shared_attempt_information_architecture.md`: 공유 풀이 화면의 workflow, prompt skeleton, bottleneck, raw transcript 정보 구조 강화.
 
 다음 plan 후보:
 
-- `010_live_environment_smoke.md`
-- `011_llm_judge_calibration.md`
-- `012_shared_attempt_information_architecture.md`
-- `013_admin_authoring_mvp.md`
-- `014_supabase_deployment_hardening.md`
-- `015_cost_guardrails.md`
+- `011_live_environment_smoke.md`
+- `012_llm_judge_calibration.md`
+- `013_shared_attempt_discussion.md`
+- `014_admin_authoring_mvp.md`
+- `015_supabase_deployment_hardening.md`
+- `016_cost_guardrails.md`
 
 ## Reading Map
 

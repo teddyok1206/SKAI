@@ -2,7 +2,7 @@
 
 import type { ScoreReport } from "@/lib/types";
 
-export function ScoreReportCard({ report }: { report: ScoreReport }) {
+export function ScoreReportCard({ report, showBottlenecks = true }: { report: ScoreReport; showBottlenecks?: boolean }) {
   return (
     <section className="panel" aria-label="Score report">
       <div className="panel-header">
@@ -44,23 +44,24 @@ export function ScoreReportCard({ report }: { report: ScoreReport }) {
           ))}
         </ul>
       </div>
-      <div className="panel-body">
-        <h3>Bottleneck</h3>
-        <div className="workflow">
-          {report.bottlenecks.length === 0 ? (
-            <p className="muted">명확한 병목은 아직 감지되지 않았습니다.</p>
-          ) : (
-            report.bottlenecks.map((item) => (
-              <div className="workflow-step" key={`${item.label}-${item.traceEventId ?? "none"}`}>
-                <strong>{item.label}</strong>
-                <p className="muted">{item.explanation}</p>
-                <p>{item.replaySuggestion}</p>
-              </div>
-            ))
-          )}
+      {showBottlenecks ? (
+        <div className="panel-body">
+          <h3>Bottleneck</h3>
+          <div className="workflow">
+            {report.bottlenecks.length === 0 ? (
+              <p className="muted">명확한 병목은 아직 감지되지 않았습니다.</p>
+            ) : (
+              report.bottlenecks.map((item) => (
+                <div className="workflow-step" key={`${item.label}-${item.traceEventId ?? "none"}`}>
+                  <strong>{item.label}</strong>
+                  <p className="muted">{item.explanation}</p>
+                  <p>{item.replaySuggestion}</p>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      ) : null}
     </section>
   );
 }
-
