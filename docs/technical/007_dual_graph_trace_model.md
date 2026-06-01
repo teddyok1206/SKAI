@@ -127,15 +127,38 @@ Current code:
 - `buildConversationGraph(trace, scoreReport)`
 - shared attempt page compact graph section
 
-The builder:
+The builder is intentionally sparse and single-pass oriented:
 
-1. Extracts user trace events as prompt nodes.
-2. Extracts assistant trace events as response nodes.
-3. Pairs each user prompt with the next assistant response before the next user prompt.
-4. Creates prompt graph edges where responses act as edges.
-5. Creates response graph edges where prompts act as edges.
-6. Creates a status node for each prompt-response pair.
-7. Adds sparse incidence and adjacency indexes.
+1. Builds `bottleneckByTraceEventId` once.
+2. Walks `TraceEvent[]` once.
+3. Creates prompt nodes when user events appear.
+4. Creates response nodes when assistant events appear.
+5. Maintains a `pendingPrompt` until the next user prompt or trace end.
+6. Pairs each user prompt with the first assistant response before the next user prompt.
+7. Creates prompt graph edges where responses act as edges.
+8. Creates response graph edges where prompts act as edges.
+9. Creates a status node for each prompt-response pair.
+10. Adds sparse incidence and adjacency indexes.
+
+## Complexity
+
+Backend engineering goal:
+
+- Build time: `O(n + b + e)`.
+- Storage: `O(V + E)`.
+- Trace event to graph node lookup: `O(1)`.
+- Trace event to prompt-response pair lookup: `O(1)`.
+- Neighbor traversal: `O(degree(node))`.
+
+Definitions:
+
+- `n`: trace event count.
+- `b`: bottleneck count.
+- `e`: derived graph edge count.
+- `V`: graph node count.
+- `E`: graph edge count.
+
+This is why the MVP uses sparse dictionaries instead of a dense incidence matrix. A dense matrix would be useful for some offline research workloads, but it would cost unnecessary `O(V * E)` or `O(V^2)` space in the interactive product path.
 
 ## Research Implications
 

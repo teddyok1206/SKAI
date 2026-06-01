@@ -42,12 +42,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
+- conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 
 현재 데모가 증명하는 것:
 
 - SKAI 안에서 문제를 풀며 AI와 대화하는 경험.
 - 전체 대화 trace를 평가 대상으로 삼는 구조.
 - flat trace를 prompt graph, response graph, status layer로 파생하는 구조.
+- graph lookup을 위해 trace-event/node/pair dictionary와 sparse incidence index를 쓰는 구조.
 - 자료를 보고 선택하고 모델 입력에 포함하는 흐름.
 - process score와 final output score를 분리할 수 있는 기본 구조.
 - 공유 화면에서 workflow를 원문보다 먼저 보여주는 방향.

@@ -5,6 +5,7 @@ import type {
   ConversationGraphNode,
   ConversationGraphPair,
   ConversationTaskStatus,
+  Bottleneck,
   ScoreReport,
   TraceEvent,
 } from "@/lib/types";
@@ -41,9 +42,13 @@ function addEdgeToIndex(index: ConversationGraphIndex, edge: ConversationGraphEd
   index.incidence[edge.targetNodeId].incoming.push(edge.id);
 }
 
-function inferTaskStatus(prompt: TraceEvent, response: TraceEvent | undefined, scoreReport: ScoreReport | undefined) {
+function inferTaskStatus(
+  prompt: TraceEvent,
+  response: TraceEvent | undefined,
+  bottleneckByTraceEventId: Map<string, Bottleneck>,
+) {
   const reasons: string[] = [];
-  const bottleneck = scoreReport?.bottlenecks.find((item) => item.traceEventId === prompt.id);
+  const bottleneck = bottleneckByTraceEventId.get(prompt.id);
 
   if (bottleneck) {
     reasons.push(`bottleneck: ${bottleneck.label}`);
@@ -78,39 +83,38 @@ function node(
 
 export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreReport): ConversationGraph {
   const attemptId = trace[0]?.attemptId ?? scoreReport?.attemptId ?? "unknown-attempt";
-  const userEvents = trace.filter((event) => event.role === "user");
-  const assistantEvents = trace.filter((event) => event.role === "assistant");
-  const promptNodes: ConversationGraphNode[] = userEvents.map((event, index) =>
-    node({
-      id: `prompt:${event.id}`,
-      kind: "prompt",
-      traceEventId: event.id,
-      label: `Prompt ${index + 1}`,
-      summary: compact(event.content),
-      sequence: index,
-    }),
+  const promptNodes: ConversationGraphNode[] = [];
+  const responseNodes: ConversationGraphNode[] = [];
+  const statusNodes: ConversationGraphNode[] = [];
+  const promptEdges: ConversationGraphEdge[] = [];
+  const responseEdges: ConversationGraphEdge[] = [];
+  const statusEdges: ConversationGraphEdge[] = [];
+  const pairs: ConversationGraphPair[] = [];
+  const promptNodeByTraceEventId: Record<string, string> = {};
+  const responseNodeByTraceEventId: Record<string, string> = {};
+  const pairByPromptTraceEventId: Record<string, string> = {};
+  const pairByResponseTraceEventId: Record<string, string> = {};
+  const bottleneckByTraceEventId = new Map(
+    scoreReport?.bottlenecks
+      .filter((item): item is Bottleneck & { traceEventId: string } => Boolean(item.traceEventId))
+      .map((item) => [item.traceEventId, item]) ?? [],
   );
-  const responseNodes: ConversationGraphNode[] = assistantEvents.map((event, index) =>
-    node({
-      id: `response:${event.id}`,
-      kind: "response",
-      traceEventId: event.id,
-      label: `Response ${index + 1}`,
-      summary: compact(event.content),
-      sequence: index,
-    }),
-  );
+  let promptSequence = 0;
+  let responseSequence = 0;
+  let lastResponseNodeId = `response-origin:${attemptId}`;
+  let pendingPrompt:
+    | {
+        event: TraceEvent;
+        nodeId: string;
+        sequence: number;
+        previousResponseNodeId: string;
+        responseEvent?: TraceEvent;
+        responseNodeId?: string;
+      }
+    | undefined;
 
-  const promptTerminalNode = node({
-    id: `prompt-terminal:${attemptId}`,
-    kind: "prompt",
-    label: "Prompt terminal",
-    summary: "No later user prompt in this branch.",
-    sequence: promptNodes.length,
-    synthetic: true,
-  });
   const responseOriginNode = node({
-    id: `response-origin:${attemptId}`,
+    id: lastResponseNodeId,
     kind: "response",
     label: "Response origin",
     summary: "Conversation state before the first model response.",
@@ -118,32 +122,27 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
     synthetic: true,
   });
 
-  const promptNodeByTraceId = new Map(promptNodes.map((item) => [item.traceEventId, item.id]));
-  const responseNodeByTraceId = new Map(responseNodes.map((item) => [item.traceEventId, item.id]));
-  const statusNodes: ConversationGraphNode[] = [];
-  const promptEdges: ConversationGraphEdge[] = [];
-  const responseEdges: ConversationGraphEdge[] = [];
-  const statusEdges: ConversationGraphEdge[] = [];
-  const pairs: ConversationGraphPair[] = [];
-
-  userEvents.forEach((promptEvent, sequence) => {
-    const promptTraceIndex = trace.findIndex((event) => event.id === promptEvent.id);
-    const nextPromptTraceIndex = trace.findIndex((event, index) => index > promptTraceIndex && event.role === "user");
-    const responseEvent = trace
-      .slice(promptTraceIndex + 1, nextPromptTraceIndex === -1 ? undefined : nextPromptTraceIndex)
-      .find((event) => event.role === "assistant");
-    const promptNodeId = promptNodeByTraceId.get(promptEvent.id) as string;
-    const responseNodeId = responseEvent ? responseNodeByTraceId.get(responseEvent.id) : undefined;
+  function finalizePrompt(input: {
+    promptEvent: TraceEvent;
+    promptNodeId: string;
+    previousResponseNodeId: string;
+    sequence: number;
+    nextPromptNodeId: string;
+    responseEvent?: TraceEvent;
+    responseNodeId?: string;
+  }) {
+    const {
+      promptEvent,
+      promptNodeId,
+      previousResponseNodeId,
+      sequence,
+      nextPromptNodeId,
+      responseEvent,
+      responseNodeId,
+    } = input;
     const pairId = `pair:${promptEvent.id}:${responseEvent?.id ?? "pending"}`;
-    const inferred = inferTaskStatus(promptEvent, responseEvent, scoreReport);
+    const inferred = inferTaskStatus(promptEvent, responseEvent, bottleneckByTraceEventId);
     const statusNodeId = `status:${pairId}`;
-    const nextPrompt = userEvents[sequence + 1];
-    const nextPromptNodeId = nextPrompt ? promptNodeByTraceId.get(nextPrompt.id) : promptTerminalNode.id;
-    const previousResponse = [...assistantEvents].reverse().find((event) => {
-      const responseTraceIndex = trace.findIndex((traceEvent) => traceEvent.id === event.id);
-      return responseTraceIndex < promptTraceIndex;
-    });
-    const previousResponseNodeId = previousResponse ? responseNodeByTraceId.get(previousResponse.id) : responseOriginNode.id;
 
     statusNodes.push(
       node({
@@ -152,7 +151,7 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
         pairId,
         label: inferred.status,
         summary: inferred.reasons.join("; "),
-        sequence,
+        sequence: input.sequence,
       }),
     );
 
@@ -167,13 +166,17 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
       status: inferred.status satisfies ConversationTaskStatus,
       statusReasons: inferred.reasons,
     });
+    pairByPromptTraceEventId[promptEvent.id] = pairId;
+    if (responseEvent) {
+      pairByResponseTraceEventId[responseEvent.id] = pairId;
+    }
 
     if (responseEvent && responseNodeId) {
       promptEdges.push({
         id: edgeId("prompt-edge", pairId, "llm-response"),
         projection: "prompt_graph",
         sourceNodeId: promptNodeId,
-        targetNodeId: nextPromptNodeId as string,
+        targetNodeId: nextPromptNodeId,
         traceEventId: responseEvent.id,
         pairId,
         dualNodeId: responseNodeId,
@@ -183,7 +186,7 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
       responseEdges.push({
         id: edgeId("response-edge", pairId, "user-prompt"),
         projection: "response_graph",
-        sourceNodeId: previousResponseNodeId as string,
+        sourceNodeId: previousResponseNodeId,
         targetNodeId: responseNodeId,
         traceEventId: promptEvent.id,
         pairId,
@@ -215,17 +218,100 @@ export function buildConversationGraph(trace: TraceEvent[], scoreReport?: ScoreR
       label: "prompt -> status",
       sequence,
     });
+  }
+
+  // Single-pass pairing: a prompt is finalized when the next prompt appears or the trace ends.
+  for (const event of trace) {
+    if (event.role === "user") {
+      const promptNodeId = `prompt:${event.id}`;
+      promptNodes.push(
+        node({
+          id: promptNodeId,
+          kind: "prompt",
+          traceEventId: event.id,
+          label: `Prompt ${promptSequence + 1}`,
+          summary: compact(event.content),
+          sequence: promptSequence,
+        }),
+      );
+      promptNodeByTraceEventId[event.id] = promptNodeId;
+
+      if (pendingPrompt) {
+        finalizePrompt({
+          promptEvent: pendingPrompt.event,
+          promptNodeId: pendingPrompt.nodeId,
+          previousResponseNodeId: pendingPrompt.previousResponseNodeId,
+          sequence: pendingPrompt.sequence,
+          nextPromptNodeId: promptNodeId,
+          responseEvent: pendingPrompt.responseEvent,
+          responseNodeId: pendingPrompt.responseNodeId,
+        });
+      }
+
+      pendingPrompt = {
+        event,
+        nodeId: promptNodeId,
+        sequence: promptSequence,
+        previousResponseNodeId: lastResponseNodeId,
+      };
+      promptSequence += 1;
+    }
+
+    if (event.role === "assistant") {
+      const responseNodeId = `response:${event.id}`;
+      responseNodes.push(
+        node({
+          id: responseNodeId,
+          kind: "response",
+          traceEventId: event.id,
+          label: `Response ${responseSequence + 1}`,
+          summary: compact(event.content),
+          sequence: responseSequence,
+        }),
+      );
+      responseNodeByTraceEventId[event.id] = responseNodeId;
+
+      if (pendingPrompt && !pendingPrompt.responseEvent) {
+        pendingPrompt = {
+          ...pendingPrompt,
+          responseEvent: event,
+          responseNodeId,
+        };
+      }
+
+      lastResponseNodeId = responseNodeId;
+      responseSequence += 1;
+    }
+  }
+
+  const promptTerminalNode = node({
+    id: `prompt-terminal:${attemptId}`,
+    kind: "prompt",
+    label: "Prompt terminal",
+    summary: "No later user prompt in this branch.",
+    sequence: promptNodes.length,
+    synthetic: true,
   });
+
+  if (pendingPrompt) {
+    finalizePrompt({
+      promptEvent: pendingPrompt.event,
+      promptNodeId: pendingPrompt.nodeId,
+      previousResponseNodeId: pendingPrompt.previousResponseNodeId,
+      sequence: pendingPrompt.sequence,
+      nextPromptNodeId: promptTerminalNode.id,
+      responseEvent: pendingPrompt.responseEvent,
+      responseNodeId: pendingPrompt.responseNodeId,
+    });
+  }
 
   const allPromptNodes = promptNodes.length > 0 ? [...promptNodes, promptTerminalNode] : promptNodes;
   const allResponseNodes = responseNodes.length > 0 ? [responseOriginNode, ...responseNodes] : responseNodes;
   const index: ConversationGraphIndex = {
-    promptNodeByTraceEventId: Object.fromEntries(promptNodes.map((item) => [item.traceEventId as string, item.id])),
-    responseNodeByTraceEventId: Object.fromEntries(responseNodes.map((item) => [item.traceEventId as string, item.id])),
-    pairByPromptTraceEventId: Object.fromEntries(pairs.map((item) => [item.promptTraceEventId, item.id])),
-    pairByResponseTraceEventId: Object.fromEntries(
-      pairs.filter((item) => item.responseTraceEventId).map((item) => [item.responseTraceEventId as string, item.id]),
-    ),
+    promptNodeByTraceEventId,
+    responseNodeByTraceEventId,
+    pairByPromptTraceEventId,
+    pairByResponseTraceEventId,
     adjacency: {},
     incidence: {},
   };

@@ -66,6 +66,7 @@
 | TDR-060 | MVP API guardrails | Reject oversized or invalid request shapes before model/provider/database paths | Accepted | SaaS 운영 관점에서 데모라도 payload, attachment, provider, comment target 검증은 초기에 넣어야 함 | 2026-06-01 |
 | TDR-061 | Controlled attachment drop | Only the composer dropzone accepts material/file drop; prompt textarea drop is blocked | Accepted | 첨부 행위는 traceable UI action이어야 하며 textarea에 material id나 파일명이 우발적으로 삽입되면 평가 trace가 흐려짐 | 2026-06-01 |
 | TDR-062 | Dual graph trace model | Derive prompt graph, response graph, and task-status layer from flat traces | Accepted | SKAI의 핵심 학습 대상은 단일 프롬프트가 아니라 사용자의 directed orchestration flow이므로 graph 표현이 연구와 시각화에 적합함 | 2026-06-01 |
+| TDR-063 | Graph builder complexity | Build derived conversation graphs with a single trace pass and sparse indexes | Accepted | graph 모델은 의미론뿐 아니라 backend lookup/build 비용을 낮춰야 하므로 `O(n + b + e)` build와 `O(V + E)` storage를 목표로 함 | 2026-06-02 |
 
 ## Decision Template
 

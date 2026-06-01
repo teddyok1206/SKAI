@@ -66,6 +66,24 @@ Excluded:
 7. Document future persistence and research implications.
 8. Verify typecheck, lint, build, and API smoke.
 
+## Backend Complexity Target
+
+The graph builder should not repeatedly scan the trace for each prompt.
+
+Target:
+
+- Build time: `O(n + b + e)`, where `n` is trace event count, `b` is bottleneck count, and `e` is derived edge count.
+- Storage: `O(V + E)` using sparse adjacency/incidence dictionaries.
+- Lookup: `O(1)` for trace-event-to-node and trace-event-to-pair lookup.
+
+Implementation direction:
+
+- Build `bottleneckByTraceEventId` once.
+- Walk `TraceEvent[]` once.
+- Maintain `pendingPrompt` and `lastResponseNodeId` while walking.
+- Finalize a prompt-response pair only when the next prompt or trace end is reached.
+- Avoid `findIndex`, `slice().find`, and repeated reverse scans in the builder.
+
 ## Verification
 
 - `npm run typecheck`
