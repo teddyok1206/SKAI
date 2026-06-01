@@ -37,6 +37,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
+- 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 
 현재 데모가 증명하는 것:
 
@@ -57,7 +58,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
-- 공개 풀이의 댓글 thread와 trace event별 discussion은 아직 없다.
+- 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
@@ -93,28 +94,21 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - coach review와 strict rubric mode를 분리할 준비를 한다.
 - 완료 조건: 최소 3개 sample attempt에서 LLM judge 결과를 founder가 정성 검토한다.
 
-우선순위 3: shared attempt discussion
-
-- 특정 trace event에 댓글을 달 수 있는 data model과 UI 초안을 만든다.
-- prompt skeleton 카드와 댓글 thread를 연결한다.
-- 공개 범위와 moderation 기준을 정한다.
-- 완료 조건: 다른 사람이 특정 프롬프트 지점에 질문/피드백을 남길 수 있다.
-
-우선순위 4: admin authoring MVP
+우선순위 3: admin authoring MVP
 
 - 문제 statement, constraints, deliverables, materials, rubric을 작성/수정하는 UI를 만든다.
 - 자료 업로드와 extracted text 입력을 지원한다.
 - rubric public preview를 제공한다.
 - 완료 조건: 코드 수정 없이 새 demo problem을 만들 수 있다.
 
-우선순위 5: Supabase deployment hardening
+우선순위 4: Supabase deployment hardening
 
 - RLS 정책을 실제 사용자 flow 기준으로 점검한다.
 - anonymous/local fallback과 authenticated sync의 경계를 정리한다.
 - Vercel env var 체크리스트를 만든다.
 - 완료 조건: 배포 환경에서 로그인, 풀이 저장, 공유 조회가 재현된다.
 
-우선순위 6: cost and budget guardrails
+우선순위 5: cost and budget guardrails
 
 - provider/model별 단가 설정 파일을 만든다.
 - attempt별 예상 비용을 계산하고 UI에 노출한다.
@@ -146,15 +140,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/008_minimal_interface_pass.md`: 홈/풀이 시작/풀이 화면을 명료한 미니멀 UI로 정리.
 - `docs/technical/plan/009_judge_system_foundation.md`: heuristic/LLM/ensemble judge pipeline과 judge metadata 준비.
 - `docs/technical/plan/010_shared_attempt_information_architecture.md`: 공유 풀이 화면의 workflow, prompt skeleton, bottleneck, raw transcript 정보 구조 강화.
+- `docs/technical/plan/011_shared_attempt_discussion.md`: prompt skeleton 카드별 댓글과 답글 thread 구현.
 
 다음 plan 후보:
 
-- `011_live_environment_smoke.md`
-- `012_llm_judge_calibration.md`
-- `013_shared_attempt_discussion.md`
+- `012_live_environment_smoke.md`
+- `013_llm_judge_calibration.md`
 - `014_admin_authoring_mvp.md`
 - `015_supabase_deployment_hardening.md`
 - `016_cost_guardrails.md`
+- `017_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

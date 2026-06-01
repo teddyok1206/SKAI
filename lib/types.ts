@@ -201,6 +201,16 @@ export interface PublishedAttempt {
   createdAt: string;
 }
 
+export interface PromptComment {
+  id: string;
+  attemptId: string;
+  traceEventId: string;
+  parentId?: string;
+  authorName: string;
+  body: string;
+  createdAt: string;
+}
+
 export interface LeaderboardEntry {
   attemptId: string;
   problemId: string;

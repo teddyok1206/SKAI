@@ -1,11 +1,15 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { AlertTriangle, Bot, Eye, GitBranch, MessageSquare, Paperclip, Route, Workflow } from "lucide-react";
-import { getPublishedAttempt } from "@/lib/local-store";
-import { loadPublishedAttemptFromSupabase } from "@/lib/supabase-persistence";
-import type { PublishedAttempt, TraceEvent } from "@/lib/types";
+import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Paperclip, Route, Send, Workflow } from "lucide-react";
+import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
+import {
+  createPromptCommentInSupabase,
+  loadPromptCommentsFromSupabase,
+  loadPublishedAttemptFromSupabase,
+} from "@/lib/supabase-persistence";
+import type { PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 const signalDefinitions = [
@@ -83,6 +87,12 @@ function findNextAssistant(trace: TraceEvent[], userEventIndex: number) {
   return trace.slice(userEventIndex + 1).find((event) => event.role === "assistant");
 }
 
+function mergeComments(comments: PromptComment[]) {
+  return Array.from(new Map(comments.map((comment) => [comment.id, comment])).values()).sort((a, b) =>
+    a.createdAt.localeCompare(b.createdAt),
+  );
+}
+
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const attempt = useSyncExternalStore<PublishedAttempt | null>(
     (onStoreChange) => {
@@ -97,6 +107,43 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     () => getPublishedAttempt(attemptId) ?? null,
     () => null,
   );
+  const loadedAttemptId = attempt?.attemptId;
+  const [comments, setComments] = useState<PromptComment[]>([]);
+  const [authorName, setAuthorName] = useState("SKAI learner");
+  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loadedAttemptId) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void Promise.resolve().then(async () => {
+      const localComments = getPromptComments(loadedAttemptId);
+
+      if (cancelled) {
+        return;
+      }
+
+      setComments(localComments);
+      const remoteComments = await loadPromptCommentsFromSupabase(loadedAttemptId);
+
+      if (cancelled || remoteComments.length === 0) {
+        return;
+      }
+
+      const merged = mergeComments([...localComments, ...remoteComments]);
+      setComments(merged);
+      savePromptComments(merged);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadedAttemptId]);
 
   if (!attempt) {
     return (
@@ -114,10 +161,49 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     );
   }
 
-  const userEvents = attempt.trace.filter((event) => event.role === "user");
-  const assistantEvents = attempt.trace.filter((event) => event.role === "assistant");
-  const attachmentCount = attempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
-  const relatedEventIds = new Set(attempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
+  const publishedAttempt = attempt;
+  const userEvents = publishedAttempt.trace.filter((event) => event.role === "user");
+  const assistantEvents = publishedAttempt.trace.filter((event) => event.role === "assistant");
+  const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
+  const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
+
+  async function submitComment(input: { traceEventId: string; parentId?: string }, event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    const draftKey = input.parentId ?? input.traceEventId;
+    const draft = input.parentId ? replyDrafts[draftKey] : commentDrafts[draftKey];
+    const body = draft?.trim();
+
+    if (!body) {
+      return;
+    }
+
+    const comment: PromptComment = {
+      id: crypto.randomUUID(),
+      attemptId: publishedAttempt.attemptId,
+      traceEventId: input.traceEventId,
+      parentId: input.parentId,
+      authorName: authorName.trim() || "SKAI learner",
+      body: body.slice(0, 1200),
+      createdAt: new Date().toISOString(),
+    };
+
+    const nextComments = mergeComments([...comments, comment]);
+    setComments(nextComments);
+    savePromptComment(comment);
+    void createPromptCommentInSupabase(comment);
+
+    if (input.parentId) {
+      setReplyDrafts((current) => ({ ...current, [draftKey]: "" }));
+      setActiveReplyId(null);
+    } else {
+      setCommentDrafts((current) => ({ ...current, [draftKey]: "" }));
+    }
+  }
+
+  function commentsForTrace(traceEventId: string) {
+    return comments.filter((comment) => comment.traceEventId === traceEventId);
+  }
 
   return (
     <main className="container">
@@ -190,6 +276,18 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           </h2>
         </div>
         <div className="panel-body prompt-skeleton-list">
+          <div className="discussion-identity">
+            <label>
+              <span>Comment name</span>
+              <input
+                className="input"
+                maxLength={40}
+                value={authorName}
+                onChange={(event) => setAuthorName(event.target.value)}
+              />
+            </label>
+            <p className="muted">각 프롬프트 지점에 질문, 해석, 대안 지시를 남길 수 있습니다.</p>
+          </div>
           {userEvents.length === 0 ? (
             <p className="muted">공개된 사용자 프롬프트가 없습니다.</p>
           ) : (
@@ -197,6 +295,14 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               const traceIndex = attempt.trace.findIndex((item) => item.id === event.id);
               const response = findNextAssistant(attempt.trace, traceIndex);
               const signals = promptSignals(event);
+              const traceComments = commentsForTrace(event.id);
+              const rootComments = traceComments.filter((comment) => !comment.parentId);
+              const repliesByParent = new Map<string, PromptComment[]>();
+              traceComments
+                .filter((comment) => comment.parentId)
+                .forEach((comment) => {
+                  repliesByParent.set(comment.parentId as string, [...(repliesByParent.get(comment.parentId as string) ?? []), comment]);
+                });
 
               return (
                 <article className="prompt-skeleton" id={`trace-${event.id}`} key={event.id}>
@@ -237,6 +343,89 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                         {compactText(response.content, 90)}
                       </p>
                     ) : null}
+                    <div className="comment-thread">
+                      <div className="comment-thread-header">
+                        <strong>
+                          <MessageSquare size={15} /> {traceComments.length} comments
+                        </strong>
+                      </div>
+                      {rootComments.length > 0 ? (
+                        <div className="comment-list">
+                          {rootComments.map((comment) => {
+                            const replies = repliesByParent.get(comment.id) ?? [];
+
+                            return (
+                              <div className="comment-item" key={comment.id}>
+                                <div className="comment-meta">
+                                  <strong>{comment.authorName}</strong>
+                                  <span>{new Date(comment.createdAt).toLocaleString()}</span>
+                                </div>
+                                <p>{comment.body}</p>
+                                {replies.length > 0 ? (
+                                  <div className="reply-list">
+                                    {replies.map((reply) => (
+                                      <div className="comment-item reply" key={reply.id}>
+                                        <div className="comment-meta">
+                                          <strong>{reply.authorName}</strong>
+                                          <span>{new Date(reply.createdAt).toLocaleString()}</span>
+                                        </div>
+                                        <p>{reply.body}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : null}
+                                {activeReplyId === comment.id ? (
+                                  <form
+                                    className="comment-form compact"
+                                    onSubmit={(submitEvent) =>
+                                      void submitComment({ traceEventId: event.id, parentId: comment.id }, submitEvent)
+                                    }
+                                  >
+                                    <textarea
+                                      className="textarea"
+                                      maxLength={1200}
+                                      placeholder="이 지점에 대한 답글"
+                                      value={replyDrafts[comment.id] ?? ""}
+                                      onChange={(changeEvent) =>
+                                        setReplyDrafts((current) => ({ ...current, [comment.id]: changeEvent.target.value }))
+                                      }
+                                    />
+                                    <div className="actions">
+                                      <button className="button quiet" type="button" onClick={() => setActiveReplyId(null)}>
+                                        취소
+                                      </button>
+                                      <button className="button" type="submit">
+                                        <Send size={15} /> 답글
+                                      </button>
+                                    </div>
+                                  </form>
+                                ) : (
+                                  <button className="comment-reply-button" type="button" onClick={() => setActiveReplyId(comment.id)}>
+                                    <CornerDownRight size={14} /> reply
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : null}
+                      <form className="comment-form" onSubmit={(submitEvent) => void submitComment({ traceEventId: event.id }, submitEvent)}>
+                        <textarea
+                          className="textarea"
+                          maxLength={1200}
+                          placeholder="이 프롬프트의 문제정의, 세분화, 검증 방식에 대해 남기기"
+                          value={commentDrafts[event.id] ?? ""}
+                          onChange={(changeEvent) =>
+                            setCommentDrafts((current) => ({ ...current, [event.id]: changeEvent.target.value }))
+                          }
+                        />
+                        <div className="actions">
+                          <button className="button" type="submit">
+                            <Send size={15} /> Comment
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </article>
               );

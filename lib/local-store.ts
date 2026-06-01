@@ -1,5 +1,5 @@
 import { SKAI_STORAGE_KEYS } from "@/lib/constants";
-import type { Attempt, PublishedAttempt } from "@/lib/types";
+import type { Attempt, PromptComment, PublishedAttempt } from "@/lib/types";
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") {
@@ -54,3 +54,23 @@ export function getPublishedAttempt(attemptId: string): PublishedAttempt | undef
   return getPublishedAttempts().find((attempt) => attempt.attemptId === attemptId || attempt.id === attemptId);
 }
 
+export function getPromptComments(attemptId: string): PromptComment[] {
+  return readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, [])
+    .filter((comment) => comment.attemptId === attemptId)
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}
+
+export function savePromptComment(comment: PromptComment) {
+  const comments = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
+  const next = [comment, ...comments.filter((item) => item.id !== comment.id)];
+  writeJson(SKAI_STORAGE_KEYS.promptComments, next);
+}
+
+export function savePromptComments(comments: PromptComment[]) {
+  const stored = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
+  const incomingIds = new Set(comments.map((comment) => comment.id));
+  writeJson(SKAI_STORAGE_KEYS.promptComments, [
+    ...comments,
+    ...stored.filter((comment) => !incomingIds.has(comment.id)),
+  ]);
+}

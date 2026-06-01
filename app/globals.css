@@ -963,6 +963,113 @@ h3 {
   line-height: 1.45;
 }
 
+.discussion-identity {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px;
+}
+
+.discussion-identity label {
+  display: grid;
+  gap: 6px;
+}
+
+.discussion-identity span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.comment-thread {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.comment-thread-header strong {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.comment-list,
+.reply-list {
+  display: grid;
+  gap: 8px;
+}
+
+.reply-list {
+  margin-top: 8px;
+  border-left: 2px solid var(--line);
+  padding-left: 10px;
+}
+
+.comment-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 10px;
+}
+
+.comment-item.reply {
+  background: var(--surface);
+}
+
+.comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.comment-meta span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.comment-item p {
+  margin-bottom: 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.comment-form {
+  display: grid;
+  gap: 8px;
+}
+
+.comment-form.compact {
+  margin-top: 8px;
+}
+
+.comment-form .textarea {
+  min-height: 76px;
+}
+
+.comment-reply-button {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--accent-strong);
+  padding: 8px 0 0;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .bottleneck-card {
   border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--line));
   border-radius: 8px;
@@ -1073,6 +1180,10 @@ summary {
 
   .axis-row {
     grid-template-columns: 92px minmax(0, 1fr) 40px;
+  }
+
+  .discussion-identity {
+    grid-template-columns: 1fr;
   }
 }
 

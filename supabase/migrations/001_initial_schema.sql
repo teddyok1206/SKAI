@@ -101,6 +101,7 @@ create table if not exists public.prompt_comments (
   attempt_id uuid not null references public.attempts(id) on delete cascade,
   user_id uuid,
   parent_id uuid references public.prompt_comments(id) on delete cascade,
+  author_label text not null default 'SKAI learner',
   body text not null,
   created_at timestamptz not null default now()
 );
@@ -108,3 +109,5 @@ create table if not exists public.prompt_comments (
 create index if not exists trace_events_attempt_id_idx on public.trace_events(attempt_id);
 create index if not exists attempts_problem_id_idx on public.attempts(problem_id);
 create index if not exists score_reports_problem_id_idx on public.score_reports(problem_id);
+create index if not exists prompt_comments_attempt_id_idx on public.prompt_comments(attempt_id);
+create index if not exists prompt_comments_trace_event_id_idx on public.prompt_comments(trace_event_id);

@@ -1,6 +1,7 @@
 export const SKAI_STORAGE_KEYS = {
   attempts: "skai:attempts",
   publishedAttempts: "skai:publishedAttempts",
+  promptComments: "skai:promptComments",
 } as const;
 
 export const budgetGuardrails = {
@@ -9,4 +10,3 @@ export const budgetGuardrails = {
   monthlyCapKrw: 200_000,
   eventCapKrw: 100_000,
 };
-

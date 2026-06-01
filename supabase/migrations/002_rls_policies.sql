@@ -163,5 +163,11 @@ create policy "Prompt comments are readable"
 
 create policy "Authenticated users can comment"
   on public.prompt_comments for insert
-  with check (auth.role() = 'authenticated');
-
+  with check (
+    auth.role() = 'authenticated'
+    and user_id = auth.uid()
+    and exists (
+      select 1 from public.published_attempts
+      where published_attempts.attempt_id = prompt_comments.attempt_id
+    )
+  );
