@@ -33,6 +33,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - theme selector와 3개 디자인 옵션이 있다.
 - Pretendard Variable + JetBrains Mono font system이 적용됐다.
 - provider별 chat surface mood가 적용됐다.
+- 홈과 풀이 시작 화면은 내부 설명을 줄이고 현재 행동 중심의 미니멀 UI로 정리됐다.
 
 현재 데모가 증명하는 것:
 
@@ -137,15 +138,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/005_fonts_provider_ui_adaptation.md`: font system과 provider별 UI surface.
 - `docs/technical/plan/006_interaction_environment_presets.md`: 사용자 기본 AI 선택을 raw provider/model에서 환경 preset으로 전환.
 - `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 모델 환경 선택과 attempt 단위 모델 고정.
+- `docs/technical/plan/008_minimal_interface_pass.md`: 홈/풀이 시작/풀이 화면을 명료한 미니멀 UI로 정리.
 
 다음 plan 후보:
 
-- `008_live_environment_smoke.md`
-- `009_llm_judge_mvp.md`
-- `010_shared_attempt_information_architecture.md`
-- `011_admin_authoring_mvp.md`
-- `012_supabase_deployment_hardening.md`
-- `013_cost_guardrails.md`
+- `009_live_environment_smoke.md`
+- `010_llm_judge_mvp.md`
+- `011_shared_attempt_information_architecture.md`
+- `012_admin_authoring_mvp.md`
+- `013_supabase_deployment_hardening.md`
+- `014_cost_guardrails.md`
 
 ## Reading Map
 

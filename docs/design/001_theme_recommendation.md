@@ -160,14 +160,15 @@ For mobile:
 
 ## Recommended Next Design Pass
 
-1. Replace the warm paper background with neutral mist.
-2. Tighten solve page density.
-3. Make material selection more tab-like.
-4. Make trace events more clearly connected as a timeline.
-5. Reduce the visual dominance of card shadows.
-6. Add clearer selected/published/private states.
-7. Add severity colors for bottlenecks.
-8. Add mode controls: beginner, standard, expert.
+1. Keep the neutral mist background and avoid paper/cream drift.
+2. Keep the homepage focused on one sentence, one primary action, and the problem list.
+3. Keep model choice visually prominent before attempt start.
+4. Make the solving toolbar quiet after the model is locked.
+5. Make material selection more tab-like.
+6. Make trace events more clearly connected as a timeline.
+7. Add clearer selected/published/private states.
+8. Add severity colors for bottlenecks.
+9. Add mode controls: beginner, standard, expert.
 
 ## Alternative Themes Considered
 

@@ -29,6 +29,17 @@ The user should feel:
 
 The design should make process visible before outcome.
 
+## Minimal Interface Standard
+
+SKAI should be minimal in the Apple sense of discipline, not in the sense of hiding the product.
+
+- Show only what helps the current step.
+- Move internal rationale and design explanations to docs, not user-facing pages.
+- Use whitespace, typography, and hierarchy before decoration.
+- Keep primary actions visually obvious.
+- Keep model choice clear before attempt start, then quiet during the attempt.
+- Avoid copying Apple's product pages, campaign structure, exact component styling, or brand treatment.
+
 ## Visual Hierarchy
 
 1. Problem and constraints.
@@ -87,4 +98,3 @@ The total score should be visible but never visually dominate the whole experien
 - Buttons and controls should clearly communicate actions.
 - File attachment and publish actions need explicit state.
 - Public/private trace boundaries must be visually obvious.
-

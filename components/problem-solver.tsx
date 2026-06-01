@@ -334,7 +334,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       <div className="pre-attempt-layout">
         <section className="panel pre-attempt-panel provider-shell" data-provider={provider}>
           <div className="panel-header">
-            <p className="eyebrow">Attempt setup</p>
+            <p className="eyebrow">풀이 설정</p>
             <h2>{problem.title}</h2>
             <p className="muted">{problem.subtitle}</p>
           </div>
@@ -350,6 +350,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 <button
                   className={`environment-card ${environment.id === environmentId ? "active" : ""}`}
                   data-provider={environment.provider}
+                  aria-pressed={environment.id === environmentId}
                   key={environment.id}
                   onClick={() => handleEnvironmentChange(environment.id)}
                   type="button"
@@ -357,9 +358,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   <span>{environment.label}</span>
                   <strong>{environment.surfaceLabel}</strong>
                   <small>{environment.description}</small>
-                  <em>
-                    {providerUiProfiles[environment.provider].label} · {environment.model}
-                  </em>
+                  <em>{providerUiProfiles[environment.provider].label} · {environment.model}</em>
                 </button>
               ))}
             </div>
@@ -369,7 +368,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 <p className="muted">{selectedEnvironment.materialBehavior}</p>
               </div>
               <button className="button primary" onClick={startAttempt} type="button">
-                <Play size={16} /> Start Attempt
+                <Play size={16} /> 풀이 시작
               </button>
             </div>
           </div>
@@ -546,12 +545,6 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <MessageSquare size={17} />
             <strong>Attempt</strong>
             <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
-          </div>
-          <div className="provider-profile" aria-live="polite">
-            <span>{selectedEnvironment.label}</span>
-            <strong>{selectedEnvironment.surfaceLabel}</strong>
-            <small>{selectedEnvironment.description}</small>
-            <small>{selectedEnvironment.materialBehavior}</small>
           </div>
           <div className="segmented locked-environment">
             <span className="lock-dot" aria-hidden="true" />
