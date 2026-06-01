@@ -2,6 +2,8 @@
 
 Date: 2026-06-01
 
+Status: Revised by `019_decouple_solving_mode_from_model_choice.md`. Attempt-level model locking remains, but solving mode and model choice are now independent.
+
 ## Goal
 
 Move model/environment selection before attempt start, similar to choosing a programming language before solving/submitting on coding platforms.

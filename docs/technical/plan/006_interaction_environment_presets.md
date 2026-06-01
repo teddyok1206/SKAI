@@ -2,6 +2,8 @@
 
 Date: 2026-06-01
 
+Status: Superseded by `019_decouple_solving_mode_from_model_choice.md`. The original environment preset idea coupled provider brand and workflow mode too tightly.
+
 ## Goal
 
 Replace the default user-facing raw model/provider selector with a small set of realistic AI-use environment presets.
@@ -70,4 +72,3 @@ The UI should describe these as environments, not as a list of raw model brands 
 ## Rollback
 
 Restore the raw provider/model selector in `components/problem-solver.tsx` and remove `lib/interaction-environments.ts`.
-

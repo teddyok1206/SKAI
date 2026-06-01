@@ -14,6 +14,7 @@ const publishedSchema = z.object({
     scoreReport: z.unknown(),
     branch: z.unknown().optional(),
     counterfactualReport: z.unknown().optional(),
+    solvingMode: z.enum(["single_model", "material_grounded", "verification_drill"]).optional(),
     createdAt: z.string(),
   }),
 });

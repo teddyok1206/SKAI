@@ -4,6 +4,7 @@ import { operationGuardrails } from "@/lib/constants";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 const providerSchema = z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]);
+const solvingModeSchema = z.enum(["single_model", "material_grounded", "verification_drill"]);
 
 const attachmentSchema = z.object({
   id: z.string().min(1).max(120),
@@ -110,6 +111,7 @@ const attemptSchema = z.object({
   title: z.string().min(1).max(220),
   provider: providerSchema,
   model: z.string().max(operationGuardrails.maxModelNameChars),
+  solvingMode: solvingModeSchema.optional(),
   trace: z.array(traceEventSchema).max(operationGuardrails.maxTraceEventsPerJudge),
   finalAnswer: z.string().max(operationGuardrails.maxFinalAnswerChars).optional(),
   scoreReport: scoreReportSchema.optional(),

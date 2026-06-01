@@ -7,14 +7,10 @@ import { FilePlus2, GitBranch, MessageSquare, Paperclip, Play, RotateCcw, Send, 
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
-import {
-  getInteractionEnvironment,
-  interactionEnvironments,
-  type InteractionEnvironment,
-  type InteractionEnvironmentId,
-} from "@/lib/interaction-environments";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
+import { getModelOption, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
 import { providerUiProfiles } from "@/lib/provider-ui";
+import { getSolvingMode, solvingModes } from "@/lib/solving-modes";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
 import type {
   Attempt,
@@ -24,6 +20,7 @@ import type {
   Problem,
   ProviderId,
   ScoreReport,
+  SolvingModeId,
   TraceEvent,
 } from "@/lib/types";
 import { MarkdownContent } from "@/components/markdown-content";
@@ -31,7 +28,11 @@ import { ScoreReportCard } from "@/components/score-report-card";
 
 const materialDragDataType = "application/x-skai-material-id";
 
-function newAttempt(problem: Problem, environment: InteractionEnvironment = getInteractionEnvironment("skai-practice")): Attempt {
+function newAttempt(
+  problem: Problem,
+  modelOption: ModelOption = getModelOption("skai-mock"),
+  solvingModeId: SolvingModeId = "single_model",
+): Attempt {
   const now = new Date().toISOString();
   return {
     id: crypto.randomUUID(),
@@ -39,8 +40,9 @@ function newAttempt(problem: Problem, environment: InteractionEnvironment = getI
     userId: "local-demo-user",
     status: "draft",
     title: `${problem.title} 풀이`,
-    provider: environment.provider,
-    model: environment.model,
+    provider: modelOption.provider,
+    model: modelOption.model,
+    solvingMode: solvingModeId,
     trace: [],
     createdAt: now,
     updatedAt: now,
@@ -79,11 +81,12 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
-  const defaultEnvironment = getInteractionEnvironment("skai-practice");
+  const defaultModelOption = getModelOption("skai-mock");
   const [attempt, setAttempt] = useState<Attempt | null>(null);
-  const [environmentId, setEnvironmentId] = useState<InteractionEnvironmentId>(defaultEnvironment.id);
-  const [provider, setProvider] = useState<ProviderId>(defaultEnvironment.provider);
-  const [model, setModel] = useState(defaultEnvironment.model);
+  const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
+  const [modelOptionId, setModelOptionId] = useState<ModelOptionId>(defaultModelOption.id);
+  const [provider, setProvider] = useState<ProviderId>(defaultModelOption.provider);
+  const [model, setModel] = useState(defaultModelOption.model);
   const [input, setInput] = useState("");
   const [finalAnswer, setFinalAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +97,12 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [attachmentNotice, setAttachmentNotice] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const selectedEnvironment = useMemo(() => getInteractionEnvironment(environmentId), [environmentId]);
+  const selectedSolvingMode = useMemo(() => getSolvingMode(solvingModeId), [solvingModeId]);
+  const selectedModelOption = useMemo(() => getModelOption(modelOptionId), [modelOptionId]);
+  const availableModelOptions = useMemo(
+    () => modelOptions.filter((option) => problem.allowedProviders.includes(option.provider)),
+    [problem.allowedProviders],
+  );
   const providerProfile = providerUiProfiles[provider];
   const leaderboard = getAttempts()
     .filter((item) => item.problemId === problem.id && item.scoreReport)
@@ -107,6 +115,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   ) ?? 0;
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
+  const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
 
   function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {
     const next = [...current];
@@ -138,15 +147,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     void syncAttemptToSupabase(next, problem);
   }
 
-  function handleEnvironmentChange(nextEnvironmentId: InteractionEnvironmentId) {
-    const environment = getInteractionEnvironment(nextEnvironmentId);
-    setEnvironmentId(environment.id);
-    setProvider(environment.provider);
-    setModel(environment.model);
+  function handleModelOptionChange(nextModelOptionId: ModelOptionId) {
+    const option = getModelOption(nextModelOptionId);
+    setModelOptionId(option.id);
+    setProvider(option.provider);
+    setModel(option.model);
   }
 
   function startAttempt() {
-    const next = newAttempt(problem, selectedEnvironment);
+    const next = newAttempt(problem, selectedModelOption, selectedSolvingMode.id);
     setAttempt(next);
     setFinalAnswer("");
     setInput("");
@@ -386,6 +395,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       scoreReport: attempt.scoreReport,
       branch: attempt.branch,
       counterfactualReport: attempt.counterfactualReport,
+      solvingMode: attempt.solvingMode,
       createdAt: new Date().toISOString(),
     };
 
@@ -487,32 +497,58 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           </div>
           <div className="panel-body pre-attempt-body">
             <div>
-              <h3>모델 환경 선택</h3>
+              <h3>풀이 모드 선택</h3>
               <p className="muted">
-                코딩 문제를 풀기 전에 언어를 고르듯, 이 attempt에서 사용할 AI 환경을 먼저 고릅니다. 데모에서는 한 attempt가 하나의 모델 환경에 고정됩니다.
+                모드는 이 attempt의 연습 목적입니다. 어떤 모델을 고르든 동일한 모드로 풀 수 있어야 합니다.
               </p>
             </div>
             <div className="environment-grid">
-              {interactionEnvironments.map((environment) => (
+              {solvingModes.map((mode) => (
                 <button
-                  className={`environment-card ${environment.id === environmentId ? "active" : ""}`}
-                  data-provider={environment.provider}
-                  aria-pressed={environment.id === environmentId}
-                  key={environment.id}
-                  onClick={() => handleEnvironmentChange(environment.id)}
+                  className={`environment-card ${mode.id === solvingModeId ? "active" : ""}`}
+                  aria-pressed={mode.id === solvingModeId}
+                  key={mode.id}
+                  onClick={() => setSolvingModeId(mode.id)}
                   type="button"
                 >
-                  <span>{environment.label}</span>
-                  <strong>{environment.surfaceLabel}</strong>
-                  <small>{environment.description}</small>
-                  <em>{providerUiProfiles[environment.provider].label} · {environment.model}</em>
+                  <span>{mode.label}</span>
+                  <strong>{mode.surfaceLabel}</strong>
+                  <small>{mode.description}</small>
+                  <em>{mode.evaluationLens}</em>
+                </button>
+              ))}
+            </div>
+            <div>
+              <h3>모델 선택</h3>
+              <p className="muted">
+                모델은 실행 엔진입니다. 자료 활용형 모드도 Gemini에 묶이지 않고, 일반 대화형 모드도 OpenAI에 묶이지 않습니다.
+              </p>
+            </div>
+            <div className="environment-grid">
+              {availableModelOptions.map((option) => (
+                <button
+                  className={`environment-card ${option.id === modelOptionId ? "active" : ""}`}
+                  data-provider={option.provider}
+                  aria-pressed={option.id === modelOptionId}
+                  key={option.id}
+                  onClick={() => handleModelOptionChange(option.id)}
+                  type="button"
+                >
+                  <span>{option.label}</span>
+                  <strong>{providerUiProfiles[option.provider].label}</strong>
+                  <small>{option.description}</small>
+                  <em>{option.capabilityNote} · {option.model}</em>
                 </button>
               ))}
             </div>
             <div className="pre-attempt-selected">
               <div>
-                <strong>{selectedEnvironment.shortLabel}</strong>
-                <p className="muted">{selectedEnvironment.materialBehavior}</p>
+                <strong>
+                  {selectedSolvingMode.shortLabel} · {selectedModelOption.shortLabel}
+                </strong>
+                <p className="muted">
+                  선택한 모드는 평가 렌즈이고, 선택한 모델은 실행 엔진입니다. 이 attempt에서는 {providerUiProfiles[provider].label} · {model}로 고정됩니다.
+                </p>
               </div>
               <button className="button primary" onClick={startAttempt} type="button">
                 <Play size={16} /> 풀이 시작
@@ -698,7 +734,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           </div>
           <div className="segmented locked-environment">
             <span className="lock-dot" aria-hidden="true" />
-            <strong>{selectedEnvironment.shortLabel}</strong>
+            <strong>{activeSolvingMode.shortLabel}</strong>
             <span className="environment-meta">
               {providerProfile.label} · {model}
             </span>

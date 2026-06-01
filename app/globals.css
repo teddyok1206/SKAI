@@ -407,6 +407,8 @@ h3 {
 }
 
 .environment-card {
+  --card-provider-accent: var(--accent);
+  --card-provider-soft: var(--accent-soft);
   display: grid;
   min-height: 214px;
   gap: 8px;

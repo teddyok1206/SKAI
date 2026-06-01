@@ -23,8 +23,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
-- 사용자 기본 UI는 raw model selector가 아니라 풀이 시작 전 SKAI Practice, ChatGPT-like, Gemini-like 환경 preset을 고르게 한다.
-- 데모에서는 하나의 attempt가 하나의 AI 환경/모델에 고정된다.
+- 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
+- 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - Supabase Auth, Google OAuth callback, Supabase persistence baseline이 있다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
@@ -64,7 +64,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 아직 약한 부분:
 
-- Live provider API key 검증과 실제 환경별 품질/비용/latency 비교가 필요하다.
+- Live provider API key 검증과 실제 모델별 품질/비용/latency 비교가 필요하다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. 실제 API key로 LLM judge 품질을 smoke/calibration해야 한다.
@@ -97,9 +97,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 우선순위 1: live environment smoke
 
 - `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다.
-- 첫 후보는 ChatGPT-like 또는 Gemini-like 환경이다.
+- 첫 후보는 Gemini Flash-Lite, Groq Llama, xAI Grok Fast 중 API key와 비용이 가장 현실적인 모델이다.
 - 같은 문제, 같은 첫 프롬프트로 SKAI Practice와 live environment 응답을 비교한다.
-- 환경별 latency, token usage, failure mode를 기록한다.
+- 모델별 latency, token usage, failure mode를 기록한다.
 - 완료 조건: 적어도 하나의 live environment로 문제 풀이 1회가 end-to-end 성공한다.
 
 우선순위 2: LLM judge smoke and calibration
@@ -141,7 +141,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 다음 결정은 구현 전에 명확히 해야 한다:
 
-- 첫 live user environment를 ChatGPT-like와 Gemini-like 중 무엇으로 고정할지.
+- 첫 live user model을 Gemini, Groq, xAI, OpenAI 중 무엇으로 고정할지.
 - expert/admin용 raw provider/model lab을 언제 분리할지.
 - multi-AI solving mode를 언제부터 설계/노출할지.
 - judge model을 conversation model과 같은 provider로 둘지, 별도 저가/강한 모델로 둘지.
@@ -157,8 +157,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/003_supabase_auth_live_provider_baseline.md`: Supabase auth와 live provider baseline.
 - `docs/technical/plan/004_theme_selector_design_pass.md`: theme selector와 디자인 옵션.
 - `docs/technical/plan/005_fonts_provider_ui_adaptation.md`: font system과 provider별 UI surface.
-- `docs/technical/plan/006_interaction_environment_presets.md`: 사용자 기본 AI 선택을 raw provider/model에서 환경 preset으로 전환.
-- `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 모델 환경 선택과 attempt 단위 모델 고정.
+- `docs/technical/plan/006_interaction_environment_presets.md`: 초기 환경 preset 실험. `019`에서 superseded.
+- `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 attempt 단위 모델 고정. `019`에서 모드/모델 분리로 보정.
+- `docs/technical/plan/019_decouple_solving_mode_from_model_choice.md`: 풀이 모드와 모델 선택 분리.
 - `docs/technical/plan/008_minimal_interface_pass.md`: 홈/풀이 시작/풀이 화면을 명료한 미니멀 UI로 정리.
 - `docs/technical/plan/009_judge_system_foundation.md`: heuristic/LLM/ensemble judge pipeline과 judge metadata 준비.
 - `docs/technical/plan/010_shared_attempt_information_architecture.md`: 공유 풀이 화면의 workflow, prompt skeleton, bottleneck, raw transcript 정보 구조 강화.

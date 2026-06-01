@@ -21,9 +21,9 @@ Fallback:
 - Use system sans-serif after Pretendard.
 - Use system monospace after JetBrains Mono.
 
-## Interaction Environment Rule
+## Mode And Model Rule
 
-The default user experience should expose a small set of AI-use environments before an attempt starts, not a long list of raw providers and editable model IDs inside the solving surface.
+The default user experience should separate solving mode from model choice before an attempt starts.
 
 Reason:
 
@@ -31,16 +31,17 @@ Reason:
 - Beginners should practice in conditions that resemble real ChatGPT/Gemini usage.
 - Internal provider/model routing is still necessary for cost, evaluation, and research.
 - Model choice should feel like choosing a programming language before a coding problem attempt.
+- A provider brand should not define the user's workflow or evaluation lens.
 
-Environment selection may change the interaction surface, but only at the level of mood and workflow affordance. Once the demo attempt starts, the selected environment is locked for that attempt.
+Mode selection may change UI emphasis and later judge weighting, but it must not inject hidden instructions into the live model prompt. Model selection chooses the execution engine. Once the demo attempt starts, both are locked for that attempt.
 
 Allowed:
 
 - Accent color.
 - Density.
 - Metadata emphasis.
-- Empty-state and coach tone.
-- Surface labels that explain the interaction mode.
+- Empty-state and coach tone tied to the selected solving mode.
+- Surface labels that distinguish mode from model.
 
 Not allowed:
 
@@ -48,19 +49,28 @@ Not allowed:
 - Using provider logos as the primary UI structure.
 - Replicating proprietary animations, gradients, button shapes, or product trade dress.
 - Making SKAI feel like a skin over another product.
+- Describing Gemini as the material mode or OpenAI as the general-chat mode.
 
-## Current Environment Mapping
+## Current Mode Mapping
 
-- SKAI Practice: default practice environment with mock provider fallback.
-- ChatGPT-like: text-first general AI conversation environment.
-- Gemini-like: material-heavy, multimodal AI conversation environment.
+- Single Model: one selected model, broad orchestration practice.
+- Material Grounded: any selected model, material use and evidence discipline emphasized.
+- Verification Drill: any selected model, critique, uncertainty, and validation emphasized.
 
-## Solving Modes
+## Current Model Mapping
+
+- SKAI Mock: no-cost local demo path.
+- Gemini Flash-Lite: low-cost live smoke candidate.
+- Groq Llama: fast hosted text model candidate.
+- xAI Grok Fast: low-cost Grok API candidate.
+- OpenAI GPT-4.1 Mini: stable baseline candidate with cost caution.
+
+## Future Solving Modes
 
 Demo mode:
 
-- Single model mode.
-- The user chooses one AI environment before starting.
+- Single selected model per attempt.
+- The user chooses one solving mode and one model before starting.
 - The attempt trace records that selected provider/model.
 
 Future modes:
@@ -69,13 +79,13 @@ Future modes:
 - Harness mode: the user designs a workflow and assigns subtasks to multiple AI workers.
 - Expert lab mode: raw provider/model selection, cost probes, and evaluation diagnostics.
 
-## Internal Provider Mapping
+## Provider Surface Mapping
 
-- SKAI Mock: workbench default, evidence-first.
-- OpenAI: minimal, neutral, reasoning-focused.
-- Gemini: exploratory, evidence and comparison oriented.
-- xAI Grok: direct, high-contrast, bottleneck-oriented.
-- Groq: compact, speed and iteration oriented.
-- OpenRouter: routing and comparison oriented.
+Provider surface styling is allowed only as lightweight execution metadata:
 
-This mapping is intentionally lightweight. The core SKAI UI remains stable so users can compare attempts without the interface itself becoming the main variable. Raw provider/model selection belongs in expert/admin tooling, not the beginner-facing solving surface.
+- provider accent,
+- provider label,
+- model id,
+- latency/cost metadata when available.
+
+It should not imply a workflow. The core SKAI UI remains stable so users can compare attempts without the interface itself becoming the main variable. Raw provider/model editing belongs in expert/admin tooling, not the beginner-facing solving surface.

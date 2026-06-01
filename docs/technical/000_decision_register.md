@@ -57,7 +57,7 @@
 | TDR-051 | Material extraction MVP | Use extracted text sidecars for official files; pass text uploads directly and images as data URLs where supported | Accepted | OCR/임의 XLSX/PDF 파싱은 후속 과제로 두되 데모에서 모델이 자료를 볼 수 있어야 함 | 2026-06-01 |
 | TDR-052 | Supabase sync | Use server API routes for Supabase persistence with local fallback | Accepted | 클라이언트 직접 DB 쓰기보다 auth/cookie/RLS 흐름에 맞고 mock/local 모드도 유지됨 | 2026-06-01 |
 | TDR-053 | OAuth callback | Use `/auth/callback` for Supabase Google OAuth exchange | Accepted | Supabase session cookies를 Next.js route handler에서 안정적으로 설정해야 함 | 2026-06-01 |
-| TDR-054 | User-facing AI choice | Choose one interaction environment before attempt start; no raw provider/model switching inside demo solve | Accepted | 코딩 문제의 언어 선택처럼 attempt 설정으로 모델을 고르는 것이 실제 학습/비교에 더 적합함 | 2026-06-01 |
+| TDR-054 | User-facing AI choice | Choose one interaction environment before attempt start; no raw provider/model switching inside demo solve | Superseded | TDR-067 separates solving mode from model choice because provider brand must not define workflow | 2026-06-01 |
 | TDR-055 | Solving modes | Demo supports single-model attempts; future versions should support multi-AI and harness modes | Accepted | SKAI의 장기 방향은 여러 AI를 task별로 배분하는 오케스트레이션 훈련까지 포함해야 함 | 2026-06-01 |
 | TDR-056 | Judge architecture | Build a repeatable judge pipeline before any Codex-backed agent judge | Accepted | 채점은 반복 가능성, 구조화 출력, judge run 기록, disagreement 추적이 우선이며 Codex judge는 local research spike로 분리해야 함 | 2026-06-01 |
 | TDR-057 | Shared attempt IA | Show workflow, prompt skeleton, and bottlenecks before raw transcript | Accepted | SKAI 공유 화면은 프롬프트 원문보다 문제 구조화와 task 배분 흐름을 먼저 학습시키는 공간이어야 함 | 2026-06-01 |
@@ -70,6 +70,7 @@
 | TDR-064 | Breakpoint replay branch | Branch from a trace event by creating a child attempt with source trace lineage, and mark the breakpoint on the existing prompt-response pair | Accepted | GDB-like replay는 bottleneck을 체감하게 하지만 3D dual graph를 4번째 차원으로 흔들면 안 되므로 branch는 inter-attempt metadata와 pair anchor로 다룸 | 2026-06-02 |
 | TDR-065 | Context compiler | Treat provider context as a compiled runtime artifact from immutable trace, not as provider-thread storage | Accepted | branch/replay/비교/채점/공유를 안정적으로 하려면 삭제/복원이 아니라 현재 attempt path에서 context를 매번 재구성해야 함 | 2026-06-02 |
 | TDR-066 | Counterfactual judge | Store parent/child branch diff and counterfactual judge report separately from the original score report | Accepted | replay의 학습 가치는 기존 점수를 덮는 것이 아니라 병목 변경의 인과 효과를 별도 평가하는 데 있음 | 2026-06-02 |
+| TDR-067 | Mode/model separation | Select solving mode and model independently before attempt start | Accepted | 모델은 실행 엔진이고 모드는 사용자의 연습/평가 렌즈이므로 Gemini=자료탐색형, OpenAI=일반대화형처럼 묶으면 사용자 오케스트레이션 선택권이 흐려짐 | 2026-06-02 |
 
 ## Decision Template
 

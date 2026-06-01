@@ -35,6 +35,8 @@ export type MaterialKind = "image" | "spreadsheet" | "csv" | "text" | "pdf" | "o
 
 export type AttemptBranchMode = "breakpoint_replay";
 
+export type SolvingModeId = "single_model" | "material_grounded" | "verification_drill";
+
 export interface ProblemMaterial {
   id: string;
   title: string;
@@ -129,6 +131,7 @@ export interface Attempt {
   title: string;
   provider: ProviderId;
   model: string;
+  solvingMode?: SolvingModeId;
   trace: TraceEvent[];
   finalAnswer?: string;
   scoreReport?: ScoreReport;
@@ -219,6 +222,7 @@ export interface PublishedAttempt {
   scoreReport: ScoreReport;
   branch?: AttemptBranch;
   counterfactualReport?: CounterfactualJudgeReport;
+  solvingMode?: SolvingModeId;
   createdAt: string;
 }
 
