@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Problem not found." }, { status: 404 });
   }
 
-  const report = judgeAttempt({
+  const report = await judgeAttempt({
     attemptId: parsed.data.attemptId,
     problem,
     trace: parsed.data.trace,

@@ -1,6 +1,31 @@
+import { z } from "zod";
 import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
-import type { AxisScore, Bottleneck, Problem, ScoreReport, TraceEvent, WorkflowStep } from "@/lib/types";
+import { getProvider } from "@/lib/providers";
+import type {
+  AxisScore,
+  Bottleneck,
+  JudgeMode,
+  JudgeRunSummary,
+  Problem,
+  ProviderId,
+  ScoreReport,
+  TraceEvent,
+  WorkflowStep,
+} from "@/lib/types";
+
+const rubricVersion = "v0";
+
+const providerIds = ["mock", "openai", "groq", "xai", "openrouter", "gemini"] as const;
+const scoreAxisValues = [
+  "problem_definition",
+  "decomposition",
+  "instruction_clarity",
+  "adaptation",
+  "verification",
+  "efficiency",
+  "final_quality",
+] as const;
 
 const axisLabels: Record<AxisScore["axis"], string> = {
   problem_definition: "문제정의",
@@ -12,6 +37,57 @@ const axisLabels: Record<AxisScore["axis"], string> = {
   final_quality: "최종품질",
 };
 
+const llmJudgeSchema = z.object({
+  coachSummary: z.string().min(1),
+  axisScores: z.array(
+    z.object({
+      axis: z.enum(scoreAxisValues),
+      score: z.coerce.number().min(0).max(100),
+      rationale: z.string().min(1),
+    }),
+  ),
+  strengths: z.array(z.string()).default([]),
+  improvements: z.array(z.string()).default([]),
+  bottlenecks: z
+    .array(
+      z.object({
+        traceEventId: z.string().optional(),
+        label: z.string(),
+        severity: z.enum(["low", "medium", "high"]),
+        explanation: z.string(),
+        replaySuggestion: z.string(),
+      }),
+    )
+    .default([]),
+  workflow: z
+    .array(
+      z.object({
+        title: z.string(),
+        summary: z.string(),
+        relatedTraceEventIds: z.array(z.string()).default([]),
+      }),
+    )
+    .default([]),
+  nextPracticeTargets: z.array(z.string()).default([]),
+});
+
+interface JudgeInput {
+  attemptId: string;
+  problem: Problem;
+  trace: TraceEvent[];
+  finalAnswer: string;
+}
+
+interface JudgeConfig {
+  provider: ProviderId;
+  model: string;
+}
+
+interface JudgeRunInternal {
+  summary: JudgeRunSummary;
+  report?: ScoreReport;
+}
+
 function countMatches(text: string, keywords: string[]) {
   const normalized = text.toLowerCase();
   return keywords.reduce((count, keyword) => count + (normalized.includes(keyword.toLowerCase()) ? 1 : 0), 0);
@@ -19,6 +95,17 @@ function countMatches(text: string, keywords: string[]) {
 
 function clampScore(score: number) {
   return Math.max(35, Math.min(96, Math.round(score)));
+}
+
+function weightedTotal(problem: Problem, axisScores: AxisScore[]) {
+  const totalWeight = problem.rubric.reduce((sum, item) => sum + item.weight, 0);
+  const weighted =
+    axisScores.reduce((sum, score) => {
+      const weight = problem.rubric.find((item) => item.axis === score.axis)?.weight ?? 1;
+      return sum + score.score * weight;
+    }, 0) / totalWeight;
+
+  return Math.round(weighted);
 }
 
 function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: string, turnCount: number): AxisScore {
@@ -106,22 +193,12 @@ function buildWorkflow(trace: TraceEvent[]): WorkflowStep[] {
   ];
 }
 
-export function judgeAttempt(input: {
-  attemptId: string;
-  problem: Problem;
-  trace: TraceEvent[];
-  finalAnswer: string;
-}): ScoreReport {
+function buildHeuristicReport(input: JudgeInput): ScoreReport {
   const userTurnCount = input.trace.filter((event) => event.role === "user").length;
   const traceText = input.trace
     .map((event) => `${event.role}: ${event.content}\n${buildAttachmentContext(event.attachments)}`)
     .join("\n");
   const axisScores = defaultRubric.map((item) => axisScore(item.axis, traceText, input.finalAnswer, userTurnCount));
-  const weightedTotal =
-    axisScores.reduce((sum, score) => {
-      const weight = input.problem.rubric.find((item) => item.axis === score.axis)?.weight ?? 1;
-      return sum + score.score * weight;
-    }, 0) / input.problem.rubric.reduce((sum, item) => sum + item.weight, 0);
   const bottlenecks = findBottlenecks(input.trace);
   const strengths = axisScores
     .filter((score) => score.score >= 76)
@@ -136,7 +213,7 @@ export function judgeAttempt(input: {
     id: crypto.randomUUID(),
     attemptId: input.attemptId,
     problemId: input.problem.id,
-    totalScore: Math.round(weightedTotal),
+    totalScore: weightedTotal(input.problem, axisScores),
     axisScores,
     coachSummary:
       "이번 시도는 AI에게 바로 정답을 맡기는 대신 문제 구조와 검증 기준을 얼마나 세웠는지가 핵심입니다. 점수보다 아래 축별 피드백을 보고 다음 시도에서 한 지점을 바꾸는 것이 중요합니다.",
@@ -154,6 +231,374 @@ export function judgeAttempt(input: {
     ],
     judgeProvider: "mock",
     judgeModel: "heuristic-coach-v0",
+    judgeMode: "heuristic",
     createdAt: new Date().toISOString(),
   };
+}
+
+function isProviderId(value: string): value is ProviderId {
+  return providerIds.includes(value as ProviderId);
+}
+
+function getJudgeMode(): JudgeMode {
+  const value = process.env.SKAI_JUDGE_MODE;
+  return value === "llm" || value === "ensemble" ? value : "heuristic";
+}
+
+function defaultJudgeModel(provider: ProviderId) {
+  const models: Record<ProviderId, string> = {
+    mock: "mock-orchestrator",
+    openai: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+    groq: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
+    xai: process.env.XAI_MODEL ?? "grok-4-fast",
+    openrouter: process.env.OPENROUTER_MODEL ?? "openai/gpt-oss-20b",
+    gemini: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
+  };
+
+  return models[provider];
+}
+
+function parseJudgeConfig(value: string): JudgeConfig | null {
+  const [providerValue, modelValue] = value.split(":");
+  const provider = providerValue?.trim();
+
+  if (!provider || !isProviderId(provider) || provider === "mock") {
+    return null;
+  }
+
+  return {
+    provider,
+    model: modelValue?.trim() || defaultJudgeModel(provider),
+  };
+}
+
+function getLlmJudgeConfigs(mode: JudgeMode): JudgeConfig[] {
+  if (mode === "ensemble") {
+    const configs =
+      process.env.SKAI_JUDGE_ENSEMBLE?.split(",")
+        .map((item) => parseJudgeConfig(item.trim()))
+        .filter((item): item is JudgeConfig => Boolean(item)) ?? [];
+
+    if (configs.length > 0) {
+      return configs;
+    }
+  }
+
+  const provider = process.env.SKAI_JUDGE_PROVIDER?.trim() ?? "gemini";
+  if (!isProviderId(provider) || provider === "mock") {
+    return [];
+  }
+
+  return [
+    {
+      provider,
+      model: process.env.SKAI_JUDGE_MODEL?.trim() || defaultJudgeModel(provider),
+    },
+  ];
+}
+
+function buildJudgeContext(input: JudgeInput) {
+  const trace = input.trace
+    .map((event, index) => {
+      const attachmentContext = buildAttachmentContext(event.attachments);
+      return [
+        `Trace event ${index + 1}`,
+        `id: ${event.id}`,
+        `role: ${event.role}`,
+        `provider/model: ${event.provider ?? "unknown"}/${event.model ?? "unknown"}`,
+        "content:",
+        event.content,
+        attachmentContext ? `attachments:\n${attachmentContext}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    })
+    .join("\n\n---\n\n");
+
+  return [
+    "SKAI Judge Context",
+    "",
+    `Problem ID: ${input.problem.id}`,
+    `Title: ${input.problem.title}`,
+    `Goal profile: ${input.problem.goalProfile}`,
+    "",
+    "Problem statement:",
+    input.problem.statement,
+    "",
+    "User goal:",
+    input.problem.userGoal,
+    "",
+    "Constraints:",
+    input.problem.constraints.map((item) => `- ${item}`).join("\n"),
+    "",
+    "Deliverables:",
+    input.problem.deliverables.map((item) => `- ${item}`).join("\n"),
+    "",
+    "Rubric:",
+    input.problem.rubric.map((item) => `- ${item.axis} (${item.weight}): ${item.description}`).join("\n"),
+    "",
+    "Trace:",
+    trace || "No trace events.",
+    "",
+    "Final answer:",
+    input.finalAnswer || "(empty)",
+  ].join("\n");
+}
+
+function extractJsonObject(value: string) {
+  const withoutFence = value.replace(/```json|```/g, "").trim();
+  const start = withoutFence.indexOf("{");
+  const end = withoutFence.lastIndexOf("}");
+
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error("Judge response did not contain a JSON object.");
+  }
+
+  return JSON.parse(withoutFence.slice(start, end + 1)) as unknown;
+}
+
+function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer<typeof llmJudgeSchema>): ScoreReport {
+  const axisScores = defaultRubric.map((item) => {
+    const found = raw.axisScores.find((score) => score.axis === item.axis);
+
+    return {
+      axis: item.axis,
+      label: item.label,
+      score: clampScore(found?.score ?? 50),
+      rationale: found?.rationale ?? `${item.label} 축에 대한 judge 근거가 누락되었습니다.`,
+    };
+  });
+
+  return {
+    id: crypto.randomUUID(),
+    attemptId: input.attemptId,
+    problemId: input.problem.id,
+    totalScore: weightedTotal(input.problem, axisScores),
+    axisScores,
+    coachSummary: raw.coachSummary,
+    strengths: raw.strengths.slice(0, 4),
+    improvements: raw.improvements.slice(0, 4),
+    bottlenecks: raw.bottlenecks.slice(0, 4),
+    workflow: raw.workflow.length > 0 ? raw.workflow.slice(0, 6) : buildWorkflow(input.trace),
+    nextPracticeTargets: raw.nextPracticeTargets.slice(0, 4),
+    judgeProvider: config.provider,
+    judgeModel: config.model,
+    judgeMode: "llm",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function runSummary(input: {
+  attemptId: string;
+  status: JudgeRunSummary["status"];
+  judgeProvider: ProviderId;
+  judgeModel: string;
+  judgeKind: JudgeRunSummary["judgeKind"];
+  startedAt: number;
+  totalScore?: number;
+  axisScores?: AxisScore[];
+  error?: string;
+}): JudgeRunSummary {
+  const now = new Date().toISOString();
+
+  return {
+    id: crypto.randomUUID(),
+    attemptId: input.attemptId,
+    status: input.status,
+    judgeProvider: input.judgeProvider,
+    judgeModel: input.judgeModel,
+    judgeKind: input.judgeKind,
+    rubricVersion,
+    latencyMs: Date.now() - input.startedAt,
+    totalScore: input.totalScore,
+    axisScores: input.axisScores,
+    error: input.error,
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
+function runHeuristicJudge(input: JudgeInput): JudgeRunInternal {
+  const startedAt = Date.now();
+  const report = buildHeuristicReport(input);
+
+  return {
+    report,
+    summary: runSummary({
+      attemptId: input.attemptId,
+      status: "succeeded",
+      judgeProvider: "mock",
+      judgeModel: "heuristic-coach-v0",
+      judgeKind: "heuristic",
+      startedAt,
+      totalScore: report.totalScore,
+      axisScores: report.axisScores,
+    }),
+  };
+}
+
+async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<JudgeRunInternal> {
+  const startedAt = Date.now();
+
+  try {
+    const provider = getProvider(config.provider);
+    const response = await provider.complete({
+      provider: config.provider,
+      model: config.model,
+      problem: input.problem,
+      temperature: 0.1,
+      systemPrompt: [
+        "You are SKAI Judge, an evaluator for AI orchestration skill.",
+        "Evaluate the human user's process, not the model's raw intelligence.",
+        "Focus on problem definition, decomposition, instruction clarity, adaptation, verification, efficiency, material use, and final artifact quality.",
+        "Do not reward fake precision. Explain bottlenecks concretely.",
+        "Return only valid JSON. Do not include markdown fences.",
+      ].join(" "),
+      contextMessage: buildJudgeContext(input),
+      messages: [
+        {
+          role: "user",
+          content: [
+            "Return a JSON object with these keys:",
+            "coachSummary: string",
+            "axisScores: array of {axis, score, rationale}",
+            "strengths: string[]",
+            "improvements: string[]",
+            "bottlenecks: array of {traceEventId?, label, severity, explanation, replaySuggestion}",
+            "workflow: array of {title, summary, relatedTraceEventIds}",
+            "nextPracticeTargets: string[]",
+            `Allowed axes: ${scoreAxisValues.join(", ")}`,
+          ].join("\n"),
+        },
+      ],
+    });
+    const parsed = llmJudgeSchema.parse(extractJsonObject(response.message));
+    const report = normalizeLlmReport(input, config, parsed);
+
+    return {
+      report,
+      summary: runSummary({
+        attemptId: input.attemptId,
+        status: "succeeded",
+        judgeProvider: config.provider,
+        judgeModel: config.model,
+        judgeKind: "llm",
+        startedAt,
+        totalScore: report.totalScore,
+        axisScores: report.axisScores,
+      }),
+    };
+  } catch (error) {
+    return {
+      summary: runSummary({
+        attemptId: input.attemptId,
+        status: "failed",
+        judgeProvider: config.provider,
+        judgeModel: config.model,
+        judgeKind: "llm",
+        startedAt,
+        error: error instanceof Error ? error.message : "Unknown judge error",
+      }),
+    };
+  }
+}
+
+function uniqueStrings(values: string[], limit: number) {
+  return Array.from(new Set(values.filter(Boolean))).slice(0, limit);
+}
+
+function detectDisagreement(reports: ScoreReport[]) {
+  const notes: string[] = [];
+
+  if (reports.length < 2) {
+    return notes;
+  }
+
+  const totals = reports.map((report) => report.totalScore);
+  if (Math.max(...totals) - Math.min(...totals) >= 12) {
+    notes.push(`총점 차이가 ${Math.max(...totals) - Math.min(...totals)}점입니다. judge calibration이 필요합니다.`);
+  }
+
+  for (const axis of scoreAxisValues) {
+    const scores = reports
+      .map((report) => report.axisScores.find((score) => score.axis === axis)?.score)
+      .filter((score): score is number => typeof score === "number");
+
+    if (scores.length >= 2 && Math.max(...scores) - Math.min(...scores) >= 15) {
+      notes.push(`${axisLabels[axis]} 축에서 judge 간 점수 차이가 큽니다.`);
+    }
+  }
+
+  return notes.slice(0, 5);
+}
+
+function aggregateReports(input: JudgeInput, reports: ScoreReport[]): ScoreReport {
+  const primary = reports.find((report) => report.judgeMode === "llm") ?? reports[0];
+  const axisScores = defaultRubric.map((rubric) => {
+    const values = reports
+      .map((report) => report.axisScores.find((score) => score.axis === rubric.axis))
+      .filter((score): score is AxisScore => Boolean(score));
+    const average = values.reduce((sum, score) => sum + score.score, 0) / values.length;
+    const primaryScore = primary.axisScores.find((score) => score.axis === rubric.axis);
+
+    return {
+      axis: rubric.axis,
+      label: rubric.label,
+      score: clampScore(average),
+      rationale: primaryScore
+        ? `${primaryScore.rationale} (ensemble average: ${Math.round(average)})`
+        : "앙상블 judge 평균으로 산출한 점수입니다.",
+    };
+  });
+
+  return {
+    id: crypto.randomUUID(),
+    attemptId: input.attemptId,
+    problemId: input.problem.id,
+    totalScore: weightedTotal(input.problem, axisScores),
+    axisScores,
+    coachSummary: primary.coachSummary,
+    strengths: uniqueStrings(reports.flatMap((report) => report.strengths), 4),
+    improvements: uniqueStrings(reports.flatMap((report) => report.improvements), 4),
+    bottlenecks: primary.bottlenecks,
+    workflow: primary.workflow,
+    nextPracticeTargets: uniqueStrings(reports.flatMap((report) => report.nextPracticeTargets), 4),
+    judgeProvider: primary.judgeProvider,
+    judgeModel: `ensemble(${reports.map((report) => report.judgeModel).join(",")})`,
+    judgeMode: "ensemble",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function withJudgeRuns(report: ScoreReport, mode: JudgeMode, runs: JudgeRunInternal[], disagreement: string[]) {
+  return {
+    ...report,
+    judgeMode: mode,
+    judgeRuns: runs.map((run) => run.summary),
+    judgeDisagreement: disagreement,
+  };
+}
+
+export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
+  const heuristicRun = runHeuristicJudge(input);
+  const mode = getJudgeMode();
+
+  if (mode === "heuristic") {
+    return withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []);
+  }
+
+  const llmRuns = await Promise.all(getLlmJudgeConfigs(mode).map((config) => runLlmJudge(input, config)));
+  const allRuns = [heuristicRun, ...llmRuns];
+  const successfulReports = allRuns.map((run) => run.report).filter((report): report is ScoreReport => Boolean(report));
+  const successfulLlmReports = llmRuns.map((run) => run.report).filter((report): report is ScoreReport => Boolean(report));
+
+  if (successfulLlmReports.length === 0) {
+    return withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", allRuns, ["LLM judge가 실패해 heuristic judge 결과를 사용했습니다."]);
+  }
+
+  const report =
+    mode === "ensemble" ? aggregateReports(input, successfulReports) : successfulLlmReports[0];
+  const disagreement = detectDisagreement(successfulReports);
+
+  return withJudgeRuns(report, mode, allRuns, disagreement);
 }

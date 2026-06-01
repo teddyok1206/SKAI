@@ -79,6 +79,9 @@ create table if not exists public.score_reports (
   next_practice_targets jsonb not null default '[]'::jsonb,
   judge_provider text not null,
   judge_model text not null,
+  judge_mode text not null default 'heuristic',
+  judge_runs jsonb not null default '[]'::jsonb,
+  judge_disagreement jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now()
 );
 

@@ -94,6 +94,29 @@ Rubrics should be visible to users.
 
 Hidden judge prompts may exist for robustness, but the evaluation standards should be public enough that users understand what skill they are practicing.
 
+## Judge System Direction
+
+Judging should be repeatable before it is agentic.
+
+Current intended layers:
+
+1. Heuristic baseline judge.
+2. Optional LLM judge with structured JSON output.
+3. Optional ensemble mode that records judge disagreement.
+4. Later queue worker for slow or high-traffic judging.
+5. Codex-backed deep judge only as a local research spike until reliability, security, and cost are understood.
+
+Judge runs should store enough metadata to audit the result:
+
+- judge provider,
+- judge model,
+- judge mode,
+- status,
+- latency,
+- axis scores,
+- error if any,
+- disagreement notes across judge runs.
+
 ## Difficulty
 
 Difficulty can combine:

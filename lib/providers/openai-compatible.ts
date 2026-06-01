@@ -60,11 +60,14 @@ export function createOpenAICompatibleProvider(options: OpenAICompatibleProvider
         {
           role: "system",
           content:
+            request.systemPrompt ??
             "You are the in-app assistant for SKAI, a platform for practicing AI orchestration. Help the user define, decompose, delegate, verify, and produce the requested artifact. Be concrete and structured. If files are attached, explicitly separate file evidence from assumptions.",
         },
         {
           role: "user",
-          content: `Problem:\n${request.problem.statement}\n\nConstraints:\n${request.problem.constraints.join("\n")}`,
+          content:
+            request.contextMessage ??
+            `Problem:\n${request.problem.statement}\n\nConstraints:\n${request.problem.constraints.join("\n")}`,
         },
         ...request.messages.map((message): OpenAICompatibleMessage => {
           const attachmentContext = buildAttachmentContext(message.attachments);
@@ -117,7 +120,7 @@ export function createOpenAICompatibleProvider(options: OpenAICompatibleProvider
         },
         body: JSON.stringify({
           model: request.model || options.defaultModel,
-          temperature: 0.4,
+          temperature: request.temperature ?? 0.4,
           messages,
         }),
       });

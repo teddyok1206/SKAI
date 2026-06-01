@@ -33,6 +33,22 @@ const traceEventSchema = z.object({
   attachments: z.array(attachmentSchema).optional(),
 });
 
+const judgeRunSchema = z.object({
+  id: z.string(),
+  attemptId: z.string(),
+  status: z.enum(["pending", "running", "succeeded", "failed", "cancelled"]),
+  judgeProvider: providerSchema,
+  judgeModel: z.string(),
+  judgeKind: z.enum(["heuristic", "llm"]),
+  rubricVersion: z.string(),
+  latencyMs: z.number().optional(),
+  totalScore: z.number().optional(),
+  axisScores: z.array(z.unknown()).optional(),
+  error: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
 const scoreReportSchema = z.object({
   id: z.string(),
   attemptId: z.string(),
@@ -47,6 +63,9 @@ const scoreReportSchema = z.object({
   nextPracticeTargets: z.array(z.string()),
   judgeProvider: providerSchema,
   judgeModel: z.string(),
+  judgeMode: z.enum(["heuristic", "llm", "ensemble"]).optional(),
+  judgeRuns: z.array(judgeRunSchema).optional(),
+  judgeDisagreement: z.array(z.string()).optional(),
   createdAt: z.string(),
 });
 
@@ -195,14 +214,42 @@ export async function POST(request: Request) {
       next_practice_targets: attempt.scoreReport.nextPracticeTargets,
       judge_provider: attempt.scoreReport.judgeProvider,
       judge_model: attempt.scoreReport.judgeModel,
+      judge_mode: attempt.scoreReport.judgeMode ?? "heuristic",
+      judge_runs: attempt.scoreReport.judgeRuns ?? [],
+      judge_disagreement: attempt.scoreReport.judgeDisagreement ?? [],
       created_at: attempt.scoreReport.createdAt,
     });
 
     if (scoreResult.error) {
       return NextResponse.json({ error: scoreResult.error.message }, { status: 500 });
     }
+
+    if (attempt.scoreReport.judgeRuns && attempt.scoreReport.judgeRuns.length > 0) {
+      const judgeRunResult = await supabase.from("judge_runs").upsert(
+        attempt.scoreReport.judgeRuns.map((run) => ({
+          id: run.id,
+          attempt_id: attempt.id,
+          status: run.status,
+          judge_provider: run.judgeProvider,
+          judge_model: run.judgeModel,
+          rubric_version: run.rubricVersion,
+          report: {
+            judgeKind: run.judgeKind,
+            latencyMs: run.latencyMs,
+            totalScore: run.totalScore,
+            axisScores: run.axisScores,
+          },
+          error: run.error ?? null,
+          created_at: run.createdAt,
+          updated_at: run.updatedAt,
+        })),
+      );
+
+      if (judgeRunResult.error) {
+        return NextResponse.json({ error: judgeRunResult.error.message }, { status: 500 });
+      }
+    }
   }
 
   return NextResponse.json({ mode: "supabase", synced: true });
 }
-

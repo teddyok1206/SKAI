@@ -152,6 +152,24 @@ export interface WorkflowStep {
   relatedTraceEventIds: string[];
 }
 
+export type JudgeMode = "heuristic" | "llm" | "ensemble";
+
+export interface JudgeRunSummary {
+  id: string;
+  attemptId: string;
+  status: JudgeRunStatus;
+  judgeProvider: ProviderId;
+  judgeModel: string;
+  judgeKind: "heuristic" | "llm";
+  rubricVersion: string;
+  latencyMs?: number;
+  totalScore?: number;
+  axisScores?: AxisScore[];
+  error?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ScoreReport {
   id: string;
   attemptId: string;
@@ -166,6 +184,9 @@ export interface ScoreReport {
   nextPracticeTargets: string[];
   judgeProvider: ProviderId;
   judgeModel: string;
+  judgeMode?: JudgeMode;
+  judgeRuns?: JudgeRunSummary[];
+  judgeDisagreement?: string[];
   createdAt: string;
 }
 

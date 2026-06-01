@@ -34,6 +34,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Pretendard Variable + JetBrains Mono font system이 적용됐다.
 - provider별 chat surface mood가 적용됐다.
 - 홈과 풀이 시작 화면은 내부 설명을 줄이고 현재 행동 중심의 미니멀 UI로 정리됐다.
+- Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
+- Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 
 현재 데모가 증명하는 것:
 
@@ -50,7 +52,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Live provider API key 검증과 실제 환경별 품질/비용/latency 비교가 필요하다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
-- Judge는 아직 heuristic 중심이다. LLM judge, multi-judge voting, judge disagreement 저장이 필요하다.
+- Judge는 기본값이 아직 heuristic이다. 실제 API key로 LLM judge 품질을 smoke/calibration해야 한다.
+- Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS와 sync path는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이의 prompt summary, 원문 접기/펼치기, 댓글 thread가 아직 충분하지 않다.
@@ -81,13 +84,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 환경별 latency, token usage, failure mode를 기록한다.
 - 완료 조건: 적어도 하나의 live environment로 문제 풀이 1회가 end-to-end 성공한다.
 
-우선순위 2: LLM judge MVP
+우선순위 2: LLM judge smoke and calibration
 
-- 현재 heuristic judge를 유지하되 LLM judge adapter를 추가한다.
-- judge prompt는 문제, rubric, trace, final answer, attachments summary를 입력으로 받는다.
-- 결과는 structured JSON으로 저장한다.
+- `SKAI_JUDGE_MODE=llm` 또는 `ensemble`으로 실제 judge provider를 켠다.
+- 같은 attempt에 대해 heuristic report와 LLM judge report를 비교한다.
+- malformed JSON, provider failure, judge disagreement를 기록한다.
 - coach review와 strict rubric mode를 분리할 준비를 한다.
-- 완료 조건: 같은 attempt에 대해 heuristic report와 LLM judge report를 비교할 수 있다.
+- 완료 조건: 최소 3개 sample attempt에서 LLM judge 결과를 founder가 정성 검토한다.
 
 우선순위 3: share page 정보 구조 강화
 
@@ -125,6 +128,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - expert/admin용 raw provider/model lab을 언제 분리할지.
 - multi-AI solving mode를 언제부터 설계/노출할지.
 - judge model을 conversation model과 같은 provider로 둘지, 별도 저가/강한 모델로 둘지.
+- judge calibration용 golden trace를 몇 개 만들지.
 - public sharing의 기본 공개 범위: workflow only, summarized prompts, full raw transcript 중 어디까지인지.
 - 자료 업로드의 MVP 한계: text/image만 우선할지, xlsx/pdf parsing까지 넣을지.
 - smoke test에서 사용자가 풀 첫 문제 1개를 무엇으로 할지.
@@ -139,15 +143,16 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/006_interaction_environment_presets.md`: 사용자 기본 AI 선택을 raw provider/model에서 환경 preset으로 전환.
 - `docs/technical/plan/007_pre_attempt_model_selection.md`: 풀이 시작 전 모델 환경 선택과 attempt 단위 모델 고정.
 - `docs/technical/plan/008_minimal_interface_pass.md`: 홈/풀이 시작/풀이 화면을 명료한 미니멀 UI로 정리.
+- `docs/technical/plan/009_judge_system_foundation.md`: heuristic/LLM/ensemble judge pipeline과 judge metadata 준비.
 
 다음 plan 후보:
 
-- `009_live_environment_smoke.md`
-- `010_llm_judge_mvp.md`
-- `011_shared_attempt_information_architecture.md`
-- `012_admin_authoring_mvp.md`
-- `013_supabase_deployment_hardening.md`
-- `014_cost_guardrails.md`
+- `010_live_environment_smoke.md`
+- `011_llm_judge_calibration.md`
+- `012_shared_attempt_information_architecture.md`
+- `013_admin_authoring_mvp.md`
+- `014_supabase_deployment_hardening.md`
+- `015_cost_guardrails.md`
 
 ## Reading Map
 

@@ -5,6 +5,9 @@ export interface ProviderRequest {
   model: string;
   problem: Problem;
   messages: ChatMessage[];
+  systemPrompt?: string;
+  contextMessage?: string;
+  temperature?: number;
 }
 
 export interface ProviderResponse {
@@ -16,4 +19,3 @@ export interface ModelProvider {
   id: ProviderId;
   complete(request: ProviderRequest): Promise<ProviderResponse>;
 }
-
