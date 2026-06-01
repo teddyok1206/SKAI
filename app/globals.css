@@ -1131,12 +1131,16 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  max-width: 100%;
   border-radius: 999px;
   background: var(--surface-muted);
   color: var(--muted);
   padding: 5px 8px;
   font-size: 12px;
   font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .graph-status.material_used,
@@ -1197,9 +1201,9 @@ h3 {
 .graph-lane-head,
 .graph-lane-row {
   display: grid;
-  grid-template-columns: minmax(160px, 1fr) 118px minmax(160px, 1fr) 74px minmax(160px, 1fr);
+  grid-template-columns: minmax(78px, 1fr) minmax(84px, 120px) minmax(78px, 1fr) minmax(58px, 86px) minmax(78px, 1fr);
   gap: 8px;
-  align-items: stretch;
+  align-items: center;
 }
 
 .graph-lane-head {
@@ -1220,8 +1224,13 @@ h3 {
 .graph-lane-row {
   border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 14%, var(--line));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--evidence-bg) 76%, #fff);
-  padding: 8px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    color-mix(in srgb, var(--evidence-bg) 76%, #fff);
+  background-size: 28px 28px;
+  min-height: 104px;
+  padding: 12px 8px;
 }
 
 .graph-lane-row.breakpoint {
@@ -1230,10 +1239,11 @@ h3 {
 }
 
 .graph-lane-link {
-  display: grid;
-  gap: 6px;
-  align-content: center;
-  justify-items: center;
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
   color: var(--muted);
   font-size: 11px;
   font-weight: 800;
@@ -1244,45 +1254,89 @@ h3 {
   opacity: 0.72;
 }
 
+.graph-lane-link small {
+  position: relative;
+  z-index: 1;
+  max-width: 76px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 2px 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graph-connector {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: color-mix(in srgb, var(--provider-accent, var(--accent)) 30%, var(--line));
+}
+
+.graph-connector::after {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 42%, var(--line));
+  border-right: 2px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 42%, var(--line));
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.graph-node-slot {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+}
+
 .graph-node {
   display: grid;
-  gap: 5px;
-  min-height: 112px;
-  align-content: start;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  width: 72px;
+  min-height: 72px;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
   background: var(--surface);
   color: var(--ink);
-  padding: 10px;
-  text-align: left;
+  padding: 8px;
+  text-align: center;
 }
 
 .graph-node span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
+  max-width: 58px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .graph-node strong {
   color: var(--ink);
-  font-size: 14px;
-}
-
-.graph-node small {
-  color: var(--muted);
-  line-height: 1.45;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .graph-node em {
-  width: fit-content;
+  max-width: 52px;
+  overflow: hidden;
   border-radius: 999px;
   background: var(--surface-muted);
   color: var(--muted);
-  padding: 3px 6px;
-  font-size: 11px;
+  padding: 1px 5px;
+  font-size: 9px;
   font-style: normal;
   font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .graph-node.prompt {
@@ -1300,7 +1354,7 @@ h3 {
 .graph-node.selected {
   border-color: var(--provider-accent, var(--accent));
   box-shadow:
-    inset 0 3px 0 var(--provider-accent, var(--accent)),
+    0 0 0 4px color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 82%, transparent),
     0 8px 18px rgba(23, 26, 31, 0.06);
 }
 
@@ -1313,6 +1367,7 @@ h3 {
   justify-items: center;
   border-style: dashed;
   color: var(--muted);
+  font-size: 11px;
   text-align: center;
 }
 
@@ -1336,9 +1391,18 @@ h3 {
 }
 
 .graph-node-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 18px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    var(--evidence-bg);
+  background-size: 28px 28px;
+  padding: 16px;
 }
 
 .graph-edge-list {

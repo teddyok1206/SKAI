@@ -49,6 +49,34 @@ function statusClass(pair?: ConversationGraphPair) {
   return pair ? `graph-status ${pair.status} ${pair.isBreakpoint ? "breakpoint" : ""}` : "graph-status";
 }
 
+function nodeToken(node: ConversationGraphNode) {
+  if (node.synthetic) {
+    return node.kind === "prompt" ? "PT" : "RO";
+  }
+
+  if (node.kind === "prompt") {
+    return `P${node.sequence + 1}`;
+  }
+
+  if (node.kind === "response") {
+    return `R${node.sequence + 1}`;
+  }
+
+  return `S${node.sequence + 1}`;
+}
+
+function fixedNodeCaption(node: ConversationGraphNode, pair?: ConversationGraphPair) {
+  if (node.kind === "task_status" && pair) {
+    return pair.status.replace("_", " ");
+  }
+
+  if (node.synthetic) {
+    return "synthetic";
+  }
+
+  return nodeKindLabel(node.kind).replace(" node", "");
+}
+
 function GraphNodeButton({
   node,
   selected,
@@ -61,19 +89,19 @@ function GraphNodeButton({
   onSelect: (nodeId: string) => void;
 }) {
   if (!node) {
-    return <div className="graph-node missing">No node</div>;
+    return <div className="graph-node missing">NA</div>;
   }
 
   return (
     <button
       className={`graph-node ${node.kind} ${selected ? "selected" : ""} ${pair?.isBreakpoint ? "breakpoint" : ""}`}
       onClick={() => onSelect(node.id)}
+      title={node.summary}
       type="button"
     >
-      <span>{node.label}</span>
-      <strong>{nodeKindLabel(node.kind)}</strong>
-      <small>{node.summary || "No summary yet."}</small>
-      {node.sourceTraceEventId ? <em>source trace</em> : null}
+      <strong>{nodeToken(node)}</strong>
+      <span>{fixedNodeCaption(node, pair)}</span>
+      {node.sourceTraceEventId ? <em>source</em> : null}
     </button>
   );
 }
@@ -161,36 +189,44 @@ export function ConversationGraphView({
 
           return (
             <div className={`graph-lane-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
-              <GraphNodeButton
-                node={promptNode}
-                pair={pair}
-                selected={effectiveSelectedNodeId === promptNode?.id}
-                onSelect={selectNode}
-              />
-              <div className="graph-lane-link">
-                <span>prompt → status</span>
-                <span className={statusClass(pair)}>{pair.status}</span>
-                <span>status → response</span>
-              </div>
-              <GraphNodeButton
-                node={statusNode}
-                pair={pair}
-                selected={effectiveSelectedNodeId === statusNode?.id}
-                onSelect={selectNode}
-              />
-              <div className="graph-lane-link response-link">
-                <span>dual edge</span>
-              </div>
-              {responseNode ? (
+              <div className="graph-node-slot">
                 <GraphNodeButton
-                  node={responseNode}
+                  node={promptNode}
                   pair={pair}
-                  selected={effectiveSelectedNodeId === responseNode.id}
+                  selected={effectiveSelectedNodeId === promptNode?.id}
                   onSelect={selectNode}
                 />
-              ) : (
-                <div className="graph-node missing">Pending response</div>
-              )}
+              </div>
+              <div className="graph-lane-link">
+                <span aria-hidden="true" className="graph-connector" />
+                <small>prompt</small>
+                <span className={statusClass(pair)}>{pair.status}</span>
+                <small>status</small>
+              </div>
+              <div className="graph-node-slot">
+                <GraphNodeButton
+                  node={statusNode}
+                  pair={pair}
+                  selected={effectiveSelectedNodeId === statusNode?.id}
+                  onSelect={selectNode}
+                />
+              </div>
+              <div className="graph-lane-link response-link">
+                <span aria-hidden="true" className="graph-connector" />
+                <small>dual</small>
+              </div>
+              <div className="graph-node-slot">
+                {responseNode ? (
+                  <GraphNodeButton
+                    node={responseNode}
+                    pair={pair}
+                    selected={effectiveSelectedNodeId === responseNode.id}
+                    onSelect={selectNode}
+                  />
+                ) : (
+                <div className="graph-node missing">wait</div>
+                )}
+              </div>
             </div>
           );
         })}
