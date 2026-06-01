@@ -81,7 +81,10 @@ export async function POST(request: Request) {
       contextMessage: compiledContext.contextMessage,
     });
 
-    return NextResponse.json(response);
+    return NextResponse.json({
+      ...response,
+      contextDebug: compiledContext.debugSnapshot,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Provider request failed." },

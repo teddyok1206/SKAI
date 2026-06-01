@@ -11,6 +11,7 @@ import {
   loadPublishedAttemptFromSupabase,
 } from "@/lib/supabase-persistence";
 import type { PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
+import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 const signalDefinitions = [
@@ -630,7 +631,9 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                   ))}
                 </div>
               ) : null}
-              <p className="raw-content">{event.content}</p>
+              <div className="raw-content">
+                <MarkdownContent content={event.content} />
+              </div>
             </details>
           ))}
       </div>

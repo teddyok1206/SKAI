@@ -7,6 +7,7 @@ import { ThemeSelector } from "@/components/theme-selector";
 import "pretendard/dist/web/variable/pretendardvariable.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/600.css";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

@@ -101,6 +101,7 @@ export interface TraceEvent {
   attachments?: AttemptAttachment[];
   sourceTraceEventId?: string;
   branchId?: string;
+  contextDebug?: ContextDebugSnapshot;
 }
 
 export interface ModelRun {
@@ -119,6 +120,29 @@ export interface ChatMessage {
   attachments?: AttemptAttachment[];
   sourceTraceEventId?: string;
   branchId?: string;
+}
+
+export type ContextDebugMessageKind = "system_prompt" | "skai_background" | "trace_message";
+
+export interface ContextDebugMessage {
+  order: number;
+  kind: ContextDebugMessageKind;
+  role: TraceRole;
+  label: string;
+  content: string;
+  activeInstruction?: boolean;
+  attachmentNames?: string[];
+  sourceTraceEventId?: string;
+  branchId?: string;
+}
+
+export interface ContextDebugSnapshot {
+  materializedAt: string;
+  sourceMessageCount: number;
+  providerMessageCount: number;
+  omittedMessageCount: number;
+  providerAdapterNote: string;
+  messages: ContextDebugMessage[];
 }
 
 export interface Attempt {

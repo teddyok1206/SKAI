@@ -15,6 +15,22 @@ This means "delete" and "restore" are runtime compilation behaviors:
 
 The underlying trace is not deleted or rewritten.
 
+## Cold-Start Definition
+
+Cold-start in SKAI means the provider should not rely on hidden provider-side memory, account personalization, or opaque threads.
+
+It does not mean the model receives an empty prompt. SKAI intentionally materializes declared exercise context so that the model can solve the selected problem:
+
+- problem statement,
+- user goal,
+- constraints,
+- deliverables,
+- starter context,
+- material catalog,
+- branch and lineage metadata.
+
+The critical product rule is transparency: the user should be able to inspect the exact context SKAI added before the latest prompt.
+
 ## Why
 
 Provider-native threads are convenient, but they are the wrong canonical state for SKAI because they make these tasks hard:
@@ -44,12 +60,14 @@ Inputs:
 Outputs:
 
 - system prompt,
-- context message,
+- context message marked as `SKAI BACKGROUND CONTEXT`,
 - bounded provider messages,
 - compile metadata.
+- debug snapshot for UI inspection.
 
 The context message includes:
 
+- an instruction that this is background, not the active user request,
 - problem statement,
 - user goal,
 - constraints,
@@ -59,6 +77,14 @@ The context message includes:
 - branch replay metadata,
 - source trace lineage for copied/replacement events,
 - explicit pruning notice if older messages were excluded.
+
+The provider message order is:
+
+1. SKAI system prompt.
+2. SKAI background context as a user-role message for broad provider compatibility.
+3. Attempt trace messages, where the latest user message is the active instruction.
+
+The adapter may append normalized attachment text to user trace messages and may pass image attachments as multimodal image parts.
 
 ## Branch Replay Semantics
 
