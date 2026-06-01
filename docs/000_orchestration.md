@@ -85,6 +85,31 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt를 UI에서 원클릭 삽입하는 기능은 아직 없다.
 
+## Demo Contract
+
+다음 smoke test에서 반드시 통과해야 하는 한 줄 흐름:
+
+```text
+문제 선택 -> 풀이 모드/모델 선택 -> 자료 확인/첨부 -> live chat 풀이 -> Graph 확인 -> 제출/채점 -> bottleneck branch -> parent/child 비교 -> 공유/리뷰
+```
+
+첫 데모가 약속하는 것:
+
+- 사용자는 숨은 SKAI 배경 prompt 없이 cold-start 모델과 대화한다.
+- 사용자가 선택한 자료와 업로드한 파일만 모델 context에 들어간다.
+- 전체 trace는 prompt-response-status graph로 파생된다.
+- judge는 최종 산출물뿐 아니라 문제정의, 세분화, 자료 활용, 검증, 방향 수정 과정을 평가한다.
+- branch replay는 "여기서 다르게 물었으면 어땠을까"를 학습 가능한 비교 대상으로 만든다.
+- founder는 10명 이하 사용자의 log를 직접 읽고 정성 검증할 수 있어야 한다.
+
+첫 데모 밖으로 미루는 것:
+
+- multi-AI/harness solving mode 구현.
+- certification/HR-grade anti-cheat.
+- production-grade moderation/notification.
+- dense graph analytics and export.
+- xlsx/pdf/OCR 자동 파싱의 완성형.
+
 ## Execution Rules
 
 새 작업을 시작할 때:
@@ -99,49 +124,73 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 ## Next Queue
 
+현재 상위 로드맵:
+
+- `docs/technical/plan/024_post_graph_demo_execution_plan.md`
+
+우선순위 0: freeze demo contract and smoke path
+
+- 이 문서의 Demo Contract를 기준으로 다음 구현 요청을 판단한다.
+- smoke path는 `문제 -> 모델/모드 -> 자료 -> chat -> graph -> judge -> branch -> compare -> share`로 고정한다.
+- 완료 조건: 다음 구현 계획이 이 smoke path 중 어느 단계에 기여하는지 명확히 말할 수 있다.
+
 우선순위 1: live environment smoke
 
 - `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다.
-- `docs/problem_playbooks/`의 paste-ready prompts로 손타이핑 없이 sample attempt를 만든다.
-- 첫 후보는 Gemini Flash-Lite, Groq Llama, xAI Grok Fast 중 API key와 비용이 가장 현실적인 모델이다.
-- 같은 문제, 같은 첫 프롬프트로 SKAI Practice와 live environment 응답을 비교한다.
+- 첫 후보는 Gemini, Groq, xAI 순으로 비용/latency/attachment handling을 본다.
+- `docs/problem_playbooks/`의 paste-ready prompts로 sample attempt를 만든다.
+- 같은 문제, 같은 첫 프롬프트로 mock/live 응답 차이를 기록한다.
 - 모델별 latency, token usage, failure mode를 기록한다.
-- 완료 조건: 적어도 하나의 live environment로 문제 풀이 1회가 end-to-end 성공한다.
+- 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다.
 
-우선순위 2: LLM judge smoke and calibration
+우선순위 2: golden attempts and LLM judge calibration
 
+- 각 seed problem마다 weak/average/strong attempt를 만든다.
 - `SKAI_JUDGE_MODE=llm` 또는 `ensemble`으로 실제 judge provider를 켠다.
-- 같은 attempt에 대해 heuristic report와 LLM judge report를 비교한다.
+- heuristic report와 LLM judge report를 비교한다.
 - malformed JSON, provider failure, judge disagreement를 기록한다.
 - coach review와 strict rubric mode를 분리할 준비를 한다.
-- 완료 조건: 최소 3개 sample attempt에서 LLM judge 결과를 founder가 정성 검토한다.
+- 완료 조건: 최소 9개 sample attempt에서 judge 결과를 founder가 정성 검토한다.
 
-우선순위 3: admin authoring MVP
+우선순위 3: playbook insertion and smoke operator UX
 
-- 문제 statement, constraints, deliverables, materials, rubric을 작성/수정하는 UI를 만든다.
-- 자료 업로드와 extracted text 입력을 지원한다.
-- rubric public preview를 제공한다.
-- 완료 조건: 코드 수정 없이 새 demo problem을 만들 수 있다.
+- 문제별 playbook prompt를 UI에서 composer로 삽입할 수 있게 한다.
+- 필요한 자료 첨부를 step별로 명시한다.
+- 삽입된 prompt는 숨은 context가 아니라 사용자가 볼 수 있는 composer text여야 한다.
+- 완료 조건: 손타이핑 없이 반복 가능한 sample attempt를 생성한다.
 
-우선순위 4: Supabase deployment hardening
+우선순위 4: cost and budget guardrails
+
+- provider/model별 단가 설정 파일을 만든다.
+- attempt별 예상 비용을 계산하고 admin/expert UI에 노출한다.
+- 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다.
+- 완료 조건: live environment attempt마다 비용 추정치 또는 `unknown`이 저장된다.
+
+우선순위 5: Supabase deployment hardening
 
 - RLS 정책을 실제 사용자 flow 기준으로 점검한다.
 - anonymous/local fallback과 authenticated sync의 경계를 정리한다.
 - Vercel env var 체크리스트를 만든다.
 - 완료 조건: 배포 환경에서 로그인, 풀이 저장, 공유 조회가 재현된다.
 
-우선순위 5: cost and budget guardrails
+우선순위 6: admin authoring MVP
 
-- provider/model별 단가 설정 파일을 만든다.
-- attempt별 예상 비용을 계산하고 UI에 노출한다.
-- 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다.
-- 완료 조건: live environment attempt마다 비용 추정치가 저장된다.
+- 문제 statement, constraints, deliverables, materials, rubric을 작성/수정하는 UI를 만든다.
+- 자료 업로드와 extracted text 입력을 지원한다.
+- rubric public preview를 제공한다.
+- 완료 조건: 코드 수정 없이 새 demo problem을 만들 수 있다.
 
-우선순위 6: branch tree explorer
+우선순위 7: branch tree explorer
 
 - parent attempt 아래의 여러 child branch를 한 화면에서 비교한다.
 - 어떤 breakpoint에서 어떤 branch가 갈라졌는지 tree/lineage로 보여준다.
 - 완료 조건: 한 parent에서 생성된 branch 2개 이상을 lineage view로 탐색한다.
+
+우선순위 8: founder review dashboard
+
+- 모든 smoke attempts를 문제, 모델, 모드, judge mode 기준으로 모아본다.
+- founder note를 attempt 옆에 기록한다.
+- 완료 조건: DB table을 직접 열지 않아도 smoke test 정성 분석이 가능하다.
 
 ## Decision Gates
 
@@ -177,15 +226,21 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/016_branch_diff_counterfactual_judge.md`: parent/child branch diff와 counterfactual judge 구현.
 - `docs/technical/plan/020_problem_prompt_playbooks.md`: 문제별 paste-ready prompt playbook.
 - `docs/technical/plan/021_conversation_graph_visual_tabs.md`: 풀이 화면 3D dual graph tab.
+- `docs/technical/plan/022_compact_graph_nodes.md`: graph node를 compact token 중심으로 정리.
+- `docs/technical/plan/023_directed_graph_affordance.md`: directed graph flow와 source/target affordance 강화.
+- `docs/technical/plan/024_post_graph_demo_execution_plan.md`: 설계/계획/철학/진척도 분석 기반 post-graph 실행 로드맵.
 
 다음 plan 후보:
 
-- `022_live_environment_smoke.md`
-- `023_llm_judge_calibration.md`
-- `024_admin_authoring_mvp.md`
-- `025_supabase_deployment_hardening.md`
-- `026_cost_guardrails.md`
-- `027_comment_moderation_and_privacy.md`
+- `025_live_environment_smoke.md`
+- `026_golden_attempts_judge_calibration.md`
+- `027_playbook_insertion_operator_ux.md`
+- `028_cost_guardrails.md`
+- `029_supabase_deployment_hardening.md`
+- `030_admin_authoring_mvp.md`
+- `031_branch_tree_explorer.md`
+- `032_founder_review_dashboard.md`
+- `033_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
