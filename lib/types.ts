@@ -497,6 +497,35 @@ export interface ConversationGraph {
   branch?: ConversationGraphBranch;
 }
 
+export type GraphSkeletonStepRole =
+  | "problem_reframe"
+  | "clarifying_question"
+  | "material_selection"
+  | "task_decomposition"
+  | "draft_generation"
+  | "verification"
+  | "revision"
+  | "finalization"
+  | "other";
+
+export interface GraphSkeletonStep {
+  id: string;
+  pairId: string;
+  sequence: number;
+  role: GraphSkeletonStepRole;
+  label: string;
+  status: ConversationTaskStatus;
+  summary: string;
+  annotationIds: string[];
+  annotationKinds: ConversationGraphAnnotationKind[];
+  signals: string[];
+  evidenceLabels: string[];
+  expandableTraceEventIds: string[];
+  promptTraceEventId: string;
+  responseTraceEventId?: string;
+  isBreakpoint?: boolean;
+}
+
 export interface LeaderboardEntry {
   attemptId: string;
   problemId: string;

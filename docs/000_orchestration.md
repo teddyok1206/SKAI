@@ -43,6 +43,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
+- 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
@@ -57,6 +58,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 - Branch diff는 parent/child graph-state transition을 포함한다.
 - Counterfactual judge는 prompt text delta뿐 아니라 graph-state status/annotation delta를 증거로 사용한다.
+- Graph skeleton generator는 graph pair/status/annotation에서 공유용 구조 요약을 파생한다.
 - Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
 
 현재 데모가 증명하는 것:
@@ -72,6 +74,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 자료를 보고 선택하고 모델 입력에 포함하는 흐름.
 - process score와 final output score를 분리할 수 있는 기본 구조.
 - 공유 화면에서 workflow를 원문보다 먼저 보여주는 방향.
+- 공유 화면에서 graph skeleton만 읽어도 풀이의 오케스트레이션 흐름을 파악할 수 있는 방향.
 
 ## Current Gaps
 
@@ -87,7 +90,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
 - Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
-- LLM judge-native custom graph annotations, graph skeleton sharing, habit motif report, graph snapshot persistence는 아직 구현 전이다.
+- LLM judge-native custom graph annotations, skeleton comparison, habit motif report, graph snapshot persistence는 아직 구현 전이다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
@@ -160,8 +163,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - LLM/heuristic judge output을 graph annotation schema에 직접 맞춘다. (기본 연결 완료, LLM custom schema는 후속)
 - branch diff를 parent/child graph-state transition으로 보여준다. (완료)
-- graph skeleton generator를 만들어 공유 화면에서 raw transcript보다 먼저 노출한다.
-- 완료 조건: judge/replay/sharing 중 하나 이상이 graph annotation을 1차 입력으로 사용한다.
+- graph skeleton generator를 만들어 공유 화면에서 raw transcript보다 먼저 노출한다. (완료)
+- 완료 조건: judge/replay/sharing 중 하나 이상이 graph annotation을 1차 입력으로 사용한다. (완료)
 
 우선순위 2: golden attempts and LLM judge calibration
 
@@ -254,12 +257,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/027_graph_backbone_full_implementation.md`: 3D dual graph를 judge/replay/sharing/habit/model/research 백본으로 확장하는 전체 구현 계획.
 - `docs/technical/plan/028_graph_annotations_first_slice.md`: deterministic graph annotations와 Graph tab detail panel 표시.
 - `docs/technical/plan/029_judge_branch_graph_state_transition.md`: judge graph annotations와 branch graph-state transition 연결.
+- `docs/technical/plan/032_graph_skeleton_sharing.md`: graph skeleton generator와 공유 화면 skeleton-first 읽기 경로.
 
 다음 plan 후보:
 
 - `030_live_environment_smoke.md`
 - `031_llm_judge_graph_annotation_schema.md`
-- `032_graph_skeleton_sharing.md`
 - `033_golden_attempts_judge_calibration.md`
 - `034_playbook_insertion_operator_ux.md`
 - `035_cost_guardrails.md`

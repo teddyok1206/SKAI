@@ -6,12 +6,13 @@ import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Pap
 import { problems } from "@/data/problems";
 import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
 import { buildConversationGraph } from "@/lib/conversation-graph";
+import { buildGraphSkeleton } from "@/lib/graph-skeleton";
 import {
   createPromptCommentInSupabase,
   loadPromptCommentsFromSupabase,
   loadPublishedAttemptFromSupabase,
 } from "@/lib/supabase-persistence";
-import type { PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
+import type { GraphSkeletonStep, GraphSkeletonStepRole, PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
@@ -105,6 +106,26 @@ const taskStatusLabels = {
   bottleneck: "Bottleneck",
 } as const;
 
+const skeletonRoleLabels: Record<GraphSkeletonStepRole, string> = {
+  problem_reframe: "문제 재정의",
+  clarifying_question: "불확실성 확인",
+  material_selection: "자료 선택",
+  task_decomposition: "작업 분해",
+  draft_generation: "초안 생성",
+  verification: "검증",
+  revision: "수정",
+  finalization: "최종화",
+  other: "진행",
+};
+
+function skeletonRoleLabel(role: GraphSkeletonStepRole) {
+  return skeletonRoleLabels[role];
+}
+
+function skeletonRoleClass(step: GraphSkeletonStep) {
+  return `graph-skeleton-role ${step.role} ${step.isBreakpoint ? "breakpoint" : ""}`;
+}
+
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const attempt = useSyncExternalStore<PublishedAttempt | null>(
     (onStoreChange) => {
@@ -182,6 +203,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch, {
     problemMaterialCount: problem?.materials.length ?? 0,
   });
+  const graphSkeleton = buildGraphSkeleton(conversationGraph, publishedAttempt.trace);
   const graphNodeById = new Map(
     [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
   );
@@ -257,6 +279,67 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         <div className="share-stat">
           <strong>{attempt.scoreReport.totalScore}</strong>
           <span>coach score</span>
+        </div>
+      </section>
+
+      <section className="panel" style={{ marginTop: 16 }}>
+        <div className="panel-header">
+          <h2>
+            <Workflow size={20} /> Graph Skeleton
+          </h2>
+          <p className="muted">문제 접근 흐름을 graph pair, task status, annotation 기준으로 압축했습니다.</p>
+        </div>
+        <div className="panel-body graph-skeleton-list">
+          {graphSkeleton.length === 0 ? (
+            <p className="muted">아직 graph skeleton으로 만들 prompt-response pair가 없습니다.</p>
+          ) : (
+            graphSkeleton.map((step) => (
+              <article className="graph-skeleton-step" key={step.id}>
+                <div className="graph-skeleton-index">
+                  <span>{step.sequence + 1}</span>
+                  <small>{step.status}</small>
+                </div>
+                <div className="graph-skeleton-body">
+                  <div className="graph-skeleton-heading">
+                    <div>
+                      <span className={skeletonRoleClass(step)}>{skeletonRoleLabel(step.role)}</span>
+                      <h3>{step.label}</h3>
+                    </div>
+                    {step.isBreakpoint ? (
+                      <span className="trace-warning breakpoint">
+                        <GitBranch size={14} /> breakpoint
+                      </span>
+                    ) : null}
+                  </div>
+                  <p>{step.summary}</p>
+                  <div className="signal-row">
+                    {step.signals.map((signal) => (
+                      <span className="signal-chip" key={`${step.id}-${signal}`}>
+                        {signal}
+                      </span>
+                    ))}
+                    {step.annotationKinds.map((kind) => (
+                      <span className="signal-chip graph-annotation-kind" key={`${step.id}-${kind}`}>
+                        {kind}
+                      </span>
+                    ))}
+                  </div>
+                  {step.evidenceLabels.length > 0 ? (
+                    <div className="graph-skeleton-evidence">
+                      {step.evidenceLabels.map((label) => (
+                        <span key={`${step.id}-${label}`}>{label}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                  <div className="trace-link-row">
+                    <a href={`#trace-${step.promptTraceEventId}`}>prompt skeleton</a>
+                    {step.responseTraceEventId ? <a href={`#raw-${step.responseTraceEventId}`}>response raw</a> : null}
+                    <a href={`#raw-${step.promptTraceEventId}`}>prompt raw</a>
+                  </div>
+                </div>
+              </article>
+            ))
+          )}
         </div>
       </section>
 
@@ -378,8 +461,9 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
           <h2>
-            <GitBranch size={20} /> Prompt Skeleton
+            <GitBranch size={20} /> Prompt Detail Anchors
           </h2>
+          <p className="muted">댓글과 원문 확인이 필요한 prompt 지점입니다.</p>
         </div>
         <div className="panel-body prompt-skeleton-list">
           <div className="discussion-identity">
