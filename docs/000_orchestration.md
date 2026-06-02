@@ -329,6 +329,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/049_problem_browser_search_filter_curation.md`: 홈 문제 검색, 필터, curation lane.
 - `docs/technical/plan/050_generated_problem_editorial_gate.md`: Gemini 004 반영, 생성 문제 smoke publish gate와 Admin editorial dashboard.
 - `docs/technical/plan/051_activity_aware_graph_mark.md`: Gemini 005 반영, literal flame 대신 activity-aware graph packet-flow.
+- `docs/technical/plan/052_home_hero_lockup_and_copy.md`: 홈 hero 중복 lockup 제거와 SKAI 철학 기반 headline 후보 정리.
 
 다음 plan 후보:
 
