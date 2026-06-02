@@ -55,6 +55,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - theme selector와 3개 디자인 옵션이 있다.
 - Pretendard Variable + JetBrains Mono font system이 적용됐다.
 - Human Mode / Engine Mode typography principle이 문서화됐고, route-level `data-ui-mode` tokens로 구현됐다.
+- Topbar mark는 client-side `html[data-ui-mode]` sync로 route mode를 안정적으로 따른다.
 - Home/admin/share는 Human Mode, problem setup/solve/local solve는 Engine Mode로 표시된다.
 - Engine Mode에서는 control/metadata/graph/prompt/material/judge evidence가 더 강한 JetBrains Mono와 hairline treatment를 사용하고, brand mark node는 hex treatment로 전환된다.
 - provider별 chat surface mood가 적용됐다.
@@ -299,12 +300,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/040_comment_moderation_and_privacy.md`: 공개 댓글의 민감정보 redaction과 1차 misuse guardrail.
 - `docs/technical/plan/041_gemini_manifesto_brand_mark.md`: Gemini 철학 대화 반영, 3-node directed graph brand mark 1차 적용.
 - `docs/technical/plan/042_human_engine_mode_ui_split.md`: Human Mode / Engine Mode route tokens와 Gemini 최신 briefing.
+- `docs/technical/plan/043_route_mode_logo_sync_bugfix.md`: topbar mark route mode sync 안정화.
 
 다음 plan 후보:
 
-- `043_supabase_cohort_review_dashboard.md`
-- `044_comment_edit_delete_and_reports.md`
-- `045_brand_mark_motion_and_logo_lockup.md`
+- `044_supabase_cohort_review_dashboard.md`
+- `045_comment_edit_delete_and_reports.md`
+- `046_brand_mark_motion_and_logo_lockup.md`
 
 ## Reading Map
 

@@ -34,6 +34,7 @@ Implementation note, 2026-06-02:
 - Engine Mode gives controls, graph, material, prompt, trace, and judge evidence stronger JetBrains Mono emphasis.
 - Human Mode keeps the calm sans surface.
 - The primary SKAI mark remains the same 3-node directed graph, but Engine Mode renders the node treatment with sharper hex geometry.
+- The topbar mark follows `html[data-ui-mode]`, which is synchronized from the current route by a client bridge. The route-level `data-ui-mode` wrappers remain the page-surface contract.
 - No Geist package has been installed yet.
 
 ## Mode And Model Rule

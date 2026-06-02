@@ -4,6 +4,7 @@ import { AuthStatus } from "@/components/auth-status";
 import { SkaiMark } from "@/components/skai-mark";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSelector } from "@/components/theme-selector";
+import { UiModeSync } from "@/components/ui-mode-sync";
 import "pretendard/dist/web/variable/pretendardvariable.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/600.css";
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="ko">
       <body>
         <ThemeProvider>
+          <UiModeSync />
           <div className="app-shell">
             <header className="topbar">
               <div className="topbar-inner">

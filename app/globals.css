@@ -191,18 +191,22 @@ button {
   fill: color-mix(in srgb, var(--surface) 70%, transparent);
 }
 
+:root[data-ui-mode="engine"] .skai-mark-node-circle,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .skai-mark-node-circle {
   display: none;
 }
 
+:root[data-ui-mode="engine"] .skai-mark-node-hex,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .skai-mark-node-hex {
   display: block;
 }
 
+:root[data-ui-mode="engine"] .brand,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .brand {
   font-family: var(--font-mono);
 }
 
+:root[data-ui-mode="engine"] .brand-mark,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .brand-mark {
   border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
   background: color-mix(in srgb, var(--surface) 85%, var(--accent-soft));
