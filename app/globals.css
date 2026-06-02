@@ -1701,6 +1701,125 @@ h3 {
   gap: 12px;
 }
 
+.graph-transition-view {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px;
+}
+
+.graph-transition-header,
+.graph-state-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.graph-transition-header strong,
+.graph-state-card-top strong,
+.graph-annotation-delta strong {
+  color: var(--ink);
+}
+
+.graph-transition-header span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.graph-state-card-grid,
+.graph-annotation-delta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.graph-state-card,
+.graph-annotation-delta > div {
+  display: grid;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 10px;
+}
+
+.graph-state-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.graph-state-card dl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.graph-state-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.graph-state-card dt {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.graph-state-card dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: right;
+}
+
+.graph-state-status,
+.graph-transition-chip {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.graph-state-status.verification,
+.graph-state-status.material_used,
+.graph-transition-chip.positive {
+  border-color: color-mix(in srgb, var(--success) 30%, var(--line));
+  background: color-mix(in srgb, #e7f5ee 68%, #fff);
+  color: var(--success);
+}
+
+.graph-state-status.bottleneck,
+.graph-transition-chip.critical {
+  border-color: color-mix(in srgb, var(--red) 28%, var(--line));
+  background: #fff0ed;
+  color: var(--red);
+}
+
+.graph-transition-chip.watch {
+  border-color: color-mix(in srgb, var(--gold) 32%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 55%, #fff);
+  color: #705313;
+}
+
+.graph-transition-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .verdict-pill {
   display: inline-flex;
   width: fit-content;
@@ -1741,6 +1860,13 @@ h3 {
 .claim-negative {
   background: #fff0ed;
   color: var(--red);
+}
+
+@media (max-width: 720px) {
+  .graph-state-card-grid,
+  .graph-annotation-delta {
+    grid-template-columns: 1fr;
+  }
 }
 
 .timeline-step,

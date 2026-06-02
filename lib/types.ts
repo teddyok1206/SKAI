@@ -313,6 +313,57 @@ export interface BranchScoreDelta {
   axisDeltas: BranchAxisDelta[];
 }
 
+export interface GraphStateSnapshotAnnotation {
+  id: string;
+  kind: ConversationGraphAnnotationKind;
+  severity: ConversationGraphAnnotationSeverity;
+  title: string;
+  source: ConversationGraphAnnotationSource;
+  scoreImpact?: number;
+  confidence: number;
+}
+
+export interface GraphStateSnapshot {
+  attemptId: string;
+  pairId?: string;
+  promptNodeId?: string;
+  statusNodeId?: string;
+  responseNodeId?: string;
+  promptTraceEventId?: string;
+  responseTraceEventId?: string;
+  status?: ConversationTaskStatus;
+  statusReasons: string[];
+  directedDegree: {
+    incoming: number;
+    outgoing: number;
+  };
+  annotationIds: string[];
+  annotationKinds: ConversationGraphAnnotationKind[];
+  annotations: GraphStateSnapshotAnnotation[];
+  summary: string;
+  missing?: boolean;
+}
+
+export interface GraphAnnotationDelta {
+  added: GraphStateSnapshotAnnotation[];
+  removed: GraphStateSnapshotAnnotation[];
+  persisted: GraphStateSnapshotAnnotation[];
+}
+
+export interface GraphStateTransition {
+  id: string;
+  parentAttemptId: string;
+  childAttemptId: string;
+  breakpointTraceEventId: string;
+  parentPairId?: string;
+  childPairId?: string;
+  before: GraphStateSnapshot;
+  after: GraphStateSnapshot;
+  annotationDelta: GraphAnnotationDelta;
+  transitionLabels: string[];
+  createdAt: string;
+}
+
 export interface BranchDiff {
   id: string;
   parentAttemptId: string;
@@ -325,6 +376,7 @@ export interface BranchDiff {
   responseChange?: BranchResponseChange;
   processDelta: BranchProcessDelta;
   scoreDelta?: BranchScoreDelta;
+  graphTransition?: GraphStateTransition;
   createdAt: string;
 }
 

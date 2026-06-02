@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
+import { buildConversationGraph } from "@/lib/conversation-graph";
 import { getProvider } from "@/lib/providers";
 import type {
   AxisScore,
@@ -579,12 +580,23 @@ function withJudgeRuns(report: ScoreReport, mode: JudgeMode, runs: JudgeRunInter
   };
 }
 
+function withGraphAnnotations(input: JudgeInput, report: ScoreReport): ScoreReport {
+  const graph = buildConversationGraph(input.trace, report, undefined, {
+    problemMaterialCount: input.problem.materials.length,
+  });
+
+  return {
+    ...report,
+    graphAnnotations: graph.annotations,
+  };
+}
+
 export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
   const heuristicRun = runHeuristicJudge(input);
   const mode = getJudgeMode();
 
   if (mode === "heuristic") {
-    return withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []);
+    return withGraphAnnotations(input, withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []));
   }
 
   const llmRuns = await Promise.all(getLlmJudgeConfigs(mode).map((config) => runLlmJudge(input, config)));
@@ -593,12 +605,17 @@ export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
   const successfulLlmReports = llmRuns.map((run) => run.report).filter((report): report is ScoreReport => Boolean(report));
 
   if (successfulLlmReports.length === 0) {
-    return withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", allRuns, ["LLM judge가 실패해 heuristic judge 결과를 사용했습니다."]);
+    return withGraphAnnotations(
+      input,
+      withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", allRuns, [
+        "LLM judge가 실패해 heuristic judge 결과를 사용했습니다.",
+      ]),
+    );
   }
 
   const report =
     mode === "ensemble" ? aggregateReports(input, successfulReports) : successfulLlmReports[0];
   const disagreement = detectDisagreement(successfulReports);
 
-  return withJudgeRuns(report, mode, allRuns, disagreement);
+  return withGraphAnnotations(input, withJudgeRuns(report, mode, allRuns, disagreement));
 }

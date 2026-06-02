@@ -34,12 +34,14 @@ Already implemented:
 - Deterministic annotations are generated for bottlenecks, material use, verification, adaptation, pending responses, breakpoint anchors, and missing material use.
 - Sparse annotation indexes support lookup by target id, trace event id, and kind.
 - The Graph tab detail panel renders selected node/pair annotations and evidence.
+- Score reports carry derived graph annotations.
+- Branch diffs carry parent/child graph-state transitions.
+- Counterfactual judge consumes graph-state status and annotation delta as evidence.
 
 Current limitation:
 
-- Judge output is still mostly attempt-level except deterministic graph annotations.
+- Judge output has a graph annotation bridge, but LLM judge does not yet emit a custom graph-native annotation schema.
 - Graph nodes/pairs do not yet carry rich LLM judge-native annotations.
-- Branch diff is not yet primarily displayed as graph-state transition.
 - Shared attempt UX still has room to make graph skeleton the primary reading path.
 - User habit reporting does not yet aggregate graph motifs.
 - Graph snapshots are not yet persisted for offline research/search.
@@ -290,10 +292,10 @@ Behavior:
 
 ## Implementation Order
 
-1. Add graph annotation types and deterministic annotation builder.
-2. Attach heuristic/LLM judge feedback to graph pairs.
-3. Render annotations in the Graph tab detail panel.
-4. Convert branch diff UI into graph-state transition UI.
+1. Add graph annotation types and deterministic annotation builder. Done in `028`.
+2. Attach heuristic/LLM judge feedback to graph pairs. Baseline done in `029`; LLM custom schema remains.
+3. Render annotations in the Graph tab detail panel. Done in `028`.
+4. Convert branch diff UI into graph-state transition UI. Done in `029`.
 5. Build graph skeleton generator and use it in shared attempts.
 6. Build graph motif extractor for attempt-level habit report.
 7. Persist graph snapshots after judged submission.
@@ -323,8 +325,8 @@ Avoid dense graph matrices in the online product path. Dense incidence/adjacency
 
 ## Open Questions
 
-- Should graph annotations live inside `ScoreReport` first, or as a separate persisted entity?
-- Should LLM judge produce annotations directly, or should SKAI post-process judge text into annotations?
+- When should graph annotations move from `ScoreReport` JSON to a separate persisted entity?
+- Should LLM judge produce custom annotations directly, or should SKAI continue to derive them from bottleneck/workflow outputs first?
 - What confidence threshold should be shown to beginners?
 - How many motif kinds should be visible in beginner mode?
 - Should material attachments become first-class graph nodes or pair metadata in the MVP?

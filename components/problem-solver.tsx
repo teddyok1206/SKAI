@@ -25,6 +25,7 @@ import type {
   TraceEvent,
 } from "@/lib/types";
 import { ConversationGraphView } from "@/components/conversation-graph-view";
+import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 
@@ -998,6 +999,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found yet."}</p>
                 </div>
               </div>
+              <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
               <div className="signal-row">
                 {attempt.counterfactualReport.causalClaims.map((claim) => (
                   <span className={`signal-chip claim-${claim.effect}`} key={`${claim.label}-${claim.effect}`}>

@@ -77,6 +77,7 @@ create table if not exists public.score_reports (
   bottlenecks jsonb not null default '[]'::jsonb,
   workflow jsonb not null default '[]'::jsonb,
   next_practice_targets jsonb not null default '[]'::jsonb,
+  graph_annotations jsonb not null default '[]'::jsonb,
   judge_provider text not null,
   judge_model text not null,
   judge_mode text not null default 'heuristic',

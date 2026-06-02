@@ -76,6 +76,7 @@ const scoreReportSchema = z.object({
   bottlenecks: z.array(z.unknown()).max(12),
   workflow: z.array(z.unknown()).max(20),
   nextPracticeTargets: z.array(z.string().max(1200)).max(8),
+  graphAnnotations: z.array(z.unknown()).max(160).optional(),
   judgeProvider: providerSchema,
   judgeModel: z.string().max(operationGuardrails.maxModelNameChars),
   judgeMode: z.enum(["heuristic", "llm", "ensemble"]).optional(),
@@ -229,7 +230,7 @@ export async function POST(request: Request) {
   }
 
   if (attempt.scoreReport) {
-    const scoreResult = await supabase.from("score_reports").upsert({
+    const scoreReportPayload = {
       id: attempt.scoreReport.id,
       attempt_id: attempt.id,
       problem_id: attempt.problemId,
@@ -241,13 +242,22 @@ export async function POST(request: Request) {
       bottlenecks: attempt.scoreReport.bottlenecks,
       workflow: attempt.scoreReport.workflow,
       next_practice_targets: attempt.scoreReport.nextPracticeTargets,
+      graph_annotations: attempt.scoreReport.graphAnnotations ?? [],
       judge_provider: attempt.scoreReport.judgeProvider,
       judge_model: attempt.scoreReport.judgeModel,
       judge_mode: attempt.scoreReport.judgeMode ?? "heuristic",
       judge_runs: attempt.scoreReport.judgeRuns ?? [],
       judge_disagreement: attempt.scoreReport.judgeDisagreement ?? [],
       created_at: attempt.scoreReport.createdAt,
-    });
+    };
+
+    let scoreResult = await supabase.from("score_reports").upsert(scoreReportPayload);
+
+    if (scoreResult.error && scoreResult.error.message.includes("graph_annotations")) {
+      const { graph_annotations: graphAnnotations, ...fallbackScoreReportPayload } = scoreReportPayload;
+      void graphAnnotations;
+      scoreResult = await supabase.from("score_reports").upsert(fallbackScoreReportPayload);
+    }
 
     if (scoreResult.error) {
       return NextResponse.json({ error: scoreResult.error.message }, { status: 500 });

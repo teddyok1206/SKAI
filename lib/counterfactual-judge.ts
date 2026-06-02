@@ -53,6 +53,10 @@ function containsSignal(values: string[] | undefined, signal: string) {
   return values?.some((value) => value.includes(signal)) ?? false;
 }
 
+function containsGraphTransitionLabel(diff: BranchDiff, signal: string) {
+  return diff.graphTransition?.transitionLabels.some((label) => label.includes(signal)) ?? false;
+}
+
 function totalEffectScore(diff: BranchDiff) {
   let score = 0;
 
@@ -92,6 +96,22 @@ function totalEffectScore(diff: BranchDiff) {
     score += 8;
   }
 
+  if (containsGraphTransitionLabel(diff, "bottleneck signal reduced")) {
+    score += 14;
+  }
+
+  if (containsGraphTransitionLabel(diff, "verification evidence introduced")) {
+    score += 10;
+  }
+
+  if (containsGraphTransitionLabel(diff, "material grounding changed")) {
+    score += 6;
+  }
+
+  if (containsGraphTransitionLabel(diff, "new bottleneck signal appeared")) {
+    score -= 12;
+  }
+
   if (diff.processDelta.tokenDelta > 2500 && (diff.scoreDelta?.totalDelta ?? 0) <= 0) {
     score -= 12;
   }
@@ -125,6 +145,43 @@ function verdictFromScore(score: number): CounterfactualVerdict {
 
 function buildClaims(diff: BranchDiff): CounterfactualCausalClaim[] {
   const claims: CounterfactualCausalClaim[] = [];
+  const transition = diff.graphTransition;
+
+  if (transition?.transitionLabels.length) {
+    claims.push({
+      label: "Graph state changed",
+      effect:
+        transition.transitionLabels.some((item) => item.includes("bottleneck signal reduced") || item.includes("verification"))
+          ? "positive"
+          : transition.transitionLabels.some((item) => item.includes("new bottleneck"))
+            ? "negative"
+            : "neutral",
+      evidence: transition.transitionLabels.join("; "),
+    });
+  }
+
+  if (transition && (transition.annotationDelta.added.length > 0 || transition.annotationDelta.removed.length > 0)) {
+    claims.push({
+      label: "Graph annotations changed",
+      effect:
+        transition.annotationDelta.added.some((item) => item.severity === "positive") ||
+        transition.annotationDelta.removed.some((item) => item.kind === "bottleneck")
+          ? "positive"
+          : transition.annotationDelta.added.some((item) => item.kind === "bottleneck" || item.severity === "critical")
+            ? "negative"
+            : "neutral",
+      evidence: [
+        transition.annotationDelta.added.length > 0
+          ? `added ${transition.annotationDelta.added.map((item) => item.title).join(", ")}`
+          : "",
+        transition.annotationDelta.removed.length > 0
+          ? `removed ${transition.annotationDelta.removed.map((item) => item.title).join(", ")}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("; "),
+    });
+  }
 
   if (diff.promptChange?.semanticDelta.length) {
     claims.push({

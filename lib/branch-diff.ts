@@ -6,6 +6,12 @@ import type {
   BranchPromptChange,
   BranchResponseChange,
   BranchScoreDelta,
+  ConversationGraph,
+  ConversationGraphAnnotation,
+  GraphAnnotationDelta,
+  GraphStateSnapshot,
+  GraphStateSnapshotAnnotation,
+  GraphStateTransition,
   ScoreAxis,
   TraceEvent,
 } from "@/lib/types";
@@ -197,6 +203,255 @@ function buildScoreDelta(parentAttempt: Attempt, childAttempt: Attempt): BranchS
   };
 }
 
+function graphPairIdForTraceEvent(graph: ConversationGraph, traceEventId?: string) {
+  if (!traceEventId) {
+    return undefined;
+  }
+
+  return graph.index.pairByPromptTraceEventId[traceEventId] ?? graph.index.pairByResponseTraceEventId[traceEventId];
+}
+
+function graphAnnotationKey(annotation: GraphStateSnapshotAnnotation) {
+  return `${annotation.kind}:${annotation.severity}:${annotation.title}`;
+}
+
+function graphAnnotationSnapshot(annotation: ConversationGraphAnnotation): GraphStateSnapshotAnnotation {
+  return {
+    id: annotation.id,
+    kind: annotation.kind,
+    severity: annotation.severity,
+    title: annotation.title,
+    source: annotation.source,
+    scoreImpact: annotation.scoreImpact,
+    confidence: annotation.confidence,
+  };
+}
+
+function graphAnnotationsForPair(graph: ConversationGraph, pairId?: string) {
+  const pair = pairId ? graph.pairs.find((item) => item.id === pairId) : undefined;
+
+  if (!pair) {
+    return [];
+  }
+
+  const annotationById = new Map(graph.annotations.map((annotation) => [annotation.id, annotation]));
+  const annotationIds = new Set<string>();
+
+  for (const targetId of [pair.id, pair.promptNodeId, pair.statusNodeId, pair.responseNodeId]) {
+    if (!targetId) {
+      continue;
+    }
+
+    for (const annotationId of graph.index.annotationIdsByTargetId[targetId] ?? []) {
+      annotationIds.add(annotationId);
+    }
+  }
+
+  for (const traceEventId of [pair.promptTraceEventId, pair.responseTraceEventId]) {
+    if (!traceEventId) {
+      continue;
+    }
+
+    for (const annotationId of graph.index.annotationIdsByTraceEventId[traceEventId] ?? []) {
+      annotationIds.add(annotationId);
+    }
+  }
+
+  return [...annotationIds]
+    .map((annotationId) => annotationById.get(annotationId))
+    .filter((annotation): annotation is ConversationGraphAnnotation => Boolean(annotation));
+}
+
+function directedDegreeForPair(graph: ConversationGraph, pairId?: string) {
+  const pair = pairId ? graph.pairs.find((item) => item.id === pairId) : undefined;
+  const incoming = new Set<string>();
+  const outgoing = new Set<string>();
+
+  if (!pair) {
+    return { incoming: 0, outgoing: 0 };
+  }
+
+  for (const nodeId of [pair.promptNodeId, pair.statusNodeId, pair.responseNodeId]) {
+    if (!nodeId) {
+      continue;
+    }
+
+    const incidence = graph.index.incidence[nodeId];
+    incidence?.incoming.forEach((edgeId) => incoming.add(edgeId));
+    incidence?.outgoing.forEach((edgeId) => outgoing.add(edgeId));
+  }
+
+  return {
+    incoming: incoming.size,
+    outgoing: outgoing.size,
+  };
+}
+
+function uniqueAnnotationKinds(annotations: GraphStateSnapshotAnnotation[]) {
+  return Array.from(new Set(annotations.map((annotation) => annotation.kind)));
+}
+
+function buildGraphStateSnapshot(graph: ConversationGraph, pairId?: string): GraphStateSnapshot {
+  const pair = pairId ? graph.pairs.find((item) => item.id === pairId) : undefined;
+
+  if (!pair) {
+    return {
+      attemptId: graph.attemptId,
+      statusReasons: [],
+      directedDegree: { incoming: 0, outgoing: 0 },
+      annotationIds: [],
+      annotationKinds: [],
+      annotations: [],
+      summary: "No comparable graph pair found at this replay point.",
+      missing: true,
+    };
+  }
+
+  const annotations = graphAnnotationsForPair(graph, pair.id).map(graphAnnotationSnapshot);
+
+  return {
+    attemptId: graph.attemptId,
+    pairId: pair.id,
+    promptNodeId: pair.promptNodeId,
+    statusNodeId: pair.statusNodeId,
+    responseNodeId: pair.responseNodeId,
+    promptTraceEventId: pair.promptTraceEventId,
+    responseTraceEventId: pair.responseTraceEventId,
+    status: pair.status,
+    statusReasons: pair.statusReasons,
+    directedDegree: directedDegreeForPair(graph, pair.id),
+    annotationIds: annotations.map((annotation) => annotation.id),
+    annotationKinds: uniqueAnnotationKinds(annotations),
+    annotations,
+    summary: `Pair ${pair.sequence + 1}: ${pair.status}${pair.isBreakpoint ? " / replay breakpoint" : ""}`,
+  };
+}
+
+function buildGraphAnnotationDelta(before: GraphStateSnapshot, after: GraphStateSnapshot): GraphAnnotationDelta {
+  const beforeByKey = new Map(before.annotations.map((annotation) => [graphAnnotationKey(annotation), annotation]));
+  const afterByKey = new Map(after.annotations.map((annotation) => [graphAnnotationKey(annotation), annotation]));
+
+  return {
+    added: after.annotations.filter((annotation) => !beforeByKey.has(graphAnnotationKey(annotation))),
+    removed: before.annotations.filter((annotation) => !afterByKey.has(graphAnnotationKey(annotation))),
+    persisted: after.annotations.filter((annotation) => beforeByKey.has(graphAnnotationKey(annotation))),
+  };
+}
+
+function annotationListLabel(annotations: GraphStateSnapshotAnnotation[], prefix: string) {
+  if (annotations.length === 0) {
+    return undefined;
+  }
+
+  return `${prefix}: ${annotations
+    .slice(0, 3)
+    .map((annotation) => annotation.title)
+    .join(", ")}`;
+}
+
+function hasKind(annotations: GraphStateSnapshotAnnotation[], kind: GraphStateSnapshotAnnotation["kind"]) {
+  return annotations.some((annotation) => annotation.kind === kind);
+}
+
+function buildGraphTransitionLabels(input: {
+  before: GraphStateSnapshot;
+  after: GraphStateSnapshot;
+  annotationDelta: GraphAnnotationDelta;
+  processDelta: BranchProcessDelta;
+  scoreDelta?: BranchScoreDelta;
+}) {
+  const labels: string[] = [];
+  const { before, after, annotationDelta, processDelta, scoreDelta } = input;
+
+  if (before.status !== after.status) {
+    labels.push(`status: ${before.status ?? "missing"} -> ${after.status ?? "missing"}`);
+  }
+
+  if (hasKind(annotationDelta.added, "verification")) {
+    labels.push("verification evidence introduced");
+  }
+
+  if (hasKind(annotationDelta.added, "material_grounding")) {
+    labels.push("material grounding changed");
+  }
+
+  if (hasKind(annotationDelta.removed, "bottleneck") || (hasKind(before.annotations, "bottleneck") && !hasKind(after.annotations, "bottleneck"))) {
+    labels.push("bottleneck signal reduced");
+  }
+
+  if (hasKind(annotationDelta.added, "bottleneck")) {
+    labels.push("new bottleneck signal appeared");
+  }
+
+  if (processDelta.verificationMovedEarlier) {
+    labels.push("verification moved earlier in the branch");
+  }
+
+  if (processDelta.materialUseChanged) {
+    labels.push(`attachments: ${processDelta.parentAttachmentCount} -> ${processDelta.childAttachmentCount}`);
+  }
+
+  if (typeof scoreDelta?.totalDelta === "number") {
+    labels.push(`score delta: ${scoreDelta.totalDelta > 0 ? "+" : ""}${scoreDelta.totalDelta}`);
+  }
+
+  const addedLabel = annotationListLabel(annotationDelta.added, "added annotations");
+  const removedLabel = annotationListLabel(annotationDelta.removed, "removed annotations");
+
+  if (addedLabel) {
+    labels.push(addedLabel);
+  }
+
+  if (removedLabel) {
+    labels.push(removedLabel);
+  }
+
+  return Array.from(new Set(labels)).slice(0, 8);
+}
+
+function buildGraphStateTransition(input: {
+  parentAttempt: Attempt;
+  childAttempt: Attempt;
+  processDelta: BranchProcessDelta;
+  scoreDelta?: BranchScoreDelta;
+}): GraphStateTransition {
+  const { parentAttempt, childAttempt, processDelta, scoreDelta } = input;
+  const branch = childAttempt.branch;
+
+  if (!branch) {
+    throw new Error("Child attempt does not contain branch metadata.");
+  }
+
+  const parentGraph = buildConversationGraph(parentAttempt.trace, parentAttempt.scoreReport, parentAttempt.branch);
+  const childGraph = buildConversationGraph(childAttempt.trace, childAttempt.scoreReport, childAttempt.branch);
+  const childBreakpointEvent = childAttempt.trace.find((event) => event.sourceTraceEventId === branch.parentTraceEventId);
+  const parentPairId = branch.parentPairId ?? graphPairIdForTraceEvent(parentGraph, branch.parentTraceEventId);
+  const childPairId = childGraph.branch?.breakpointPairId ?? graphPairIdForTraceEvent(childGraph, childBreakpointEvent?.id);
+  const before = buildGraphStateSnapshot(parentGraph, parentPairId);
+  const after = buildGraphStateSnapshot(childGraph, childPairId);
+  const annotationDelta = buildGraphAnnotationDelta(before, after);
+
+  return {
+    id: `graph-transition:${parentAttempt.id}:${childAttempt.id}:${branch.parentTraceEventId}`,
+    parentAttemptId: parentAttempt.id,
+    childAttemptId: childAttempt.id,
+    breakpointTraceEventId: branch.parentTraceEventId,
+    parentPairId,
+    childPairId,
+    before,
+    after,
+    annotationDelta,
+    transitionLabels: buildGraphTransitionLabels({
+      before,
+      after,
+      annotationDelta,
+      processDelta,
+      scoreDelta,
+    }),
+    createdAt: new Date().toISOString(),
+  };
+}
+
 function tracePair(parentAttempt: Attempt, childAttempt: Attempt) {
   const branch = childAttempt.branch;
 
@@ -278,7 +533,14 @@ export function buildBranchDiff(parentAttempt: Attempt, childAttempt: Attempt): 
   }
 
   const pair = tracePair(parentAttempt, childAttempt);
-  const childGraph = buildConversationGraph(childAttempt.trace, childAttempt.scoreReport, childAttempt.branch);
+  const processDelta = buildProcessDelta(parentAttempt, childAttempt);
+  const scoreDelta = buildScoreDelta(parentAttempt, childAttempt);
+  const graphTransition = buildGraphStateTransition({
+    parentAttempt,
+    childAttempt,
+    processDelta,
+    scoreDelta,
+  });
 
   return {
     id: crypto.randomUUID(),
@@ -287,11 +549,12 @@ export function buildBranchDiff(parentAttempt: Attempt, childAttempt: Attempt): 
     breakpointTraceEventId: branch.parentTraceEventId,
     breakpointRole: pair.parentBreakpoint.role,
     parentPairId: branch.parentPairId,
-    childPairId: childGraph.branch?.breakpointPairId,
+    childPairId: graphTransition.childPairId,
     promptChange: buildPromptChange(pair.parentPrompt, pair.childPrompt),
     responseChange: buildResponseChange(pair.parentResponse, pair.childResponse),
-    processDelta: buildProcessDelta(parentAttempt, childAttempt),
-    scoreDelta: buildScoreDelta(parentAttempt, childAttempt),
+    processDelta,
+    scoreDelta,
+    graphTransition,
     createdAt: new Date().toISOString(),
   };
 }

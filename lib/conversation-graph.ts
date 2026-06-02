@@ -62,6 +62,19 @@ function addAnnotationToIndex(index: ConversationGraphIndex, annotation: Convers
   }
 }
 
+function dedupeAnnotations(annotations: ConversationGraphAnnotation[]) {
+  const seen = new Set<string>();
+
+  return annotations.filter((annotation) => {
+    if (seen.has(annotation.id)) {
+      return false;
+    }
+
+    seen.add(annotation.id);
+    return true;
+  });
+}
+
 function inferTaskStatus(
   prompt: TraceEvent,
   response: TraceEvent | undefined,
@@ -408,7 +421,7 @@ export function buildConversationGraph(
     branch: branchGraph,
     problemMaterialCount: options.problemMaterialCount,
   });
-  const annotations = [...deterministicAnnotations, ...(scoreReport?.graphAnnotations ?? [])];
+  const annotations = dedupeAnnotations([...deterministicAnnotations, ...(scoreReport?.graphAnnotations ?? [])]);
   annotations.forEach((annotation) => addAnnotationToIndex(index, annotation));
 
   return {
