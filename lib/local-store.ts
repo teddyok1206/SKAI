@@ -1,9 +1,17 @@
 import { SKAI_STORAGE_KEYS } from "@/lib/constants";
-import type { Attempt, FounderReviewNote, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
+import type {
+  Attempt,
+  FounderReviewNote,
+  GeneratedProblemEditorialState,
+  Problem,
+  PromptComment,
+  PublishedAttempt,
+} from "@/lib/types";
 
 const authoredProblemsChangedEvent = "skai:authored-problems-changed";
 const attemptsChangedEvent = "skai:attempts-changed";
 const founderReviewNotesChangedEvent = "skai:founder-review-notes-changed";
+const generatedProblemEditorialChangedEvent = "skai:generated-problem-editorial-changed";
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") {
@@ -52,6 +60,14 @@ function notifyFounderReviewNotesChanged() {
   }
 
   window.dispatchEvent(new Event(founderReviewNotesChangedEvent));
+}
+
+function notifyGeneratedProblemEditorialChanged() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new Event(generatedProblemEditorialChangedEvent));
 }
 
 export function getAttempts(): Attempt[] {
@@ -222,5 +238,36 @@ export function subscribeFounderReviewNotes(listener: () => void) {
   return () => {
     window.removeEventListener("storage", handleStorage);
     window.removeEventListener(founderReviewNotesChangedEvent, listener);
+  };
+}
+
+export function getGeneratedProblemEditorialStates(): GeneratedProblemEditorialState[] {
+  return readJson<GeneratedProblemEditorialState[]>(SKAI_STORAGE_KEYS.generatedProblemEditorial, []);
+}
+
+export function saveGeneratedProblemEditorialState(state: GeneratedProblemEditorialState) {
+  const states = getGeneratedProblemEditorialStates();
+  const next = [state, ...states.filter((item) => item.problemId !== state.problemId)];
+  writeJson(SKAI_STORAGE_KEYS.generatedProblemEditorial, next);
+  notifyGeneratedProblemEditorialChanged();
+}
+
+export function subscribeGeneratedProblemEditorialStates(listener: () => void) {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === SKAI_STORAGE_KEYS.generatedProblemEditorial) {
+      listener();
+    }
+  }
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(generatedProblemEditorialChangedEvent, listener);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(generatedProblemEditorialChangedEvent, listener);
   };
 }

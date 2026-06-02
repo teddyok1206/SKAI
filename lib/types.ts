@@ -148,6 +148,21 @@ export interface FounderReviewNote {
   updatedAt: string;
 }
 
+export interface GeneratedProblemEditorialChecklist {
+  antiOneShot: boolean;
+  materialCrossReference: boolean;
+  extractedTextUsable: boolean;
+  domainAccessible: boolean;
+}
+
+export interface GeneratedProblemEditorialState {
+  problemId: string;
+  isPublished: boolean;
+  checklist: GeneratedProblemEditorialChecklist;
+  note?: string;
+  updatedAt: string;
+}
+
 export interface FounderCohortAttempt {
   id: string;
   problemId: string;

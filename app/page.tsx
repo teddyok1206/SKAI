@@ -56,7 +56,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </section>
       {notice ? <p className="auth-notice">{notice}</p> : null}
 
-      <ProblemBrowser problems={problems} classifications={generatedProblemBatch001Classifications} />
+      <ProblemBrowser
+        problems={problems}
+        classifications={generatedProblemBatch001Classifications}
+        generatedProblemIds={Object.keys(generatedProblemBatch001Classifications)}
+      />
 
       <AuthoredProblemList />
     </main>

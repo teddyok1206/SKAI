@@ -1,5 +1,6 @@
 import { AdminAuthoringClient } from "@/components/admin-authoring-client";
 import { FounderReviewDashboard } from "@/components/founder-review-dashboard";
+import { GeneratedProblemEditorialDashboard } from "@/components/generated-problem-editorial-dashboard";
 
 export default function AdminPage() {
   return (
@@ -15,6 +16,7 @@ export default function AdminPage() {
       </section>
 
       <AdminAuthoringClient />
+      <GeneratedProblemEditorialDashboard />
       <FounderReviewDashboard />
     </main>
   );

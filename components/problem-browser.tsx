@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Clock, FileText, Layers3, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import type { GeneratedProblemClassification } from "@/data/generated-problem-batch-001";
-import type { Problem, ProblemCategory, ProblemGoalProfile, MaterialKind } from "@/lib/types";
+import { useGeneratedProblemEditorialMap } from "@/lib/use-generated-problem-editorial";
+import type { Problem, ProblemCategory, MaterialKind } from "@/lib/types";
 
 const categoryLabels: Record<ProblemCategory, string> = {
   workplace: "업무",
@@ -21,15 +22,6 @@ const difficultyLabels: Record<Problem["difficulty"], string> = {
   advanced: "심화",
 };
 
-const goalLabels: Record<ProblemGoalProfile, string> = {
-  accuracy_first: "정확성",
-  speed_first: "속도",
-  cost_constrained: "비용",
-  workflow_adoption: "정착",
-  learning_oriented: "학습",
-  exploration: "탐색",
-};
-
 const materialLabels: Record<MaterialKind | "none" | "any", string> = {
   any: "전체 자료",
   none: "자료 없음",
@@ -42,12 +34,10 @@ const materialLabels: Record<MaterialKind | "none" | "any", string> = {
 };
 
 const curationLabels = {
-  all: "전체",
-  quick_start: "빠른 시작",
-  material_heavy: "자료 중심",
-  verification: "검증 연습",
-  advanced_replay: "심화 replay",
-  no_material_framing: "문제정의",
+  all: "Smoke 후보",
+  first_run: "처음 체감",
+  material_control: "자료 다루기",
+  verification_replay: "검증/되돌리기",
 } as const;
 
 type CurationId = keyof typeof curationLabels;
@@ -57,6 +47,7 @@ type FilterValue<T extends string> = "all" | T;
 interface ProblemBrowserProps {
   problems: Problem[];
   classifications?: Record<string, GeneratedProblemClassification>;
+  generatedProblemIds?: string[];
 }
 
 function problemMaterialKinds(problem: Problem) {
@@ -68,23 +59,15 @@ function curationMatches(problem: Problem, classification: GeneratedProblemClass
     return true;
   }
 
-  if (curation === "quick_start") {
+  if (curation === "first_run") {
     return problem.difficulty === "intro" || problem.estimatedMinutes <= 20;
   }
 
-  if (curation === "material_heavy") {
-    return problem.materials.length >= 3 || classification?.primarySkill === "material_grounding";
+  if (curation === "material_control") {
+    return problem.materials.length >= 2 || classification?.primarySkill === "material_grounding";
   }
 
-  if (curation === "verification") {
-    return problem.goalProfile === "accuracy_first" || classification?.primarySkill === "verification";
-  }
-
-  if (curation === "advanced_replay") {
-    return problem.difficulty === "advanced" || Boolean(classification?.idealBottleneck);
-  }
-
-  return problem.materials.length === 0 || classification?.primarySkill === "problem_definition";
+  return problem.goalProfile === "accuracy_first" || problem.difficulty === "advanced" || classification?.primarySkill === "verification";
 }
 
 function buildSearchText(problem: Problem, classification: GeneratedProblemClassification | undefined) {
@@ -140,17 +123,30 @@ function materialCountLabel(problem: Problem) {
   return `${problem.materials.length}개 자료`;
 }
 
-export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowserProps) {
+export function ProblemBrowser({ problems, classifications = {}, generatedProblemIds = [] }: ProblemBrowserProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<FilterValue<ProblemCategory>>("all");
   const [difficulty, setDifficulty] = useState<FilterValue<Problem["difficulty"]>>("all");
-  const [goal, setGoal] = useState<FilterValue<ProblemGoalProfile>>("all");
   const [materialKind, setMaterialKind] = useState<MaterialKind | "none" | "any">("any");
   const [curation, setCuration] = useState<CurationId>("all");
+  const editorialMap = useGeneratedProblemEditorialMap();
+  const generatedProblemIdSet = useMemo(() => new Set(generatedProblemIds), [generatedProblemIds]);
+  const visibleProblems = useMemo(
+    () =>
+      problems.filter((problem) => {
+        if (!generatedProblemIdSet.has(problem.id)) {
+          return true;
+        }
+
+        return editorialMap.get(problem.id)?.isPublished ?? false;
+      }),
+    [editorialMap, generatedProblemIdSet, problems],
+  );
+  const hiddenGeneratedCount = problems.length - visibleProblems.length;
 
   const filteredProblems = useMemo(
     () =>
-      problems.filter((problem) => {
+      visibleProblems.filter((problem) => {
         const classification = classifications[problem.id];
         const materialKinds = problemMaterialKinds(problem);
 
@@ -166,10 +162,6 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
           return false;
         }
 
-        if (goal !== "all" && problem.goalProfile !== goal) {
-          return false;
-        }
-
         if (materialKind === "none" && problem.materials.length > 0) {
           return false;
         }
@@ -180,7 +172,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
 
         return curationMatches(problem, classification, curation);
       }),
-    [category, classifications, curation, difficulty, goal, materialKind, problems, query],
+    [category, classifications, curation, difficulty, materialKind, query, visibleProblems],
   );
 
   const topDomains = useMemo(() => {
@@ -196,14 +188,12 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
       .map(([domain, count]) => `${domain} ${count}`);
   }, [classifications, filteredProblems]);
 
-  const hasActiveFilter =
-    query.trim() || category !== "all" || difficulty !== "all" || goal !== "all" || materialKind !== "any" || curation !== "all";
+  const hasActiveFilter = query.trim() || category !== "all" || difficulty !== "all" || materialKind !== "any" || curation !== "all";
 
   function resetFilters() {
     setQuery("");
     setCategory("all");
     setDifficulty("all");
-    setGoal("all");
     setMaterialKind("any");
     setCuration("all");
   }
@@ -217,7 +207,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
         </div>
         <div className="problem-browser-count">
           <strong>{filteredProblems.length}</strong>
-          <span>/ {problems.length}</span>
+          <span>/ {visibleProblems.length}</span>
         </div>
       </div>
 
@@ -226,7 +216,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
           <Search size={17} />
           <input
             aria-label="문제 검색"
-            placeholder="문제, 자료, 역량 검색"
+            placeholder="문제나 자료 검색"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -246,58 +236,56 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
           ))}
         </div>
 
-        <div className="problem-filter-grid">
-          <label>
-            <span>분야</span>
-            <select className="select" value={category} onChange={(event) => setCategory(event.target.value as FilterValue<ProblemCategory>)}>
-              <option value="all">전체 분야</option>
-              {(Object.keys(categoryLabels) as ProblemCategory[]).map((item) => (
-                <option key={item} value={item}>
-                  {categoryLabels[item]}
-                </option>
-              ))}
-            </select>
-          </label>
+        <details className="advanced-problem-filters">
+          <summary>
+            <SlidersHorizontal size={14} /> 세부 필터
+          </summary>
+          <div className="problem-filter-grid">
+            <label>
+              <span>분야</span>
+              <select className="select" value={category} onChange={(event) => setCategory(event.target.value as FilterValue<ProblemCategory>)}>
+                <option value="all">전체 분야</option>
+                {(Object.keys(categoryLabels) as ProblemCategory[]).map((item) => (
+                  <option key={item} value={item}>
+                    {categoryLabels[item]}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          <label>
-            <span>난이도</span>
-            <select className="select" value={difficulty} onChange={(event) => setDifficulty(event.target.value as FilterValue<Problem["difficulty"]>)}>
-              <option value="all">전체 난이도</option>
-              {(Object.keys(difficultyLabels) as Problem["difficulty"][]).map((item) => (
-                <option key={item} value={item}>
-                  {difficultyLabels[item]}
-                </option>
-              ))}
-            </select>
-          </label>
+            <label>
+              <span>난이도</span>
+              <select
+                className="select"
+                value={difficulty}
+                onChange={(event) => setDifficulty(event.target.value as FilterValue<Problem["difficulty"]>)}
+              >
+                <option value="all">전체 난이도</option>
+                {(Object.keys(difficultyLabels) as Problem["difficulty"][]).map((item) => (
+                  <option key={item} value={item}>
+                    {difficultyLabels[item]}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          <label>
-            <span>목표</span>
-            <select className="select" value={goal} onChange={(event) => setGoal(event.target.value as FilterValue<ProblemGoalProfile>)}>
-              <option value="all">전체 목표</option>
-              {(Object.keys(goalLabels) as ProblemGoalProfile[]).map((item) => (
-                <option key={item} value={item}>
-                  {goalLabels[item]}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            <span>자료</span>
-            <select className="select" value={materialKind} onChange={(event) => setMaterialKind(event.target.value as MaterialKind | "none" | "any")}>
-              {(Object.keys(materialLabels) as Array<MaterialKind | "none" | "any">).map((item) => (
-                <option key={item} value={item}>
-                  {materialLabels[item]}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+            <label>
+              <span>자료</span>
+              <select className="select" value={materialKind} onChange={(event) => setMaterialKind(event.target.value as MaterialKind | "none" | "any")}>
+                {(Object.keys(materialLabels) as Array<MaterialKind | "none" | "any">).map((item) => (
+                  <option key={item} value={item}>
+                    {materialLabels[item]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </details>
 
         <div className="problem-browser-summary">
           <span>
             <SlidersHorizontal size={14} /> {topDomains.length > 0 ? topDomains.join(" · ") : "결과 없음"}
+            {hiddenGeneratedCount > 0 ? ` · ${hiddenGeneratedCount}개 생성 문제 검토 대기` : ""}
           </span>
           {hasActiveFilter ? (
             <button className="button quiet" onClick={resetFilters} type="button">
@@ -317,39 +305,34 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
         </div>
       ) : (
         <section className="grid problem-grid" aria-label="Problem list">
-          {filteredProblems.map((problem) => {
-            const classification = classifications[problem.id];
-            return (
-              <article className="card problem-card" key={problem.id}>
-                <div>
-                  <div className="tag-row">
-                    <span className="tag">
-                      <Layers3 size={13} /> {categoryLabels[problem.category]}
-                    </span>
-                    <span className="tag">
-                      <Clock size={13} /> {problem.estimatedMinutes}분
-                    </span>
-                    <span className="tag">
-                      <BarChart3 size={13} /> {difficultyLabels[problem.difficulty]}
-                    </span>
-                    <span className="tag">
-                      <FileText size={13} /> {materialCountLabel(problem)}
-                    </span>
-                  </div>
-                  <h2>{problem.title}</h2>
-                  <p className="muted">{problem.subtitle}</p>
-                  <div className="problem-card-meta">
-                    <span>{goalLabels[problem.goalProfile]}</span>
-                    <span>{classification?.domain ?? categoryLabels[problem.category]}</span>
-                    <span>{classification?.primarySkill?.replaceAll("_", " ") ?? "problem practice"}</span>
-                  </div>
+          {filteredProblems.map((problem) => (
+            <article className="card problem-card" key={problem.id}>
+              <div>
+                <div className="tag-row">
+                  <span className="tag">
+                    <Layers3 size={13} /> {categoryLabels[problem.category]}
+                  </span>
+                  <span className="tag">
+                    <Clock size={13} /> {problem.estimatedMinutes}분
+                  </span>
+                  <span className="tag">
+                    <BarChart3 size={13} /> {difficultyLabels[problem.difficulty]}
+                  </span>
+                  <span className="tag">
+                    <FileText size={13} /> {materialCountLabel(problem)}
+                  </span>
                 </div>
-                <Link className="button" href={`/problems/${problem.id}`}>
-                  풀기 <ArrowRight size={16} />
-                </Link>
-              </article>
-            );
-          })}
+                <h2>{problem.title}</h2>
+                <p className="muted">{problem.subtitle}</p>
+                <div className="problem-card-meta">
+                  <span>{problem.constraints[0] ?? problem.userGoal}</span>
+                </div>
+              </div>
+              <Link className="button" href={`/problems/${problem.id}`}>
+                풀기 <ArrowRight size={16} />
+              </Link>
+            </article>
+          ))}
         </section>
       )}
     </section>
