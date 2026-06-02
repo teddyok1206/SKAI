@@ -50,6 +50,8 @@ Apply migrations in order:
 006_branch_replay_metadata.sql
 007_counterfactual_report.sql
 008_seed_demo_problems_and_harden_problem_rls.sql
+009_attempt_solving_mode.sql
+010_prompt_comment_edit_delete_reports.sql
 ```
 
 Migration `008` does two important things:

@@ -54,6 +54,8 @@ conda run --no-capture-output -n SKAI npm run serve:lan
 
 Use `dev` while coding and `serve:lan` when leaving the demo on for hours. More operational notes are in `docs/technical/011_local_mac_operations.md`.
 
+For external WAN users, prefer Vercel rather than exposing the Mac directly. The first-deployment walkthrough is in `docs/technical/014_vercel_first_deployment_guide.md`.
+
 ## Verification
 
 ```bash

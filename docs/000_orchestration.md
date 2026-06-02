@@ -27,6 +27,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - Engine Mode의 topbar mark는 풀이 상태에 따라 ready/primed/busy/structured packet-flow intensity가 바뀐다. 이는 flame shape가 아니라 graph 내부 에너지 표현이다.
 - Browser/OAuth icon assets는 `public/favicon.svg`, `public/skai-mark.svg`, `public/skai-mark-512.png`, `public/skai-mark-192.png`, `public/apple-touch-icon.png`로 준비됐고, Next metadata에 연결됐다.
+- External WAN smoke의 1순위 경로는 Vercel-hosted Next.js + Supabase Auth/Postgres이며, 초보자용 단계별 배포 가이드는 `docs/technical/014_vercel_first_deployment_guide.md`에 있다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
 - 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
@@ -143,6 +144,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
 - Problem solving 중 mark activity는 root `data-skai-activity`로 동기화되며, 모델 처리 중에는 packet density/speed가 올라가고 trace가 쌓이면 artifact node가 pulse한다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
+- Vercel guide는 준비됐지만 실제 Vercel production deployment, Supabase redirect update, deployed health check, deployed smoke flow는 아직 수행 전이다.
 
 ## Demo Contract
 
@@ -360,6 +362,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/010_branch_diff_and_counterfactual_judge.md`
 - `docs/technical/011_local_mac_operations.md`
 - `docs/technical/012_graph_backbone_strategy.md`
+- `docs/technical/013_supabase_deployment_checklist.md`
+- `docs/technical/014_vercel_first_deployment_guide.md`
 
 디자인:
 
