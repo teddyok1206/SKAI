@@ -86,6 +86,7 @@
 | TDR-080 | Problem browser | Home discovery uses search, app-schema filters, and curation lanes rather than a flat grid | Accepted | 30개 이상 문제에서는 사용자가 연습하려는 orchestration 상황을 골라야 하므로 문제 탐색은 모델/provider가 아니라 분야, 난이도, 목표, 자료, 검증/정의/자료활용 경로를 중심으로 해야 함 | 2026-06-02 |
 | TDR-081 | Generated problem editorial gate | Generated problems are hidden from first-smoke discovery until founder checklist approval publishes them | Accepted | synthetic problem의 논리 구멍은 SKAI의 권위를 무너뜨릴 수 있으므로 seed 문제는 기본 노출하고 generated 문제는 anti-one-shot, material cross-reference, extracted text usability, domain accessibility를 통과한 것만 노출함 | 2026-06-02 |
 | TDR-082 | Activity-aware graph mark | Represent solving energy as packet-flow inside the 3-node graph, not as a literal flame mark | Accepted | Prometheus/fire는 origin metaphor이지만 primary identity는 user agency와 structure를 드러내는 graph여야 하므로 dynamic energy는 Engine Mode graph packet speed/density/artifact pulse로만 흡수함 | 2026-06-03 |
+| TDR-083 | External icon assets | Browser/OAuth icons use the square 3-node directed graph mark | Accepted | 홈 카피는 Prometheus metaphor를 쓸 수 있지만 favicon/OAuth 같은 외부 로고 표면은 SKAI의 primary identity인 graph mark를 유지해야 함 | 2026-06-03 |
 
 ## Decision Template
 

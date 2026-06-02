@@ -26,6 +26,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - Engine Mode의 topbar mark는 풀이 상태에 따라 ready/primed/busy/structured packet-flow intensity가 바뀐다. 이는 flame shape가 아니라 graph 내부 에너지 표현이다.
+- Browser/OAuth icon assets는 `public/favicon.svg`, `public/skai-mark.svg`, `public/skai-mark-512.png`, `public/skai-mark-192.png`, `public/apple-touch-icon.png`로 준비됐고, Next metadata에 연결됐다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
 - 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
@@ -330,6 +331,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/050_generated_problem_editorial_gate.md`: Gemini 004 반영, 생성 문제 smoke publish gate와 Admin editorial dashboard.
 - `docs/technical/plan/051_activity_aware_graph_mark.md`: Gemini 005 반영, literal flame 대신 activity-aware graph packet-flow.
 - `docs/technical/plan/052_home_hero_lockup_and_copy.md`: 홈 hero 중복 lockup 제거와 SKAI 철학 기반 headline 후보 정리.
+- `docs/technical/plan/053_home_hero_line_integrity.md`: Prometheus headline이 문장 내부에서 줄바꿈되지 않도록 line integrity 보정.
+- `docs/technical/plan/054_browser_oauth_logo_assets.md`: Chrome favicon과 Supabase/OAuth branding용 graph mark asset 생성.
 
 다음 plan 후보:
 
@@ -363,6 +366,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/design/000_design_principles.md`
 - `docs/design/001_theme_recommendation.md`
 - `docs/design/002_font_and_provider_surfaces.md`
+- `docs/design/004_logo_asset_usage.md`
 
 ## Update Trigger
 
