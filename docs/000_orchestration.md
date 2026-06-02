@@ -50,6 +50,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
+- Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
 
 현재 데모가 증명하는 것:
 
@@ -85,6 +86,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt를 UI에서 원클릭 삽입하는 기능은 아직 없다.
+- 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
 ## Demo Contract
 
@@ -231,18 +233,19 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/023_directed_graph_affordance.md`: directed graph flow와 source/target affordance 강화.
 - `docs/technical/plan/024_post_graph_demo_execution_plan.md`: 설계/계획/철학/진척도 분석 기반 post-graph 실행 로드맵.
 - `docs/technical/plan/025_google_login_integration.md`: Google OAuth sign-in/callback/sign-out hardening.
+- `docs/technical/plan/026_local_mac_runtime_strategy.md`: MacBook/Mac mini local runtime strategy.
 
 다음 plan 후보:
 
-- `026_live_environment_smoke.md`
-- `027_golden_attempts_judge_calibration.md`
-- `028_playbook_insertion_operator_ux.md`
-- `029_cost_guardrails.md`
-- `030_supabase_deployment_hardening.md`
-- `031_admin_authoring_mvp.md`
-- `032_branch_tree_explorer.md`
-- `033_founder_review_dashboard.md`
-- `034_comment_moderation_and_privacy.md`
+- `027_live_environment_smoke.md`
+- `028_golden_attempts_judge_calibration.md`
+- `029_playbook_insertion_operator_ux.md`
+- `030_cost_guardrails.md`
+- `031_supabase_deployment_hardening.md`
+- `032_admin_authoring_mvp.md`
+- `033_branch_tree_explorer.md`
+- `034_founder_review_dashboard.md`
+- `035_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
@@ -261,6 +264,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/008_breakpoint_branch_replay.md`
 - `docs/technical/009_context_compiler.md`
 - `docs/technical/010_branch_diff_and_counterfactual_judge.md`
+- `docs/technical/011_local_mac_operations.md`
 
 디자인:
 

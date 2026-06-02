@@ -39,6 +39,21 @@ Open:
 http://localhost:3000
 ```
 
+For active development reachable from other devices on the same Wi-Fi:
+
+```bash
+conda run --no-capture-output -n SKAI npm run dev:lan
+```
+
+For a more stable local/LAN demo, run a production build and serve it:
+
+```bash
+conda run -n SKAI npm run build
+conda run --no-capture-output -n SKAI npm run serve:lan
+```
+
+Use `dev` while coding and `serve:lan` when leaving the demo on for hours. More operational notes are in `docs/technical/011_local_mac_operations.md`.
+
 ## Verification
 
 ```bash
