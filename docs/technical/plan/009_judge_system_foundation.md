@@ -45,7 +45,7 @@ Excluded:
 - `SKAI_JUDGE_MODE`: `heuristic`, `llm`, or `ensemble`. Default: `heuristic`.
 - `SKAI_JUDGE_PROVIDER`: provider for single LLM judge. Default: `gemini`.
 - `SKAI_JUDGE_MODEL`: model for single LLM judge. Default follows provider.
-- `SKAI_JUDGE_ENSEMBLE`: comma-separated configs such as `gemini:gemini-2.5-flash-lite,openai:gpt-4.1-mini`.
+- `SKAI_JUDGE_ENSEMBLE`: comma-separated configs such as `gemini:gemini-2.5-flash-lite,openai:gpt-4.1-nano`.
 
 ## Affected Files
 

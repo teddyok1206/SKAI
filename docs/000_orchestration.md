@@ -41,6 +41,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
+- OpenAI cheap baseline은 `gpt-4.1-nano`로 설정됐다. Local `.env.local`과 ignored `.env.vercel.import`에는 OpenAI provider/default model 값이 준비됐고, 앱의 OpenAI option/pricing/defaults도 nano 기준이다.
 - `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
 - `npm run calibrate:judge`로 3개 seed problem의 weak/average/strong golden attempts 9개를 `/api/judge`에 반복 채점할 수 있다.
@@ -147,6 +148,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Problem solving 중 mark activity는 root `data-skai-activity`로 동기화되며, 모델 처리 중에는 packet density/speed가 올라가고 trace가 쌓이면 artifact node가 pulse한다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 - Vercel guide는 준비됐지만 실제 Vercel production deployment, Supabase redirect update, deployed health check, deployed smoke flow는 아직 수행 전이다.
+- Vercel production env는 로컬 파일 변경만으로 자동 반영되지 않는다. `.env.vercel.import`의 OpenAI 값은 Vercel Environment Variables에 import/update하고 redeploy해야 public URL에 반영된다.
 
 ## Demo Contract
 
@@ -338,6 +340,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/053_home_hero_line_integrity.md`: Prometheus headline이 문장 내부에서 줄바꿈되지 않도록 line integrity 보정.
 - `docs/technical/plan/054_browser_oauth_logo_assets.md`: Chrome favicon과 Supabase/OAuth branding용 graph mark asset 생성.
 - `docs/technical/plan/055_deployment_reporting_and_share_open_fix.md`: 배포 반영 보고 규칙과 publish/share open race 보강.
+- `docs/technical/plan/056_openai_nano_provider_baseline.md`: OpenAI API key와 `gpt-4.1-nano` 저가 baseline 연결.
 
 다음 plan 후보:
 

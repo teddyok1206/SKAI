@@ -211,7 +211,32 @@ These are allowed to be visible to the browser because they are `NEXT_PUBLIC_`.
 
 ### Required Provider Config
 
-Use one live provider first. Recommended first deployment:
+Use one live provider first. Recommended low-cost OpenAI deployment:
+
+```bash
+SKAI_DEFAULT_PROVIDER=openai
+SKAI_DEFAULT_MODEL=gpt-4.1-nano
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+OPENAI_MODEL=gpt-4.1-nano
+```
+
+Mark `OPENAI_API_KEY` as sensitive.
+
+If using the generated local import helper, copy values from:
+
+```text
+.env.vercel.import
+```
+
+That file is ignored by git and currently targets OpenAI `gpt-4.1-nano`.
+
+You do not need to set `OPENAI_BASE_URL` unless changing the adapter. The code defaults to:
+
+```text
+https://api.openai.com/v1
+```
+
+Alternative Gemini config:
 
 ```bash
 SKAI_DEFAULT_PROVIDER=gemini

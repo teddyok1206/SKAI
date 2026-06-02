@@ -64,12 +64,12 @@ export const modelPricingTable: ModelPricing[] = [
   },
   {
     provider: "openai",
-    model: "gpt-4.1-mini",
-    inputUsdPerMillionTokens: 0.4,
-    outputUsdPerMillionTokens: 1.6,
-    sourceLabel: "OpenAI GPT-4.1 mini model docs",
-    sourceUrl: "https://developers.openai.com/api/docs/models/gpt-4.1-mini",
-    effectiveDate: "2026-06-02",
+    model: "gpt-4.1-nano",
+    inputUsdPerMillionTokens: 0.1,
+    outputUsdPerMillionTokens: 0.4,
+    sourceLabel: "OpenAI GPT-4.1 nano model docs",
+    sourceUrl: "https://platform.openai.com/docs/models/gpt-4.1-nano",
+    effectiveDate: "2026-06-03",
     note: "Standard text token pricing. Cached input, batch mode, image token details, and tool calls are not modeled.",
   },
 ];

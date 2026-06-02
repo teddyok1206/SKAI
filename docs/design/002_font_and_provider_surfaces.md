@@ -97,7 +97,7 @@ Not allowed:
 - Gemini Flash-Lite: low-cost live smoke candidate.
 - Groq Llama: fast hosted text model candidate.
 - xAI Grok Fast: low-cost Grok API candidate.
-- OpenAI GPT-4.1 Mini: stable baseline candidate with cost caution.
+- OpenAI GPT-4.1 Nano: low-cost baseline candidate for live smoke comparison.
 
 ## Future Solving Modes
 

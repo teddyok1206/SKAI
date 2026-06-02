@@ -117,7 +117,7 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
-  const defaultModelOption = getModelOption("skai-mock");
+  const defaultModelOption = getModelOption("openai-gpt-4-1-nano");
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
   const [modelOptionId, setModelOptionId] = useState<ModelOptionId>(defaultModelOption.id);

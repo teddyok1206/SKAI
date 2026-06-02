@@ -111,7 +111,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ### Live Model Provider
 
-The app runs with `SKAI_DEFAULT_PROVIDER=mock` until a real provider key is set.
+The current live baseline can run with OpenAI `gpt-4.1-nano` when `OPENAI_API_KEY` is configured. Mock remains available for zero-key UI demos.
+
+For OpenAI's low-cost baseline:
+
+```bash
+SKAI_DEFAULT_PROVIDER=openai
+SKAI_DEFAULT_MODEL=gpt-4.1-nano
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4.1-nano
+```
 
 For Groq:
 

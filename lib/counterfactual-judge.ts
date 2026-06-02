@@ -35,7 +35,7 @@ function isProviderId(value: string): value is ProviderId {
 function defaultJudgeModel(provider: ProviderId) {
   const models: Record<ProviderId, string> = {
     mock: "counterfactual-heuristic-v0",
-    openai: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+    openai: process.env.OPENAI_MODEL ?? "gpt-4.1-nano",
     groq: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
     xai: process.env.XAI_MODEL ?? "grok-4-fast",
     openrouter: process.env.OPENROUTER_MODEL ?? "openai/gpt-oss-20b",

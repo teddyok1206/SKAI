@@ -88,6 +88,7 @@
 | TDR-082 | Activity-aware graph mark | Represent solving energy as packet-flow inside the 3-node graph, not as a literal flame mark | Accepted | Prometheus/fire는 origin metaphor이지만 primary identity는 user agency와 structure를 드러내는 graph여야 하므로 dynamic energy는 Engine Mode graph packet speed/density/artifact pulse로만 흡수함 | 2026-06-03 |
 | TDR-083 | External icon assets | Browser/OAuth icons use the square 3-node directed graph mark | Accepted | 홈 카피는 Prometheus metaphor를 쓸 수 있지만 favicon/OAuth 같은 외부 로고 표면은 SKAI의 primary identity인 graph mark를 유지해야 함 | 2026-06-03 |
 | TDR-084 | First WAN deployment | Use Vercel + Supabase as the first external-user deployment path | Accepted | MacBook public port forwarding is operationally fragile and risky; first WAN smoke should use Vercel for the Next.js app and Supabase for auth/persistence so users can access SKAI through a stable browser URL | 2026-06-03 |
+| TDR-085 | OpenAI cheap baseline | Use `gpt-4.1-nano` as the current OpenAI low-cost Chat Completions-compatible baseline | Accepted | OpenAI pricing shows cheaper `gpt-5-nano`, but SKAI currently uses a Chat Completions-compatible adapter; `gpt-4.1-nano` is confirmed as low-cost and Chat Completions-compatible, making it the safer immediate baseline | 2026-06-03 |
 
 ## Decision Template
 

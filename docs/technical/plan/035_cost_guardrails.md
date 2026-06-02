@@ -49,7 +49,7 @@ Excluded:
    - `gemini-2.5-flash-lite`
    - `llama-3.3-70b-versatile`
    - `grok-4-fast`
-   - `gpt-4.1-mini`
+   - `gpt-4.1-nano`
 3. Use the pricing helper in the OpenAI-compatible provider adapter.
 4. Add attempt cost summary helpers in the solver.
 5. Render visible cost/budget status in the toolbar and sidebar.
@@ -88,7 +88,7 @@ Implemented:
   - `gemini/gemini-2.5-flash-lite`
   - `groq/llama-3.3-70b-versatile`
   - `xai/grok-4-fast`
-  - `openai/gpt-4.1-mini`
+  - `openai/gpt-4.1-nano`
 - Added source labels, source URLs, effective dates, and pricing notes.
 - OpenAI-compatible provider adapter now estimates `ModelRun.estimatedCostUsd` when:
   - provider returns input/output token usage,

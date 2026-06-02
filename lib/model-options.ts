@@ -1,6 +1,6 @@
 import type { ProviderId } from "@/lib/types";
 
-export type ModelOptionId = "skai-mock" | "openai-gpt-4-1-mini" | "gemini-flash-lite" | "groq-llama" | "xai-grok-fast";
+export type ModelOptionId = "skai-mock" | "openai-gpt-4-1-nano" | "gemini-flash-lite" | "groq-llama" | "xai-grok-fast";
 
 export interface ModelOption {
   id: ModelOptionId;
@@ -50,13 +50,13 @@ export const modelOptions: ModelOption[] = [
     capabilityNote: "저가 후보 · provider key 필요",
   },
   {
-    id: "openai-gpt-4-1-mini",
-    label: "OpenAI GPT-4.1 Mini",
+    id: "openai-gpt-4-1-nano",
+    label: "OpenAI GPT-4.1 Nano",
     shortLabel: "OpenAI",
     provider: "openai",
-    model: "gpt-4.1-mini",
-    description: "OpenAI 계열의 안정적인 baseline 비교용 모델입니다.",
-    capabilityNote: "비교 baseline · 비용 주의",
+    model: "gpt-4.1-nano",
+    description: "OpenAI 계열의 초저가 live smoke baseline 모델입니다.",
+    capabilityNote: "초저가 · 텍스트/이미지 입력 지원",
   },
 ];
 

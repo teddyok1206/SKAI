@@ -9,7 +9,7 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
     id: "openai",
     baseUrl: process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1",
     apiKey: process.env.OPENAI_API_KEY,
-    defaultModel: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+    defaultModel: process.env.OPENAI_MODEL ?? "gpt-4.1-nano",
   }),
   groq: createOpenAICompatibleProvider({
     id: "groq",
