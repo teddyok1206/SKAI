@@ -89,6 +89,7 @@
 | TDR-083 | External icon assets | Browser/OAuth icons use the square 3-node directed graph mark | Accepted | 홈 카피는 Prometheus metaphor를 쓸 수 있지만 favicon/OAuth 같은 외부 로고 표면은 SKAI의 primary identity인 graph mark를 유지해야 함 | 2026-06-03 |
 | TDR-084 | First WAN deployment | Use Vercel + Supabase as the first external-user deployment path | Accepted | MacBook public port forwarding is operationally fragile and risky; first WAN smoke should use Vercel for the Next.js app and Supabase for auth/persistence so users can access SKAI through a stable browser URL | 2026-06-03 |
 | TDR-085 | OpenAI cheap baseline | Use `gpt-4.1-nano` as the current OpenAI low-cost Chat Completions-compatible baseline | Accepted | OpenAI pricing shows cheaper `gpt-5-nano`, but SKAI currently uses a Chat Completions-compatible adapter; `gpt-4.1-nano` is confirmed as low-cost and Chat Completions-compatible, making it the safer immediate baseline | 2026-06-03 |
+| TDR-086 | Gemini default with OpenAI option | Keep Gemini Flash-Lite as the global default while exposing OpenAI `gpt-4.1-nano` as an optional provider | Accepted | First smoke should keep the already-tested Gemini path stable; OpenAI nano adds a cheap comparison engine without changing the default learner experience | 2026-06-03 |
 
 ## Decision Template
 

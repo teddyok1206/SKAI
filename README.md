@@ -111,14 +111,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ### Live Model Provider
 
-The current live baseline can run with OpenAI `gpt-4.1-nano` when `OPENAI_API_KEY` is configured. Mock remains available for zero-key UI demos.
+The current default live baseline is Gemini Flash-Lite when `GEMINI_API_KEY` is configured. The problem solver, shared model fallback, and raw `/api/chat` fallback all default to Gemini. OpenAI `gpt-4.1-nano` is available as an additional low-cost comparison option when `OPENAI_API_KEY` is configured. Mock remains available for zero-key UI demos.
+
+For Gemini:
+
+```bash
+SKAI_DEFAULT_PROVIDER=gemini
+SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash-lite
+```
 
 For OpenAI's low-cost baseline:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=openai
-SKAI_DEFAULT_MODEL=gpt-4.1-nano
 OPENAI_API_KEY=
+OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_MODEL=gpt-4.1-nano
 ```
 

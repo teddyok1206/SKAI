@@ -211,12 +211,24 @@ These are allowed to be visible to the browser because they are `NEXT_PUBLIC_`.
 
 ### Required Provider Config
 
-Use one live provider first. Recommended low-cost OpenAI deployment:
+Use one live provider first. Recommended default deployment:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=openai
-SKAI_DEFAULT_MODEL=gpt-4.1-nano
+SKAI_DEFAULT_PROVIDER=gemini
+SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+GEMINI_MODEL=gemini-2.5-flash-lite
+```
+
+Mark `GEMINI_API_KEY` as sensitive.
+
+With this config, SKAI's solver UI, model option fallback, and raw `/api/chat` fallback all start from Gemini. OpenAI can still be configured below as a selectable comparison engine.
+
+Add OpenAI as an optional low-cost comparison provider:
+
+```bash
 OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_MODEL=gpt-4.1-nano
 ```
 
@@ -228,28 +240,28 @@ If using the generated local import helper, copy values from:
 .env.vercel.import
 ```
 
-That file is ignored by git and currently targets OpenAI `gpt-4.1-nano`.
-
-You do not need to set `OPENAI_BASE_URL` unless changing the adapter. The code defaults to:
-
-```text
-https://api.openai.com/v1
-```
-
-Alternative Gemini config:
+That file is ignored by git and includes Gemini default values plus OpenAI optional values. Keep these values if Gemini should remain the default:
 
 ```bash
 SKAI_DEFAULT_PROVIDER=gemini
 SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
-Mark `GEMINI_API_KEY` as sensitive.
-
-You do not need to set `GEMINI_BASE_URL` unless changing the adapter. The code defaults to:
+You do not need to set `OPENAI_BASE_URL` or `GEMINI_BASE_URL` unless changing adapters. The code defaults to:
 
 ```text
-https://generativelanguage.googleapis.com/v1beta/openai
+OpenAI: https://api.openai.com/v1
+Gemini: https://generativelanguage.googleapis.com/v1beta/openai
+```
+
+Alternative OpenAI-as-default config:
+
+```bash
+SKAI_DEFAULT_PROVIDER=openai
+SKAI_DEFAULT_MODEL=gpt-4.1-nano
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4.1-nano
 ```
 
 Alternative Groq config:

@@ -24,7 +24,7 @@ import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } f
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
-import { getModelOption, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
+import { getDefaultModelOption, getModelOption, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
 import { providerUiProfiles } from "@/lib/provider-ui";
 import { getSolvingMode, solvingModes } from "@/lib/solving-modes";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
@@ -66,7 +66,7 @@ function formatKrw(value: number) {
 
 function newAttempt(
   problem: Problem,
-  modelOption: ModelOption = getModelOption("skai-mock"),
+  modelOption: ModelOption = getDefaultModelOption(),
   solvingModeId: SolvingModeId = "single_model",
 ): Attempt {
   const now = new Date().toISOString();
@@ -117,7 +117,7 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
-  const defaultModelOption = getModelOption("openai-gpt-4-1-nano");
+  const defaultModelOption = getDefaultModelOption();
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
   const [modelOptionId, setModelOptionId] = useState<ModelOptionId>(defaultModelOption.id);

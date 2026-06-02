@@ -7,7 +7,7 @@ Attach the provided OpenAI Platform API key to SKAI's local and Vercel-import en
 ## Scope
 
 - Store the OpenAI API key only in ignored env files.
-- Set local/default provider to OpenAI `gpt-4.1-nano`.
+- Add OpenAI `gpt-4.1-nano` as the OpenAI baseline. A later follow-up keeps Gemini as the global default.
 - Update OpenAI model option, provider defaults, judge defaults, and pricing registry.
 - Update deployment and operational docs.
 - Do not commit secrets.
@@ -60,10 +60,12 @@ OpenAI's pricing page lists `gpt-5-nano` as cheaper than `gpt-4.1-nano`, but SKA
 ## Implementation Result
 
 - Added OpenAI env values to ignored `.env.local` and `.env.vercel.import`.
-- Set ignored local/Vercel-import defaults to `SKAI_DEFAULT_PROVIDER=openai` and `SKAI_DEFAULT_MODEL=gpt-4.1-nano`.
+- Initially set ignored local/Vercel-import defaults to `SKAI_DEFAULT_PROVIDER=openai` and `SKAI_DEFAULT_MODEL=gpt-4.1-nano`.
 - Updated OpenAI provider default, model selector option, judge defaults, counterfactual judge defaults, and pricing registry to `gpt-4.1-nano`.
-- Made OpenAI GPT-4.1 Nano the default pre-attempt model option while keeping SKAI Mock selectable.
+- Initially made OpenAI GPT-4.1 Nano the default pre-attempt model option while keeping SKAI Mock selectable.
 - Updated README, Vercel deployment guide, decision register, orchestration, and design/technical notes.
+
+Follow-up `057_gemini_default_openai_optional.md` restores Gemini as the global default across env, solver UI, model fallback, and raw `/api/chat` fallback while keeping OpenAI Nano as an optional low-cost provider.
 
 ## Verification Result
 

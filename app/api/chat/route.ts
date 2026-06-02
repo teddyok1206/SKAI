@@ -19,8 +19,8 @@ const attachmentSchema = z.object({
 
 const chatSchema = z.object({
   problemId: z.string().min(1).max(120),
-  provider: z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]).default("mock"),
-  model: z.string().min(1).max(operationGuardrails.maxModelNameChars).default("mock-orchestrator"),
+  provider: z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]).default("gemini"),
+  model: z.string().min(1).max(operationGuardrails.maxModelNameChars).default("gemini-2.5-flash-lite"),
   branch: z.object({
     id: z.string().min(1).max(120),
     mode: z.enum(["breakpoint_replay"]),
