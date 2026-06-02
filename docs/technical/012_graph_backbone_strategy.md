@@ -1,0 +1,331 @@
+# Graph Backbone Strategy
+
+Date: 2026-06-02
+
+Source: `docs/philosophy/006_3d_dual_graph_system_backbone.md`
+
+## Thesis
+
+The 3D dual graph should become SKAI's system backbone.
+
+It should not remain only a visualization tab. It should be the shared representation used by:
+
+- judge annotation,
+- coach feedback,
+- branch replay and graph diff,
+- shared attempt learning views,
+- user habit reports,
+- model/provider analysis,
+- research export and future graph persistence.
+
+## Current Graph Baseline
+
+Already implemented:
+
+- `TraceEvent[]` remains the canonical raw transcript.
+- `buildConversationGraph(trace, scoreReport, branch?)` derives graph data from trace.
+- Prompt graph, response graph, and task-status layer exist.
+- Sparse indexes support node/pair lookup.
+- Graph tab exists in the solve UI.
+- Shared attempt page has graph-derived workflow sections.
+- Breakpoint replay anchors branch metadata to graph pairs.
+- Parent/child branch diff and counterfactual judge exist as baseline.
+
+Current limitation:
+
+- Judge output is still mostly attempt-level.
+- Graph nodes/pairs do not yet carry rich judge annotations.
+- Branch diff is not yet primarily displayed as graph-state transition.
+- Shared attempt UX still has room to make graph skeleton the primary reading path.
+- User habit reporting does not yet aggregate graph motifs.
+- Graph snapshots are not yet persisted for offline research/search.
+
+## System Principle
+
+Every major SKAI loop should eventually answer through graph state:
+
+```text
+What did the user change?
+What did the model return?
+What task state did that create?
+What evidence/material entered the loop?
+What did the judge infer at that node/pair/edge?
+What changed after replay?
+What pattern repeats across attempts?
+```
+
+## Core Entities To Add
+
+### Graph Annotation
+
+Attach judge and deterministic observations to graph nodes, edges, and pairs.
+
+Candidate type:
+
+```ts
+type GraphAnnotationTargetKind = "node" | "edge" | "pair";
+
+type GraphAnnotationKind =
+  | "framing"
+  | "decomposition"
+  | "delegation"
+  | "material_grounding"
+  | "verification"
+  | "adaptation"
+  | "context_drift"
+  | "bottleneck"
+  | "recovery"
+  | "finalization"
+  | "model_behavior"
+  | "cost_efficiency";
+
+interface GraphAnnotation {
+  id: string;
+  attemptId: string;
+  graphSchemaVersion: string;
+  targetKind: GraphAnnotationTargetKind;
+  targetId: string;
+  kind: GraphAnnotationKind;
+  severity: "info" | "positive" | "watch" | "critical";
+  axis?: string;
+  scoreImpact?: number;
+  confidence: number;
+  title: string;
+  explanation: string;
+  evidenceTraceEventIds: string[];
+  source: "deterministic" | "heuristic_judge" | "llm_judge" | "human";
+  createdAt: string;
+}
+```
+
+### Graph Diff
+
+Represent parent/child replay as graph-state transition, not text diff.
+
+Candidate type:
+
+```ts
+interface GraphStateTransition {
+  id: string;
+  parentAttemptId: string;
+  childAttemptId: string;
+  breakpointPairId: string;
+  before: {
+    promptNodeId?: string;
+    statusNodeId?: string;
+    responseNodeId?: string;
+    status?: string;
+    annotations: GraphAnnotation[];
+  };
+  after: {
+    promptNodeId?: string;
+    statusNodeId?: string;
+    responseNodeId?: string;
+    status?: string;
+    annotations: GraphAnnotation[];
+  };
+  transitionLabels: string[];
+  processDelta: {
+    turnDelta: number;
+    tokenDelta?: number;
+    materialUseChanged: boolean;
+    verificationMovedEarlier: boolean;
+  };
+  scoreDelta?: Record<string, number>;
+}
+```
+
+### Graph Skeleton
+
+Summarize a trace as a visible orchestration skeleton.
+
+Candidate type:
+
+```ts
+interface GraphSkeletonStep {
+  id: string;
+  pairId: string;
+  sequence: number;
+  label: string;
+  role:
+    | "problem_reframe"
+    | "clarifying_question"
+    | "material_selection"
+    | "task_decomposition"
+    | "draft_generation"
+    | "verification"
+    | "revision"
+    | "finalization"
+    | "other";
+  annotationIds: string[];
+  summary: string;
+  expandableTraceEventIds: string[];
+}
+```
+
+### Graph Motif
+
+Aggregate repeated orchestration behavior.
+
+Candidate type:
+
+```ts
+interface GraphMotif {
+  id: string;
+  userId?: string;
+  problemId?: string;
+  scope: "attempt" | "user" | "problem" | "model";
+  kind:
+    | "late_verification"
+    | "missing_decomposition"
+    | "material_not_used_in_final"
+    | "context_switching"
+    | "response_unexamined"
+    | "early_grounding"
+    | "strong_recovery"
+    | "model_drift";
+  evidencePairIds: string[];
+  count: number;
+  explanation: string;
+  recommendation?: string;
+}
+```
+
+### Graph Snapshot
+
+Persist derived graph state after submission/judge.
+
+Candidate table:
+
+```text
+conversation_graph_snapshots
+  id uuid primary key
+  attempt_id uuid
+  graph_schema_version text
+  trace_event_ids jsonb
+  graph jsonb
+  annotations jsonb
+  generated_at timestamptz
+  source text
+```
+
+Do not replace `trace_events`. Trace remains canonical. Snapshot is derived and versioned.
+
+## Required Product Surfaces
+
+### 1. Judge Annotation Surface
+
+Where:
+
+- solve Graph tab detail panel,
+- score report card,
+- shared attempt graph view.
+
+Behavior:
+
+- select a graph node/pair,
+- show judge annotations attached to that target,
+- show evidence trace events,
+- show score impact when available.
+
+### 2. Graph Diff Surface
+
+Where:
+
+- branch diff panel,
+- counterfactual judge section,
+- future branch tree explorer.
+
+Behavior:
+
+- show parent and child graph states side by side,
+- mark changed prompt/status/response,
+- show transition labels,
+- explain whether the changed prompt changed orchestration state.
+
+### 3. Graph Skeleton Sharing Surface
+
+Where:
+
+- shared attempt page,
+- problem-level published attempts,
+- future community comparison.
+
+Behavior:
+
+- show skeleton before raw transcript,
+- raw prompt/response only on expand,
+- preserve learning from structure rather than prompt copying.
+
+### 4. Graph Habit Report
+
+Where:
+
+- attempt result page,
+- future profile/dashboard,
+- founder review dashboard.
+
+Behavior:
+
+- extract motifs from one attempt,
+- later aggregate motifs across user attempts,
+- give practice targets based on graph behavior.
+
+### 5. Model/Provider Response Graph Analysis
+
+Where:
+
+- admin/research surfaces first,
+- model provider/startup data product later.
+
+Behavior:
+
+- compare response graphs under similar prompt graphs,
+- separate human orchestration quality from model behavior,
+- store model drift/stability annotations.
+
+## Implementation Order
+
+1. Add graph annotation types and deterministic annotation builder.
+2. Attach heuristic/LLM judge feedback to graph pairs.
+3. Render annotations in the Graph tab detail panel.
+4. Convert branch diff UI into graph-state transition UI.
+5. Build graph skeleton generator and use it in shared attempts.
+6. Build graph motif extractor for attempt-level habit report.
+7. Persist graph snapshots after judged submission.
+8. Add admin/research export of graph, annotations, motifs, and snapshots.
+9. Later: compare same/similar prompt graphs across models.
+
+## Complexity Target
+
+Graph derivation should remain efficient:
+
+- trace pass: `O(n)`,
+- annotation attach: `O(a)`,
+- pair/node lookup: `O(1)` using sparse maps,
+- motif extraction: `O(V + E + a)` for MVP rules,
+- snapshot storage: `O(V + E + a)`.
+
+Avoid dense graph matrices in the online product path. Dense incidence/adjacency matrices can be generated for offline research exports only.
+
+## Anti-Goals
+
+- Do not turn graph into decorative analytics.
+- Do not hide raw trace, but do not make raw trace the default learning path.
+- Do not make judge annotations look more certain than they are.
+- Do not replace human qualitative founder review during early smoke tests.
+- Do not make model comparison override human orchestration assessment.
+- Do not force all feedback into numeric scores.
+
+## Open Questions
+
+- Should graph annotations live inside `ScoreReport` first, or as a separate persisted entity?
+- Should LLM judge produce annotations directly, or should SKAI post-process judge text into annotations?
+- What confidence threshold should be shown to beginners?
+- How many motif kinds should be visible in beginner mode?
+- Should material attachments become first-class graph nodes or pair metadata in the MVP?
+- Should graph snapshot persistence wait until Supabase deployment hardening?
+
+## Philosophy Check
+
+This strategy directly implements SKAI's core claim: AI skill is a directed process of problem framing, task assignment, response interpretation, and verification. The graph becomes the common language that keeps judge, replay, sharing, habit analysis, and model research tied to human orchestration rather than generic chatbot output.

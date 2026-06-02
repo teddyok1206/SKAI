@@ -48,6 +48,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
+- 3D dual graph는 judge annotation, branch graph diff, sharing skeleton, habit report, model analysis, research snapshot의 시스템 백본으로 확장하는 방향이 확정됐다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 - Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
@@ -79,6 +80,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
 - Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
+- graph annotations, graph-state branch diff, graph skeleton sharing, habit motif report, graph snapshot persistence는 아직 구현 전이다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
@@ -130,6 +132,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 현재 상위 로드맵:
 
 - `docs/technical/plan/024_post_graph_demo_execution_plan.md`
+- `docs/technical/plan/027_graph_backbone_full_implementation.md`
 
 우선순위 0: freeze demo contract and smoke path
 
@@ -145,6 +148,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 같은 문제, 같은 첫 프롬프트로 mock/live 응답 차이를 기록한다.
 - 모델별 latency, token usage, failure mode를 기록한다.
 - 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다.
+
+우선순위 1.5: graph backbone first slice
+
+- graph annotation type을 추가한다.
+- deterministic annotation builder를 만든다.
+- 기존 bottleneck/material/verification/breakpoint 정보를 graph pair/node annotation으로 붙인다.
+- Graph tab detail panel에서 annotation을 볼 수 있게 한다.
+- 완료 조건: 사용자가 특정 graph node/pair를 눌렀을 때 "이 orchestration state에서 무엇이 바뀌었는지"를 볼 수 있다.
 
 우선순위 2: golden attempts and LLM judge calibration
 
@@ -234,18 +245,20 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/024_post_graph_demo_execution_plan.md`: 설계/계획/철학/진척도 분석 기반 post-graph 실행 로드맵.
 - `docs/technical/plan/025_google_login_integration.md`: Google OAuth sign-in/callback/sign-out hardening.
 - `docs/technical/plan/026_local_mac_runtime_strategy.md`: MacBook/Mac mini local runtime strategy.
+- `docs/technical/plan/027_graph_backbone_full_implementation.md`: 3D dual graph를 judge/replay/sharing/habit/model/research 백본으로 확장하는 전체 구현 계획.
 
 다음 plan 후보:
 
-- `027_live_environment_smoke.md`
-- `028_golden_attempts_judge_calibration.md`
-- `029_playbook_insertion_operator_ux.md`
-- `030_cost_guardrails.md`
-- `031_supabase_deployment_hardening.md`
-- `032_admin_authoring_mvp.md`
-- `033_branch_tree_explorer.md`
-- `034_founder_review_dashboard.md`
-- `035_comment_moderation_and_privacy.md`
+- `028_live_environment_smoke.md`
+- `029_graph_annotations_first_slice.md`
+- `030_golden_attempts_judge_calibration.md`
+- `031_playbook_insertion_operator_ux.md`
+- `032_cost_guardrails.md`
+- `033_supabase_deployment_hardening.md`
+- `034_admin_authoring_mvp.md`
+- `035_branch_tree_explorer.md`
+- `036_founder_review_dashboard.md`
+- `037_comment_moderation_and_privacy.md`
 
 ## Reading Map
 
@@ -254,6 +267,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/philosophy/000_project_seed.md`
 - `docs/philosophy/002_initial_demo_answers.md`
 - `docs/philosophy/005_materials_and_real_world_context.md`
+- `docs/philosophy/006_3d_dual_graph_system_backbone.md`
 
 기술:
 
@@ -265,6 +279,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/009_context_compiler.md`
 - `docs/technical/010_branch_diff_and_counterfactual_judge.md`
 - `docs/technical/011_local_mac_operations.md`
+- `docs/technical/012_graph_backbone_strategy.md`
 
 디자인:
 
