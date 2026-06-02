@@ -4,7 +4,7 @@ export default async function LocalProblemPage({ params }: { params: Promise<{ p
   const { problemId } = await params;
 
   return (
-    <main className="container">
+    <main className="container ui-mode-surface" data-ui-mode="engine">
       <LocalProblemSolver problemId={problemId} />
     </main>
   );

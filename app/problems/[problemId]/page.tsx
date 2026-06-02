@@ -11,9 +11,8 @@ export default async function ProblemPage({ params }: { params: Promise<{ proble
   }
 
   return (
-    <main className="container">
+    <main className="container ui-mode-surface" data-ui-mode="engine">
       <ProblemSolver problem={problem} />
     </main>
   );
 }
-

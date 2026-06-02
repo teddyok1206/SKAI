@@ -44,7 +44,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const notice = authNotice(params?.auth, params?.message);
 
   return (
-    <main className="container">
+    <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="home-hero">
         <p className="eyebrow">Social Knowledge of AI</p>
         <h1>AI를 잘 쓰는 법을 문제로 연습한다.</h1>

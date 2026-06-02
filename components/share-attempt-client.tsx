@@ -183,7 +183,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
 
   if (!attempt) {
     return (
-      <main className="container">
+      <main className="container ui-mode-surface" data-ui-mode="human">
         <div className="empty">
           <div>
             <h1>공개 풀이를 찾을 수 없습니다.</h1>
@@ -271,7 +271,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   }
 
   return (
-    <main className="container">
+    <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
         <div>
           <p className="eyebrow">Published Attempt</p>

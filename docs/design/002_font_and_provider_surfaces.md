@@ -25,6 +25,17 @@ Fallback:
 - Use system sans-serif after Pretendard.
 - Use system monospace after JetBrains Mono.
 
+Implementation note, 2026-06-02:
+
+- Major route surfaces now carry `data-ui-mode`.
+- `data-ui-mode="human"` is used for home, admin, and shared attempt reading/review.
+- `data-ui-mode="engine"` is used for problem setup, solving, local solving, trace, graph, judge, and replay work.
+- Global CSS exposes mode tokens for font, control font, hairline borders, and panel background.
+- Engine Mode gives controls, graph, material, prompt, trace, and judge evidence stronger JetBrains Mono emphasis.
+- Human Mode keeps the calm sans surface.
+- The primary SKAI mark remains the same 3-node directed graph, but Engine Mode renders the node treatment with sharper hex geometry.
+- No Geist package has been installed yet.
+
 ## Mode And Model Rule
 
 The default user experience should separate solving mode from model choice before an attempt starts.

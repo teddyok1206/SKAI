@@ -3,7 +3,7 @@ import { FounderReviewDashboard } from "@/components/founder-review-dashboard";
 
 export default function AdminPage() {
   return (
-    <main className="container">
+    <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
         <div>
           <p className="eyebrow">Admin MVP</p>

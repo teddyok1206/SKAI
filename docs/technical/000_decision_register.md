@@ -75,6 +75,7 @@
 | TDR-069 | Graph workspace | Show the derived 3D dual graph as an operational solving tab | Accepted | SKAI의 핵심 artifact는 flat chat이 아니라 prompt graph, response graph, task-status layer이므로 사용자가 풀이 중 구조를 보고 branch를 만들 수 있어야 함 | 2026-06-02 |
 | TDR-070 | Local runtime | Use `next dev` for active development and `next start` production mode for stable Mac/LAN demos | Accepted | 맥북 상시 구동은 가능하지만 장시간 데모는 dev server보다 build 후 production server가 안정적이며, 외부 공개는 포트포워딩이 아니라 배포/터널 전략으로 분리해야 함 | 2026-06-02 |
 | TDR-071 | Graph backbone | Treat the 3D dual graph as SKAI's shared system backbone for judge annotations, replay diff, sharing skeletons, habit reports, model analysis, and research persistence | Accepted | graph는 예쁜 탭이 아니라 채팅 로그를 학습 가능한 구조로 바꾸는 엔진이며, SKAI가 prompt gallery나 model leaderboard로 흐르지 않게 하는 공통 언어가 되어야 함 | 2026-06-02 |
+| TDR-072 | Human/Engine UI modes | Mark route surfaces with explicit Human Mode and Engine Mode tokens | Accepted | 접속/커뮤니티/리뷰와 풀이/trace/graph/judge는 서로 다른 인지 상태를 요구하므로 typography와 evidence density를 코드 레벨에서 분리해야 함 | 2026-06-02 |
 
 ## Decision Template
 
