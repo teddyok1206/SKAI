@@ -157,29 +157,51 @@ export async function POST(request: Request) {
   }
 
   const { problem, attempt } = parsed.data;
+  const allowAuthenticatedProblemSync =
+    process.env.SKAI_ALLOW_AUTHENTICATED_PROBLEM_SYNC === "true" || process.env.NODE_ENV !== "production";
 
-  const problemResult = await supabase.from("problems").upsert({
-    id: problem.id,
-    title: problem.title,
-    subtitle: problem.subtitle,
-    category: problem.category,
-    difficulty: problem.difficulty,
-    goal_profile: problem.goalProfile,
-    estimated_minutes: problem.estimatedMinutes,
-    statement: problem.statement,
-    user_goal: problem.userGoal,
-    constraints: problem.constraints,
-    starter_context: problem.starterContext,
-    deliverables: problem.deliverables,
-    materials: problem.materials,
-    allowed_providers: problem.allowedProviders,
-    rubric: problem.rubric,
-    is_published: true,
-    updated_at: new Date().toISOString(),
-  });
+  const problemLookup = await supabase.from("problems").select("id").eq("id", problem.id).maybeSingle();
 
-  if (problemResult.error) {
-    return NextResponse.json({ error: problemResult.error.message }, { status: 500 });
+  if (problemLookup.error) {
+    return NextResponse.json({ error: problemLookup.error.message }, { status: 500 });
+  }
+
+  if (!problemLookup.data) {
+    if (!allowAuthenticatedProblemSync) {
+      return NextResponse.json(
+        {
+          mode: "supabase",
+          synced: false,
+          reason: "problem_not_seeded",
+          problemId: problem.id,
+        },
+        { status: 409 },
+      );
+    }
+
+    const problemResult = await supabase.from("problems").insert({
+      id: problem.id,
+      title: problem.title,
+      subtitle: problem.subtitle,
+      category: problem.category,
+      difficulty: problem.difficulty,
+      goal_profile: problem.goalProfile,
+      estimated_minutes: problem.estimatedMinutes,
+      statement: problem.statement,
+      user_goal: problem.userGoal,
+      constraints: problem.constraints,
+      starter_context: problem.starterContext,
+      deliverables: problem.deliverables,
+      materials: problem.materials,
+      allowed_providers: problem.allowedProviders,
+      rubric: problem.rubric,
+      is_published: true,
+      updated_at: new Date().toISOString(),
+    });
+
+    if (problemResult.error) {
+      return NextResponse.json({ error: problemResult.error.message }, { status: 500 });
+    }
   }
 
   const attemptResult = await supabase.from("attempts").upsert({

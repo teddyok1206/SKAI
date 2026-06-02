@@ -36,6 +36,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - playbook turn은 자동 전송되지 않으며, 필요한 문제 자료도 visible attachment chip으로만 붙는다.
 - Supabase Auth, Google OAuth sign-in/callback/sign-out flow, Supabase persistence baseline이 있다.
 - Google OAuth callback은 현재 page 복귀용 `next` 값을 local path로 sanitize한다.
+- `/api/deployment/health`는 Supabase/provider/judge/problem-sync 설정 상태를 secret 없이 점검한다.
+- production attempt sync는 client-submitted problem definition을 기존 문제 row에 덮어쓰지 않는다.
+- Supabase migration `008`은 seed demo problems를 넣고 broad authenticated problem insert/update RLS policies를 제거한다.
 - local fallback 저장이 유지된다.
 - 문제 자료와 사용자 업로드 파일을 solving loop에 포함했다.
 - 문제 자료 카드를 composer로 드래그하면 다음 프롬프트 첨부로 들어간다.
@@ -94,7 +97,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
-- Supabase RLS, sync path, deployed Google OAuth settings는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
+- Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
@@ -202,10 +205,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 5: Supabase deployment hardening
 
-- RLS 정책을 실제 사용자 flow 기준으로 점검한다.
-- anonymous/local fallback과 authenticated sync의 경계를 정리한다.
-- Vercel env var 체크리스트를 만든다.
-- 완료 조건: 배포 환경에서 로그인, 풀이 저장, 공유 조회가 재현된다.
+- RLS 정책을 실제 사용자 flow 기준으로 점검한다. (완료: checklist/migration draft)
+- anonymous/local fallback과 authenticated sync의 경계를 정리한다. (완료: production problem sync hardening)
+- Vercel env var 체크리스트를 만든다. (완료: deployment checklist)
+- 완료 조건: 배포 환경에서 로그인, 풀이 저장, 공유 조회가 재현된다. (후속: 실제 배포 smoke 필요)
 
 우선순위 6: admin authoring MVP
 
@@ -272,12 +275,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/031_llm_judge_graph_annotation_schema.md`: LLM judge graph annotation schema와 trace id 기반 graph target mapping.
 - `docs/technical/plan/032_graph_skeleton_sharing.md`: graph skeleton generator와 공유 화면 skeleton-first 읽기 경로.
 - `docs/technical/plan/033_golden_attempts_judge_calibration.md`: 9개 golden attempt judge calibration runner와 heuristic baseline 기록.
+- `docs/technical/plan/034_playbook_insertion_operator_ux.md`: 문제별 playbook prompt를 composer/final answer에 visible draft로 삽입하는 operator UX.
+- `docs/technical/plan/035_cost_guardrails.md`: provider/model pricing registry와 attempt-level 비용 표시.
+- `docs/technical/plan/036_supabase_deployment_hardening.md`: deployment health route, production sync boundary, Supabase RLS checklist.
 
 다음 plan 후보:
 
-- `034_playbook_insertion_operator_ux.md`
-- `035_cost_guardrails.md`
-- `036_supabase_deployment_hardening.md`
 - `037_admin_authoring_mvp.md`
 - `038_branch_tree_explorer.md`
 - `039_founder_review_dashboard.md`
