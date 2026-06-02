@@ -3,7 +3,21 @@
 import { useMemo, useRef, useState } from "react";
 import type { DragEvent } from "react";
 import Link from "next/link";
-import { FilePlus2, GitBranch, MessageSquare, Network, Paperclip, Play, RotateCcw, Send, Share2, Trophy, X } from "lucide-react";
+import {
+  BookOpen,
+  FilePlus2,
+  GitBranch,
+  MessageSquare,
+  Network,
+  Paperclip,
+  Play,
+  RotateCcw,
+  Send,
+  Share2,
+  Trophy,
+  X,
+} from "lucide-react";
+import { getProblemPlaybook, type ProblemPlaybookTurn } from "@/data/problem-playbooks";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
 import { buildConversationGraph } from "@/lib/conversation-graph";
@@ -120,6 +134,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
   const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
+  const playbook = useMemo(() => getProblemPlaybook(problem.id), [problem.id]);
   const conversationGraph = useMemo(
     () =>
       attempt
@@ -202,6 +217,52 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
     setAttachmentNotice("");
     setSelectedAttachments((current) => mergeAttachments(current, [attachmentFromMaterial(material)]));
+  }
+
+  function addMaterialAttachments(materialIds: string[]) {
+    const attachments = materialIds
+      .map((materialId) => problem.materials.find((item) => item.id === materialId))
+      .filter((material): material is NonNullable<typeof material> => Boolean(material))
+      .map((material) => attachmentFromMaterial(material));
+
+    if (attachments.length === 0) {
+      return;
+    }
+
+    setAttachmentNotice("");
+    setSelectedAttachments((current) => mergeAttachments(current, attachments));
+  }
+
+  function appendPromptDraft(prompt: string) {
+    setInput((current) => {
+      if (!current.trim()) {
+        return prompt;
+      }
+
+      return `${current.trimEnd()}\n\n${prompt}`;
+    });
+  }
+
+  function insertPlaybookTurn(turn: ProblemPlaybookTurn) {
+    appendPromptDraft(turn.prompt);
+    if (turn.attachmentMaterialIds?.length) {
+      addMaterialAttachments(turn.attachmentMaterialIds);
+    }
+    setWorkspaceTab("chat");
+  }
+
+  function insertFinalAnswerDraft() {
+    if (!playbook?.finalAnswerDraft) {
+      return;
+    }
+
+    setFinalAnswer((current) => {
+      if (!current.trim()) {
+        return playbook.finalAnswerDraft ?? "";
+      }
+
+      return `${current.trimEnd()}\n\n${playbook.finalAnswerDraft}`;
+    });
   }
 
   async function addFiles(files: FileList | File[]) {
@@ -838,6 +899,35 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         )}
 
         <div className="composer">
+          {playbook ? (
+            <div className="playbook-strip" aria-label="Problem prompt playbook">
+              <div className="playbook-strip-header">
+                <div className="playbook-title">
+                  <BookOpen size={16} />
+                  <strong>Playbook</strong>
+                  <span className="muted">{playbook.turns.length} turns</span>
+                </div>
+                {playbook.finalAnswerDraft ? (
+                  <button className="button quiet" onClick={insertFinalAnswerDraft} type="button">
+                    Final draft
+                  </button>
+                ) : null}
+              </div>
+              <div className="playbook-turns">
+                {playbook.turns.map((turn) => (
+                  <button className="playbook-turn" key={turn.id} onClick={() => insertPlaybookTurn(turn)} type="button">
+                    <span>{turn.label}</span>
+                    <strong>{turn.title}</strong>
+                    {turn.attachmentMaterialIds?.length ? (
+                      <small>
+                        <Paperclip size={12} /> {turn.attachmentMaterialIds.length} 자료
+                      </small>
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
           <div
             className={`dropzone ${isDraggingAttachment ? "active" : ""}`}
             onDragEnter={(event) => {

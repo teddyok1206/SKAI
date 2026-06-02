@@ -30,6 +30,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
+- 풀이 화면 composer에는 문제별 playbook turn을 visible draft로 삽입하는 operator UX가 있다.
+- playbook turn은 자동 전송되지 않으며, 필요한 문제 자료도 visible attachment chip으로만 붙는다.
 - Supabase Auth, Google OAuth sign-in/callback/sign-out flow, Supabase persistence baseline이 있다.
 - Google OAuth callback은 현재 page 복귀용 `next` 값을 local path로 sanitize한다.
 - local fallback 저장이 유지된다.
@@ -102,7 +104,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
-- Playbook prompt를 UI에서 원클릭 삽입하는 기능은 아직 없다.
+- Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
 ## Demo Contract
@@ -182,10 +184,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 3: playbook insertion and smoke operator UX
 
-- 문제별 playbook prompt를 UI에서 composer로 삽입할 수 있게 한다.
-- 필요한 자료 첨부를 step별로 명시한다.
-- 삽입된 prompt는 숨은 context가 아니라 사용자가 볼 수 있는 composer text여야 한다.
-- 완료 조건: 손타이핑 없이 반복 가능한 sample attempt를 생성한다.
+- 문제별 playbook prompt를 UI에서 composer로 삽입할 수 있게 한다. (완료)
+- 필요한 자료 첨부를 step별로 명시한다. (완료)
+- 삽입된 prompt는 숨은 context가 아니라 사용자가 볼 수 있는 composer text여야 한다. (완료)
+- 완료 조건: 손타이핑 없이 반복 가능한 sample attempt를 생성한다. (완료)
+- 후속: Markdown playbook과 typed app playbook의 source of truth를 통합한다.
 
 우선순위 4: cost and budget guardrails
 
