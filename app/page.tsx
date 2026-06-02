@@ -1,17 +1,10 @@
 import Link from "next/link";
-import { ArrowRight, BarChart3, Clock, Layers3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { generatedProblemBatch001Classifications } from "@/data/generated-problem-batch-001";
 import { problems } from "@/data/problems";
 import { AuthoredProblemList } from "@/components/authored-problem-list";
+import { ProblemBrowser } from "@/components/problem-browser";
 import { SkaiLockup } from "@/components/skai-lockup";
-
-const categoryLabel = {
-  workplace: "업무",
-  research: "자료조사",
-  creative: "창작",
-  data_analysis: "데이터",
-  coding: "코딩",
-  strategy: "전략",
-};
 
 type HomePageProps = {
   searchParams?: Promise<{
@@ -63,35 +56,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </section>
       {notice ? <p className="auth-notice">{notice}</p> : null}
 
-      <section className="section-heading" id="problems">
-        <p className="eyebrow">Problems</p>
-        <h2>오늘 풀 수 있는 문제</h2>
-      </section>
-
-      <section className="grid problem-grid" aria-label="Problem list">
-        {problems.map((problem) => (
-          <article className="card problem-card" key={problem.id}>
-            <div>
-              <div className="tag-row">
-                <span className="tag">
-                  <Layers3 size={13} /> {categoryLabel[problem.category]}
-                </span>
-                <span className="tag">
-                  <Clock size={13} /> {problem.estimatedMinutes}분
-                </span>
-                <span className="tag">
-                  <BarChart3 size={13} /> {problem.difficulty}
-                </span>
-              </div>
-              <h2>{problem.title}</h2>
-              <p className="muted">{problem.subtitle}</p>
-            </div>
-            <Link className="button" href={`/problems/${problem.id}`}>
-              풀기 <ArrowRight size={16} />
-            </Link>
-          </article>
-        ))}
-      </section>
+      <ProblemBrowser problems={problems} classifications={generatedProblemBatch001Classifications} />
 
       <AuthoredProblemList />
     </main>

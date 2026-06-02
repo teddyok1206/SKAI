@@ -559,6 +559,146 @@ h3 {
   font-size: 28px;
 }
 
+.problem-browser {
+  display: grid;
+  gap: 16px;
+  scroll-margin-top: 88px;
+}
+
+.problem-browser-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.problem-browser-count {
+  display: inline-flex;
+  min-width: 78px;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 3px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.problem-browser-count strong {
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.problem-browser-tools {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 86%, var(--surface-muted));
+  padding: 14px;
+}
+
+.problem-search {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 0 12px;
+}
+
+.problem-search:focus-within {
+  box-shadow: var(--focus-ring);
+}
+
+.problem-search input {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 750;
+}
+
+.problem-search input::placeholder {
+  color: color-mix(in srgb, var(--muted) 76%, transparent);
+}
+
+.curation-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.curation-chip {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.curation-chip.active {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 74%, var(--surface));
+  color: var(--accent-strong);
+}
+
+.curation-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.problem-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.problem-filter-grid label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.problem-filter-grid label > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.problem-browser-summary {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.problem-browser-summary > span {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -582,6 +722,26 @@ h3 {
 
 .problem-card h2 {
   font-size: 22px;
+}
+
+.problem-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.problem-card-meta span {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tag-row {
@@ -3169,6 +3329,23 @@ summary {
   text-align: center;
 }
 
+.empty-state {
+  display: grid;
+  min-height: 220px;
+  justify-items: start;
+  align-content: center;
+  gap: 10px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 78%, var(--surface-muted));
+  padding: 24px;
+}
+
+.empty-state h3,
+.empty-state p {
+  margin-bottom: 0;
+}
+
 @media (max-width: 900px) {
   .grid,
   .solve-layout,
@@ -3180,8 +3357,19 @@ summary {
   }
 
   .environment-grid,
-  .authoring-row {
+  .authoring-row,
+  .problem-filter-grid {
     grid-template-columns: 1fr;
+  }
+
+  .problem-browser-heading,
+  .problem-browser-summary {
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .problem-browser-summary {
+    display: grid;
   }
 
   .share-overview {

@@ -83,6 +83,7 @@
 | TDR-077 | Comment lifecycle | Prompt comments support edit, soft-delete, and reports rather than hard delete | Accepted | 프롬프트 단위 토론은 학습 맥락을 보존해야 하므로 댓글 thread 구조는 유지하고, 작성자 수정/soft-delete와 별도 report record로 커뮤니티 안전성을 높임 | 2026-06-02 |
 | TDR-078 | Logo lockup | Provide a reusable SKAI lockup that combines the 3-node directed mark, wordmark, and full project name | Accepted | Gemini 001의 브랜드 방향은 장식보다 SKAI의 구조 철학을 첫 신호로 보여주는 것이므로 홈에서는 mark-only nav보다 명확한 lockup이 필요함 | 2026-06-02 |
 | TDR-079 | Generated problem ingestion | Preserve generated problem batches as raw archives and import them through typed normalization modules | Accepted | 대량 생성 문제는 원본 provenance와 앱 schema를 분리해야 하며, synthetic material href처럼 생성물이 만든 운영 위험은 import layer에서 보정해야 함 | 2026-06-02 |
+| TDR-080 | Problem browser | Home discovery uses search, app-schema filters, and curation lanes rather than a flat grid | Accepted | 30개 이상 문제에서는 사용자가 연습하려는 orchestration 상황을 골라야 하므로 문제 탐색은 모델/provider가 아니라 분야, 난이도, 목표, 자료, 검증/정의/자료활용 경로를 중심으로 해야 함 | 2026-06-02 |
 
 ## Decision Template
 
