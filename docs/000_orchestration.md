@@ -61,6 +61,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
+- 풀이 화면 sidebar에는 local attempts의 parent/child breakpoint lineage를 보는 Branch Tree explorer가 있다.
 - 3D dual graph는 judge annotation, branch graph diff, sharing skeleton, habit report, model analysis, research snapshot의 시스템 백본으로 확장하는 방향이 확정됐다.
 - Conversation graph는 deterministic graph annotations와 sparse annotation indexes를 포함한다.
 - Graph tab detail panel은 선택한 graph node/pair의 annotation과 evidence trace를 보여준다.
@@ -101,8 +102,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
-- branch tree explorer는 아직 없다.
-- Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
+- Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
+- Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
 - LLM judge-native graph annotation calibration, skeleton comparison, habit motif report, graph snapshot persistence는 아직 구현 전이다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
@@ -221,9 +222,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 7: branch tree explorer
 
-- parent attempt 아래의 여러 child branch를 한 화면에서 비교한다.
-- 어떤 breakpoint에서 어떤 branch가 갈라졌는지 tree/lineage로 보여준다.
-- 완료 조건: 한 parent에서 생성된 branch 2개 이상을 lineage view로 탐색한다.
+- parent attempt 아래의 여러 child branch를 한 화면에서 비교한다. (부분 완료: local lineage navigation)
+- 어떤 breakpoint에서 어떤 branch가 갈라졌는지 tree/lineage로 보여준다. (완료)
+- 완료 조건: 한 parent에서 생성된 branch 2개 이상을 lineage view로 탐색한다. (완료: local attempts 기준)
+- 후속: Supabase-backed tree, multi-branch aggregate comparison, canvas tree.
 
 우선순위 8: founder review dashboard
 
@@ -281,10 +283,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/035_cost_guardrails.md`: provider/model pricing registry와 attempt-level 비용 표시.
 - `docs/technical/plan/036_supabase_deployment_hardening.md`: deployment health route, production sync boundary, Supabase RLS checklist.
 - `docs/technical/plan/037_admin_authoring_mvp.md`: localStorage 기반 문제 출제 초안 작성, 홈 노출, local problem solve route.
+- `docs/technical/plan/038_branch_tree_explorer.md`: local attempts parent/child breakpoint lineage explorer.
 
 다음 plan 후보:
 
-- `038_branch_tree_explorer.md`
 - `039_founder_review_dashboard.md`
 - `040_comment_moderation_and_privacy.md`
 

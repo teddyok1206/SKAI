@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { getProblemPlaybook, type ProblemPlaybookTurn } from "@/data/problem-playbooks";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
+import { buildBranchTree } from "@/lib/branch-tree";
 import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
@@ -39,6 +40,7 @@ import type {
   TraceEvent,
 } from "@/lib/types";
 import { ConversationGraphView } from "@/components/conversation-graph-view";
+import { BranchTreeExplorer } from "@/components/branch-tree-explorer";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
@@ -138,8 +140,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     [problem.allowedProviders],
   );
   const providerProfile = providerUiProfiles[provider];
-  const leaderboard = getAttempts()
-    .filter((item) => item.problemId === problem.id && item.scoreReport)
+  const problemAttempts = getAttempts().filter((item) => item.problemId === problem.id);
+  const branchTree = buildBranchTree(problemAttempts, problem.id);
+  const leaderboard = problemAttempts
+    .filter((item) => item.scoreReport)
     .sort((a, b) => (b.scoreReport?.totalScore ?? 0) - (a.scoreReport?.totalScore ?? 0))
     .slice(0, 5);
 
@@ -555,6 +559,22 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     }
   }
 
+  function openAttemptFromTree(attemptId: string) {
+    const saved = getAttempt(attemptId);
+
+    if (!saved) {
+      setAttachmentNotice("선택한 attempt를 local storage에서 찾을 수 없습니다.");
+      return;
+    }
+
+    setAttempt(saved);
+    setFinalAnswer(saved.finalAnswer ?? "");
+    setShareUrl(saved.publishedAt ? `${window.location.origin}/share/${saved.id}` : "");
+    setSelectedAttachments([]);
+    setAttachmentNotice("");
+    setWorkspaceTab("chat");
+  }
+
   async function runCounterfactualJudge() {
     if (!attempt?.branch) {
       return;
@@ -858,6 +878,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               ))}
             </ol>
           )}
+        </div>
+        <div className="panel-body">
+          <h3>Branch Tree</h3>
+          <BranchTreeExplorer tree={branchTree} currentAttemptId={attempt.id} onOpenAttempt={openAttemptFromTree} />
         </div>
       </aside>
 
