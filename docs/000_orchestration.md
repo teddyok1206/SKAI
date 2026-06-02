@@ -49,6 +49,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - 3D dual graph는 judge annotation, branch graph diff, sharing skeleton, habit report, model analysis, research snapshot의 시스템 백본으로 확장하는 방향이 확정됐다.
+- Conversation graph는 deterministic graph annotations와 sparse annotation indexes를 포함한다.
+- Graph tab detail panel은 선택한 graph node/pair의 annotation과 evidence trace를 보여준다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 - Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
@@ -80,7 +82,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
 - Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
-- graph annotations, graph-state branch diff, graph skeleton sharing, habit motif report, graph snapshot persistence는 아직 구현 전이다.
+- LLM judge-native graph annotations, graph-state branch diff, graph skeleton sharing, habit motif report, graph snapshot persistence는 아직 구현 전이다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
@@ -149,13 +151,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 모델별 latency, token usage, failure mode를 기록한다.
 - 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다.
 
-우선순위 1.5: graph backbone first slice
+우선순위 1.5: graph backbone second slice
 
-- graph annotation type을 추가한다.
-- deterministic annotation builder를 만든다.
-- 기존 bottleneck/material/verification/breakpoint 정보를 graph pair/node annotation으로 붙인다.
-- Graph tab detail panel에서 annotation을 볼 수 있게 한다.
-- 완료 조건: 사용자가 특정 graph node/pair를 눌렀을 때 "이 orchestration state에서 무엇이 바뀌었는지"를 볼 수 있다.
+- LLM/heuristic judge output을 graph annotation schema에 직접 맞춘다.
+- branch diff를 parent/child graph-state transition으로 보여준다.
+- graph skeleton generator를 만들어 공유 화면에서 raw transcript보다 먼저 노출한다.
+- 완료 조건: judge/replay/sharing 중 하나 이상이 graph annotation을 1차 입력으로 사용한다.
 
 우선순위 2: golden attempts and LLM judge calibration
 
@@ -246,19 +247,22 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/025_google_login_integration.md`: Google OAuth sign-in/callback/sign-out hardening.
 - `docs/technical/plan/026_local_mac_runtime_strategy.md`: MacBook/Mac mini local runtime strategy.
 - `docs/technical/plan/027_graph_backbone_full_implementation.md`: 3D dual graph를 judge/replay/sharing/habit/model/research 백본으로 확장하는 전체 구현 계획.
+- `docs/technical/plan/028_graph_annotations_first_slice.md`: deterministic graph annotations와 Graph tab detail panel 표시.
 
 다음 plan 후보:
 
-- `028_live_environment_smoke.md`
-- `029_graph_annotations_first_slice.md`
-- `030_golden_attempts_judge_calibration.md`
-- `031_playbook_insertion_operator_ux.md`
-- `032_cost_guardrails.md`
-- `033_supabase_deployment_hardening.md`
-- `034_admin_authoring_mvp.md`
-- `035_branch_tree_explorer.md`
-- `036_founder_review_dashboard.md`
-- `037_comment_moderation_and_privacy.md`
+- `029_live_environment_smoke.md`
+- `030_judge_graph_annotation_mapping.md`
+- `031_branch_graph_state_transition.md`
+- `032_graph_skeleton_sharing.md`
+- `033_golden_attempts_judge_calibration.md`
+- `034_playbook_insertion_operator_ux.md`
+- `035_cost_guardrails.md`
+- `036_supabase_deployment_hardening.md`
+- `037_admin_authoring_mvp.md`
+- `038_branch_tree_explorer.md`
+- `039_founder_review_dashboard.md`
+- `040_comment_moderation_and_privacy.md`
 
 ## Reading Map
 

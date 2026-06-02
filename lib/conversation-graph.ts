@@ -1,6 +1,7 @@
 import type {
   AttemptBranch,
   ConversationGraph,
+  ConversationGraphAnnotation,
   ConversationGraphBranch,
   ConversationGraphEdge,
   ConversationGraphIndex,
@@ -11,6 +12,11 @@ import type {
   ScoreReport,
   TraceEvent,
 } from "@/lib/types";
+import { buildDeterministicGraphAnnotations } from "@/lib/graph-annotations";
+
+export type ConversationGraphBuildOptions = {
+  problemMaterialCount?: number;
+};
 
 function compact(value: string, limit = 120) {
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -42,6 +48,18 @@ function addEdgeToIndex(index: ConversationGraphIndex, edge: ConversationGraphEd
   ensureIncidence(index, edge.targetNodeId);
   index.incidence[edge.sourceNodeId].outgoing.push(edge.id);
   index.incidence[edge.targetNodeId].incoming.push(edge.id);
+}
+
+function addAnnotationToIndex(index: ConversationGraphIndex, annotation: ConversationGraphAnnotation) {
+  index.annotationIdsByTargetId[annotation.targetId] ??= [];
+  index.annotationIdsByTargetId[annotation.targetId].push(annotation.id);
+  index.annotationIdsByKind[annotation.kind] ??= [];
+  index.annotationIdsByKind[annotation.kind].push(annotation.id);
+
+  for (const traceEventId of annotation.evidenceTraceEventIds) {
+    index.annotationIdsByTraceEventId[traceEventId] ??= [];
+    index.annotationIdsByTraceEventId[traceEventId].push(annotation.id);
+  }
 }
 
 function inferTaskStatus(
@@ -87,6 +105,7 @@ export function buildConversationGraph(
   trace: TraceEvent[],
   scoreReport?: ScoreReport,
   branch?: AttemptBranch,
+  options: ConversationGraphBuildOptions = {},
 ): ConversationGraph {
   const attemptId = trace[0]?.attemptId ?? scoreReport?.attemptId ?? "unknown-attempt";
   const promptNodes: ConversationGraphNode[] = [];
@@ -340,6 +359,9 @@ export function buildConversationGraph(
     pairByResponseTraceEventId,
     adjacency: {},
     incidence: {},
+    annotationIdsByTargetId: {},
+    annotationIdsByTraceEventId: {},
+    annotationIdsByKind: {},
   };
 
   [...allPromptNodes, ...allResponseNodes, ...statusNodes].forEach((item) => ensureIncidence(index, item.id));
@@ -375,6 +397,20 @@ export function buildConversationGraph(
     };
   }
 
+  const deterministicAnnotations = buildDeterministicGraphAnnotations({
+    attemptId,
+    trace,
+    promptNodes: allPromptNodes,
+    responseNodes: allResponseNodes,
+    statusNodes,
+    pairs,
+    scoreReport,
+    branch: branchGraph,
+    problemMaterialCount: options.problemMaterialCount,
+  });
+  const annotations = [...deterministicAnnotations, ...(scoreReport?.graphAnnotations ?? [])];
+  annotations.forEach((annotation) => addAnnotationToIndex(index, annotation));
+
   return {
     attemptId,
     promptNodes: allPromptNodes,
@@ -384,6 +420,7 @@ export function buildConversationGraph(
     responseEdges,
     statusEdges,
     pairs,
+    annotations,
     index,
     branch: branchGraph,
   };

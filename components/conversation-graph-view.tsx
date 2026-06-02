@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GitBranch, Network, Route, Workflow } from "lucide-react";
+import { GitBranch, Info, Network, Route, Workflow } from "lucide-react";
 import type {
   ConversationGraph,
+  ConversationGraphAnnotation,
   ConversationGraphEdge,
   ConversationGraphNode,
   ConversationGraphPair,
@@ -53,6 +54,47 @@ function degreeLabel(incoming = 0, outgoing = 0) {
   return `in ${incoming} · out ${outgoing}`;
 }
 
+function annotationKindLabel(kind: ConversationGraphAnnotation["kind"]) {
+  const labels: Record<ConversationGraphAnnotation["kind"], string> = {
+    framing: "Framing",
+    decomposition: "Decomposition",
+    delegation: "Delegation",
+    material_grounding: "Material",
+    verification: "Verification",
+    adaptation: "Adaptation",
+    context_drift: "Drift",
+    bottleneck: "Bottleneck",
+    recovery: "Recovery",
+    finalization: "Finalization",
+    model_behavior: "Model",
+    cost_efficiency: "Cost",
+  };
+
+  return labels[kind];
+}
+
+function annotationSourceLabel(source: ConversationGraphAnnotation["source"]) {
+  if (source === "heuristic_judge") {
+    return "heuristic judge";
+  }
+
+  if (source === "llm_judge") {
+    return "LLM judge";
+  }
+
+  return source;
+}
+
+function compactText(value: string, limit = 120) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= limit) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, limit - 1)}…`;
+}
+
 function nodeToken(node: ConversationGraphNode) {
   if (node.synthetic) {
     return node.kind === "prompt" ? "PT" : "RO";
@@ -85,11 +127,13 @@ function GraphNodeButton({
   node,
   selected,
   pair,
+  annotationCount = 0,
   onSelect,
 }: {
   node?: ConversationGraphNode;
   selected: boolean;
   pair?: ConversationGraphPair;
+  annotationCount?: number;
   onSelect: (nodeId: string) => void;
 }) {
   if (!node) {
@@ -106,6 +150,7 @@ function GraphNodeButton({
       <strong>{nodeToken(node)}</strong>
       <span>{fixedNodeCaption(node, pair)}</span>
       {node.sourceTraceEventId ? <em>source</em> : null}
+      {annotationCount > 0 ? <small className="graph-annotation-badge">{annotationCount}</small> : null}
     </button>
   );
 }
@@ -147,6 +192,10 @@ export function ConversationGraphView({
     [graph.promptNodes, graph.responseNodes, graph.statusNodes],
   );
   const nodeById = useMemo(() => new Map(allNodes.map((node) => [node.id, node])), [allNodes]);
+  const annotationById = useMemo(
+    () => new Map(graph.annotations.map((annotation) => [annotation.id, annotation])),
+    [graph.annotations],
+  );
   const traceById = useMemo(() => new Map(trace.map((event) => [event.id, event])), [trace]);
   const firstSelectableNode = allNodes.find((node) => !node.synthetic)?.id ?? allNodes[0]?.id ?? null;
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(firstSelectableNode);
@@ -164,6 +213,47 @@ export function ConversationGraphView({
   const selectedIncidence = selectedNode ? graph.index.incidence[selectedNode.id] : undefined;
   const branchTraceEventId =
     selectedTrace?.id ?? selectedPair?.promptTraceEventId ?? selectedPair?.responseTraceEventId ?? undefined;
+  const selectedAnnotations = useMemo(() => {
+    const annotationIds = new Set<string>();
+
+    for (const targetId of [selectedNode?.id, selectedPair?.id]) {
+      if (!targetId) {
+        continue;
+      }
+
+      for (const annotationId of graph.index.annotationIdsByTargetId[targetId] ?? []) {
+        annotationIds.add(annotationId);
+      }
+    }
+
+    if (selectedTrace?.id) {
+      for (const annotationId of graph.index.annotationIdsByTraceEventId[selectedTrace.id] ?? []) {
+        annotationIds.add(annotationId);
+      }
+    }
+
+    return [...annotationIds].map((annotationId) => annotationById.get(annotationId)).filter(Boolean) as ConversationGraphAnnotation[];
+  }, [annotationById, graph.index.annotationIdsByTargetId, graph.index.annotationIdsByTraceEventId, selectedNode, selectedPair, selectedTrace]);
+
+  function annotationCountForNode(node?: ConversationGraphNode, pair?: ConversationGraphPair) {
+    if (!node) {
+      return 0;
+    }
+
+    const annotationIds = new Set<string>();
+
+    for (const targetId of [node.id, pair?.id]) {
+      if (!targetId) {
+        continue;
+      }
+
+      for (const annotationId of graph.index.annotationIdsByTargetId[targetId] ?? []) {
+        annotationIds.add(annotationId);
+      }
+    }
+
+    return annotationIds.size;
+  }
 
   function selectNode(nodeId: string) {
     setSelectedNodeId(nodeId);
@@ -203,6 +293,7 @@ export function ConversationGraphView({
                 <GraphNodeButton
                   node={promptNode}
                   pair={pair}
+                  annotationCount={annotationCountForNode(promptNode, pair)}
                   selected={effectiveSelectedNodeId === promptNode?.id}
                   onSelect={selectNode}
                 />
@@ -217,6 +308,7 @@ export function ConversationGraphView({
                 <GraphNodeButton
                   node={statusNode}
                   pair={pair}
+                  annotationCount={annotationCountForNode(statusNode, pair)}
                   selected={effectiveSelectedNodeId === statusNode?.id}
                   onSelect={selectNode}
                 />
@@ -230,6 +322,7 @@ export function ConversationGraphView({
                   <GraphNodeButton
                     node={responseNode}
                     pair={pair}
+                    annotationCount={annotationCountForNode(responseNode, pair)}
                     selected={effectiveSelectedNodeId === responseNode.id}
                     onSelect={selectNode}
                   />
@@ -274,6 +367,12 @@ export function ConversationGraphView({
               selected={effectiveSelectedNodeId === node.id}
               pair={graph.pairs.find(
                 (pair) => pair.promptNodeId === node.id || pair.responseNodeId === node.id || pair.statusNodeId === node.id,
+              )}
+              annotationCount={annotationCountForNode(
+                node,
+                graph.pairs.find(
+                  (pair) => pair.promptNodeId === node.id || pair.responseNodeId === node.id || pair.statusNodeId === node.id,
+                ),
               )}
               onSelect={selectNode}
             />
@@ -343,6 +442,10 @@ export function ConversationGraphView({
           <strong>{graph.pairs.length}</strong>
           <span>paired turns</span>
         </div>
+        <div className="graph-stat">
+          <strong>{graph.annotations.length}</strong>
+          <span>annotations</span>
+        </div>
       </div>
 
       <div className="graph-tabs" role="tablist" aria-label="Graph projections">
@@ -398,6 +501,40 @@ export function ConversationGraphView({
               ))}
             </div>
           ) : null}
+          <div className="graph-annotation-list">
+            <strong>Graph annotations</strong>
+            {selectedAnnotations.length === 0 ? (
+              <span className="muted">No annotations on this graph state yet.</span>
+            ) : (
+              selectedAnnotations.map((annotation) => (
+                <article className={`graph-annotation-card ${annotation.severity}`} key={annotation.id}>
+                  <div>
+                    <span>{annotationKindLabel(annotation.kind)}</span>
+                    <small>{annotationSourceLabel(annotation.source)}</small>
+                  </div>
+                  <h4>{annotation.title}</h4>
+                  <p>{annotation.explanation}</p>
+                  <footer>
+                    <span>confidence {Math.round(annotation.confidence * 100)}%</span>
+                    {typeof annotation.scoreImpact === "number" ? <span>impact {annotation.scoreImpact > 0 ? "+" : ""}{annotation.scoreImpact}</span> : null}
+                  </footer>
+                  {annotation.evidenceTraceEventIds.length > 0 ? (
+                    <div className="graph-annotation-evidence">
+                      <Info size={13} />
+                      <span>
+                        {annotation.evidenceTraceEventIds
+                          .map((traceEventId) => {
+                            const event = traceById.get(traceEventId);
+                            return event ? `${event.role}: ${compactText(event.content, 72)}` : traceEventId;
+                          })
+                          .join(" / ")}
+                      </span>
+                    </div>
+                  ) : null}
+                </article>
+              ))
+            )}
+          </div>
           {selectedIncidence ? (
             <div className="graph-reason-list">
               <strong>Directed incidence</strong>

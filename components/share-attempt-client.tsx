@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Paperclip, Route, Send, Workflow } from "lucide-react";
+import { problems } from "@/data/problems";
 import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import {
@@ -176,7 +177,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const assistantEvents = publishedAttempt.trace.filter((event) => event.role === "assistant");
   const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
   const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
-  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch);
+  const problem = problems.find((item) => item.id === publishedAttempt.problemId);
+  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch, {
+    problemMaterialCount: problem?.materials.length ?? 0,
+  });
   const graphNodeById = new Map(
     [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
   );

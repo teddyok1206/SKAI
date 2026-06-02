@@ -30,11 +30,15 @@ Already implemented:
 - Shared attempt page has graph-derived workflow sections.
 - Breakpoint replay anchors branch metadata to graph pairs.
 - Parent/child branch diff and counterfactual judge exist as baseline.
+- Conversation graph annotations exist as an in-memory derived layer.
+- Deterministic annotations are generated for bottlenecks, material use, verification, adaptation, pending responses, breakpoint anchors, and missing material use.
+- Sparse annotation indexes support lookup by target id, trace event id, and kind.
+- The Graph tab detail panel renders selected node/pair annotations and evidence.
 
 Current limitation:
 
-- Judge output is still mostly attempt-level.
-- Graph nodes/pairs do not yet carry rich judge annotations.
+- Judge output is still mostly attempt-level except deterministic graph annotations.
+- Graph nodes/pairs do not yet carry rich LLM judge-native annotations.
 - Branch diff is not yet primarily displayed as graph-state transition.
 - Shared attempt UX still has room to make graph skeleton the primary reading path.
 - User habit reporting does not yet aggregate graph motifs.

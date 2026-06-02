@@ -1072,7 +1072,7 @@ h3 {
 
 .graph-overview {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -1342,6 +1342,7 @@ h3 {
 }
 
 .graph-node {
+  position: relative;
   display: grid;
   width: 72px;
   min-height: 72px;
@@ -1385,6 +1386,24 @@ h3 {
   font-weight: 900;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.graph-annotation-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  min-width: 21px;
+  height: 21px;
+  place-items: center;
+  border: 2px solid var(--surface);
+  border-radius: 999px;
+  background: var(--provider-accent, var(--accent));
+  color: #fff;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .graph-node.prompt {
@@ -1507,6 +1526,91 @@ h3 {
   flex-basis: 100%;
   color: var(--muted);
   line-height: 1.4;
+}
+
+.graph-annotation-list {
+  display: grid;
+  gap: 8px;
+}
+
+.graph-annotation-list > strong {
+  font-size: 13px;
+}
+
+.graph-annotation-card {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 10px;
+}
+
+.graph-annotation-card.positive {
+  border-color: color-mix(in srgb, var(--success) 28%, var(--line));
+  background: color-mix(in srgb, var(--success) 8%, var(--surface));
+}
+
+.graph-annotation-card.watch {
+  border-color: color-mix(in srgb, var(--gold) 32%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 38%, var(--surface));
+}
+
+.graph-annotation-card.critical {
+  border-color: color-mix(in srgb, var(--red) 28%, var(--line));
+  background: color-mix(in srgb, var(--red) 7%, var(--surface));
+}
+
+.graph-annotation-card > div,
+.graph-annotation-card footer,
+.graph-annotation-evidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.graph-annotation-card > div span,
+.graph-annotation-card footer span {
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.graph-annotation-card > div small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.graph-annotation-card h4 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.graph-annotation-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.graph-annotation-evidence {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  padding-top: 7px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.graph-annotation-evidence span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .graph-index-grid {

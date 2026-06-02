@@ -120,8 +120,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
   const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
   const conversationGraph = useMemo(
-    () => (attempt ? buildConversationGraph(attempt.trace, attempt.scoreReport, attempt.branch) : null),
-    [attempt],
+    () =>
+      attempt
+        ? buildConversationGraph(attempt.trace, attempt.scoreReport, attempt.branch, {
+            problemMaterialCount: problem.materials.length,
+          })
+        : null,
+    [attempt, problem.materials.length],
   );
 
   function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {

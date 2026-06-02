@@ -174,6 +174,44 @@ export interface WorkflowStep {
   relatedTraceEventIds: string[];
 }
 
+export type ConversationGraphAnnotationTargetKind = "node" | "edge" | "pair";
+
+export type ConversationGraphAnnotationKind =
+  | "framing"
+  | "decomposition"
+  | "delegation"
+  | "material_grounding"
+  | "verification"
+  | "adaptation"
+  | "context_drift"
+  | "bottleneck"
+  | "recovery"
+  | "finalization"
+  | "model_behavior"
+  | "cost_efficiency";
+
+export type ConversationGraphAnnotationSeverity = "info" | "positive" | "watch" | "critical";
+
+export type ConversationGraphAnnotationSource = "deterministic" | "heuristic_judge" | "llm_judge" | "human";
+
+export interface ConversationGraphAnnotation {
+  id: string;
+  attemptId: string;
+  graphSchemaVersion: string;
+  targetKind: ConversationGraphAnnotationTargetKind;
+  targetId: string;
+  kind: ConversationGraphAnnotationKind;
+  severity: ConversationGraphAnnotationSeverity;
+  axis?: ScoreAxis;
+  scoreImpact?: number;
+  confidence: number;
+  title: string;
+  explanation: string;
+  evidenceTraceEventIds: string[];
+  source: ConversationGraphAnnotationSource;
+  createdAt: string;
+}
+
 export type JudgeMode = "heuristic" | "llm" | "ensemble";
 
 export interface JudgeRunSummary {
@@ -204,6 +242,7 @@ export interface ScoreReport {
   bottlenecks: Bottleneck[];
   workflow: WorkflowStep[];
   nextPracticeTargets: string[];
+  graphAnnotations?: ConversationGraphAnnotation[];
   judgeProvider: ProviderId;
   judgeModel: string;
   judgeMode?: JudgeMode;
@@ -372,6 +411,9 @@ export interface ConversationGraphIndex {
   pairByResponseTraceEventId: Record<string, string>;
   adjacency: Record<string, string[]>;
   incidence: Record<string, { incoming: string[]; outgoing: string[] }>;
+  annotationIdsByTargetId: Record<string, string[]>;
+  annotationIdsByTraceEventId: Record<string, string[]>;
+  annotationIdsByKind: Record<string, string[]>;
 }
 
 export interface ConversationGraphBranch {
@@ -398,6 +440,7 @@ export interface ConversationGraph {
   responseEdges: ConversationGraphEdge[];
   statusEdges: ConversationGraphEdge[];
   pairs: ConversationGraphPair[];
+  annotations: ConversationGraphAnnotation[];
   index: ConversationGraphIndex;
   branch?: ConversationGraphBranch;
 }
