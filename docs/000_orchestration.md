@@ -20,7 +20,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - Next.js 기반 SKAI 데모 앱이 동작한다.
 - Gemini branding/philosophy transcript는 `docs/philosophy/Gemini/001.md`로 보존했고, 핵심 원칙은 `docs/philosophy/007_intelligence_and_brand_manifesto.md`에 반영했다.
-- Gemini에게 현재 프로젝트 상태를 설명하기 위한 최신 briefing은 `docs/philosophy/Gemini/002.md`에 있다.
+- Gemini에게 현재 프로젝트 상태를 설명하기 위한 최신 briefing은 `docs/philosophy/Gemini/003.md`에 있다.
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
