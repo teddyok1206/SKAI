@@ -2,13 +2,33 @@
 
 import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Paperclip, Route, Send, Workflow } from "lucide-react";
+import {
+  AlertTriangle,
+  Bot,
+  ClipboardCopy,
+  CornerDownRight,
+  Download,
+  Eye,
+  GitBranch,
+  MessageSquare,
+  Paperclip,
+  Route,
+  Send,
+  Workflow,
+} from "lucide-react";
 import { problems } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
 import { moderateComment } from "@/lib/comment-moderation";
 import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { buildGraphSkeleton } from "@/lib/graph-skeleton";
+import {
+  buildGraphTransitionLog,
+  buildSkaiArtifact,
+  buildUniversalAttemptSummary,
+  skaiArtifactToSvg,
+  skaiArtifactToText,
+} from "@/lib/skai-artifact";
 import {
   createPromptCommentInSupabase,
   loadPromptCommentsFromSupabase,
@@ -149,6 +169,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
   const [commentNotice, setCommentNotice] = useState("");
+  const [artifactNotice, setArtifactNotice] = useState("");
 
   useEffect(() => {
     if (!loadedAttemptId) {
@@ -214,6 +235,13 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     counts[pair.status] = (counts[pair.status] ?? 0) + 1;
     return counts;
   }, {});
+  const skaiArtifact = buildSkaiArtifact({ attempt: publishedAttempt, graph: conversationGraph, skeleton: graphSkeleton });
+  const universalSummary = buildUniversalAttemptSummary({
+    attempt: publishedAttempt,
+    graph: conversationGraph,
+    skeleton: graphSkeleton,
+  });
+  const transitionLog = buildGraphTransitionLog(conversationGraph, publishedAttempt.trace);
 
   async function submitComment(input: { traceEventId: string; parentId?: string }, event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -270,6 +298,30 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     return comments.filter((comment) => comment.traceEventId === traceEventId);
   }
 
+  async function copyArtifactSummary() {
+    const text = skaiArtifactToText(skaiArtifact);
+
+    if (!navigator.clipboard) {
+      setArtifactNotice("이 브라우저에서는 clipboard API를 사용할 수 없습니다.");
+      return;
+    }
+
+    await navigator.clipboard.writeText(text);
+    setArtifactNotice("Artifact summary copied.");
+  }
+
+  function downloadArtifactSvg() {
+    const svg = skaiArtifactToSvg(skaiArtifact);
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${publishedAttempt.title.replace(/[^a-z0-9가-힣_-]+/gi, "-").slice(0, 48) || "skai-artifact"}.svg`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setArtifactNotice("Artifact SVG downloaded.");
+  }
+
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
@@ -299,6 +351,80 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         <div className="share-stat">
           <strong>{attempt.scoreReport.totalScore}</strong>
           <span>coach score</span>
+        </div>
+      </section>
+
+      <section className="skai-artifact-section" aria-label="SKAI artifact">
+        <article className="skai-artifact-card">
+          <div className="skai-artifact-topline">
+            <span>SKAI Artifact</span>
+            <span>{skaiArtifact.signature}</span>
+          </div>
+          <div className="skai-artifact-header">
+            <div>
+              <h2>{skaiArtifact.headline}</h2>
+              <p>{skaiArtifact.title}</p>
+            </div>
+            <strong>{skaiArtifact.score}</strong>
+          </div>
+          <div className="artifact-graph-mark" aria-hidden="true">
+            <div className="artifact-node intent">
+              <span>Intent</span>
+            </div>
+            <div className="artifact-node materials">
+              <span>Materials</span>
+            </div>
+            <div className="artifact-flow top" />
+            <div className="artifact-flow bottom" />
+            <div className="artifact-node outcome">
+              <span>Artifact</span>
+            </div>
+          </div>
+          <div className="artifact-node-copy">
+            {skaiArtifact.nodes.map((node) => (
+              <div key={node.id}>
+                <strong>{node.label}</strong>
+                <p>{node.summary}</p>
+              </div>
+            ))}
+          </div>
+          <div className="artifact-timeline">
+            {skaiArtifact.timeline.length === 0 ? (
+              <p>아직 공유할 graph timeline이 없습니다.</p>
+            ) : (
+              skaiArtifact.timeline.map((step) => (
+                <span key={step.id}>
+                  {step.sequence}. {step.label}
+                </span>
+              ))
+            )}
+          </div>
+          <p className="artifact-mantra">Do not memorize prompts. Design the structure of work.</p>
+        </article>
+        <div className="artifact-actions">
+          <button className="button" type="button" onClick={() => void copyArtifactSummary()}>
+            <ClipboardCopy size={16} /> 요약 복사
+          </button>
+          <button className="button" type="button" onClick={downloadArtifactSvg}>
+            <Download size={16} /> SVG 저장
+          </button>
+          {artifactNotice ? <p className="attachment-notice neutral">{artifactNotice}</p> : null}
+        </div>
+      </section>
+
+      <section className="panel" style={{ marginTop: 16 }}>
+        <div className="panel-header">
+          <h2>Universal Reading Layer</h2>
+          <p className="muted">Graph 용어를 몰라도 문제, 자료, 진행, 확인 흐름으로 읽을 수 있습니다.</p>
+        </div>
+        <div className="panel-body universal-summary-grid">
+          {universalSummary.map((item) => (
+            <article className="universal-summary-card" key={item.id}>
+              <span>{item.label}</span>
+              <strong>{item.value}</strong>
+              <p>{item.detail}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -356,6 +482,37 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                     {step.responseTraceEventId ? <a href={`#raw-${step.responseTraceEventId}`}>response raw</a> : null}
                     <a href={`#raw-${step.promptTraceEventId}`}>prompt raw</a>
                   </div>
+                </div>
+              </article>
+            ))
+          )}
+        </div>
+      </section>
+
+      <section className="panel" style={{ marginTop: 16 }}>
+        <div className="panel-header">
+          <h2>Graph Transition Log</h2>
+          <p className="muted">Trace에서 파생된 graph state 전환을 알고리즘 흐름처럼 읽습니다.</p>
+        </div>
+        <div className="panel-body transition-log-list">
+          {transitionLog.length === 0 ? (
+            <p className="muted">아직 전환 로그가 없습니다.</p>
+          ) : (
+            transitionLog.map((entry) => (
+              <article className="transition-log-entry" key={entry.id}>
+                <div>
+                  <span>{entry.sequence}</span>
+                  <strong>{entry.from}</strong>
+                  <em>{entry.status}</em>
+                </div>
+                <p>{entry.via}</p>
+                <small>{`-> ${entry.to}`}</small>
+                <div className="signal-row">
+                  {entry.evidence.map((item) => (
+                    <span className="signal-chip" key={`${entry.id}-${item}`}>
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </article>
             ))

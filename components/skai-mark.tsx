@@ -11,6 +11,8 @@ export function SkaiMark({ size = 22 }: { size?: number }) {
       <path className="skai-mark-edge" d="M12 9.5H25.5C30.8 9.5 33.4 13.4 37 16" />
       <path className="skai-mark-edge" d="M12 22.5H25.5C30.8 22.5 33.4 18.6 37 16" />
       <path className="skai-mark-arrow" d="M36.5 11.8L42 16L36.5 20.2" />
+      <circle className="skai-mark-packet skai-mark-packet-top" cx="14" cy="9.5" r="1.5" />
+      <circle className="skai-mark-packet skai-mark-packet-bottom" cx="14" cy="22.5" r="1.5" />
       <circle className="skai-mark-node skai-mark-node-circle" cx="9.5" cy="9.5" r="4.2" />
       <circle className="skai-mark-node skai-mark-node-circle" cx="9.5" cy="22.5" r="4.2" />
       <circle className="skai-mark-node skai-mark-node-circle" cx="39.5" cy="16" r="4.2" />

@@ -1,13 +1,26 @@
 "use client";
 
+import { buildIntelligenceMirror } from "@/lib/skai-artifact";
 import type { ScoreReport } from "@/lib/types";
 
 export function ScoreReportCard({ report, showBottlenecks = true }: { report: ScoreReport; showBottlenecks?: boolean }) {
+  const mirror = buildIntelligenceMirror(report);
+
   return (
     <section className="panel" aria-label="Score report">
       <div className="panel-header">
-        <h2>Coach Report</h2>
+        <p className="eyebrow">Intelligence Mirror</p>
+        <h2>구조가 드러났습니다.</h2>
         <p className="muted">{report.coachSummary}</p>
+      </div>
+      <div className="panel-body mirror-grid">
+        {mirror.map((item) => (
+          <article className="mirror-card" key={item.id}>
+            <span>{item.label}</span>
+            <strong>{item.score ?? "N/A"}</strong>
+            <p>{item.summary}</p>
+          </article>
+        ))}
       </div>
       <div className="panel-body report-grid">
         <div>

@@ -139,6 +139,15 @@ SKAI should prioritize features that make structure visible:
 - founder qualitative review before public leaderboard,
 - problem authoring that requires constraints, materials, deliverables, and verification.
 
+Further product translations from `Gemini/001.md`:
+
+- The Artifact: a shared attempt should feel like a graph artifact of human orchestration, not a grade receipt.
+- Intelligence Mirror: the score report should show intent, control, verification, and artifact formation as a mirror of the user's thinking.
+- Field Test / Universality: beginner-facing readings should use plain layers such as problem, materials, process, and checking before graph vocabulary.
+- Anti-servant language: feedback should not imply the user failed to command AI well; it should point to structure, responsibility, verification, and orchestration.
+- Packet-flow identity: Engine Mode motion should be sparse and structural, showing intent/material packets converging into an artifact.
+- Transition logs: graph-state transitions should remain readable as algorithmic evidence for research, replay, and potential IP documentation.
+
 SKAI should avoid:
 
 - generic chatbot surfaces,
@@ -157,3 +166,4 @@ Every future design/code slice should ask:
 - Does this preserve human agency over framing, verification, and final judgment?
 - Does this keep the 3-node intent/material/artifact structure alive in data and UI?
 - Does this reduce noise for beginners without hiding the serious machinery from experts?
+- Does the shared artifact make the user's orchestration structure more visible than the score?

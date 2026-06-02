@@ -165,7 +165,7 @@ function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: stri
     rationale:
       matches > 3
         ? `${axisLabels[axis]} 관련 신호가 충분히 드러났습니다. 다음 단계는 근거와 우선순위를 더 압축하는 것입니다.`
-        : `${axisLabels[axis]} 관련 표현과 실행 증거가 아직 약합니다. 프롬프트에 기준, 역할, 검증 방법을 더 명시해보세요.`,
+        : `${axisLabels[axis]} 관련 실행 증거가 아직 약합니다. 모델에게 결과를 맡기기 전에 기준, 역할, 검증 책임을 더 선명하게 설계해보세요.`,
   };
 }
 
@@ -179,7 +179,7 @@ function findBottlenecks(trace: TraceEvent[]): Bottleneck[] {
       traceEventId: broadEvent.id,
       label: "너무 넓은 지시",
       severity: "medium",
-      explanation: "짧고 추상적인 요청은 AI가 목표, 범위, 출력 형식을 추측하게 만듭니다.",
+      explanation: "짧고 추상적인 요청은 목표, 범위, 출력 형식의 설계를 모델의 추측에 넘깁니다.",
       replaySuggestion: "이 지점부터 목표, 제약, 원하는 산출물 형식을 한 번에 명시해 다시 진행해보세요.",
     });
   }
@@ -189,7 +189,7 @@ function findBottlenecks(trace: TraceEvent[]): Bottleneck[] {
     bottlenecks.push({
       label: "검증 프롬프트 부재",
       severity: "high",
-      explanation: "AI의 중간 산출물을 확인하는 단계가 약하면 그럴듯한 오류가 최종 답에 남을 수 있습니다.",
+      explanation: "검증 단계가 없으면 AI의 그럴듯한 산출물을 사용자가 다시 판단하지 않고 통과시키게 됩니다.",
       replaySuggestion: "최종 답 직전부터 `이 답의 약점과 검증할 지점을 찾아줘`라고 요청해보세요.",
     });
   }
@@ -249,7 +249,7 @@ function buildHeuristicReport(input: JudgeInput): ScoreReport {
     totalScore: weightedTotal(input.problem, axisScores),
     axisScores,
     coachSummary:
-      "이번 시도는 AI에게 바로 정답을 맡기는 대신 문제 구조와 검증 기준을 얼마나 세웠는지가 핵심입니다. 점수보다 아래 축별 피드백을 보고 다음 시도에서 한 지점을 바꾸는 것이 중요합니다.",
+      "이번 시도는 AI에게 정답을 맡긴 기록이 아니라, 사용자가 문제 구조와 검증 책임을 어떻게 설계했는지에 대한 기록입니다. 점수보다 아래 mirror와 축별 피드백을 보고 다음 시도에서 한 지점을 바꾸는 것이 중요합니다.",
     strengths: strengths.length > 0 ? strengths : ["문제 해결 과정을 trace로 남겼기 때문에 개선 가능한 지점이 명확해졌습니다."],
     improvements:
       improvements.length > 0

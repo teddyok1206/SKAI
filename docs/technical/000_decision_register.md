@@ -76,6 +76,9 @@
 | TDR-070 | Local runtime | Use `next dev` for active development and `next start` production mode for stable Mac/LAN demos | Accepted | 맥북 상시 구동은 가능하지만 장시간 데모는 dev server보다 build 후 production server가 안정적이며, 외부 공개는 포트포워딩이 아니라 배포/터널 전략으로 분리해야 함 | 2026-06-02 |
 | TDR-071 | Graph backbone | Treat the 3D dual graph as SKAI's shared system backbone for judge annotations, replay diff, sharing skeletons, habit reports, model analysis, and research persistence | Accepted | graph는 예쁜 탭이 아니라 채팅 로그를 학습 가능한 구조로 바꾸는 엔진이며, SKAI가 prompt gallery나 model leaderboard로 흐르지 않게 하는 공통 언어가 되어야 함 | 2026-06-02 |
 | TDR-072 | Human/Engine UI modes | Mark route surfaces with explicit Human Mode and Engine Mode tokens | Accepted | 접속/커뮤니티/리뷰와 풀이/trace/graph/judge는 서로 다른 인지 상태를 요구하므로 typography와 evidence density를 코드 레벨에서 분리해야 함 | 2026-06-02 |
+| TDR-073 | SKAI Artifact | Shared attempts should expose a graph artifact before detailed score/transcript surfaces | Accepted | Gemini 001의 Artifact 방향은 점수보다 사용자의 directed orchestration timeline을 공유 가능하게 만드는 것이므로 graph skeleton에서 파생한 artifact card를 우선 노출함 | 2026-06-02 |
+| TDR-074 | Intelligence Mirror | Score reports open with intent/control/verification/artifact mirror sections | Accepted | SKAI는 AI 산출물 평가 앱이 아니라 인간의 문제 구조화와 통제력을 비추는 시스템이므로 점수보다 mirror language가 먼저 와야 함 | 2026-06-02 |
+| TDR-075 | Universal reading layer | Shared attempts include a plain problem/material/process/checking layer before graph-heavy details | Accepted | graph/matrix machinery는 유지하되 초보자와 비전문 사용자가 들판처럼 명료하게 읽을 수 있는 보편 표면이 필요함 | 2026-06-02 |
 
 ## Decision Template
 

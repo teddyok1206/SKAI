@@ -64,6 +64,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
+- 공유 화면에는 점수표가 아니라 사용자의 directed orchestration timeline을 보여주는 SKAI Artifact 카드와 SVG export가 있다.
+- 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
+- Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공개 댓글은 email/phone/API-key-like text를 저장 전 redaction하고, script-like content와 excessive links를 차단하는 1차 privacy guardrail을 지난다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
@@ -122,7 +125,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
-- 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization도 1차 구현됐다. packet-flow animation과 full logo lockup은 아직 없다.
+- 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization도 1차 구현됐다. full logo lockup은 아직 없다.
+- Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
 ## Demo Contract
@@ -189,6 +193,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - LLM/heuristic judge output을 graph annotation schema에 직접 맞춘다. (완료, calibration은 후속)
 - branch diff를 parent/child graph-state transition으로 보여준다. (완료)
 - graph skeleton generator를 만들어 공유 화면에서 raw transcript보다 먼저 노출한다. (완료)
+- SKAI Artifact card와 universal reading layer를 만들어 공유 화면에서 score/transcript보다 먼저 구조를 읽게 한다. (완료)
 - 완료 조건: judge/replay/sharing 중 하나 이상이 graph annotation을 1차 입력으로 사용한다. (완료)
 
 우선순위 2: golden attempts and LLM judge calibration
@@ -301,12 +306,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/041_gemini_manifesto_brand_mark.md`: Gemini 철학 대화 반영, 3-node directed graph brand mark 1차 적용.
 - `docs/technical/plan/042_human_engine_mode_ui_split.md`: Human Mode / Engine Mode route tokens와 Gemini 최신 briefing.
 - `docs/technical/plan/043_route_mode_logo_sync_bugfix.md`: topbar mark route mode sync 안정화.
+- `docs/technical/plan/044_gemini001_artifact_mirror_universalization.md`: SKAI Artifact, Intelligence Mirror, universal reading layer, packet-flow, graph transition log.
 
 다음 plan 후보:
 
-- `044_supabase_cohort_review_dashboard.md`
-- `045_comment_edit_delete_and_reports.md`
-- `046_brand_mark_motion_and_logo_lockup.md`
+- `045_supabase_cohort_review_dashboard.md`
+- `046_comment_edit_delete_and_reports.md`
+- `047_brand_mark_logo_lockup.md`
 
 ## Reading Map
 
