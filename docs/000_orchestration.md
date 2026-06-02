@@ -23,6 +23,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
+- `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
+- 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
@@ -80,7 +82,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 아직 약한 부분:
 
-- Live provider API key 검증과 실제 모델별 품질/비용/latency 비교가 필요하다.
+- 추가 provider별 품질/비용/latency 비교가 필요하다. Gemini live connectivity baseline은 통과했다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. 실제 API key로 LLM judge 품질을 smoke/calibration해야 한다.
@@ -152,12 +154,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 1: live environment smoke
 
-- `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다.
-- 첫 후보는 Gemini, Groq, xAI 순으로 비용/latency/attachment handling을 본다.
-- `docs/problem_playbooks/`의 paste-ready prompts로 sample attempt를 만든다.
+- `.env.local`에 사용 가능한 API key를 넣고 실제 provider 1개를 호출한다. (완료: Gemini)
+- 첫 후보는 Gemini, Groq, xAI 순으로 비용/latency/attachment handling을 본다. (Gemini baseline 완료, 나머지는 후속 비교)
+- `docs/problem_playbooks/`의 paste-ready prompts로 sample attempt를 만든다. (Turn 1 smoke 완료)
 - 같은 문제, 같은 첫 프롬프트로 mock/live 응답 차이를 기록한다.
-- 모델별 latency, token usage, failure mode를 기록한다.
-- 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다.
+- 모델별 latency, token usage, failure mode를 기록한다. (Gemini 기록 완료)
+- 완료 조건: 적어도 하나의 live provider로 문제 풀이 1회가 end-to-end 성공한다. (완료)
 
 우선순위 1.5: graph backbone second slice
 
@@ -257,11 +259,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/027_graph_backbone_full_implementation.md`: 3D dual graph를 judge/replay/sharing/habit/model/research 백본으로 확장하는 전체 구현 계획.
 - `docs/technical/plan/028_graph_annotations_first_slice.md`: deterministic graph annotations와 Graph tab detail panel 표시.
 - `docs/technical/plan/029_judge_branch_graph_state_transition.md`: judge graph annotations와 branch graph-state transition 연결.
+- `docs/technical/plan/030_live_environment_smoke.md`: local `/api/chat` live provider smoke runner와 Gemini baseline 기록.
 - `docs/technical/plan/032_graph_skeleton_sharing.md`: graph skeleton generator와 공유 화면 skeleton-first 읽기 경로.
 
 다음 plan 후보:
 
-- `030_live_environment_smoke.md`
 - `031_llm_judge_graph_annotation_schema.md`
 - `033_golden_attempts_judge_calibration.md`
 - `034_playbook_insertion_operator_ux.md`
