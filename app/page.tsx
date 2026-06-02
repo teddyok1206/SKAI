@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BarChart3, Clock, Layers3 } from "lucide-react";
 import { problems } from "@/data/problems";
 import { AuthoredProblemList } from "@/components/authored-problem-list";
+import { SkaiLockup } from "@/components/skai-lockup";
 
 const categoryLabel = {
   workplace: "업무",
@@ -46,7 +47,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="home-hero">
-        <p className="eyebrow">Social Knowledge of AI</p>
+        <SkaiLockup />
         <h1>AI를 잘 쓰는 법을 문제로 연습한다.</h1>
         <p className="lead">
           문제 정의, task 분배, 자료 활용, 검증 흐름을 하나의 풀이로 남긴다.

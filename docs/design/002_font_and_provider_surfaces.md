@@ -36,6 +36,7 @@ Implementation note, 2026-06-02:
 - The primary SKAI mark remains the same 3-node directed graph, but Engine Mode renders the node treatment with sharper hex geometry.
 - The topbar mark follows `html[data-ui-mode]`, which is synchronized from the current route by a client bridge. The route-level `data-ui-mode` wrappers remain the page-surface contract.
 - Engine Mode now allows sparse packet-flow motion in the SKAI mark. Motion should stay structural and subtle: intent/material packets move toward artifact, without turning the brand into theatrical decoration.
+- The reusable lockup combines the mark, `SKAI`, and `Social Knowledge of AI`. It is allowed on entry/review surfaces; compact topbar usage should keep the smaller mark-only treatment.
 - No Geist package has been installed yet.
 
 ## Mode And Model Rule

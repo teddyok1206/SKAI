@@ -22,6 +22,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Gemini branding/philosophy transcript는 `docs/philosophy/Gemini/001.md`로 보존했고, 핵심 원칙은 `docs/philosophy/007_intelligence_and_brand_manifesto.md`에 반영했다.
 - Gemini에게 현재 프로젝트 상태를 설명하기 위한 최신 briefing은 `docs/philosophy/Gemini/002.md`에 있다.
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
+- Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
@@ -127,7 +128,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
-- 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization도 1차 구현됐다. full logo lockup은 아직 없다.
+- 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization과 reusable logo lockup도 1차 구현됐다.
 - Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
@@ -312,10 +313,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/044_gemini001_artifact_mirror_universalization.md`: SKAI Artifact, Intelligence Mirror, universal reading layer, packet-flow, graph transition log.
 - `docs/technical/plan/045_supabase_cohort_review_dashboard.md`: Supabase remote cohort snapshot을 founder dashboard에 표시.
 - `docs/technical/plan/046_comment_edit_delete_and_reports.md`: 공개 댓글 edit, soft-delete, report baseline.
+- `docs/technical/plan/047_brand_mark_logo_lockup.md`: 3-node mark와 wordmark/full name을 묶은 reusable lockup.
 
 다음 plan 후보:
 
-- `047_brand_mark_logo_lockup.md`
+- 현재 확정 queue는 `047`까지 완료한다. 다음 slice는 실제 smoke 사용 로그를 본 뒤 demo contract에 가장 크게 기여하는 항목으로 재선정한다.
 
 ## Reading Map
 

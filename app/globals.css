@@ -401,6 +401,77 @@ button {
   font-family: var(--font-engine);
 }
 
+.skai-lockup {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 82%, var(--brand-tile));
+  color: var(--ink);
+  padding: 10px 13px;
+}
+
+.skai-lockup-mark {
+  display: grid;
+  width: 54px;
+  height: 40px;
+  place-items: center;
+  color: var(--accent-strong);
+}
+
+.skai-lockup-copy {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.skai-lockup-copy strong {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.skai-lockup-copy small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.skai-lockup.engine {
+  font-family: var(--font-mono);
+}
+
+.skai-lockup.engine .skai-lockup-copy strong::before {
+  content: "[";
+}
+
+.skai-lockup.engine .skai-lockup-copy strong::after {
+  content: "]";
+}
+
+.skai-lockup.compact {
+  gap: 9px;
+  padding: 7px 10px;
+}
+
+.skai-lockup.compact .skai-lockup-mark {
+  width: 42px;
+  height: 32px;
+}
+
+.skai-lockup.compact .skai-lockup-copy strong {
+  font-size: 17px;
+}
+
+.skai-lockup.compact .skai-lockup-copy small {
+  font-size: 10px;
+}
+
 .home-hero {
   display: grid;
   min-height: 420px;
