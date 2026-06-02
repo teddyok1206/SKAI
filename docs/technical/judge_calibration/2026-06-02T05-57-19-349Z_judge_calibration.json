@@ -1,0 +1,430 @@
+{
+  "startedAt": "2026-06-02T05:57:19.349Z",
+  "baseUrl": "http://127.0.0.1:3000",
+  "status": "passed",
+  "results": [
+    {
+      "sampleId": "golden-ambiguous-research-brief-weak",
+      "problemId": "ambiguous-research-brief",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 51,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 1,
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 50
+        },
+        {
+          "axis": "decomposition",
+          "score": 50
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 50
+        },
+        {
+          "axis": "adaptation",
+          "score": 50
+        },
+        {
+          "axis": "verification",
+          "score": 50
+        },
+        {
+          "axis": "efficiency",
+          "score": 59
+        },
+        {
+          "axis": "final_quality",
+          "score": 50
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-average",
+      "problemId": "ambiguous-research-brief",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 62,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 1,
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 66
+        },
+        {
+          "axis": "decomposition",
+          "score": 52
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 73
+        },
+        {
+          "axis": "adaptation",
+          "score": 52
+        },
+        {
+          "axis": "verification",
+          "score": 66
+        },
+        {
+          "axis": "efficiency",
+          "score": 65
+        },
+        {
+          "axis": "final_quality",
+          "score": 59
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-strong",
+      "problemId": "ambiguous-research-brief",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 86,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 5,
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 94
+        },
+        {
+          "axis": "decomposition",
+          "score": 73
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 94
+        },
+        {
+          "axis": "adaptation",
+          "score": 80
+        },
+        {
+          "axis": "verification",
+          "score": 94
+        },
+        {
+          "axis": "efficiency",
+          "score": 73
+        },
+        {
+          "axis": "final_quality",
+          "score": 87
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-weak",
+      "problemId": "club-budget-workflow",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 51,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 2,
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 50
+        },
+        {
+          "axis": "decomposition",
+          "score": 50
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 50
+        },
+        {
+          "axis": "adaptation",
+          "score": 50
+        },
+        {
+          "axis": "verification",
+          "score": 50
+        },
+        {
+          "axis": "efficiency",
+          "score": 59
+        },
+        {
+          "axis": "final_quality",
+          "score": 50
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-average",
+      "problemId": "club-budget-workflow",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 64,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 2,
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 57
+        },
+        {
+          "axis": "decomposition",
+          "score": 64
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 71
+        },
+        {
+          "axis": "adaptation",
+          "score": 57
+        },
+        {
+          "axis": "verification",
+          "score": 64
+        },
+        {
+          "axis": "efficiency",
+          "score": 63
+        },
+        {
+          "axis": "final_quality",
+          "score": 71
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-strong",
+      "problemId": "club-budget-workflow",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 74,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 4,
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 68
+        },
+        {
+          "axis": "decomposition",
+          "score": 82
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 82
+        },
+        {
+          "axis": "adaptation",
+          "score": 61
+        },
+        {
+          "axis": "verification",
+          "score": 82
+        },
+        {
+          "axis": "efficiency",
+          "score": 61
+        },
+        {
+          "axis": "final_quality",
+          "score": 75
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-weak",
+      "problemId": "counterfactual-product-review",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 53,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 1,
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 57
+        },
+        {
+          "axis": "decomposition",
+          "score": 50
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 50
+        },
+        {
+          "axis": "adaptation",
+          "score": 50
+        },
+        {
+          "axis": "verification",
+          "score": 50
+        },
+        {
+          "axis": "efficiency",
+          "score": 66
+        },
+        {
+          "axis": "final_quality",
+          "score": 50
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-average",
+      "problemId": "counterfactual-product-review",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 56,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 1,
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 59
+        },
+        {
+          "axis": "decomposition",
+          "score": 52
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 52
+        },
+        {
+          "axis": "adaptation",
+          "score": 52
+        },
+        {
+          "axis": "verification",
+          "score": 59
+        },
+        {
+          "axis": "efficiency",
+          "score": 65
+        },
+        {
+          "axis": "final_quality",
+          "score": 52
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-strong",
+      "problemId": "counterfactual-product-review",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 71,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "graphAnnotationCount": 3,
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 66
+        },
+        {
+          "axis": "decomposition",
+          "score": 59
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 66
+        },
+        {
+          "axis": "adaptation",
+          "score": 59
+        },
+        {
+          "axis": "verification",
+          "score": 94
+        },
+        {
+          "axis": "efficiency",
+          "score": 69
+        },
+        {
+          "axis": "final_quality",
+          "score": 80
+        }
+      ]
+    }
+  ],
+  "orderingChecks": [
+    {
+      "problemId": "ambiguous-research-brief",
+      "passed": true,
+      "scores": {
+        "weak": 51,
+        "average": 62,
+        "strong": 86
+      }
+    },
+    {
+      "problemId": "club-budget-workflow",
+      "passed": true,
+      "scores": {
+        "weak": 51,
+        "average": 64,
+        "strong": 74
+      }
+    },
+    {
+      "problemId": "counterfactual-product-review",
+      "passed": true,
+      "scores": {
+        "weak": 53,
+        "average": 56,
+        "strong": 71
+      }
+    }
+  ],
+  "errors": []
+}

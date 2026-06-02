@@ -25,6 +25,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
 - `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
+- `npm run calibrate:judge`로 3개 seed problem의 weak/average/strong golden attempts 9개를 `/api/judge`에 반복 채점할 수 있다.
+- 2026-06-02 heuristic judge calibration에서 세 문제 모두 weak < average < strong ordering을 통과했다.
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
@@ -86,7 +88,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 추가 provider별 품질/비용/latency 비교가 필요하다. Gemini live connectivity baseline은 통과했다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
-- Judge는 기본값이 아직 heuristic이다. 실제 API key로 LLM judge 품질을 smoke/calibration해야 한다.
+- Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 baseline이며 실제 배포 smoke 전 점검이 필요하다.
 - Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
@@ -171,12 +173,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 2: golden attempts and LLM judge calibration
 
-- 각 seed problem마다 weak/average/strong attempt를 만든다.
+- 각 seed problem마다 weak/average/strong attempt를 만든다. (완료)
 - `SKAI_JUDGE_MODE=llm` 또는 `ensemble`으로 실제 judge provider를 켠다.
-- heuristic report와 LLM judge report를 비교한다.
+- heuristic report와 LLM judge report를 비교한다. (heuristic baseline 완료, LLM 비교 후속)
 - malformed JSON, provider failure, judge disagreement를 기록한다.
 - coach review와 strict rubric mode를 분리할 준비를 한다.
-- 완료 조건: 최소 9개 sample attempt에서 judge 결과를 founder가 정성 검토한다.
+- 완료 조건: 최소 9개 sample attempt에서 judge 결과를 founder가 정성 검토한다. (runner 완료, founder/LLM review 후속)
 
 우선순위 3: playbook insertion and smoke operator UX
 
@@ -263,10 +265,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/030_live_environment_smoke.md`: local `/api/chat` live provider smoke runner와 Gemini baseline 기록.
 - `docs/technical/plan/031_llm_judge_graph_annotation_schema.md`: LLM judge graph annotation schema와 trace id 기반 graph target mapping.
 - `docs/technical/plan/032_graph_skeleton_sharing.md`: graph skeleton generator와 공유 화면 skeleton-first 읽기 경로.
+- `docs/technical/plan/033_golden_attempts_judge_calibration.md`: 9개 golden attempt judge calibration runner와 heuristic baseline 기록.
 
 다음 plan 후보:
 
-- `033_golden_attempts_judge_calibration.md`
 - `034_playbook_insertion_operator_ux.md`
 - `035_cost_guardrails.md`
 - `036_supabase_deployment_hardening.md`
