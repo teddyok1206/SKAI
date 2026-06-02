@@ -58,6 +58,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
+- 공개 댓글은 email/phone/API-key-like text를 저장 전 redaction하고, script-like content와 excessive links를 차단하는 1차 privacy guardrail을 지난다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
@@ -102,7 +103,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
-- 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
+- 공개 풀이 댓글은 1차 privacy/misuse guardrail이 있지만, edit/delete, notification, report queue, ML moderation은 아직 없다.
 - Founder review dashboard는 localStorage 기준이다. Supabase-backed cohort review, export, filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
 - Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
@@ -288,10 +289,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/037_admin_authoring_mvp.md`: localStorage 기반 문제 출제 초안 작성, 홈 노출, local problem solve route.
 - `docs/technical/plan/038_branch_tree_explorer.md`: local attempts parent/child breakpoint lineage explorer.
 - `docs/technical/plan/039_founder_review_dashboard.md`: local smoke attempt founder review dashboard와 local qualitative notes.
+- `docs/technical/plan/040_comment_moderation_and_privacy.md`: 공개 댓글의 민감정보 redaction과 1차 misuse guardrail.
 
 다음 plan 후보:
 
-- `040_comment_moderation_and_privacy.md`
+- `041_supabase_cohort_review_dashboard.md`
+- `042_comment_edit_delete_and_reports.md`
 
 ## Reading Map
 

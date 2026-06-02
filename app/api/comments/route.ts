@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { operationGuardrails } from "@/lib/constants";
+import { moderateComment } from "@/lib/comment-moderation";
 import type { PromptComment } from "@/lib/types";
 
 const commentSchema = z.object({
@@ -105,10 +106,25 @@ export async function POST(request: Request) {
   }
 
   const { comment } = parsed.data;
+  const moderation = moderateComment({
+    body: comment.body,
+    authorName: comment.authorName,
+    maxBodyChars: operationGuardrails.maxCommentBodyChars,
+  });
+
+  if (!moderation.ok) {
+    return NextResponse.json({ error: moderation.blockedReason ?? "Comment was blocked." }, { status: 400 });
+  }
+
+  const safeComment = {
+    ...comment,
+    authorName: moderation.authorName,
+    body: moderation.body,
+  };
   const { data: publishedAttempt, error: publishedError } = await supabase
     .from("published_attempts")
     .select("attempt_id")
-    .eq("attempt_id", comment.attemptId)
+    .eq("attempt_id", safeComment.attemptId)
     .maybeSingle();
 
   if (publishedError) {
@@ -122,8 +138,8 @@ export async function POST(request: Request) {
   const { data: traceEvent, error: traceError } = await supabase
     .from("trace_events")
     .select("id")
-    .eq("id", comment.traceEventId)
-    .eq("attempt_id", comment.attemptId)
+    .eq("id", safeComment.traceEventId)
+    .eq("attempt_id", safeComment.attemptId)
     .maybeSingle();
 
   if (traceError) {
@@ -134,13 +150,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Trace event does not belong to this attempt." }, { status: 400 });
   }
 
-  if (comment.parentId) {
+  if (safeComment.parentId) {
     const { data: parentComment, error: parentError } = await supabase
       .from("prompt_comments")
       .select("id")
-      .eq("id", comment.parentId)
-      .eq("attempt_id", comment.attemptId)
-      .eq("trace_event_id", comment.traceEventId)
+      .eq("id", safeComment.parentId)
+      .eq("attempt_id", safeComment.attemptId)
+      .eq("trace_event_id", safeComment.traceEventId)
       .maybeSingle();
 
     if (parentError) {
@@ -152,16 +168,16 @@ export async function POST(request: Request) {
     }
   }
 
-  const authorLabel = comment.authorName.trim() || user.email?.split("@")[0] || "SKAI learner";
+  const authorLabel = safeComment.authorName.trim() || user.email?.split("@")[0] || "SKAI learner";
   const { error } = await supabase.from("prompt_comments").insert({
-    id: comment.id,
-    attempt_id: comment.attemptId,
-    trace_event_id: comment.traceEventId,
-    parent_id: comment.parentId ?? null,
+    id: safeComment.id,
+    attempt_id: safeComment.attemptId,
+    trace_event_id: safeComment.traceEventId,
+    parent_id: safeComment.parentId ?? null,
     user_id: user.id,
     author_label: authorLabel.slice(0, 40),
-    body: comment.body.trim(),
-    created_at: comment.createdAt,
+    body: safeComment.body.trim(),
+    created_at: safeComment.createdAt,
   });
 
   if (error) {

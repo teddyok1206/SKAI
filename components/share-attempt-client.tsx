@@ -4,6 +4,8 @@ import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AlertTriangle, Bot, CornerDownRight, Eye, GitBranch, MessageSquare, Paperclip, Route, Send, Workflow } from "lucide-react";
 import { problems } from "@/data/problems";
+import { operationGuardrails } from "@/lib/constants";
+import { moderateComment } from "@/lib/comment-moderation";
 import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { buildGraphSkeleton } from "@/lib/graph-skeleton";
@@ -146,6 +148,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [commentNotice, setCommentNotice] = useState("");
 
   useEffect(() => {
     if (!loadedAttemptId) {
@@ -223,13 +226,30 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       return;
     }
 
+    const moderation = moderateComment({
+      body,
+      authorName,
+      maxBodyChars: operationGuardrails.maxCommentBodyChars,
+    });
+
+    if (!moderation.ok) {
+      setCommentNotice(moderation.blockedReason ?? "Comment was blocked.");
+      return;
+    }
+
+    setCommentNotice(
+      moderation.warnings.length > 0
+        ? `Privacy guardrail: ${moderation.warnings.join(" ")}`
+        : "Comment saved.",
+    );
+
     const comment: PromptComment = {
       id: crypto.randomUUID(),
       attemptId: publishedAttempt.attemptId,
       traceEventId: input.traceEventId,
       parentId: input.parentId,
-      authorName: authorName.trim() || "SKAI learner",
-      body: body.slice(0, 1200),
+      authorName: moderation.authorName,
+      body: moderation.body,
       createdAt: new Date().toISOString(),
     };
 
@@ -477,6 +497,8 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               />
             </label>
             <p className="muted">각 프롬프트 지점에 질문, 해석, 대안 지시를 남길 수 있습니다.</p>
+            <p className="muted">댓글의 이메일, 전화번호, API key처럼 보이는 문자열은 저장 전 redaction됩니다.</p>
+            {commentNotice ? <p className="attachment-notice neutral">{commentNotice}</p> : null}
           </div>
           {userEvents.length === 0 ? (
             <p className="muted">공개된 사용자 프롬프트가 없습니다.</p>
@@ -578,7 +600,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                   >
                                     <textarea
                                       className="textarea"
-                                      maxLength={1200}
+                                      maxLength={operationGuardrails.maxCommentBodyChars}
                                       placeholder="이 지점에 대한 답글"
                                       value={replyDrafts[comment.id] ?? ""}
                                       onChange={(changeEvent) =>
@@ -607,7 +629,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                       <form className="comment-form" onSubmit={(submitEvent) => void submitComment({ traceEventId: event.id }, submitEvent)}>
                         <textarea
                           className="textarea"
-                          maxLength={1200}
+                          maxLength={operationGuardrails.maxCommentBodyChars}
                           placeholder="이 프롬프트의 문제정의, 세분화, 검증 방식에 대해 남기기"
                           value={commentDrafts[event.id] ?? ""}
                           onChange={(changeEvent) =>
