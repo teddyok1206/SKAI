@@ -39,9 +39,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="home-hero">
-        <h1>AI를 잘 쓰는 법을 문제로 연습한다.</h1>
+        <h1>모델의 성능은 조건입니다. 변수는 당신의 오케스트레이션입니다.</h1>
         <p className="lead">
-          문제 정의, task 분배, 자료 활용, 검증 흐름을 하나의 풀이로 남긴다.
+          의도와 현실을 구조화하고, 자료를 통제하며, 검증 가능한 산출물로 남긴다.
         </p>
         <div className="hero-actions">
           <Link className="button primary" href={`/problems/${problems[0].id}`}>

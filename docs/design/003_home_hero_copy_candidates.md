@@ -16,6 +16,31 @@ The current line, `AI를 잘 쓰는 법을 문제로 연습한다.`, is clear bu
 - Does not overuse myth, fire, genius, or model-performance language.
 - Works with the existing lead: `문제 정의, task 분배, 자료 활용, 검증 흐름을 하나의 풀이로 남긴다.`
 
+## Founder Mood Direction
+
+The founder supplied three stronger mood sets:
+
+- The Orchestrator: cold, precise, control-room language.
+- The Mindset Shifter: overturn the habit of treating AI as a command target.
+- The Prometheus Hearth: keep capability/fire as a controlled energy metaphor.
+
+The selected direction is The Orchestrator, with two corrections:
+
+- `AI의 지능은 상수입니다` is too absolute because provider/model quality still matters. SKAI should say model performance is a condition, not the thing being trained.
+- Direct "servant/slave" language should remain out of the main UI because SKAI avoids reinforcing that frame, even when rejecting it.
+
+## Selected Home Copy
+
+Main headline:
+
+> 모델의 성능은 조건입니다. 변수는 당신의 오케스트레이션입니다.
+
+Lead:
+
+> 의도와 현실을 구조화하고, 자료를 통제하며, 검증 가능한 산출물로 남긴다.
+
+This preserves the founder's `[의도 + 현실 -> 오케스트레이션 -> 산출물]` structure while keeping the home surface minimal.
+
 ## Shortlist
 
 ### 1. 현실을 구조화하고, AI를 지휘하는 법을 훈련한다.

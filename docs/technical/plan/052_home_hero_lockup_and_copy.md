@@ -8,7 +8,7 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 
 - Remove the hero-level `SkaiLockup` from `app/page.tsx`.
 - Keep the topbar as the single primary brand lockup on the home screen.
-- Preserve the current headline in code until the founder selects a replacement.
+- Replace the generic home headline with the selected Orchestrator mood copy.
 - Add a design note with curated headline candidates.
 
 ## Assumptions
@@ -21,12 +21,15 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 
 - `app/page.tsx`
 - `docs/design/003_home_hero_copy_candidates.md`
+- `ARCHIVE_prompt_long/010.md`
 
 ## Implementation Steps
 
 1. Remove the unused `SkaiLockup` import from `app/page.tsx`.
 2. Remove `<SkaiLockup />` from the home hero.
-3. Document headline candidates and the selection criteria.
+3. Archive the founder's stronger home-copy mood direction.
+4. Document headline candidates and the selection criteria.
+5. Apply the selected Orchestrator copy with model-performance wording corrected from `constant` to `condition`.
 
 ## Verification
 
@@ -34,6 +37,14 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 - Run `conda run -n SKAI npm run typecheck`.
 - Run `conda run -n SKAI npm run lint`.
 - Run `conda run -n SKAI npm run build`.
+
+## Implementation Result
+
+- Removed the duplicated hero lockup.
+- Archived the founder's three mood copy set in `ARCHIVE_prompt_long/010.md`.
+- Selected the Orchestrator mood, but corrected the home headline to avoid claiming that AI/model intelligence is literally constant.
+- Updated the home headline to `모델의 성능은 조건입니다. 변수는 당신의 오케스트레이션입니다.`
+- Updated the lead to `의도와 현실을 구조화하고, 자료를 통제하며, 검증 가능한 산출물로 남긴다.`
 
 ## Risks
 
