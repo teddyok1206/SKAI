@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Clock, Layers3 } from "lucide-react";
 import { problems } from "@/data/problems";
+import { AuthoredProblemList } from "@/components/authored-problem-list";
 
 const categoryLabel = {
   workplace: "업무",
@@ -90,6 +91,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </article>
         ))}
       </section>
+
+      <AuthoredProblemList />
     </main>
   );
 }

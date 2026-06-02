@@ -1,5 +1,7 @@
 import { SKAI_STORAGE_KEYS } from "@/lib/constants";
-import type { Attempt, PromptComment, PublishedAttempt } from "@/lib/types";
+import type { Attempt, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
+
+const authoredProblemsChangedEvent = "skai:authored-problems-changed";
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") {
@@ -24,6 +26,14 @@ function writeJson<T>(key: string, value: T) {
   }
 
   window.localStorage.setItem(key, JSON.stringify(value));
+}
+
+function notifyAuthoredProblemsChanged() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new Event(authoredProblemsChangedEvent));
 }
 
 export function getAttempts(): Attempt[] {
@@ -73,4 +83,39 @@ export function savePromptComments(comments: PromptComment[]) {
     ...comments,
     ...stored.filter((comment) => !incomingIds.has(comment.id)),
   ]);
+}
+
+export function getAuthoredProblems(): Problem[] {
+  return readJson<Problem[]>(SKAI_STORAGE_KEYS.authoredProblems, []);
+}
+
+export function saveAuthoredProblem(problem: Problem) {
+  const problems = getAuthoredProblems();
+  const next = [problem, ...problems.filter((item) => item.id !== problem.id)];
+  writeJson(SKAI_STORAGE_KEYS.authoredProblems, next);
+  notifyAuthoredProblemsChanged();
+}
+
+export function getAuthoredProblem(problemId: string): Problem | undefined {
+  return getAuthoredProblems().find((problem) => problem.id === problemId);
+}
+
+export function subscribeAuthoredProblems(listener: () => void) {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === SKAI_STORAGE_KEYS.authoredProblems) {
+      listener();
+    }
+  }
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(authoredProblemsChangedEvent, listener);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(authoredProblemsChangedEvent, listener);
+  };
 }

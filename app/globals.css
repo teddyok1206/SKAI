@@ -417,6 +417,52 @@ h3 {
   gap: 12px;
 }
 
+.authoring-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.authoring-form {
+  display: grid;
+  gap: 12px;
+}
+
+.authoring-form label,
+.authoring-material {
+  display: grid;
+  gap: 7px;
+}
+
+.authoring-form label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.authoring-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.authoring-material {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.authoring-export {
+  max-height: 420px;
+}
+
+.local-draft-card {
+  border-color: color-mix(in srgb, var(--gold) 36%, var(--line));
+}
+
 .environment-card {
   --card-provider-accent: var(--accent);
   --card-provider-soft: var(--accent-soft);
@@ -2359,12 +2405,14 @@ summary {
   .grid,
   .solve-layout,
   .pre-attempt-layout,
+  .authoring-layout,
   .page-header,
   .report-grid {
     grid-template-columns: 1fr;
   }
 
-  .environment-grid {
+  .environment-grid,
+  .authoring-row {
     grid-template-columns: 1fr;
   }
 

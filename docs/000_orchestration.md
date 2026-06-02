@@ -20,6 +20,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - Next.js 기반 SKAI 데모 앱이 동작한다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
+- Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
@@ -98,7 +99,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
-- Admin problem authoring은 최소 형태다. 문제/자료/rubric 작성 workflow가 부족하다.
+- Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
 - branch tree explorer는 아직 없다.
 - Graph tab은 현재 단일 attempt 내부 구조 시각화이며 multi-branch tree explorer는 아니다.
@@ -212,10 +213,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 6: admin authoring MVP
 
-- 문제 statement, constraints, deliverables, materials, rubric을 작성/수정하는 UI를 만든다.
-- 자료 업로드와 extracted text 입력을 지원한다.
-- rubric public preview를 제공한다.
-- 완료 조건: 코드 수정 없이 새 demo problem을 만들 수 있다.
+- 문제 statement, constraints, deliverables, materials, rubric을 작성/수정하는 UI를 만든다. (부분 완료: local draft form, default rubric)
+- 자료 업로드와 extracted text 입력을 지원한다. (부분 완료: one extracted material text field)
+- rubric public preview를 제공한다. (후속)
+- 완료 조건: 코드 수정 없이 새 demo problem을 만들 수 있다. (완료: localStorage draft route)
+- 후속: Supabase-backed authoring, import/export, rubric editor, playbook editor.
 
 우선순위 7: branch tree explorer
 
@@ -278,10 +280,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/034_playbook_insertion_operator_ux.md`: 문제별 playbook prompt를 composer/final answer에 visible draft로 삽입하는 operator UX.
 - `docs/technical/plan/035_cost_guardrails.md`: provider/model pricing registry와 attempt-level 비용 표시.
 - `docs/technical/plan/036_supabase_deployment_hardening.md`: deployment health route, production sync boundary, Supabase RLS checklist.
+- `docs/technical/plan/037_admin_authoring_mvp.md`: localStorage 기반 문제 출제 초안 작성, 홈 노출, local problem solve route.
 
 다음 plan 후보:
 
-- `037_admin_authoring_mvp.md`
 - `038_branch_tree_explorer.md`
 - `039_founder_review_dashboard.md`
 - `040_comment_moderation_and_privacy.md`
