@@ -56,6 +56,66 @@ export async function createPromptCommentInSupabase(comment: PromptComment): Pro
   return Boolean(data.synced);
 }
 
+export async function updatePromptCommentInSupabase(input: {
+  commentId: string;
+  attemptId: string;
+  body: string;
+  authorName: string;
+}): Promise<boolean> {
+  const response = await fetch("/api/comments", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return false;
+  }
+
+  const data = (await response.json()) as { synced?: boolean };
+
+  return Boolean(data.synced);
+}
+
+export async function deletePromptCommentInSupabase(input: {
+  commentId: string;
+  attemptId: string;
+}): Promise<boolean> {
+  const response = await fetch("/api/comments", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return false;
+  }
+
+  const data = (await response.json()) as { synced?: boolean };
+
+  return Boolean(data.synced);
+}
+
+export async function reportPromptCommentInSupabase(input: {
+  commentId: string;
+  attemptId: string;
+  reason: string;
+}): Promise<boolean> {
+  const response = await fetch("/api/comments/report", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return false;
+  }
+
+  const data = (await response.json()) as { reported?: boolean };
+
+  return Boolean(data.reported);
+}
+
 export async function loadFounderCohortFromSupabase(): Promise<FounderCohortSnapshot | null> {
   const response = await fetch("/api/founder/cohort").catch(() => null);
 

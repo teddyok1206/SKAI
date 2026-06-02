@@ -80,6 +80,7 @@
 | TDR-074 | Intelligence Mirror | Score reports open with intent/control/verification/artifact mirror sections | Accepted | SKAI는 AI 산출물 평가 앱이 아니라 인간의 문제 구조화와 통제력을 비추는 시스템이므로 점수보다 mirror language가 먼저 와야 함 | 2026-06-02 |
 | TDR-075 | Universal reading layer | Shared attempts include a plain problem/material/process/checking layer before graph-heavy details | Accepted | graph/matrix machinery는 유지하되 초보자와 비전문 사용자가 들판처럼 명료하게 읽을 수 있는 보편 표면이 필요함 | 2026-06-02 |
 | TDR-076 | Founder cohort access | Supabase cohort review uses service role only for allowlisted founder emails, otherwise current-user RLS scope | Accepted | 첫 smoke에서는 정성 분석이 필요하지만 전체 사용자 로그 조회는 민감하므로 서버 전용 service role과 founder allowlist가 있을 때만 cross-user cohort를 허용함 | 2026-06-02 |
+| TDR-077 | Comment lifecycle | Prompt comments support edit, soft-delete, and reports rather than hard delete | Accepted | 프롬프트 단위 토론은 학습 맥락을 보존해야 하므로 댓글 thread 구조는 유지하고, 작성자 수정/soft-delete와 별도 report record로 커뮤니티 안전성을 높임 | 2026-06-02 |
 
 ## Decision Template
 

@@ -95,6 +95,41 @@ export function savePromptComment(comment: PromptComment) {
   writeJson(SKAI_STORAGE_KEYS.promptComments, next);
 }
 
+export function updatePromptComment(comment: PromptComment) {
+  const comments = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
+  const next = comments.map((item) => (item.id === comment.id ? comment : item));
+  writeJson(SKAI_STORAGE_KEYS.promptComments, next);
+}
+
+export function softDeletePromptComment(commentId: string) {
+  const comments = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
+  const deletedAt = new Date().toISOString();
+  const next = comments.map((item) =>
+    item.id === commentId
+      ? {
+          ...item,
+          body: "Comment deleted.",
+          deletedAt,
+          updatedAt: deletedAt,
+        }
+      : item,
+  );
+  writeJson(SKAI_STORAGE_KEYS.promptComments, next);
+}
+
+export function reportPromptComment(commentId: string) {
+  const comments = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
+  const next = comments.map((item) =>
+    item.id === commentId
+      ? {
+          ...item,
+          reportCount: (item.reportCount ?? 0) + 1,
+        }
+      : item,
+  );
+  writeJson(SKAI_STORAGE_KEYS.promptComments, next);
+}
+
 export function savePromptComments(comments: PromptComment[]) {
   const stored = readJson<PromptComment[]>(SKAI_STORAGE_KEYS.promptComments, []);
   const incomingIds = new Set(comments.map((comment) => comment.id));

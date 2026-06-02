@@ -19,7 +19,15 @@ import {
 import { problems } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
 import { moderateComment } from "@/lib/comment-moderation";
-import { getPromptComments, getPublishedAttempt, savePromptComment, savePromptComments } from "@/lib/local-store";
+import {
+  getPromptComments,
+  getPublishedAttempt,
+  reportPromptComment,
+  savePromptComment,
+  savePromptComments,
+  softDeletePromptComment,
+  updatePromptComment,
+} from "@/lib/local-store";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { buildGraphSkeleton } from "@/lib/graph-skeleton";
 import {
@@ -31,8 +39,11 @@ import {
 } from "@/lib/skai-artifact";
 import {
   createPromptCommentInSupabase,
+  deletePromptCommentInSupabase,
   loadPromptCommentsFromSupabase,
   loadPublishedAttemptFromSupabase,
+  reportPromptCommentInSupabase,
+  updatePromptCommentInSupabase,
 } from "@/lib/supabase-persistence";
 import type { GraphSkeletonStep, GraphSkeletonStepRole, PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
@@ -168,6 +179,8 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
   const [commentNotice, setCommentNotice] = useState("");
   const [artifactNotice, setArtifactNotice] = useState("");
 
@@ -296,6 +309,106 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
 
   function commentsForTrace(traceEventId: string) {
     return comments.filter((comment) => comment.traceEventId === traceEventId);
+  }
+
+  function replaceComment(nextComment: PromptComment) {
+    const nextComments = mergeComments(comments.map((comment) => (comment.id === nextComment.id ? nextComment : comment)));
+    setComments(nextComments);
+    updatePromptComment(nextComment);
+  }
+
+  function startEditComment(comment: PromptComment) {
+    if (comment.deletedAt) {
+      return;
+    }
+
+    setEditingCommentId(comment.id);
+    setEditDrafts((current) => ({ ...current, [comment.id]: comment.body }));
+  }
+
+  function saveEditedComment(comment: PromptComment) {
+    const draft = editDrafts[comment.id]?.trim();
+
+    if (!draft) {
+      setCommentNotice("Comment is empty.");
+      return;
+    }
+
+    const moderation = moderateComment({
+      body: draft,
+      authorName: comment.authorName,
+      maxBodyChars: operationGuardrails.maxCommentBodyChars,
+    });
+
+    if (!moderation.ok) {
+      setCommentNotice(moderation.blockedReason ?? "Comment was blocked.");
+      return;
+    }
+
+    const updatedAt = new Date().toISOString();
+    const nextComment: PromptComment = {
+      ...comment,
+      authorName: moderation.authorName,
+      body: moderation.body,
+      updatedAt,
+      deletedAt: undefined,
+    };
+
+    replaceComment(nextComment);
+    setEditingCommentId(null);
+    setCommentNotice(
+      moderation.warnings.length > 0
+        ? `Privacy guardrail: ${moderation.warnings.join(" ")}`
+        : "Comment updated.",
+    );
+    void updatePromptCommentInSupabase({
+      commentId: comment.id,
+      attemptId: comment.attemptId,
+      body: moderation.body,
+      authorName: moderation.authorName,
+    }).then((synced) => {
+      if (!synced) {
+        setCommentNotice("Comment updated locally. Remote update requires the original authenticated author.");
+      }
+    });
+  }
+
+  function deleteComment(comment: PromptComment) {
+    const deletedAt = new Date().toISOString();
+    const nextComment: PromptComment = {
+      ...comment,
+      body: "Comment deleted.",
+      updatedAt: deletedAt,
+      deletedAt,
+    };
+
+    replaceComment(nextComment);
+    softDeletePromptComment(comment.id);
+    setCommentNotice("Comment deleted locally.");
+    void deletePromptCommentInSupabase({
+      commentId: comment.id,
+      attemptId: comment.attemptId,
+    }).then((synced) => {
+      if (!synced) {
+        setCommentNotice("Comment deleted locally. Remote delete requires the original authenticated author.");
+      }
+    });
+  }
+
+  function reportComment(comment: PromptComment) {
+    const nextComment: PromptComment = {
+      ...comment,
+      reportCount: (comment.reportCount ?? 0) + 1,
+    };
+
+    replaceComment(nextComment);
+    reportPromptComment(comment.id);
+    setCommentNotice("Comment reported.");
+    void reportPromptCommentInSupabase({
+      commentId: comment.id,
+      attemptId: comment.attemptId,
+      reason: "Reported from shared attempt UI.",
+    });
   }
 
   async function copyArtifactSummary() {
@@ -732,18 +845,96 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                               <div className="comment-item" key={comment.id}>
                                 <div className="comment-meta">
                                   <strong>{comment.authorName}</strong>
-                                  <span>{new Date(comment.createdAt).toLocaleString()}</span>
+                                  <span>
+                                    {new Date(comment.createdAt).toLocaleString()}
+                                    {comment.updatedAt ? " · edited" : ""}
+                                  </span>
                                 </div>
-                                <p>{comment.body}</p>
+                                {editingCommentId === comment.id ? (
+                                  <div className="comment-form compact">
+                                    <textarea
+                                      className="textarea"
+                                      maxLength={operationGuardrails.maxCommentBodyChars}
+                                      value={editDrafts[comment.id] ?? comment.body}
+                                      onChange={(changeEvent) =>
+                                        setEditDrafts((current) => ({ ...current, [comment.id]: changeEvent.target.value }))
+                                      }
+                                    />
+                                    <div className="actions">
+                                      <button className="button quiet" type="button" onClick={() => setEditingCommentId(null)}>
+                                        취소
+                                      </button>
+                                      <button className="button" type="button" onClick={() => saveEditedComment(comment)}>
+                                        저장
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <p className={comment.deletedAt ? "comment-deleted" : ""}>{comment.body}</p>
+                                )}
+                                <div className="comment-actions">
+                                  {!comment.deletedAt ? (
+                                    <>
+                                      <button type="button" onClick={() => startEditComment(comment)}>
+                                        Edit
+                                      </button>
+                                      <button type="button" onClick={() => deleteComment(comment)}>
+                                        Delete
+                                      </button>
+                                    </>
+                                  ) : null}
+                                  <button type="button" onClick={() => reportComment(comment)}>
+                                    Report{comment.reportCount ? ` ${comment.reportCount}` : ""}
+                                  </button>
+                                </div>
                                 {replies.length > 0 ? (
                                   <div className="reply-list">
                                     {replies.map((reply) => (
                                       <div className="comment-item reply" key={reply.id}>
                                         <div className="comment-meta">
                                           <strong>{reply.authorName}</strong>
-                                          <span>{new Date(reply.createdAt).toLocaleString()}</span>
+                                          <span>
+                                            {new Date(reply.createdAt).toLocaleString()}
+                                            {reply.updatedAt ? " · edited" : ""}
+                                          </span>
                                         </div>
-                                        <p>{reply.body}</p>
+                                        {editingCommentId === reply.id ? (
+                                          <div className="comment-form compact">
+                                            <textarea
+                                              className="textarea"
+                                              maxLength={operationGuardrails.maxCommentBodyChars}
+                                              value={editDrafts[reply.id] ?? reply.body}
+                                              onChange={(changeEvent) =>
+                                                setEditDrafts((current) => ({ ...current, [reply.id]: changeEvent.target.value }))
+                                              }
+                                            />
+                                            <div className="actions">
+                                              <button className="button quiet" type="button" onClick={() => setEditingCommentId(null)}>
+                                                취소
+                                              </button>
+                                              <button className="button" type="button" onClick={() => saveEditedComment(reply)}>
+                                                저장
+                                              </button>
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <p className={reply.deletedAt ? "comment-deleted" : ""}>{reply.body}</p>
+                                        )}
+                                        <div className="comment-actions">
+                                          {!reply.deletedAt ? (
+                                            <>
+                                              <button type="button" onClick={() => startEditComment(reply)}>
+                                                Edit
+                                              </button>
+                                              <button type="button" onClick={() => deleteComment(reply)}>
+                                                Delete
+                                              </button>
+                                            </>
+                                          ) : null}
+                                          <button type="button" onClick={() => reportComment(reply)}>
+                                            Report{reply.reportCount ? ` ${reply.reportCount}` : ""}
+                                          </button>
+                                        </div>
                                       </div>
                                     ))}
                                   </div>

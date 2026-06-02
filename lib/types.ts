@@ -453,6 +453,9 @@ export interface PromptComment {
   authorName: string;
   body: string;
   createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  reportCount?: number;
 }
 
 export type ConversationGraphNodeKind = "prompt" | "response" | "task_status";

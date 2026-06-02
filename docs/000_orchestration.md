@@ -70,6 +70,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공개 댓글은 email/phone/API-key-like text를 저장 전 redaction하고, script-like content와 excessive links를 차단하는 1차 privacy guardrail을 지난다.
+- 공개 댓글은 local/Supabase edit, soft-delete, report action을 가진다. Supabase edit/delete는 작성자 RLS로 제한되고 report는 별도 report table과 count trigger를 사용한다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
@@ -114,7 +115,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
-- 공개 풀이 댓글은 1차 privacy/misuse guardrail이 있지만, edit/delete, notification, report queue, ML moderation은 아직 없다.
+- 공개 풀이 댓글은 1차 privacy/misuse guardrail과 edit/soft-delete/report baseline이 있다. notification, founder moderation queue, ML moderation은 아직 없다.
 - Founder review dashboard는 localStorage와 Supabase cohort snapshot을 함께 본다. Remote founder notes, export, advanced filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
 - Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
@@ -310,10 +311,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/043_route_mode_logo_sync_bugfix.md`: topbar mark route mode sync 안정화.
 - `docs/technical/plan/044_gemini001_artifact_mirror_universalization.md`: SKAI Artifact, Intelligence Mirror, universal reading layer, packet-flow, graph transition log.
 - `docs/technical/plan/045_supabase_cohort_review_dashboard.md`: Supabase remote cohort snapshot을 founder dashboard에 표시.
+- `docs/technical/plan/046_comment_edit_delete_and_reports.md`: 공개 댓글 edit, soft-delete, report baseline.
 
 다음 plan 후보:
 
-- `046_comment_edit_delete_and_reports.md`
 - `047_brand_mark_logo_lockup.md`
 
 ## Reading Map

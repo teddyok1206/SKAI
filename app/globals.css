@@ -2969,6 +2969,31 @@ h3 {
   white-space: pre-wrap;
 }
 
+.comment-deleted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-actions button {
+  border: 0;
+  background: transparent;
+  color: var(--accent-strong);
+  padding: 0;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.comment-actions button:hover {
+  text-decoration: underline;
+}
+
 .comment-form {
   display: grid;
   gap: 8px;

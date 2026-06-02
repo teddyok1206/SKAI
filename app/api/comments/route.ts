@@ -15,6 +15,16 @@ const commentSchema = z.object({
   createdAt: z.string(),
 });
 const commentRequestSchema = z.object({ comment: commentSchema });
+const commentUpdateRequestSchema = z.object({
+  commentId: z.string().min(1).max(120),
+  attemptId: z.string().min(1).max(120),
+  body: z.string().trim().min(1).max(operationGuardrails.maxCommentBodyChars),
+  authorName: z.string().trim().min(1).max(40),
+});
+const commentDeleteRequestSchema = z.object({
+  commentId: z.string().min(1).max(120),
+  attemptId: z.string().min(1).max(120),
+});
 
 function rowToComment(row: {
   id: string;
@@ -24,6 +34,9 @@ function rowToComment(row: {
   author_label: string | null;
   body: string;
   created_at: string;
+  updated_at?: string | null;
+  deleted_at?: string | null;
+  report_count?: number | null;
 }): PromptComment {
   return {
     id: row.id,
@@ -33,6 +46,9 @@ function rowToComment(row: {
     authorName: row.author_label ?? "SKAI learner",
     body: row.body,
     createdAt: row.created_at,
+    updatedAt: row.updated_at ?? undefined,
+    deletedAt: row.deleted_at ?? undefined,
+    reportCount: row.report_count ?? 0,
   };
 }
 
@@ -66,7 +82,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabase
     .from("prompt_comments")
-    .select("id,attempt_id,trace_event_id,parent_id,author_label,body,created_at")
+    .select("id,attempt_id,trace_event_id,parent_id,author_label,body,created_at,updated_at,deleted_at,report_count")
     .eq("attempt_id", attemptId)
     .order("created_at", { ascending: true });
 
@@ -185,4 +201,109 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ mode: "supabase", synced: true });
+}
+
+export async function PATCH(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = commentUpdateRequestSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    return NextResponse.json({ mode: "local", synced: false, reason: "supabase_not_configured" });
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ mode: "local", synced: false, reason: "not_authenticated" });
+  }
+
+  const moderation = moderateComment({
+    body: parsed.data.body,
+    authorName: parsed.data.authorName,
+    maxBodyChars: operationGuardrails.maxCommentBodyChars,
+  });
+
+  if (!moderation.ok) {
+    return NextResponse.json({ error: moderation.blockedReason ?? "Comment was blocked." }, { status: 400 });
+  }
+
+  const updatedAt = new Date().toISOString();
+  const { error } = await supabase
+    .from("prompt_comments")
+    .update({
+      body: moderation.body,
+      author_label: moderation.authorName,
+      updated_at: updatedAt,
+      deleted_at: null,
+    })
+    .eq("id", parsed.data.commentId)
+    .eq("attempt_id", parsed.data.attemptId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ mode: "supabase", synced: true, updatedAt });
+}
+
+export async function DELETE(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = commentDeleteRequestSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    return NextResponse.json({ mode: "local", synced: false, reason: "supabase_not_configured" });
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ mode: "local", synced: false, reason: "not_authenticated" });
+  }
+
+  const deletedAt = new Date().toISOString();
+  const { error } = await supabase
+    .from("prompt_comments")
+    .update({
+      body: "Comment deleted.",
+      updated_at: deletedAt,
+      deleted_at: deletedAt,
+    })
+    .eq("id", parsed.data.commentId)
+    .eq("attempt_id", parsed.data.attemptId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ mode: "supabase", synced: true, deletedAt });
 }
