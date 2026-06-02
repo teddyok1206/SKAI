@@ -148,6 +148,41 @@ export interface FounderReviewNote {
   updatedAt: string;
 }
 
+export interface FounderCohortAttempt {
+  id: string;
+  problemId: string;
+  title: string;
+  status: AttemptStatus;
+  provider: ProviderId;
+  model: string;
+  solvingMode?: SolvingModeId;
+  userId?: string;
+  totalScore?: number;
+  judgeMode?: JudgeMode;
+  traceEventCount: number;
+  userPromptCount: number;
+  assistantResponseCount: number;
+  totalEstimatedCostUsd: number;
+  publishedAttemptId?: string;
+  isBranch: boolean;
+  branchParentTraceIndex?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FounderCohortSnapshot {
+  mode: "local" | "supabase_user" | "supabase_admin";
+  reason?: string;
+  attempts: FounderCohortAttempt[];
+  summary: {
+    attempts: number;
+    judged: number;
+    published: number;
+    branches: number;
+    totalEstimatedCostUsd: number;
+  };
+}
+
 export interface AttemptBranch {
   id: string;
   mode: AttemptBranchMode;

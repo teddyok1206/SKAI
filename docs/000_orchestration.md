@@ -25,6 +25,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
+- Admin founder review dashboard는 Supabase remote cohort snapshot도 함께 표시한다. Service-role 전체 cohort 조회는 `SKAI_FOUNDER_EMAILS` allowlist가 있을 때만 사용하고, 아니면 현재 사용자 RLS 범위로 내려간다.
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
@@ -114,7 +115,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
 - 공개 풀이 댓글은 1차 privacy/misuse guardrail이 있지만, edit/delete, notification, report queue, ML moderation은 아직 없다.
-- Founder review dashboard는 localStorage 기준이다. Supabase-backed cohort review, export, filtering은 아직 없다.
+- Founder review dashboard는 localStorage와 Supabase cohort snapshot을 함께 본다. Remote founder notes, export, advanced filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
 - Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
 - LLM judge-native graph annotation calibration, skeleton comparison, habit motif report, graph snapshot persistence는 아직 구현 전이다.
@@ -247,8 +248,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - 모든 smoke attempts를 문제, 모델, 모드, judge mode 기준으로 모아본다. (부분 완료: local attempts)
 - founder note를 attempt 옆에 기록한다. (완료: local notes)
-- 완료 조건: DB table을 직접 열지 않아도 smoke test 정성 분석이 가능하다. (부분 완료: local dashboard)
-- 후속: Supabase-backed cohort dashboard, filters, export, automatic insight extraction.
+- Supabase remote cohort snapshot을 admin dashboard에 표시한다. (완료: allowlisted service-role 또는 user RLS fallback)
+- 완료 조건: DB table을 직접 열지 않아도 smoke test 정성 분석이 가능하다. (부분 완료: local + remote snapshot)
+- 후속: remote founder notes, filters, export, automatic insight extraction.
 
 ## Decision Gates
 
@@ -307,10 +309,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/042_human_engine_mode_ui_split.md`: Human Mode / Engine Mode route tokens와 Gemini 최신 briefing.
 - `docs/technical/plan/043_route_mode_logo_sync_bugfix.md`: topbar mark route mode sync 안정화.
 - `docs/technical/plan/044_gemini001_artifact_mirror_universalization.md`: SKAI Artifact, Intelligence Mirror, universal reading layer, packet-flow, graph transition log.
+- `docs/technical/plan/045_supabase_cohort_review_dashboard.md`: Supabase remote cohort snapshot을 founder dashboard에 표시.
 
 다음 plan 후보:
 
-- `045_supabase_cohort_review_dashboard.md`
 - `046_comment_edit_delete_and_reports.md`
 - `047_brand_mark_logo_lockup.md`
 

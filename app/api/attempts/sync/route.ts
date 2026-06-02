@@ -212,6 +212,7 @@ export async function POST(request: Request) {
     title: attempt.title,
     provider: attempt.provider,
     model: attempt.model,
+    solving_mode: attempt.solvingMode ?? null,
     final_answer: attempt.finalAnswer ?? null,
     branch_metadata: attempt.branch ?? null,
     counterfactual_report: attempt.counterfactualReport ?? null,

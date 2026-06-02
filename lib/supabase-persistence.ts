@@ -1,4 +1,4 @@
-import type { Attempt, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
+import type { Attempt, FounderCohortSnapshot, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
 
 export async function syncAttemptToSupabase(attempt: Attempt, problem: Problem) {
   await fetch("/api/attempts/sync", {
@@ -54,4 +54,14 @@ export async function createPromptCommentInSupabase(comment: PromptComment): Pro
   const data = (await response.json()) as { synced?: boolean };
 
   return Boolean(data.synced);
+}
+
+export async function loadFounderCohortFromSupabase(): Promise<FounderCohortSnapshot | null> {
+  const response = await fetch("/api/founder/cohort").catch(() => null);
+
+  if (!response?.ok) {
+    return null;
+  }
+
+  return (await response.json()) as FounderCohortSnapshot;
 }

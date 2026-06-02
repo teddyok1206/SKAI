@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { GitBranch, MessageSquareText, Save, Share2, Trophy } from "lucide-react";
+import { Cloud, GitBranch, MessageSquareText, Save, Share2, Trophy } from "lucide-react";
 import { problems as seedProblems } from "@/data/problems";
 import { saveFounderReviewNote } from "@/lib/local-store";
-import type { Attempt, FounderReviewNote, Problem } from "@/lib/types";
+import { loadFounderCohortFromSupabase } from "@/lib/supabase-persistence";
+import type { Attempt, FounderCohortAttempt, FounderCohortSnapshot, FounderReviewNote, Problem } from "@/lib/types";
 import { useAuthoredProblems } from "@/lib/use-authored-problems";
 import { useFounderReviewNotes, useLocalAttempts } from "@/lib/use-local-review";
 
@@ -27,6 +28,80 @@ function attemptCost(attempt: Attempt) {
 
 function problemTitle(problemId: string, problemMap: Map<string, Problem>) {
   return problemMap.get(problemId)?.title ?? problemId;
+}
+
+function modeLabel(mode: FounderCohortSnapshot["mode"]) {
+  if (mode === "supabase_admin") {
+    return "Supabase cohort";
+  }
+
+  if (mode === "supabase_user") {
+    return "Supabase user scope";
+  }
+
+  return "Local fallback";
+}
+
+function CohortReviewRow({
+  attempt,
+  note,
+  problemName,
+}: {
+  attempt: FounderCohortAttempt;
+  note?: FounderReviewNote;
+  problemName: string;
+}) {
+  const [draft, setDraft] = useState(note?.note ?? "");
+
+  function saveNote() {
+    saveFounderReviewNote({
+      attemptId: attempt.id,
+      note: draft.trim(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  return (
+    <article className="review-row remote">
+      <div className="review-row-main">
+        <div>
+          <strong>{problemName}</strong>
+          <p className="muted">
+            {attempt.provider}/{attempt.model} · {attempt.solvingMode ?? "unknown_mode"} · {attempt.traceEventCount} events
+          </p>
+        </div>
+        <div className="review-metrics">
+          <span>
+            <Trophy size={13} /> {attempt.totalScore ?? "unjudged"}
+          </span>
+          <span>{formatUsd(attempt.totalEstimatedCostUsd)} est</span>
+          <span>{attempt.judgeMode ?? "no judge"}</span>
+          {attempt.isBranch ? (
+            <span>
+              <GitBranch size={13} /> trace {(attempt.branchParentTraceIndex ?? 0) + 1}
+            </span>
+          ) : null}
+          {attempt.publishedAttemptId ? (
+            <Link className="review-link" href={`/share/${attempt.id}`}>
+              <Share2 size={13} /> share
+            </Link>
+          ) : null}
+        </div>
+      </div>
+      <div className="review-note">
+        <textarea
+          className="textarea"
+          placeholder="Founder cohort note: smoke signal, friction, philosophy fit"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+        />
+        <button className="button" onClick={saveNote} type="button">
+          <Save size={15} /> Save note
+        </button>
+      </div>
+      {note?.updatedAt ? <small className="muted">Last note: {new Date(note.updatedAt).toLocaleString()}</small> : null}
+    </article>
+  );
 }
 
 function AttemptReviewRow({
@@ -97,6 +172,8 @@ export function FounderReviewDashboard() {
   const attempts = useLocalAttempts();
   const notes = useFounderReviewNotes();
   const authoredProblems = useAuthoredProblems();
+  const [remoteCohort, setRemoteCohort] = useState<FounderCohortSnapshot | null>(null);
+  const [remoteStatus, setRemoteStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const problemMap = useMemo(
     () => new Map([...seedProblems, ...authoredProblems].map((problem) => [problem.id, problem])),
     [authoredProblems],
@@ -106,14 +183,88 @@ export function FounderReviewDashboard() {
   const branchCount = attempts.filter((attempt) => attempt.branch).length;
   const totalCost = attempts.reduce((sum, attempt) => sum + attemptCost(attempt), 0);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    void loadFounderCohortFromSupabase().then((snapshot) => {
+      if (cancelled) {
+        return;
+      }
+
+      if (!snapshot) {
+        setRemoteStatus("unavailable");
+        return;
+      }
+
+      setRemoteCohort(snapshot);
+      setRemoteStatus("ready");
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="panel founder-review">
       <div className="panel-header">
         <p className="eyebrow">Founder Review</p>
         <h2>Smoke attempts</h2>
-        <p className="muted">로컬 attempt를 훑고 정성 검증 메모를 남깁니다.</p>
+        <p className="muted">Supabase cohort와 로컬 attempt를 훑고 정성 검증 메모를 남깁니다.</p>
       </div>
       <div className="panel-body">
+        <div className="review-cohort-header">
+          <strong>
+            <Cloud size={15} /> {remoteCohort ? modeLabel(remoteCohort.mode) : "Supabase cohort"}
+          </strong>
+          <span>{remoteStatus}</span>
+          {remoteCohort?.reason ? <span>{remoteCohort.reason}</span> : null}
+        </div>
+        {remoteCohort ? (
+          <>
+            <div className="review-summary">
+              <span>
+                <MessageSquareText size={14} /> {remoteCohort.summary.attempts} attempts
+              </span>
+              <span>
+                <Trophy size={14} /> {remoteCohort.summary.judged} judged
+              </span>
+              <span>
+                <Share2 size={14} /> {remoteCohort.summary.published} published
+              </span>
+              <span>
+                <GitBranch size={14} /> {remoteCohort.summary.branches} branches
+              </span>
+              <span>{formatUsd(remoteCohort.summary.totalEstimatedCostUsd)} est</span>
+            </div>
+            <div className="review-list remote">
+              {remoteCohort.attempts.length === 0 ? (
+                <p className="muted">Supabase에서 리뷰할 attempt를 찾지 못했습니다.</p>
+              ) : (
+                remoteCohort.attempts.map((attempt) => (
+                  <CohortReviewRow
+                    attempt={attempt}
+                    key={attempt.id}
+                    note={noteMap.get(attempt.id)}
+                    problemName={problemTitle(attempt.problemId, problemMap)}
+                  />
+                ))
+              )}
+            </div>
+          </>
+        ) : (
+          <p className="muted">
+            {remoteStatus === "loading"
+              ? "Supabase cohort를 불러오는 중입니다."
+              : "Supabase cohort를 사용할 수 없어 local review만 표시합니다."}
+          </p>
+        )}
+      </div>
+      <div className="panel-body">
+        <div className="review-cohort-header">
+          <strong>Local browser attempts</strong>
+          <span>localStorage</span>
+        </div>
         <div className="review-summary">
           <span>
             <MessageSquareText size={14} /> {attempts.length} attempts
