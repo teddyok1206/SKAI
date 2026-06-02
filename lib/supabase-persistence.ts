@@ -1,19 +1,31 @@
 import type { Attempt, FounderCohortSnapshot, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
 
 export async function syncAttemptToSupabase(attempt: Attempt, problem: Problem) {
-  await fetch("/api/attempts/sync", {
+  const response = await fetch("/api/attempts/sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ attempt, problem }),
-  }).catch(() => undefined);
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return { synced: false, reason: "request_failed" };
+  }
+
+  return (await response.json()) as { synced?: boolean; reason?: string; mode?: string };
 }
 
 export async function syncPublishedAttemptToSupabase(published: PublishedAttempt) {
-  await fetch("/api/published/sync", {
+  const response = await fetch("/api/published/sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ published }),
-  }).catch(() => undefined);
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return { synced: false, reason: "request_failed" };
+  }
+
+  return (await response.json()) as { synced?: boolean; reason?: string; mode?: string };
 }
 
 export async function loadPublishedAttemptFromSupabase(attemptId: string): Promise<PublishedAttempt | null> {

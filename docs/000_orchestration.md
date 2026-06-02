@@ -28,6 +28,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Engine Mode의 topbar mark는 풀이 상태에 따라 ready/primed/busy/structured packet-flow intensity가 바뀐다. 이는 flame shape가 아니라 graph 내부 에너지 표현이다.
 - Browser/OAuth icon assets는 `public/favicon.svg`, `public/skai-mark.svg`, `public/skai-mark-512.png`, `public/skai-mark-192.png`, `public/apple-touch-icon.png`로 준비됐고, Next metadata에 연결됐다.
 - External WAN smoke의 1순위 경로는 Vercel-hosted Next.js + Supabase Auth/Postgres이며, 초보자용 단계별 배포 가이드는 `docs/technical/014_vercel_first_deployment_guide.md`에 있다.
+- 배포 후 개발 흐름은 local edit -> verification -> commit -> optional push -> Vercel automatic deployment이며, `AGENT.md`는 final report에 local/Git/Vercel reflection status를 명시하도록 갱신됐다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
 - 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
@@ -78,6 +79,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
 - 공유 화면에는 점수표가 아니라 사용자의 directed orchestration timeline을 보여주는 SKAI Artifact 카드와 SVG export가 있다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
+- Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공개 댓글은 email/phone/API-key-like text를 저장 전 redaction하고, script-like content와 excessive links를 차단하는 1차 privacy guardrail을 지난다.
@@ -335,6 +337,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/052_home_hero_lockup_and_copy.md`: 홈 hero 중복 lockup 제거와 SKAI 철학 기반 headline 후보 정리.
 - `docs/technical/plan/053_home_hero_line_integrity.md`: Prometheus headline이 문장 내부에서 줄바꿈되지 않도록 line integrity 보정.
 - `docs/technical/plan/054_browser_oauth_logo_assets.md`: Chrome favicon과 Supabase/OAuth branding용 graph mark asset 생성.
+- `docs/technical/plan/055_deployment_reporting_and_share_open_fix.md`: 배포 반영 보고 규칙과 publish/share open race 보강.
 
 다음 plan 후보:
 

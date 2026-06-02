@@ -101,6 +101,21 @@ The first demo should prove as many of these as possible:
 - Prefer structured formats such as JSON, YAML, or typed schemas for problem definitions and attempt traces.
 - Do not build a large framework before the first judged demo attempt works end to end.
 
+## Git And Deployment Reporting
+
+- The Vercel production URL is `https://skai-sable.vercel.app/`.
+- For meaningful code, UI, schema, deployment, or documentation updates, report these four statuses in the final response:
+  - Local reflection: completed / not run / not applicable.
+  - Git commit: completed with commit hash / not committed.
+  - Git push: completed / not pushed.
+  - Vercel reflection: completed and checked / pending automatic deployment / not applicable.
+- Commit completed work by default when the task produces a coherent change. Keep commits scoped to the user request.
+- Do not push by default unless the user asks for deployment, asks for Vercel reflection, or the task explicitly needs the public URL updated.
+- If the user says `배포까지`, perform local verification, commit, push to `origin main`, then check the Vercel deployment or public URL when feasible.
+- If code changes but push is not performed, state that Vercel is not updated yet and that `git push origin main` will trigger automatic deployment.
+- Code, CSS, and API logic changes reach Vercel through Git push. Environment variable changes require Vercel settings update and redeploy. Database schema changes require only the new Supabase migration to be applied.
+- Keep `docs/technical/014_vercel_first_deployment_guide.md` aligned when deployment rules materially change.
+
 ## End-Of-Task Philosophy Check
 
 - At the end of every task, perform a SKAI philosophy check before finalizing the work.

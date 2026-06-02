@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -23,6 +23,7 @@ import {
   getPromptComments,
   getPublishedAttempt,
   reportPromptComment,
+  savePublishedAttempt,
   savePromptComment,
   savePromptComments,
   softDeletePromptComment,
@@ -160,19 +161,15 @@ function skeletonRoleClass(step: GraphSkeletonStep) {
 }
 
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
-  const attempt = useSyncExternalStore<PublishedAttempt | null>(
-    (onStoreChange) => {
-      void loadPublishedAttemptFromSupabase(attemptId).then((remoteAttempt) => {
-        if (remoteAttempt) {
-          window.localStorage.setItem("skai:publishedAttempts", JSON.stringify([remoteAttempt]));
-          onStoreChange();
-        }
-      });
-      return () => undefined;
-    },
-    () => getPublishedAttempt(attemptId) ?? null,
-    () => null,
-  );
+  const [attemptState, setAttemptState] = useState<{ attempt: PublishedAttempt | null; isLoading: boolean }>(() => {
+    const localAttempt = getPublishedAttempt(attemptId) ?? null;
+    return {
+      attempt: localAttempt,
+      isLoading: !localAttempt,
+    };
+  });
+  const attempt = attemptState.attempt;
+  const isLoadingAttempt = attemptState.isLoading;
   const loadedAttemptId = attempt?.attemptId;
   const [comments, setComments] = useState<PromptComment[]>([]);
   const [authorName, setAuthorName] = useState("SKAI learner");
@@ -183,6 +180,38 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
   const [commentNotice, setCommentNotice] = useState("");
   const [artifactNotice, setArtifactNotice] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void Promise.resolve().then(async () => {
+      const localAttempt = getPublishedAttempt(attemptId) ?? null;
+
+      if (cancelled) {
+        return;
+      }
+
+      setAttemptState({ attempt: localAttempt, isLoading: !localAttempt });
+
+      const remoteAttempt = await loadPublishedAttemptFromSupabase(attemptId);
+
+      if (cancelled) {
+        return;
+      }
+
+      if (remoteAttempt) {
+        savePublishedAttempt(remoteAttempt);
+        setAttemptState({ attempt: remoteAttempt, isLoading: false });
+        return;
+      }
+
+      setAttemptState((current) => ({ ...current, isLoading: false }));
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [attemptId]);
 
   useEffect(() => {
     if (!loadedAttemptId) {
@@ -215,13 +244,26 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     };
   }, [loadedAttemptId]);
 
+  if (isLoadingAttempt) {
+    return (
+      <main className="container ui-mode-surface" data-ui-mode="human">
+        <div className="empty">
+          <div>
+            <h1>공개 풀이를 불러오는 중입니다.</h1>
+            <p className="muted">Supabase 공유 저장소와 현재 브라우저의 local snapshot을 확인하고 있습니다.</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   if (!attempt) {
     return (
       <main className="container ui-mode-surface" data-ui-mode="human">
         <div className="empty">
           <div>
             <h1>공개 풀이를 찾을 수 없습니다.</h1>
-            <p className="muted">현재 데모는 local storage 기반이라 같은 브라우저에서 publish한 풀이만 보입니다.</p>
+            <p className="muted">공유 저장이 아직 완료되지 않았거나, 이 URL의 공개 snapshot을 읽을 수 없습니다.</p>
             <Link className="button primary" href="/">
               문제 목록으로
             </Link>

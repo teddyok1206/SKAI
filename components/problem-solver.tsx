@@ -126,7 +126,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [input, setInput] = useState("");
   const [finalAnswer, setFinalAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+  const [shareNotice, setShareNotice] = useState("");
   const [selectedAttachments, setSelectedAttachments] = useState<AttemptAttachment[]>([]);
   const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? "");
   const [isDraggingAttachment, setIsDraggingAttachment] = useState(false);
@@ -243,6 +245,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
+    setShareNotice("");
     setSelectedAttachments([]);
     saveAttempt(next);
   }
@@ -500,7 +503,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     }
   }
 
-  function publishAttempt() {
+  async function publishAttempt() {
     if (!attempt) {
       return;
     }
@@ -508,6 +511,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     if (!attempt.scoreReport) {
       return;
     }
+
+    setIsPublishing(true);
+    setShareNotice("");
 
     const publicTrace = attempt.trace.map((event) => {
       const publicEvent: TraceEvent & { contextDebug?: unknown } = { ...event };
@@ -527,16 +533,32 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       solvingMode: attempt.solvingMode,
       createdAt: new Date().toISOString(),
     };
-
-    savePublishedAttempt(published);
-    void syncPublishedAttemptToSupabase(published);
-    updateAttempt({
+    const publishedAttemptState: Attempt = {
       ...attempt,
       status: "published",
       publishedAt: published.createdAt,
       updatedAt: published.createdAt,
-    });
-    setShareUrl(`${window.location.origin}/share/${attempt.id}`);
+    };
+
+    try {
+      savePublishedAttempt(published);
+      setAttempt(publishedAttemptState);
+      saveAttempt(publishedAttemptState);
+
+      const attemptSync = await syncAttemptToSupabase(publishedAttemptState, problem);
+      const publishedSync = await syncPublishedAttemptToSupabase(published);
+      const nextShareUrl = `${window.location.origin}/share/${attempt.id}`;
+
+      setShareUrl(nextShareUrl);
+
+      if (attemptSync.synced && publishedSync.synced) {
+        setShareNotice("공유가 원격 저장까지 완료되었습니다.");
+      } else {
+        setShareNotice("이 브라우저에서는 공유 보기가 가능합니다. 원격 공유 저장은 로그인/네트워크 상태를 확인해 주세요.");
+      }
+    } finally {
+      setIsPublishing(false);
+    }
   }
 
   function branchFrom(index: number) {
@@ -549,6 +571,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
+    setShareNotice("");
     setSelectedAttachments([]);
     setAttachmentNotice("");
     setWorkspaceTab("chat");
@@ -570,6 +593,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
+    setShareNotice("");
     setSelectedAttachments([]);
   }
 
@@ -596,6 +620,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setAttempt(saved);
     setFinalAnswer(saved.finalAnswer ?? "");
     setShareUrl(saved.publishedAt ? `${window.location.origin}/share/${saved.id}` : "");
+    setShareNotice("");
     setSelectedAttachments([]);
     setAttachmentNotice("");
     setWorkspaceTab("chat");
@@ -1136,15 +1161,16 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         <div style={{ gridColumn: "1 / -1" }}>
           <ScoreReportCard report={attempt.scoreReport} />
           <div className="actions" style={{ marginTop: 12 }}>
-            <button className="button primary" onClick={publishAttempt}>
-              <Share2 size={16} /> Publish
+            <button className="button primary" disabled={isPublishing} onClick={() => void publishAttempt()}>
+              <Share2 size={16} /> {isPublishing ? "Publishing" : "Publish"}
             </button>
             {shareUrl ? (
-              <Link className="button" href={`/share/${attempt.id}`}>
+              <a className="button" href={shareUrl}>
                 공유 보기
-              </Link>
+              </a>
             ) : null}
           </div>
+          {shareNotice ? <p className="attachment-notice">{shareNotice}</p> : null}
         </div>
       ) : null}
 
