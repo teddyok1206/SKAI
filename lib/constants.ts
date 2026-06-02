@@ -9,6 +9,7 @@ export const budgetGuardrails = {
   maxInputCharsPerTurn: Number(process.env.SKAI_MAX_INPUT_CHARS_PER_TURN ?? 6000),
   monthlyCapKrw: 200_000,
   eventCapKrw: 100_000,
+  krwPerUsdEstimate: Number(process.env.NEXT_PUBLIC_SKAI_KRW_PER_USD_ESTIMATE ?? 1400),
 };
 
 export const operationGuardrails = {

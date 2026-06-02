@@ -45,6 +45,22 @@ import { ScoreReportCard } from "@/components/score-report-card";
 
 const materialDragDataType = "application/x-skai-material-id";
 
+function formatUsd(value: number) {
+  if (value === 0) {
+    return "$0";
+  }
+
+  if (value < 0.01) {
+    return `$${value.toFixed(4)}`;
+  }
+
+  return `$${value.toFixed(2)}`;
+}
+
+function formatKrw(value: number) {
+  return `₩${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(value))}`;
+}
+
 function newAttempt(
   problem: Problem,
   modelOption: ModelOption = getModelOption("skai-mock"),
@@ -131,6 +147,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     (sum, event) => sum + (event.usageInputTokens ?? 0) + (event.usageOutputTokens ?? 0),
     0,
   ) ?? 0;
+  const totalEstimatedCostUsd = attempt?.trace.reduce((sum, event) => sum + (event.estimatedCostUsd ?? 0), 0) ?? 0;
+  const totalEstimatedCostKrw = totalEstimatedCostUsd * budgetGuardrails.krwPerUsdEstimate;
+  const unknownCostEvents =
+    attempt?.trace.filter(
+      (event) =>
+        event.role === "assistant" &&
+        typeof event.estimatedCostUsd !== "number" &&
+        ((event.usageInputTokens ?? 0) > 0 || (event.usageOutputTokens ?? 0) > 0),
+    ).length ?? 0;
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
   const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
@@ -732,6 +757,31 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             ))}
           </ul>
         </div>
+        <div className="panel-body">
+          <h3>Budget</h3>
+          <div className="budget-grid">
+            <div>
+              <span>Attempt estimate</span>
+              <strong>{formatUsd(totalEstimatedCostUsd)}</strong>
+              <small>{formatKrw(totalEstimatedCostKrw)} rough</small>
+            </div>
+            <div>
+              <span>Tokens</span>
+              <strong>{totalTokens}</strong>
+              <small>{unknownCostEvents > 0 ? `${unknownCostEvents} unknown-cost events` : "priced when usage exists"}</small>
+            </div>
+            <div>
+              <span>Event cap</span>
+              <strong>{formatKrw(budgetGuardrails.eventCapKrw)}</strong>
+              <small>founder guardrail</small>
+            </div>
+            <div>
+              <span>Monthly cap</span>
+              <strong>{formatKrw(budgetGuardrails.monthlyCapKrw)}</strong>
+              <small>founder guardrail</small>
+            </div>
+          </div>
+        </div>
         {problem.materials.length > 0 ? (
           <div className="panel-body">
             <h3>자료</h3>
@@ -833,6 +883,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               <Network size={16} /> Graph
             </button>
             <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
+            <span className="muted">
+              {formatUsd(totalEstimatedCostUsd)} est{unknownCostEvents > 0 ? ` · ${unknownCostEvents} unknown` : ""}
+            </span>
           </div>
           <div className="segmented locked-environment">
             <span className="lock-dot" aria-hidden="true" />

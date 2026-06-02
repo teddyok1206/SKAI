@@ -27,6 +27,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
 - `npm run calibrate:judge`로 3개 seed problem의 weak/average/strong golden attempts 9개를 `/api/judge`에 반복 채점할 수 있다.
 - 2026-06-02 heuristic judge calibration에서 세 문제 모두 weak < average < strong ordering을 통과했다.
+- demo model pricing registry가 있고, token usage가 있는 live `ModelRun`은 가능한 경우 `estimatedCostUsd`를 저장한다.
+- 풀이 화면은 attempt-level token, estimated USD cost, rough KRW estimate, founder budget guardrail을 보여준다.
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
@@ -101,7 +103,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
 - per-problem leaderboard는 local/basic 수준이다.
-- 비용 추적은 provider usage가 주는 token 중심이며 provider별 단가 계산이 부족하다.
+- 비용 추적은 provider usage token과 demo pricing registry 기반의 추정치다. 실제 billing API, free tier, cache, image/tool 세부 과금은 아직 반영하지 않는다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
@@ -192,10 +194,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 4: cost and budget guardrails
 
-- provider/model별 단가 설정 파일을 만든다.
-- attempt별 예상 비용을 계산하고 admin/expert UI에 노출한다.
-- 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다.
-- 완료 조건: live environment attempt마다 비용 추정치 또는 `unknown`이 저장된다.
+- provider/model별 단가 설정 파일을 만든다. (완료)
+- attempt별 예상 비용을 계산하고 admin/expert UI에 노출한다. (부분 완료: solver UI)
+- 월 20만원, 1회 10만원 founder budget 기준을 운영 지표로 연결한다. (완료: display guardrail)
+- 완료 조건: live environment attempt마다 비용 추정치 또는 `unknown`이 저장된다. (부분 완료: known pricing이면 저장, unknown은 UI에서 unknown event로 노출)
+- 후속: 실제 spend ledger, rate limiting, deployed billing dashboard를 만든다.
 
 우선순위 5: Supabase deployment hardening
 

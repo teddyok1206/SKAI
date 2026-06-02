@@ -1,6 +1,7 @@
 import type { ModelProvider, ProviderRequest, ProviderResponse } from "@/lib/providers/types";
 import type { ProviderId } from "@/lib/types";
 import { buildAttachmentContext } from "@/lib/attachment-context";
+import { estimateModelCost } from "@/lib/model-pricing";
 
 interface OpenAICompatibleChoice {
   message?: {
@@ -141,15 +142,24 @@ export function createOpenAICompatibleProvider(options: OpenAICompatibleProvider
         throw new Error(`${options.id} returned an empty message.`);
       }
 
+      const responseModel = request.model || options.defaultModel;
+      const costEstimate = estimateModelCost(
+        json.usage?.prompt_tokens,
+        json.usage?.completion_tokens,
+        options.id,
+        responseModel,
+      );
+
       return {
         message,
         modelRun: {
           id: json.id ?? crypto.randomUUID(),
           provider: options.id,
-          model: request.model || options.defaultModel,
+          model: responseModel,
           latencyMs: Date.now() - startedAt,
           usageInputTokens: json.usage?.prompt_tokens,
           usageOutputTokens: json.usage?.completion_tokens,
+          estimatedCostUsd: costEstimate.estimatedCostUsd,
         },
       };
     },
