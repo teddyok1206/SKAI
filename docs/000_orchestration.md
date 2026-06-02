@@ -41,7 +41,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
-- Gemini Flash-Lite가 현재 기본 live model이다. Problem solver의 시작 모델, shared model option fallback, raw `/api/chat` fallback 모두 Gemini 기준이다. OpenAI cheap baseline `gpt-4.1-nano`는 선택 가능한 추가 provider로 설정됐고, OpenAI option/pricing/provider fallback은 nano 기준이다.
+- 현재 구현상 Gemini Flash-Lite가 live fallback/default로 남아 있다. 그러나 TDR-087에 따라 다음 slice에서는 visible model default를 제거하고, 사용자가 풀이 시작 전 정확히 하나의 모델을 명시적으로 선택해야 한다. OpenAI cheap baseline `gpt-4.1-nano`는 선택 가능한 추가 provider로 설정됐고, OpenAI option/pricing/provider fallback은 nano 기준이다.
 - `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
 - `npm run calibrate:judge`로 3개 seed problem의 weak/average/strong golden attempts 9개를 `/api/judge`에 반복 채점할 수 있다.
@@ -49,6 +49,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - demo model pricing registry가 있고, token usage가 있는 live `ModelRun`은 가능한 경우 `estimatedCostUsd`를 저장한다.
 - 풀이 화면은 attempt-level token, estimated USD cost, rough KRW estimate, founder budget guardrail을 보여준다.
 - 사용자 기본 UI는 풀이 시작 전 `풀이 모드`와 `모델`을 독립적으로 고르게 한다.
+- 다음 UX 기준은 모델들을 병렬 실행 엔진처럼 보여주는 것이다. 어떤 모델도 default/recommended처럼 보이면 안 된다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
 - 풀이 화면 composer에는 문제별 playbook turn을 visible draft로 삽입하는 operator UX가 있다.
@@ -123,7 +124,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 아직 약한 부분:
 
 - 추가 provider별 품질/비용/latency 비교가 필요하다. Gemini live connectivity baseline은 통과했다.
+- 현재 코드에는 Gemini fallback/default가 남아 있다. 다음 slice에서 visible solving setup은 unselected model state로 시작하고, 사용자가 명시적으로 하나의 모델을 고르기 전에는 attempt를 시작할 수 없게 해야 한다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
+- assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
+- 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
+- Prompt/response graph 탭에서 directed edge의 방향성이 충분히 보이지 않는다.
+- 3D dual graph 탭에서 일부 행이 흰색 직사각형 graph container 밖으로 오른쪽 overflow된다.
+- 3D dual graph edge 주변 텍스트 박스는 현재 demo readability를 해치므로 제거하고 directed edge와 detail panel 중심으로 전환해야 한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
@@ -342,10 +349,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/055_deployment_reporting_and_share_open_fix.md`: 배포 반영 보고 규칙과 publish/share open race 보강.
 - `docs/technical/plan/056_openai_nano_provider_baseline.md`: OpenAI API key와 `gpt-4.1-nano` 저가 baseline 연결.
 - `docs/technical/plan/057_gemini_default_openai_optional.md`: Gemini를 전체 기본값으로 복구하고 OpenAI nano는 선택 옵션으로 유지.
+- `docs/technical/plan/058_explicit_model_choice_message_copy_and_graph_visual_fix.md`: visible model default 제거, message copy, Markdown rendering, directed graph/3D graph 시각화 보정.
 
 다음 plan 후보:
 
-- 현재 확정 queue는 `047`까지 완료한다. 다음 slice는 실제 smoke 사용 로그를 본 뒤 demo contract에 가장 크게 기여하는 항목으로 재선정한다.
+- 다음 slice는 `058_explicit_model_choice_message_copy_and_graph_visual_fix.md`를 우선 수행한다.
 
 ## Reading Map
 
