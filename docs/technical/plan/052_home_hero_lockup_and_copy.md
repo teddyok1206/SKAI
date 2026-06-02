@@ -8,7 +8,8 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 
 - Remove the hero-level `SkaiLockup` from `app/page.tsx`.
 - Keep the topbar as the single primary brand lockup on the home screen.
-- Replace the generic home headline with the selected Orchestrator mood copy.
+- Replace the generic home headline with the founder-selected Prometheus Hearth copy.
+- Remove the hero subtitle.
 - Add a design note with curated headline candidates.
 
 ## Assumptions
@@ -30,6 +31,7 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 3. Archive the founder's stronger home-copy mood direction.
 4. Document headline candidates and the selection criteria.
 5. Apply the selected Orchestrator copy with model-performance wording corrected from `constant` to `condition`.
+6. Replace that intermediate copy with the founder-selected one-line Prometheus Hearth headline and remove the subtitle.
 
 ## Verification
 
@@ -42,15 +44,17 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 
 - Removed the duplicated hero lockup.
 - Archived the founder's three mood copy set in `ARCHIVE_prompt_long/010.md`.
-- Selected the Orchestrator mood, but corrected the home headline to avoid claiming that AI/model intelligence is literally constant.
-- Updated the home headline to `모델의 성능은 조건입니다. 변수는 당신의 오케스트레이션입니다.`
-- Updated the lead to `의도와 현실을 구조화하고, 자료를 통제하며, 검증 가능한 산출물로 남긴다.`
+- Initially selected the Orchestrator mood, but corrected the home headline to avoid claiming that AI/model intelligence is literally constant.
+- Final founder decision: use the Prometheus Hearth line as the only hero copy.
+- Updated the home headline to `불꽃은 주어졌습니다. 이제 당신의 장작을 넣을 차례입니다.`
+- Rendered the headline as two visual lines: `불꽃은 주어졌습니다.` and `이제 당신의 장작을 넣을 차례입니다.`
+- Removed the lead/subtitle from the hero.
 
 ## Risks
 
 - Removing the hero lockup can make the first viewport slightly less branded. This is acceptable because the topbar already carries the official lockup.
-- A headline that is too abstract can weaken beginner comprehension. The lead sentence should keep the practical explanation.
+- A metaphor-only headline can weaken beginner comprehension. The next screen's problem browser and first problem entry must make the practical loop clear.
 
 ## Philosophy Check
 
-This change keeps SKAI away from decorative landing-page branding and puts the emphasis back on the user's orchestration act. The headline candidates should express SKAI's claim without turning the product into a generic AI tips site.
+This change keeps fire as a restrained origin metaphor in text, not as a logo/icon/decorative theme. The practical product loop must still carry SKAI's structure: intent, materials, orchestration, verification, and artifact.

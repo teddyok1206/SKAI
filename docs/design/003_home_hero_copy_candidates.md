@@ -13,8 +13,8 @@ The current line, `AI를 잘 쓰는 법을 문제로 연습한다.`, is clear bu
 - Beginner-readable in the first three seconds.
 - Clearly different from a prompt-tip site or chatbot wrapper.
 - Points to problem definition, structure, direction, verification, or trace.
-- Does not overuse myth, fire, genius, or model-performance language.
-- Works with the existing lead: `문제 정의, task 분배, 자료 활용, 검증 흐름을 하나의 풀이로 남긴다.`
+- Does not overuse myth, fire, genius, or model-performance language unless the founder explicitly selects that metaphor.
+- Can stand alone without a subtitle when the home surface needs maximal minimalism.
 
 ## Founder Mood Direction
 
@@ -24,22 +24,23 @@ The founder supplied three stronger mood sets:
 - The Mindset Shifter: overturn the habit of treating AI as a command target.
 - The Prometheus Hearth: keep capability/fire as a controlled energy metaphor.
 
-The selected direction is The Orchestrator, with two corrections:
+The initial selected direction was The Orchestrator, with two corrections:
 
 - `AI의 지능은 상수입니다` is too absolute because provider/model quality still matters. SKAI should say model performance is a condition, not the thing being trained.
 - Direct "servant/slave" language should remain out of the main UI because SKAI avoids reinforcing that frame, even when rejecting it.
+
+The final founder-selected direction is Prometheus Hearth, but stripped to one line. Fire remains a text metaphor for capability, not an icon system or decorative UI theme.
 
 ## Selected Home Copy
 
 Main headline:
 
-> 모델의 성능은 조건입니다. 변수는 당신의 오케스트레이션입니다.
+> 불꽃은 주어졌습니다.
+> 이제 당신의 장작을 넣을 차례입니다.
 
-Lead:
+Lead: none.
 
-> 의도와 현실을 구조화하고, 자료를 통제하며, 검증 가능한 산출물로 남긴다.
-
-This preserves the founder's `[의도 + 현실 -> 오케스트레이션 -> 산출물]` structure while keeping the home surface minimal.
+This preserves the founder's Prometheus origin metaphor while keeping the home surface maximally minimal. The headline is rendered as two lines with no subtitle. The operational structure remains visible through the product flow itself: problem materials, user orchestration, graph trace, judge feedback, and artifact creation.
 
 ## Shortlist
 
