@@ -85,6 +85,7 @@
 | TDR-079 | Generated problem ingestion | Preserve generated problem batches as raw archives and import them through typed normalization modules | Accepted | 대량 생성 문제는 원본 provenance와 앱 schema를 분리해야 하며, synthetic material href처럼 생성물이 만든 운영 위험은 import layer에서 보정해야 함 | 2026-06-02 |
 | TDR-080 | Problem browser | Home discovery uses search, app-schema filters, and curation lanes rather than a flat grid | Accepted | 30개 이상 문제에서는 사용자가 연습하려는 orchestration 상황을 골라야 하므로 문제 탐색은 모델/provider가 아니라 분야, 난이도, 목표, 자료, 검증/정의/자료활용 경로를 중심으로 해야 함 | 2026-06-02 |
 | TDR-081 | Generated problem editorial gate | Generated problems are hidden from first-smoke discovery until founder checklist approval publishes them | Accepted | synthetic problem의 논리 구멍은 SKAI의 권위를 무너뜨릴 수 있으므로 seed 문제는 기본 노출하고 generated 문제는 anti-one-shot, material cross-reference, extracted text usability, domain accessibility를 통과한 것만 노출함 | 2026-06-02 |
+| TDR-082 | Activity-aware graph mark | Represent solving energy as packet-flow inside the 3-node graph, not as a literal flame mark | Accepted | Prometheus/fire는 origin metaphor이지만 primary identity는 user agency와 structure를 드러내는 graph여야 하므로 dynamic energy는 Engine Mode graph packet speed/density/artifact pulse로만 흡수함 | 2026-06-03 |
 
 ## Decision Template
 

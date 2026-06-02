@@ -36,6 +36,12 @@ Implementation note, 2026-06-02:
 - The primary SKAI mark remains the same 3-node directed graph, but Engine Mode renders the node treatment with sharper hex geometry.
 - The topbar mark follows `html[data-ui-mode]`, which is synchronized from the current route by a client bridge. The route-level `data-ui-mode` wrappers remain the page-surface contract.
 - Engine Mode now allows sparse packet-flow motion in the SKAI mark. Motion should stay structural and subtle: intent/material packets move toward artifact, without turning the brand into theatrical decoration.
+- Engine Mode packet-flow is activity-aware:
+  - `ready`: quiet structural flow,
+  - `primed`: prompt/material energy becomes more visible,
+  - `busy`: packet speed and density increase while a model call is in flight,
+  - `structured`: the artifact node pulses subtly after trace structure forms.
+- Flame is not a mark shape. Flame-like energy may only appear as contained packet/current inside the graph.
 - The reusable lockup combines the mark, `SKAI`, and `Social Knowledge of AI`. It is allowed on entry/review surfaces; compact topbar usage should keep the smaller mark-only treatment.
 - No Geist package has been installed yet.
 

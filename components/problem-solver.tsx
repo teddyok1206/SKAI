@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { DragEvent } from "react";
 import Link from "next/link";
 import {
@@ -46,6 +46,7 @@ import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 
 const materialDragDataType = "application/x-skai-material-id";
+type SkaiActivity = "ready" | "primed" | "busy" | "structured";
 
 function formatUsd(value: number) {
   if (value === 0) {
@@ -173,6 +174,31 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         : null,
     [attempt, problem.materials.length],
   );
+  const skaiActivity = useMemo<SkaiActivity>(() => {
+    if (isLoading) {
+      return "busy";
+    }
+
+    if (selectedAttachments.length > 0 || input.trim()) {
+      return "primed";
+    }
+
+    if ((attempt?.trace.length ?? 0) > 0 || (conversationGraph?.pairs.length ?? 0) > 0) {
+      return "structured";
+    }
+
+    return "ready";
+  }, [attempt?.trace.length, conversationGraph?.pairs.length, input, isLoading, selectedAttachments.length]);
+
+  useEffect(() => {
+    document.documentElement.dataset.skaiActivity = skaiActivity;
+
+    return () => {
+      if (document.documentElement.dataset.skaiActivity === skaiActivity) {
+        delete document.documentElement.dataset.skaiActivity;
+      }
+    };
+  }, [skaiActivity]);
 
   function mergeAttachments(current: AttemptAttachment[], incoming: AttemptAttachment[]) {
     const next = [...current];

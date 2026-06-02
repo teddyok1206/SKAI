@@ -22,8 +22,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Gemini branding/philosophy transcript는 `docs/philosophy/Gemini/001.md`로 보존했고, 핵심 원칙은 `docs/philosophy/007_intelligence_and_brand_manifesto.md`에 반영했다.
 - Gemini에게 현재 프로젝트 상태를 설명하기 위한 최신 briefing은 `docs/philosophy/Gemini/003.md`에 있다.
 - Gemini의 smoke-test 리스크 답변은 `docs/philosophy/Gemini/004.md`로 보존했고, generated problem editorial gate에 반영했다.
+- Gemini의 dynamic flame/logo 답변은 `docs/philosophy/Gemini/005.md`로 보존했고, literal flame 대신 activity-aware graph packet-flow로 반영했다.
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
+- Engine Mode의 topbar mark는 풀이 상태에 따라 ready/primed/busy/structured packet-flow intensity가 바뀐다. 이는 flame shape가 아니라 graph 내부 에너지 표현이다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
 - 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
@@ -138,6 +140,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
 - 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization과 reusable logo lockup도 1차 구현됐다.
 - Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
+- Problem solving 중 mark activity는 root `data-skai-activity`로 동기화되며, 모델 처리 중에는 packet density/speed가 올라가고 trace가 쌓이면 artifact node가 pulse한다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
 ## Demo Contract
@@ -325,6 +328,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/048_bulk_problem_batch_ingestion.md`: 생성 문제 batch 001 검토, 원본 archive, 앱용 normalization/import.
 - `docs/technical/plan/049_problem_browser_search_filter_curation.md`: 홈 문제 검색, 필터, curation lane.
 - `docs/technical/plan/050_generated_problem_editorial_gate.md`: Gemini 004 반영, 생성 문제 smoke publish gate와 Admin editorial dashboard.
+- `docs/technical/plan/051_activity_aware_graph_mark.md`: Gemini 005 반영, literal flame 대신 activity-aware graph packet-flow.
 
 다음 plan 후보:
 

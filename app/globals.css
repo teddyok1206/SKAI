@@ -162,7 +162,8 @@ button {
 
 .skai-mark-edge,
 .skai-mark-arrow,
-.skai-mark-node {
+.skai-mark-node,
+.skai-mark-artifact-halo {
   vector-effect: non-scaling-stroke;
   stroke: currentcolor;
   stroke-linecap: round;
@@ -186,6 +187,22 @@ button {
   display: none;
   fill: currentcolor;
   opacity: 0;
+}
+
+.skai-mark-packet-secondary,
+.skai-mark-spark,
+.skai-mark-artifact-halo {
+  display: none;
+  opacity: 0;
+}
+
+.skai-mark-spark {
+  fill: currentcolor;
+}
+
+.skai-mark-artifact-halo {
+  fill: none;
+  stroke-width: 1.2;
 }
 
 .skai-mark-node-circle {
@@ -221,12 +238,12 @@ button {
 :root[data-ui-mode="engine"] .skai-mark-packet,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .skai-mark-packet {
   display: block;
-  animation: skai-packet-flow 1600ms ease-in-out infinite;
+  animation: skai-packet-flow 2200ms ease-in-out infinite;
 }
 
 :root[data-ui-mode="engine"] .skai-mark-packet-bottom,
 :root:has(.ui-mode-surface[data-ui-mode="engine"]) .skai-mark-packet-bottom {
-  animation-delay: 220ms;
+  animation-delay: 320ms;
 }
 
 @keyframes skai-packet-flow {
@@ -271,6 +288,96 @@ button {
   100% {
     opacity: 0;
     transform: translate(22px, -6px);
+  }
+}
+
+:root[data-skai-activity="primed"] .skai-mark-packet {
+  animation-duration: 1500ms;
+}
+
+:root[data-skai-activity="primed"] .skai-mark-edge {
+  opacity: 0.92;
+}
+
+:root[data-skai-activity="busy"] .brand-mark {
+  border-color: color-mix(in srgb, var(--accent) 68%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+:root[data-skai-activity="busy"] .skai-mark-packet {
+  animation-duration: 760ms;
+}
+
+:root[data-skai-activity="busy"] .skai-mark-packet-secondary,
+:root[data-skai-activity="busy"] .skai-mark-spark {
+  display: block;
+}
+
+:root[data-skai-activity="busy"] .skai-mark-packet-secondary {
+  animation-delay: 130ms;
+  animation-duration: 940ms;
+}
+
+:root[data-skai-activity="busy"] .skai-mark-spark {
+  animation: skai-spark-jump 680ms ease-in-out infinite;
+}
+
+:root[data-skai-activity="structured"] .skai-mark-artifact-halo,
+:root[data-skai-activity="busy"] .skai-mark-artifact-halo {
+  display: block;
+  animation: skai-artifact-pulse 1800ms ease-in-out infinite;
+}
+
+:root[data-skai-activity="structured"] .skai-mark-packet {
+  animation-duration: 1300ms;
+}
+
+:root[data-skai-activity="structured"] .skai-mark-artifact-node {
+  stroke-width: 1.9;
+}
+
+@keyframes skai-spark-jump {
+  0% {
+    opacity: 0;
+    transform: translate(-2px, 0) scale(0.7);
+  }
+
+  35% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(10px, 0) scale(1.1);
+  }
+}
+
+@keyframes skai-artifact-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+
+  42% {
+    opacity: 0.42;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skai-mark-packet,
+  .skai-mark-spark,
+  .skai-mark-artifact-halo {
+    animation: none !important;
+  }
+
+  :root[data-skai-activity="busy"] .skai-mark-packet,
+  :root[data-skai-activity="structured"] .skai-mark-artifact-halo {
+    opacity: 0.72;
   }
 }
 
