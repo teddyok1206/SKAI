@@ -463,6 +463,65 @@ h3 {
   border-color: color-mix(in srgb, var(--gold) 36%, var(--line));
 }
 
+.founder-review {
+  margin-top: 18px;
+}
+
+.review-summary,
+.review-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.review-summary span,
+.review-metrics span,
+.review-link {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.review-list {
+  display: grid;
+  gap: 10px;
+}
+
+.review-row {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px;
+}
+
+.review-row-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.review-note {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.review-note .textarea {
+  min-height: 78px;
+}
+
 .environment-card {
   --card-provider-accent: var(--accent);
   --card-provider-soft: var(--accent-soft);
@@ -2521,6 +2580,11 @@ summary {
   }
 
   .branch-diff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-row-main,
+  .review-note {
     grid-template-columns: 1fr;
   }
 

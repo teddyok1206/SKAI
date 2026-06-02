@@ -3,6 +3,7 @@ export const SKAI_STORAGE_KEYS = {
   publishedAttempts: "skai:publishedAttempts",
   promptComments: "skai:promptComments",
   authoredProblems: "skai:authoredProblems",
+  founderReviewNotes: "skai:founderReviewNotes",
 } as const;
 
 export const budgetGuardrails = {

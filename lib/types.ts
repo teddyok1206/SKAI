@@ -142,6 +142,12 @@ export interface Attempt {
   updatedAt: string;
 }
 
+export interface FounderReviewNote {
+  attemptId: string;
+  note: string;
+  updatedAt: string;
+}
+
 export interface AttemptBranch {
   id: string;
   mode: AttemptBranchMode;

@@ -1,4 +1,5 @@
 import { AdminAuthoringClient } from "@/components/admin-authoring-client";
+import { FounderReviewDashboard } from "@/components/founder-review-dashboard";
 
 export default function AdminPage() {
   return (
@@ -14,6 +15,7 @@ export default function AdminPage() {
       </section>
 
       <AdminAuthoringClient />
+      <FounderReviewDashboard />
     </main>
   );
 }

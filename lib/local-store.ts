@@ -1,7 +1,9 @@
 import { SKAI_STORAGE_KEYS } from "@/lib/constants";
-import type { Attempt, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
+import type { Attempt, FounderReviewNote, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
 
 const authoredProblemsChangedEvent = "skai:authored-problems-changed";
+const attemptsChangedEvent = "skai:attempts-changed";
+const founderReviewNotesChangedEvent = "skai:founder-review-notes-changed";
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") {
@@ -36,6 +38,22 @@ function notifyAuthoredProblemsChanged() {
   window.dispatchEvent(new Event(authoredProblemsChangedEvent));
 }
 
+function notifyAttemptsChanged() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new Event(attemptsChangedEvent));
+}
+
+function notifyFounderReviewNotesChanged() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new Event(founderReviewNotesChangedEvent));
+}
+
 export function getAttempts(): Attempt[] {
   return readJson<Attempt[]>(SKAI_STORAGE_KEYS.attempts, []);
 }
@@ -44,6 +62,7 @@ export function saveAttempt(attempt: Attempt) {
   const attempts = getAttempts();
   const next = [attempt, ...attempts.filter((item) => item.id !== attempt.id)];
   writeJson(SKAI_STORAGE_KEYS.attempts, next);
+  notifyAttemptsChanged();
 }
 
 export function getAttempt(attemptId: string): Attempt | undefined {
@@ -117,5 +136,56 @@ export function subscribeAuthoredProblems(listener: () => void) {
   return () => {
     window.removeEventListener("storage", handleStorage);
     window.removeEventListener(authoredProblemsChangedEvent, listener);
+  };
+}
+
+export function subscribeAttempts(listener: () => void) {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === SKAI_STORAGE_KEYS.attempts) {
+      listener();
+    }
+  }
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(attemptsChangedEvent, listener);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(attemptsChangedEvent, listener);
+  };
+}
+
+export function getFounderReviewNotes(): FounderReviewNote[] {
+  return readJson<FounderReviewNote[]>(SKAI_STORAGE_KEYS.founderReviewNotes, []);
+}
+
+export function saveFounderReviewNote(note: FounderReviewNote) {
+  const notes = getFounderReviewNotes();
+  const next = [note, ...notes.filter((item) => item.attemptId !== note.attemptId)];
+  writeJson(SKAI_STORAGE_KEYS.founderReviewNotes, next);
+  notifyFounderReviewNotesChanged();
+}
+
+export function subscribeFounderReviewNotes(listener: () => void) {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === SKAI_STORAGE_KEYS.founderReviewNotes) {
+      listener();
+    }
+  }
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(founderReviewNotesChangedEvent, listener);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(founderReviewNotesChangedEvent, listener);
   };
 }

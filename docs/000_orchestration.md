@@ -21,6 +21,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Next.js 기반 SKAI 데모 앱이 동작한다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
+- Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
@@ -102,6 +103,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
 - 공개 풀이 댓글의 moderation, edit/delete, notification은 아직 없다.
+- Founder review dashboard는 localStorage 기준이다. Supabase-backed cohort review, export, filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
 - Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
 - LLM judge-native graph annotation calibration, skeleton comparison, habit motif report, graph snapshot persistence는 아직 구현 전이다.
@@ -229,9 +231,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 8: founder review dashboard
 
-- 모든 smoke attempts를 문제, 모델, 모드, judge mode 기준으로 모아본다.
-- founder note를 attempt 옆에 기록한다.
-- 완료 조건: DB table을 직접 열지 않아도 smoke test 정성 분석이 가능하다.
+- 모든 smoke attempts를 문제, 모델, 모드, judge mode 기준으로 모아본다. (부분 완료: local attempts)
+- founder note를 attempt 옆에 기록한다. (완료: local notes)
+- 완료 조건: DB table을 직접 열지 않아도 smoke test 정성 분석이 가능하다. (부분 완료: local dashboard)
+- 후속: Supabase-backed cohort dashboard, filters, export, automatic insight extraction.
 
 ## Decision Gates
 
@@ -284,10 +287,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/036_supabase_deployment_hardening.md`: deployment health route, production sync boundary, Supabase RLS checklist.
 - `docs/technical/plan/037_admin_authoring_mvp.md`: localStorage 기반 문제 출제 초안 작성, 홈 노출, local problem solve route.
 - `docs/technical/plan/038_branch_tree_explorer.md`: local attempts parent/child breakpoint lineage explorer.
+- `docs/technical/plan/039_founder_review_dashboard.md`: local smoke attempt founder review dashboard와 local qualitative notes.
 
 다음 plan 후보:
 
-- `039_founder_review_dashboard.md`
 - `040_comment_moderation_and_privacy.md`
 
 ## Reading Map
