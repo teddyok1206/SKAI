@@ -737,7 +737,12 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 ) : null}
                 {activeMaterial.kind !== "image" ? (
                   <pre className="material-text">{activeMaterial.extractedText}</pre>
-                ) : null}
+                ) : (
+                  <details>
+                    <summary>추출 텍스트 보기</summary>
+                    <pre className="material-text">{activeMaterial.extractedText}</pre>
+                  </details>
+                )}
               </div>
             ) : null}
           </div>

@@ -1,4 +1,5 @@
 import type { Problem } from "@/lib/types";
+import { generatedProblemBatch001Playbooks } from "@/data/generated-problem-batch-001";
 
 export interface ProblemPlaybookTurn {
   id: string;
@@ -16,7 +17,7 @@ export interface ProblemPlaybook {
   finalAnswerDraft?: string;
 }
 
-export const problemPlaybooks: ProblemPlaybook[] = [
+const seedProblemPlaybooks: ProblemPlaybook[] = [
   {
     problemId: "ambiguous-research-brief",
     recommendedMode: "Single Model or Verification Drill",
@@ -289,6 +290,8 @@ AI에게는 분석 기준 설계, 리뷰 분류, 반례와 리스크 탐지, 우
 최종 우선순위는 즉시 확인해야 하는 위험 이슈, 단기 UX 개선 후보, 추가 데이터가 필요한 가설, 판단 보류 항목으로 나누었다. 추가 데이터로는 전체 사용자 로그, 오류 발생률, 이탈 구간, 검색 실패율, 가격 페이지 행동 데이터, 신규 사용자 인터뷰가 필요하다.`,
   },
 ];
+
+export const problemPlaybooks: ProblemPlaybook[] = [...seedProblemPlaybooks, ...generatedProblemBatch001Playbooks];
 
 export function getProblemPlaybook(problemId: string) {
   return problemPlaybooks.find((playbook) => playbook.problemId === problemId);

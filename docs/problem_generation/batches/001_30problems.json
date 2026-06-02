@@ -1,0 +1,4264 @@
+{
+  "batchId": "skai-problem-batch-001",
+  "createdAt": "2026-06-02T00:00:00.000Z",
+  "coveragePlan": {
+    "targetCount": 30,
+    "categoryCoverage": {
+      "workplace": 5,
+      "research": 5,
+      "creative": 5,
+      "data_analysis": 5,
+      "coding": 5,
+      "strategy": 5
+    },
+    "difficultyCoverage": {
+      "intro": 8,
+      "standard": 14,
+      "advanced": 8
+    },
+    "goalProfileCoverage": {
+      "accuracy_first": 5,
+      "speed_first": 5,
+      "cost_constrained": 5,
+      "workflow_adoption": 5,
+      "learning_oriented": 5,
+      "exploration": 5
+    }
+  },
+  "problems": [
+    {
+      "appProblem": {
+        "id": "meeting-action-owner-map",
+        "title": "회의 액션 아이템 재구성",
+        "subtitle": "흩어진 회의록과 채팅을 실행 가능한 담당자 맵으로 바꾸기",
+        "category": "workplace",
+        "difficulty": "standard",
+        "goalProfile": "workflow_adoption",
+        "estimatedMinutes": 35,
+        "statement": "팀 회의 후 회의록과 메신저 후속 대화가 따로 남아 있다. 사용자는 실행 책임, 마감일, 확인 방식이 섞여 있는 내용을 AI와 함께 구조화해야 한다.",
+        "userGoal": "다음 주 스프린트 시작 전에 누가 무엇을 언제까지 해야 하는지 합의 가능한 액션 플랜을 만든다.",
+        "constraints": [
+          "담당자가 명시되지 않은 항목은 추정하지 말고 후보와 확인 질문으로 표시",
+          "마감일은 자료에 있는 표현만 사용하고 상대 날짜는 기준일 2026-06-02로 환산",
+          "최종안은 1페이지 요약과 액션 테이블을 포함"
+        ],
+        "starterContext": [
+          "기준일은 2026-06-02",
+          "팀은 디자인, 백엔드, 운영, 고객성공으로 구성",
+          "모델은 조직 배경을 모른다"
+        ],
+        "deliverables": [
+          "회의 목적 요약",
+          "액션 아이템 테이블",
+          "불확실한 결정 목록",
+          "후속 확인 메시지 초안"
+        ],
+        "materials": [
+          {
+            "id": "meeting-action-owner-map-m1",
+            "title": "주간 회의록 txt",
+            "description": "2026-06-01 회의록 발췌",
+            "kind": "text",
+            "fileName": "weekly_meeting_notes_20260601.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/weekly_meeting_notes_20260601.txt",
+            "extractedText": "회의 주제: 베타 고객 온보딩 지연 대응\n참석: PM, 디자인, 백엔드, 운영, 고객성공\n결정: 온보딩 이메일 문구는 이번 주 안에 간결화. 운영팀은 FAQ 초안을 먼저 제공.\n논의: 백엔드는 초대 링크 만료 시간을 72시간으로 늘리는 안을 검토. 디자인은 첫 화면 도움말 위치를 바꿀지 검토.\n미정: 베타 고객 12곳 중 우선 연락 대상은 고객성공이 다시 확인."
+          },
+          {
+            "id": "meeting-action-owner-map-m2",
+            "title": "후속 메신저 로그",
+            "description": "회의 직후 채널에 올라온 후속 대화",
+            "kind": "text",
+            "fileName": "post_meeting_chat_log.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/post_meeting_chat_log.txt",
+            "extractedText": "PM: 금요일 오전 데모 전까지 고객용 문구가 필요합니다.\n운영: FAQ 초안은 수요일 퇴근 전 공유 가능. 다만 결제 관련 문항은 제외해야 합니다.\n백엔드: 링크 만료 72시간 변경은 영향 범위 확인 필요. 목요일까지 dev에서 확인하겠습니다.\n디자인: 도움말 위치 변경은 A안/B안만 캡처로 준비하겠습니다. 적용 여부는 데모 후 결정하는 게 안전합니다.\n고객성공: 우선 연락 대상은 사용량이 0인 5개 계정 중심으로 보겠습니다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "업무 운영",
+        "subdomain": "회의록 실행화",
+        "primarySkill": "material_grounding",
+        "secondarySkills": [
+          "decomposition",
+          "workflow_design",
+          "verification"
+        ],
+        "materialProfile": [
+          "meeting notes",
+          "chat log"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "회의록을 그대로 요약하고 담당자·마감일·미정사항을 분리하지 못한다.",
+        "idealBottleneck": "Turn 2에서 자료 간 후속 발언을 회의 결정에 연결하는 지점",
+        "graphPattern": "사용자 목표 제시 → 모델이 작업 단위와 불확실성 정의 → 자료 근거로 액션 후보 추출 → 사용자 제약 반영 → 상태가 '모호한 논의'에서 '검증 가능한 액션 플랜'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "meeting-action-owner-map-m1",
+          "meeting-action-owner-map-m2"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '회의 액션 아이템 재구성'이고 내 목표는 다음과 같아: 다음 주 스프린트 시작 전에 누가 무엇을 언제까지 해야 하는지 합의 가능한 액션 플랜을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "meeting-action-owner-map-m1",
+              "meeting-action-owner-map-m2"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "meeting-action-owner-map-m1",
+              "meeting-action-owner-map-m2"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "meeting-action-owner-map-m1",
+              "meeting-action-owner-map-m2"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "회의록을 그대로 요약하고 담당자·마감일·미정사항을 분리하지 못한다.",
+        "goodTracePattern": "사용자 목표 제시 → 모델이 작업 단위와 불확실성 정의 → 자료 근거로 액션 후보 추출 → 사용자 제약 반영 → 상태가 '모호한 논의'에서 '검증 가능한 액션 플랜'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "expense-reconciliation-with-policy",
+        "title": "출장비 정산 검증",
+        "subtitle": "영수증 OCR과 회사 규정을 대조해 반려 위험을 줄이기",
+        "category": "workplace",
+        "difficulty": "standard",
+        "goalProfile": "accuracy_first",
+        "estimatedMinutes": 40,
+        "statement": "출장비 신청 내역, 영수증 OCR, 정산 규정 발췌가 서로 완전히 맞지 않는다. 사용자는 AI를 이용해 반려 가능성이 큰 항목과 추가 증빙이 필요한 항목을 찾아야 한다.",
+        "userGoal": "정산 담당자에게 제출하기 전, 승인 가능 항목·보완 필요 항목·규정상 제외 항목을 구분한다.",
+        "constraints": [
+          "세법·회계 자문처럼 단정하지 말고 내부 규정 기준의 사전 검토로 제한",
+          "금액 합계는 자료 기준으로 재계산",
+          "영수증 번호나 카드번호는 만들지 않음",
+          "불일치 항목은 근거 자료를 표시"
+        ],
+        "starterContext": [
+          "출장 기간은 2026-05-21~2026-05-23",
+          "통화는 KRW",
+          "참석자는 가명 처리"
+        ],
+        "deliverables": [
+          "정산 검토표",
+          "반려 위험 요약",
+          "추가 증빙 요청 메시지",
+          "계산 검산 로그"
+        ],
+        "materials": [
+          {
+            "id": "expense-reconciliation-with-policy-m1",
+            "title": "정산 신청표",
+            "description": "사용자가 작성한 지출 항목 표",
+            "kind": "spreadsheet",
+            "fileName": "travel_expense_claim.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/travel_expense_claim.xlsx",
+            "extractedText": "행 1: 2026-05-21 KTX 58,200 교통 / 영수증 있음\n행 2: 2026-05-21 저녁 식사 86,000 식대 / 참석 2명 / 영수증 있음\n행 3: 2026-05-22 카페 18,500 회의비 / 참석자 미기재 / 영수증 있음\n행 4: 2026-05-22 택시 34,400 교통 / 심야 이동 / 영수증 이미지 흐림\n행 5: 2026-05-23 기념품 42,000 기타 / 고객 전달용 / 영수증 있음\n신청 총액: 239,100"
+          },
+          {
+            "id": "expense-reconciliation-with-policy-m2",
+            "title": "영수증 OCR 묶음",
+            "description": "영수증 이미지에서 추출된 텍스트",
+            "kind": "image",
+            "fileName": "receipt_ocr_bundle.png",
+            "mimeType": "image/png",
+            "href": "/synthetic/skai/batch-001/receipt_ocr_bundle.png",
+            "extractedText": "OCR A: Korail 2026-05-21 08:12 금액 58,200\nOCR B: 해담식당 2026-05-21 19:44 금액 86,000 카드 끝자리 ****\nOCR C: BLUE CUP 2026-05-22 14:05 금액 18,500 품목 아메리카노 5\nOCR D: TAXI 2026-05-22 23:38 금액 34,900 출발/도착 일부 흐림\nOCR E: 문구상점 2026-05-23 11:20 금액 42,000 품목 텀블러 3개"
+          },
+          {
+            "id": "expense-reconciliation-with-policy-m3",
+            "title": "출장비 규정 발췌",
+            "description": "회사 내부 정산 기준 일부",
+            "kind": "pdf",
+            "fileName": "expense_policy_excerpt.pdf",
+            "mimeType": "application/pdf",
+            "href": "/synthetic/skai/batch-001/expense_policy_excerpt.pdf",
+            "extractedText": "교통비: 출장지 이동에 필요한 대중교통 및 택시는 영수증 제출 시 인정. 택시는 사유 기재 필요.\n식대: 1인 1식 35,000원 한도. 초과 시 사전 승인 또는 참석자/목적 기재 필요.\n회의비: 참석자와 회의 목적을 기재해야 함.\n기념품/선물: 사전 승인 없는 고객 선물은 원칙적으로 정산 제외. 단 행사 운영 물품은 예외 검토."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "회계/정산",
+        "subdomain": "출장비 사전 검토",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "material_grounding",
+          "instruction_clarity",
+          "accuracy_first"
+        ],
+        "materialProfile": [
+          "spreadsheet",
+          "receipt OCR",
+          "policy excerpt"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "신청표 총액을 그대로 믿거나 OCR 금액 차이와 규정 한도를 놓친다.",
+        "idealBottleneck": "Turn 2에서 OCR D의 34,900원과 신청표 34,400원의 불일치를 발견하는 지점",
+        "graphPattern": "정산 목표 확인 → 자료별 금액/규정 추출 → 불일치와 규정 리스크 검증 → 보완 요청 문구 작성 → 상태가 '제출 전 불안'에서 '근거 있는 보완안'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "expense-reconciliation-with-policy-m1",
+          "expense-reconciliation-with-policy-m2",
+          "expense-reconciliation-with-policy-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '출장비 정산 검증'이고 내 목표는 다음과 같아: 정산 담당자에게 제출하기 전, 승인 가능 항목·보완 필요 항목·규정상 제외 항목을 구분한다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "expense-reconciliation-with-policy-m1",
+              "expense-reconciliation-with-policy-m2",
+              "expense-reconciliation-with-policy-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "expense-reconciliation-with-policy-m1",
+              "expense-reconciliation-with-policy-m2",
+              "expense-reconciliation-with-policy-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "expense-reconciliation-with-policy-m1",
+              "expense-reconciliation-with-policy-m2",
+              "expense-reconciliation-with-policy-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "신청표 총액을 그대로 믿거나 OCR 금액 차이와 규정 한도를 놓친다.",
+        "goodTracePattern": "정산 목표 확인 → 자료별 금액/규정 추출 → 불일치와 규정 리스크 검증 → 보완 요청 문구 작성 → 상태가 '제출 전 불안'에서 '근거 있는 보완안'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "onboarding-workflow-redesign",
+        "title": "신입 온보딩 흐름 재설계",
+        "subtitle": "설문·SOP·인터뷰를 합쳐 채택 가능한 개선안 만들기",
+        "category": "workplace",
+        "difficulty": "advanced",
+        "goalProfile": "workflow_adoption",
+        "estimatedMinutes": 70,
+        "statement": "신입 구성원 온보딩 만족도가 낮지만, HR·팀장·신입의 관점이 다르다. 사용자는 여러 자료를 근거로 30일 안에 적용 가능한 온보딩 개선안을 설계해야 한다.",
+        "userGoal": "이해관계자 저항을 줄이면서 온보딩 완료율과 초기 생산성을 높이는 실행안을 만든다.",
+        "constraints": [
+          "신규 예산은 0원",
+          "HR 담당자 추가 투입은 주당 2시간 이하",
+          "기존 문서 도구만 사용",
+          "개선안은 30일 파일럿으로 설계",
+          "개인 평가나 인사 조언으로 확대하지 않음"
+        ],
+        "starterContext": [
+          "조직 규모는 80명 수준의 B2B SaaS 스타트업",
+          "최근 3개월 입사자 9명",
+          "익명 자료만 제공됨"
+        ],
+        "deliverables": [
+          "문제 진단",
+          "30일 파일럿 설계",
+          "역할별 책임표",
+          "온보딩 체크리스트 v1",
+          "성과 측정 지표"
+        ],
+        "materials": [
+          {
+            "id": "onboarding-workflow-redesign-m1",
+            "title": "온보딩 설문 결과",
+            "description": "최근 입사자 익명 설문 CSV 발췌",
+            "kind": "csv",
+            "fileName": "onboarding_survey_anonymous.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/onboarding_survey_anonymous.csv",
+            "extractedText": "respondent,week1_clarity,mentor_access,doc_usefulness,comment\nA,2,4,2,\"첫 주에 무엇을 먼저 해야 하는지 몰랐다\"\nB,3,2,3,\"멘토가 바빠 질문 타이밍을 잡기 어려웠다\"\nC,4,5,2,\"문서는 많지만 최신인지 모르겠다\"\nD,2,3,1,\"권한 신청이 여러 채널로 흩어져 있었다\"\nE,3,4,3,\"팀별 기대 수준이 다르다\""
+          },
+          {
+            "id": "onboarding-workflow-redesign-m2",
+            "title": "현재 SOP",
+            "description": "HR이 사용하는 온보딩 절차",
+            "kind": "text",
+            "fileName": "current_onboarding_sop.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/current_onboarding_sop.txt",
+            "extractedText": "D-3: 계정 생성 요청을 IT 채널에 등록\nD-day: HR 오리엔테이션 60분, 보안 교육 링크 전달\nDay 1~3: 팀장이 업무 소개. 필수 문서 목록은 Notion 페이지 참조\nWeek 1: 멘토 지정 권장. 단 멘토 활동 시간은 팀 자율\nWeek 2: 첫 과제 부여. 완료 기준은 팀별 정의\nWeek 4: HR이 만족도 설문 발송"
+          },
+          {
+            "id": "onboarding-workflow-redesign-m3",
+            "title": "팀장 인터뷰 메모",
+            "description": "익명 처리된 팀장 의견",
+            "kind": "text",
+            "fileName": "manager_interview_notes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/manager_interview_notes.txt",
+            "extractedText": "팀장 1: 체크리스트가 있으면 좋지만 HR이 모든 팀 업무를 알 수는 없다.\n팀장 2: 첫 과제 기준을 통일하면 팀 특성이 사라질까 걱정된다.\n팀장 3: 멘토링은 중요하지만 시니어 시간이 부족하다.\n팀장 4: 권한 신청 누락 때문에 첫 주가 자주 지연된다."
+          },
+          {
+            "id": "onboarding-workflow-redesign-m4",
+            "title": "권한 요청 로그 요약",
+            "description": "온보딩 중 계정/권한 지연 사례",
+            "kind": "spreadsheet",
+            "fileName": "access_delay_log.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/access_delay_log.xlsx",
+            "extractedText": "최근 9명 중 5명은 Day 1에 최소 1개 업무 도구 접근 불가.\n가장 잦은 누락: CRM 4건, 데이터 대시보드 3건, 디자인 툴 2건.\n평균 해결 시간: 1.8영업일.\n원인 메모: 요청 채널 혼선, 승인자 부재, 사전 체크 미흡."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "인사/조직운영",
+        "subdomain": "온보딩 프로세스",
+        "primarySkill": "workflow_design",
+        "secondarySkills": [
+          "stakeholder_alignment",
+          "material_grounding",
+          "adaptation",
+          "verification"
+        ],
+        "materialProfile": [
+          "survey csv",
+          "SOP",
+          "interview notes",
+          "log spreadsheet"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 5,
+        "primaryFailureMode": "만족도 개선 아이디어만 나열하고 예산·담당 시간·팀장 저항을 반영하지 못한다.",
+        "idealBottleneck": "Turn 3에서 HR 표준화와 팀별 자율성의 충돌을 파일럿 구조로 해결하는 지점",
+        "graphPattern": "목표/제약 정의 → 자료별 pain point 맵핑 → 이해관계자 충돌 발견 → 30일 실험안으로 조정 → 상태가 '불만 원인 혼재'에서 '채택 가능한 운영 변화'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "onboarding-workflow-redesign-m1",
+          "onboarding-workflow-redesign-m2",
+          "onboarding-workflow-redesign-m3",
+          "onboarding-workflow-redesign-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '신입 온보딩 흐름 재설계'이고 내 목표는 다음과 같아: 이해관계자 저항을 줄이면서 온보딩 완료율과 초기 생산성을 높이는 실행안을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "onboarding-workflow-redesign-m1",
+              "onboarding-workflow-redesign-m2",
+              "onboarding-workflow-redesign-m3",
+              "onboarding-workflow-redesign-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "onboarding-workflow-redesign-m1",
+              "onboarding-workflow-redesign-m2",
+              "onboarding-workflow-redesign-m3",
+              "onboarding-workflow-redesign-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "onboarding-workflow-redesign-m1",
+              "onboarding-workflow-redesign-m2",
+              "onboarding-workflow-redesign-m3",
+              "onboarding-workflow-redesign-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "만족도 개선 아이디어만 나열하고 예산·담당 시간·팀장 저항을 반영하지 못한다.",
+        "goodTracePattern": "목표/제약 정의 → 자료별 pain point 맵핑 → 이해관계자 충돌 발견 → 30일 실험안으로 조정 → 상태가 '불만 원인 혼재'에서 '채택 가능한 운영 변화'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "client-email-triage",
+        "title": "고객 이메일 우선순위 분류",
+        "subtitle": "모호한 요청 메일을 빠르게 triage하는 기준 만들기",
+        "category": "workplace",
+        "difficulty": "intro",
+        "goalProfile": "speed_first",
+        "estimatedMinutes": 20,
+        "statement": "고객사에서 여러 요구를 한 이메일에 섞어 보냈다. 사용자는 바로 답장을 쓰기보다, AI와 함께 긴급도·담당팀·추가 확인 질문을 먼저 나누어야 한다.",
+        "userGoal": "30분 안에 내부 공유용 triage 메모와 고객에게 보낼 1차 답장 초안을 만든다.",
+        "constraints": [
+          "확인되지 않은 장애 원인을 단정하지 않음",
+          "고객에게 약속할 일정은 범위로 표현",
+          "내부 담당팀은 후보로 제시",
+          "사과문은 과장하지 않음"
+        ],
+        "starterContext": [
+          "고객사는 베타 이용 중",
+          "계약 관련 세부 정보는 자료에 없음"
+        ],
+        "deliverables": [
+          "긴급도 분류",
+          "내부 담당 후보",
+          "추가 질문",
+          "고객 1차 답장 초안"
+        ],
+        "materials": [
+          {
+            "id": "client-email-triage-m1",
+            "title": "고객 이메일",
+            "description": "가명 고객사의 요청 메일",
+            "kind": "text",
+            "fileName": "client_email_mixed_request.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/client_email_mixed_request.txt",
+            "extractedText": "제목: 대시보드 수치와 초대 링크 관련 문의\n안녕하세요. 어제부터 관리자 대시보드의 활성 사용자 수가 저희 내부 집계와 다르게 보입니다. 또 신규 멤버 두 명이 초대 링크가 만료됐다고 합니다. 다음 주 월요일 임원 보고가 있어서 가능하면 이번 주 안에 확인 부탁드립니다. 추가로, 보고서 PDF에서 로고 위치를 바꿀 수 있는지도 궁금합니다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "고객지원",
+        "subdomain": "이메일 triage",
+        "primarySkill": "decomposition",
+        "secondarySkills": [
+          "instruction_clarity",
+          "adaptation",
+          "workflow_design"
+        ],
+        "materialProfile": [
+          "email thread"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "고객에게 바로 확정 답변을 하며 원인과 일정 약속을 지어낸다.",
+        "idealBottleneck": "Turn 1에서 답장 작성보다 이슈 분해와 확인 질문을 먼저 요구하는 지점",
+        "graphPattern": "사용자 상황 설명 → 모델이 이슈를 장애/계정/기능요청으로 분해 → 자료 확인 후 우선순위 지정 → 답장 초안 생성 → 상태가 '혼합 요청'에서 '분류된 대응'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "client-email-triage-m1"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '고객 이메일 우선순위 분류'이고 내 목표는 다음과 같아: 30분 안에 내부 공유용 triage 메모와 고객에게 보낼 1차 답장 초안을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "client-email-triage-m1"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "client-email-triage-m1"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "client-email-triage-m1"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "고객에게 바로 확정 답변을 하며 원인과 일정 약속을 지어낸다.",
+        "goodTracePattern": "사용자 상황 설명 → 모델이 이슈를 장애/계정/기능요청으로 분해 → 자료 확인 후 우선순위 지정 → 답장 초안 생성 → 상태가 '혼합 요청'에서 '분류된 대응'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "remote-incident-briefing",
+        "title": "원격 근무 장애 브리핑",
+        "subtitle": "장애 타임라인과 이해관계자 메모를 합쳐 재발 방지 브리프 만들기",
+        "category": "workplace",
+        "difficulty": "standard",
+        "goalProfile": "workflow_adoption",
+        "estimatedMinutes": 50,
+        "statement": "원격 근무 도구 장애로 오전 업무가 지연되었다. 로그와 부서별 메모가 흩어져 있어, 사용자는 사실관계와 재발 방지 액션을 분리해야 한다.",
+        "userGoal": "감정적인 책임 추궁을 피하면서 경영진 공유용 장애 브리프와 후속 액션을 만든다.",
+        "constraints": [
+          "개인 책임자 지목 금지",
+          "장애 원인은 로그 근거 없이는 가설로 표시",
+          "브리프는 700자 이하 요약과 상세 액션 테이블로 구성",
+          "재발 방지 액션은 2주 내 실행 가능해야 함"
+        ],
+        "starterContext": [
+          "장애 발생일은 2026-06-01",
+          "원격 협업 도구는 익명화",
+          "법적 책임 판단은 범위 밖"
+        ],
+        "deliverables": [
+          "경영진 요약",
+          "타임라인",
+          "영향 범위",
+          "재발 방지 액션",
+          "미확인 사항"
+        ],
+        "materials": [
+          {
+            "id": "remote-incident-briefing-m1",
+            "title": "장애 타임라인 로그",
+            "description": "운영 채널의 시간대별 기록",
+            "kind": "text",
+            "fileName": "remote_tool_incident_timeline.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/remote_tool_incident_timeline.txt",
+            "extractedText": "09:05 일부 사용자가 접속 지연 보고\n09:18 운영팀이 상태 페이지 확인, 외부 도구 상태는 정상 표시\n09:36 사내 SSO 재로그인 시도 안내\n10:10 신규 세션은 접속 가능, 기존 세션 일부 오류 지속\n10:45 캐시 삭제 안내 후 보고 감소\n11:20 고객 미팅 3건이 대체 화상 링크로 진행됨\n12:05 추가 보고 없음"
+          },
+          {
+            "id": "remote-incident-briefing-m2",
+            "title": "부서별 영향 메모",
+            "description": "익명화된 팀별 영향 기록",
+            "kind": "text",
+            "fileName": "team_impact_notes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/team_impact_notes.txt",
+            "extractedText": "영업: 오전 데모 1건이 15분 지연. 고객 불만은 낮음.\n개발: 스탠드업이 텍스트로 대체되어 배포 일정 영향 없음.\n고객성공: 고객 문의 6건 접수. 대부분 접속 지연 문의.\nHR: 후보자 인터뷰 1건을 오후로 재조정."
+          },
+          {
+            "id": "remote-incident-briefing-m3",
+            "title": "운영 회고 초안",
+            "description": "장애 후 운영팀 메모",
+            "kind": "text",
+            "fileName": "ops_retrospective_draft.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/ops_retrospective_draft.txt",
+            "extractedText": "가설: SSO 토큰 갱신과 기존 세션 캐시가 충돌했을 가능성.\n아쉬운 점: 상태 페이지가 정상이라 초반 판단이 지연됨. 대체 링크 템플릿이 팀마다 달랐음.\n잘된 점: 10시 이후 공지 빈도가 안정적이었고 고객 미팅 대부분은 대체 진행됨.\n필요: 사전 점검 체크리스트, 장애 공지 템플릿, 대체 링크 운영 기준."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "업무 운영",
+        "subdomain": "장애 커뮤니케이션",
+        "primarySkill": "workflow_design",
+        "secondarySkills": [
+          "verification",
+          "stakeholder_alignment",
+          "material_grounding"
+        ],
+        "materialProfile": [
+          "incident timeline",
+          "team notes",
+          "retrospective draft"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "원인 가설을 사실로 단정하거나 부서별 영향을 빠뜨린 채 사과문만 작성한다.",
+        "idealBottleneck": "Turn 2에서 사실·가설·영향·액션을 네 칸으로 분리하는 지점",
+        "graphPattern": "상황 설명 → 로그 기반 사실 재구성 → 가설과 미확인 사항 분리 → 이해관계자용 메시지 조정 → 상태가 '혼란스러운 장애 기록'에서 '실행 가능한 회고'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "remote-incident-briefing-m1",
+          "remote-incident-briefing-m2",
+          "remote-incident-briefing-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '원격 근무 장애 브리핑'이고 내 목표는 다음과 같아: 감정적인 책임 추궁을 피하면서 경영진 공유용 장애 브리프와 후속 액션을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "remote-incident-briefing-m1",
+              "remote-incident-briefing-m2",
+              "remote-incident-briefing-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "remote-incident-briefing-m1",
+              "remote-incident-briefing-m2",
+              "remote-incident-briefing-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "remote-incident-briefing-m1",
+              "remote-incident-briefing-m2",
+              "remote-incident-briefing-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "원인 가설을 사실로 단정하거나 부서별 영향을 빠뜨린 채 사과문만 작성한다.",
+        "goodTracePattern": "상황 설명 → 로그 기반 사실 재구성 → 가설과 미확인 사항 분리 → 이해관계자용 메시지 조정 → 상태가 '혼란스러운 장애 기록'에서 '실행 가능한 회고'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "youth-library-research-plan",
+        "title": "청소년 도서관 이용 연구 설계",
+        "subtitle": "막연한 조사 아이디어를 실행 가능한 리서치 계획으로 바꾸기",
+        "category": "research",
+        "difficulty": "intro",
+        "goalProfile": "learning_oriented",
+        "estimatedMinutes": 25,
+        "statement": "지역 청소년의 공공도서관 이용을 늘리고 싶다는 막연한 아이디어가 있다. 사용자는 AI와 함께 조사 질문, 대상, 방법, 윤리적 주의사항을 정리해야 한다.",
+        "userGoal": "작은 예산으로 2주 안에 수행할 수 있는 탐색 리서치 계획을 만든다.",
+        "constraints": [
+          "미성년자 대상 조사이므로 개인정보 수집을 최소화",
+          "실제 통계 수치를 지어내지 않음",
+          "외부 자료가 필요하면 검색 키워드 수준으로 제안",
+          "조사 설계와 질문지 초안까지만 작성"
+        ],
+        "starterContext": [
+          "지역은 특정하지 않음",
+          "예산은 인쇄비와 소정의 간식 수준",
+          "사용자는 리서치 초보"
+        ],
+        "deliverables": [
+          "리서치 질문",
+          "조사 방법",
+          "참여자 모집 문구",
+          "인터뷰/설문 질문 초안",
+          "주의사항 체크리스트"
+        ],
+        "materials": [],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "교육/지역사회",
+        "subdomain": "탐색 리서치 설계",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "decomposition",
+          "instruction_clarity",
+          "verification"
+        ],
+        "materialProfile": [
+          "no attachment"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "도서관 활성화 아이디어를 바로 캠페인으로 만들고 실제 조사 질문을 정의하지 않는다.",
+        "idealBottleneck": "Turn 1에서 목표를 '이용 증가'에서 검증 가능한 리서치 질문으로 좁히는 지점",
+        "graphPattern": "막연한 목표 제시 → 모델이 조사 목적과 가정을 분리 → 방법/윤리/질문지로 세분화 → 실행 계획 작성 → 상태가 '아이디어'에서 '2주 리서치 프로토콜'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '청소년 도서관 이용 연구 설계'이고 내 목표는 다음과 같아: 작은 예산으로 2주 안에 수행할 수 있는 탐색 리서치 계획을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [],
+            "prompt": "첨부 자료는 없어. 대신 내가 가진 제약만 근거로 조사 질문 후보와 방법을 비교해줘. 외부 통계가 필요해 보이면 어떤 자료를 찾을지만 제안해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "도서관 활성화 아이디어를 바로 캠페인으로 만들고 실제 조사 질문을 정의하지 않는다.",
+        "goodTracePattern": "막연한 목표 제시 → 모델이 조사 목적과 가정을 분리 → 방법/윤리/질문지로 세분화 → 실행 계획 작성 → 상태가 '아이디어'에서 '2주 리서치 프로토콜'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "abstract-conflict-evidence-map",
+        "title": "상충 초록 근거 맵",
+        "subtitle": "논문 초록 3개를 비교해 과장 없는 연구 요약 만들기",
+        "category": "research",
+        "difficulty": "standard",
+        "goalProfile": "accuracy_first",
+        "estimatedMinutes": 45,
+        "statement": "같은 주제의 논문 초록들이 서로 다른 결론을 말한다. 사용자는 AI와 함께 연구 질문, 방법 차이, 결론의 범위를 구분하여 과장 없는 요약을 작성해야 한다.",
+        "userGoal": "세 초록만 근거로 발표용 배경 슬라이드에 들어갈 안전한 요약과 추가 확인 목록을 만든다.",
+        "constraints": [
+          "초록 밖의 결과를 추정하지 않음",
+          "상관관계와 인과를 구분",
+          "각 주장에는 초록 ID를 표시",
+          "의학적 조언이나 치료 권고 금지"
+        ],
+        "starterContext": [
+          "주제는 성인 수면 습관과 집중도",
+          "제공된 초록은 synthetic",
+          "전문가 검토 전 사전 정리용"
+        ],
+        "deliverables": [
+          "연구 질문 비교표",
+          "공통점/차이점",
+          "안전한 한 문단 요약",
+          "추가로 읽어야 할 본문 항목"
+        ],
+        "materials": [
+          {
+            "id": "abstract-conflict-evidence-map-m1",
+            "title": "초록 A",
+            "description": "관찰 연구 초록",
+            "kind": "text",
+            "fileName": "sleep_focus_abstract_a.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/sleep_focus_abstract_a.txt",
+            "extractedText": "A study of 420 office workers found a positive association between self-reported sleep regularity and next-day focus scores. The design was observational and used a two-week diary. The authors note that workload and caffeine intake were not fully controlled."
+          },
+          {
+            "id": "abstract-conflict-evidence-map-m2",
+            "title": "초록 B",
+            "description": "소규모 실험 초록",
+            "kind": "text",
+            "fileName": "sleep_focus_abstract_b.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/sleep_focus_abstract_b.txt",
+            "extractedText": "In a randomized crossover study of 36 adults, a fixed bedtime reminder improved sleep timing consistency but did not significantly change computerized attention task scores over seven days. Participants were healthy volunteers with flexible schedules."
+          },
+          {
+            "id": "abstract-conflict-evidence-map-m3",
+            "title": "초록 C",
+            "description": "설문 기반 연구 초록",
+            "kind": "text",
+            "fileName": "sleep_focus_abstract_c.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/sleep_focus_abstract_c.txt",
+            "extractedText": "A survey of 1,200 university students reported that perceived sleep quality predicted self-rated concentration. The authors caution that stress level may explain part of the relationship and that objective sleep data were not collected."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "학술 리서치",
+        "subdomain": "문헌 초록 비교",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "material_grounding",
+          "accuracy_first",
+          "problem_definition"
+        ],
+        "materialProfile": [
+          "research abstracts"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "세 초록을 합쳐 '수면 규칙성이 집중도를 높인다'고 인과적으로 단정한다.",
+        "idealBottleneck": "Turn 2에서 연구 설계 차이와 측정 지표 차이를 표로 분리하는 지점",
+        "graphPattern": "발표 목적 확인 → 초록별 주장/한계 추출 → 충돌 원인 분석 → 안전한 요약 작성 → 상태가 '상충 결론'에서 '범위 제한된 근거 맵'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "abstract-conflict-evidence-map-m1",
+          "abstract-conflict-evidence-map-m2",
+          "abstract-conflict-evidence-map-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '상충 초록 근거 맵'이고 내 목표는 다음과 같아: 세 초록만 근거로 발표용 배경 슬라이드에 들어갈 안전한 요약과 추가 확인 목록을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "abstract-conflict-evidence-map-m1",
+              "abstract-conflict-evidence-map-m2",
+              "abstract-conflict-evidence-map-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "abstract-conflict-evidence-map-m1",
+              "abstract-conflict-evidence-map-m2",
+              "abstract-conflict-evidence-map-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "abstract-conflict-evidence-map-m1",
+              "abstract-conflict-evidence-map-m2",
+              "abstract-conflict-evidence-map-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "세 초록을 합쳐 '수면 규칙성이 집중도를 높인다'고 인과적으로 단정한다.",
+        "goodTracePattern": "발표 목적 확인 → 초록별 주장/한계 추출 → 충돌 원인 분석 → 안전한 요약 작성 → 상태가 '상충 결론'에서 '범위 제한된 근거 맵'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "grant-program-fit-analysis",
+        "title": "지원사업 적합성 분석",
+        "subtitle": "공고문·예산표·자격 메모를 대조해 신청 전략 세우기",
+        "category": "research",
+        "difficulty": "advanced",
+        "goalProfile": "cost_constrained",
+        "estimatedMinutes": 75,
+        "statement": "비영리 단체가 교육 프로그램 지원사업에 신청하려 한다. 공고문, 내부 예산, 파트너 조건이 맞지 않는 부분이 있어 AI와 함께 신청 가능성·수정안·포기 기준을 판단해야 한다.",
+        "userGoal": "제한된 시간과 비용 안에서 신청할지, 어떤 항목을 수정할지 결정할 수 있는 의사결정 메모를 만든다.",
+        "constraints": [
+          "법률/회계 자문이 아니라 공고문 기반 사전 검토로 제한",
+          "부족한 자격은 단정하지 말고 확인 질문으로 표시",
+          "신청 준비 시간은 총 18시간 이하",
+          "자부담 현금은 300만원 이하",
+          "최종 결정은 신청/조건부 신청/보류 중 하나"
+        ],
+        "starterContext": [
+          "단체명은 가명 '나루배움'",
+          "프로그램은 중학생 디지털 리터러시",
+          "공고문은 일부 발췌"
+        ],
+        "deliverables": [
+          "적합성 판정표",
+          "위험 항목",
+          "예산 수정안",
+          "신청 준비 일정",
+          "최종 권고 메모"
+        ],
+        "materials": [
+          {
+            "id": "grant-program-fit-analysis-m1",
+            "title": "지원사업 공고 발췌",
+            "description": "교육 프로그램 지원사업 PDF 일부",
+            "kind": "pdf",
+            "fileName": "education_grant_notice_excerpt.pdf",
+            "mimeType": "application/pdf",
+            "href": "/synthetic/skai/batch-001/education_grant_notice_excerpt.pdf",
+            "extractedText": "지원 대상: 설립 2년 이상 비영리 법인 또는 등록 단체.\n우대 조건: 지역 공공기관 협력 확인서 제출, 취약계층 청소년 대상 프로그램.\n지원 규모: 최대 2,000만원. 총사업비의 20% 이상 자부담 필요. 자부담 중 현금은 최소 50%.\n제출 서류: 사업계획서, 예산서, 최근 1년 활동 실적, 협력기관 확인서.\n심사 기준: 필요성 30, 실행 가능성 30, 지속 가능성 20, 예산 적정성 20."
+          },
+          {
+            "id": "grant-program-fit-analysis-m2",
+            "title": "내부 예산 초안",
+            "description": "나루배움의 초기 예산 계획",
+            "kind": "spreadsheet",
+            "fileName": "narubaewoom_budget_draft.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/narubaewoom_budget_draft.xlsx",
+            "extractedText": "강사비 900만원, 교재 제작 280만원, 장소 대관 240만원, 간식 120만원, 홍보 100만원, 운영 인력 360만원, 평가 도구 80만원.\n총사업비 2,080만원. 요청 지원금 1,850만원. 자부담 230만원(현금 100만원, 현물 130만원)."
+          },
+          {
+            "id": "grant-program-fit-analysis-m3",
+            "title": "자격 메모",
+            "description": "내부 담당자가 정리한 단체 현황",
+            "kind": "text",
+            "fileName": "organization_eligibility_memo.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/organization_eligibility_memo.txt",
+            "extractedText": "나루배움은 등록 단체로 2024-09-15 등록. 법인은 아님.\n최근 1년 활동: 토요 코딩교실 8회, 학부모 설명회 2회.\n공공기관 협력: 구립 청소년센터와 구두 협의, 확인서는 아직 없음.\n취약계층 대상 여부: 기존 프로그램은 혼합 모집이었고, 이번 사업에서 우선 선발 기준을 만들 수 있음."
+          },
+          {
+            "id": "grant-program-fit-analysis-m4",
+            "title": "작업 가능 시간표",
+            "description": "신청 전 남은 작업 시간",
+            "kind": "text",
+            "fileName": "grant_team_capacity.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/grant_team_capacity.txt",
+            "extractedText": "제출까지 9일. 담당자 A 10시간, 담당자 B 6시간, 대표 검토 2시간 가능.\n협력기관 확인서 요청에는 최소 3영업일 필요할 수 있음.\n예산 재작성은 2시간, 사업계획서 초안은 6시간, 활동 실적 정리는 3시간 예상."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "비영리/지원사업",
+        "subdomain": "공고 적합성 검토",
+        "primarySkill": "cost_control",
+        "secondarySkills": [
+          "material_grounding",
+          "stakeholder_alignment",
+          "verification",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "grant PDF",
+          "budget spreadsheet",
+          "eligibility memo",
+          "capacity note"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 5,
+        "primaryFailureMode": "최대 지원금만 보고 신청을 권하며 자부담 비율과 단체 등록 기간 리스크를 놓친다.",
+        "idealBottleneck": "Turn 3에서 자부담 현금 최소 요건과 현 예산의 차이를 계산해 조건부 전략으로 전환하는 지점",
+        "graphPattern": "신청 목표 제시 → 공고 요건 추출 → 예산/자격/시간 제약 대조 → 신청·보류 기준 분기 → 상태가 '막연한 신청 희망'에서 '조건부 의사결정'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "grant-program-fit-analysis-m1",
+          "grant-program-fit-analysis-m2",
+          "grant-program-fit-analysis-m3",
+          "grant-program-fit-analysis-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '지원사업 적합성 분석'이고 내 목표는 다음과 같아: 제한된 시간과 비용 안에서 신청할지, 어떤 항목을 수정할지 결정할 수 있는 의사결정 메모를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "grant-program-fit-analysis-m1",
+              "grant-program-fit-analysis-m2",
+              "grant-program-fit-analysis-m3",
+              "grant-program-fit-analysis-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "grant-program-fit-analysis-m1",
+              "grant-program-fit-analysis-m2",
+              "grant-program-fit-analysis-m3",
+              "grant-program-fit-analysis-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "grant-program-fit-analysis-m1",
+              "grant-program-fit-analysis-m2",
+              "grant-program-fit-analysis-m3",
+              "grant-program-fit-analysis-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "최대 지원금만 보고 신청을 권하며 자부담 비율과 단체 등록 기간 리스크를 놓친다.",
+        "goodTracePattern": "신청 목표 제시 → 공고 요건 추출 → 예산/자격/시간 제약 대조 → 신청·보류 기준 분기 → 상태가 '막연한 신청 희망'에서 '조건부 의사결정'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "competitor-feature-evidence-map",
+        "title": "경쟁 기능 근거 맵",
+        "subtitle": "흩어진 벤치마크 메모를 제품 가설로 정리하기",
+        "category": "research",
+        "difficulty": "standard",
+        "goalProfile": "exploration",
+        "estimatedMinutes": 45,
+        "statement": "경쟁 서비스 3개의 기능 메모가 수집되었지만, 어느 기능을 따라야 하는지 기준이 없다. 사용자는 AI와 함께 증거 수준과 제품 가설을 구분해야 한다.",
+        "userGoal": "경쟁사 기능을 그대로 베끼지 않고, 우리 제품에 실험할 만한 가설 3개와 확인 방법을 만든다.",
+        "constraints": [
+          "실제 경쟁사 이름 대신 코드명 사용",
+          "자료에 없는 가격·사용자 수를 만들지 않음",
+          "아이디어와 검증된 사실을 구분",
+          "최종안은 실험 가설 중심"
+        ],
+        "starterContext": [
+          "제품은 팀용 지식관리 도구",
+          "대상 고객은 20~200명 조직",
+          "시장 규모 분석은 범위 밖"
+        ],
+        "deliverables": [
+          "기능 비교표",
+          "증거 수준 평가",
+          "실험 가설 3개",
+          "검증 질문",
+          "다음 조사 계획"
+        ],
+        "materials": [
+          {
+            "id": "competitor-feature-evidence-map-m1",
+            "title": "벤치마크 메모",
+            "description": "서비스 A/B/C 관찰 기록",
+            "kind": "text",
+            "fileName": "competitor_benchmark_notes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/competitor_benchmark_notes.txt",
+            "extractedText": "서비스 A: 온보딩 첫 화면에서 '팀 문서 가져오기' 버튼이 가장 크게 보임. 가져오기 실패 시 샘플 문서를 제공.\n서비스 B: 검색 결과에 '최근 팀원이 본 문서' 배지가 있음. 관리자 설정에서 끌 수 있음.\n서비스 C: 문서 작성 중 AI 요약 제안을 오른쪽 패널에 표시. 사용자가 닫으면 하루 동안 다시 보이지 않음."
+          },
+          {
+            "id": "competitor-feature-evidence-map-m2",
+            "title": "사용자 인터뷰 발췌",
+            "description": "우리 제품 사용자 5명 인터뷰 메모",
+            "kind": "text",
+            "fileName": "user_interview_snippets.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/user_interview_snippets.txt",
+            "extractedText": "U1: 처음에 빈 화면이라 무엇을 넣어야 할지 몰랐다.\nU2: 검색 결과가 많으면 팀에서 많이 쓰는 문서가 먼저 보였으면 한다.\nU3: AI 제안이 너무 자주 뜨면 방해가 된다.\nU4: 기존 문서 가져오기가 쉬우면 도입이 빨라질 것 같다.\nU5: 관리자 입장에서는 개인정보가 들어간 문서 노출이 걱정된다."
+          },
+          {
+            "id": "competitor-feature-evidence-map-m3",
+            "title": "기술 제약 메모",
+            "description": "개발팀의 구현 난이도 의견",
+            "kind": "text",
+            "fileName": "engineering_constraints.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/engineering_constraints.txt",
+            "extractedText": "문서 가져오기 개선: 기존 API 활용 가능, 2주 예상.\n팀 인기 문서 배지: 이벤트 로깅 정비 필요, 4~5주 예상.\nAI 요약 패널 빈도 제어: 프론트 설정 추가로 1주 예상.\n관리자 토글: 권한 모델 검토 필요."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "제품 리서치",
+        "subdomain": "경쟁 벤치마킹",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "material_grounding",
+          "decomposition",
+          "verification",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "benchmark notes",
+          "interview snippets",
+          "engineering memo"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "경쟁사 기능 목록을 우선순위로 착각하고 사용자 문제와 구현 제약을 연결하지 않는다.",
+        "idealBottleneck": "Turn 2에서 관찰 사실, 사용자 pain point, 구현 난이도를 별도 축으로 분리하는 지점",
+        "graphPattern": "벤치마크 목적 확인 → 자료를 사실/욕구/제약으로 분류 → 가설 후보 생성 → 검증 계획 수립 → 상태가 '따라할 기능 목록'에서 '실험 가능한 제품 가설'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "competitor-feature-evidence-map-m1",
+          "competitor-feature-evidence-map-m2",
+          "competitor-feature-evidence-map-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '경쟁 기능 근거 맵'이고 내 목표는 다음과 같아: 경쟁사 기능을 그대로 베끼지 않고, 우리 제품에 실험할 만한 가설 3개와 확인 방법을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "competitor-feature-evidence-map-m1",
+              "competitor-feature-evidence-map-m2",
+              "competitor-feature-evidence-map-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "competitor-feature-evidence-map-m1",
+              "competitor-feature-evidence-map-m2",
+              "competitor-feature-evidence-map-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "competitor-feature-evidence-map-m1",
+              "competitor-feature-evidence-map-m2",
+              "competitor-feature-evidence-map-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "경쟁사 기능 목록을 우선순위로 착각하고 사용자 문제와 구현 제약을 연결하지 않는다.",
+        "goodTracePattern": "벤치마크 목적 확인 → 자료를 사실/욕구/제약으로 분류 → 가설 후보 생성 → 검증 계획 수립 → 상태가 '따라할 기능 목록'에서 '실험 가능한 제품 가설'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "policy-feedback-synthesis",
+        "title": "시민 의견 정책 합성",
+        "subtitle": "공개 의견과 정책 초안을 근거로 쟁점별 브리프 만들기",
+        "category": "research",
+        "difficulty": "advanced",
+        "goalProfile": "accuracy_first",
+        "estimatedMinutes": 80,
+        "statement": "시민 참여 플랫폼에 올라온 의견과 정책 초안이 길고 반복적이다. 사용자는 AI와 함께 의견을 쟁점별로 묶고, 찬반과 근거, 누락된 이해관계자를 분리해야 한다.",
+        "userGoal": "정책 담당자에게 전달할 수 있는 균형 잡힌 쟁점 브리프와 추가 공론화 질문을 만든다.",
+        "constraints": [
+          "특정 시민을 식별할 수 있는 정보 금지",
+          "의견 수를 실제 여론 비율처럼 일반화하지 않음",
+          "정책 찬반을 모델이 결정하지 않음",
+          "소수 의견도 별도 표시",
+          "법률 자문 금지"
+        ],
+        "starterContext": [
+          "주제는 야간 공공시설 개방 시간 조정",
+          "의견은 표본 발췌",
+          "정책 초안은 synthetic"
+        ],
+        "deliverables": [
+          "쟁점 맵",
+          "찬성/우려 근거 표",
+          "누락 이해관계자",
+          "정책 초안 수정 질문",
+          "검증 한계"
+        ],
+        "materials": [
+          {
+            "id": "policy-feedback-synthesis-m1",
+            "title": "정책 초안 발췌",
+            "description": "야간 공공시설 개방 정책 초안",
+            "kind": "pdf",
+            "fileName": "night_facility_policy_draft.pdf",
+            "mimeType": "application/pdf",
+            "href": "/synthetic/skai/batch-001/night_facility_policy_draft.pdf",
+            "extractedText": "목표: 청년과 교대근무자의 공공시설 접근성 확대.\n안: 평일 3개 생활문화센터를 22시까지 시범 개방. 기간 3개월.\n운영: 기존 인력의 교대 조정과 자원봉사 안내 인력 활용.\n평가: 이용자 수, 민원 건수, 안전 사고 보고, 운영비 증가분."
+          },
+          {
+            "id": "policy-feedback-synthesis-m2",
+            "title": "시민 의견 CSV",
+            "description": "익명 시민 의견 발췌",
+            "kind": "csv",
+            "fileName": "citizen_comments_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/citizen_comments_sample.csv",
+            "extractedText": "id,stance,comment\nC01,찬성,\"퇴근 후 이용할 수 있어 좋다. 특히 자격증 공부 공간이 부족하다.\"\nC02,우려,\"밤에 주변 소음과 쓰레기가 늘까 걱정된다.\"\nC03,찬성,\"교대근무자는 낮 시간 이용이 어렵다.\"\nC04,우려,\"기존 직원에게 부담이 갈 수 있다. 예산이 명확해야 한다.\"\nC05,조건부,\"센터마다 위치가 달라 안전 귀가 대책이 필요하다.\"\nC06,우려,\"자원봉사자에게 야간 안전 책임을 맡기는 것은 불안하다.\""
+          },
+          {
+            "id": "policy-feedback-synthesis-m3",
+            "title": "회의 메모",
+            "description": "담당 부서 내부 검토 메모",
+            "kind": "text",
+            "fileName": "department_review_minutes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/department_review_minutes.txt",
+            "extractedText": "시설팀: 야간 냉난방비 증가 추정 필요. 보안 순찰 동선 조정 필요.\n청년정책팀: 이용자 수만 보면 취약계층 접근성 개선 여부가 보이지 않을 수 있음.\n민원팀: 소음 민원은 주변 주거 밀집도와 관련. 센터별 차등 적용 검토.\n예산팀: 3개월 시범은 가능하지만 상시 확대는 별도 심사 필요."
+          },
+          {
+            "id": "policy-feedback-synthesis-m4",
+            "title": "이해관계자 목록 초안",
+            "description": "초기 검토에서 떠오른 대상자",
+            "kind": "text",
+            "fileName": "stakeholder_list_draft.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/stakeholder_list_draft.txt",
+            "extractedText": "현재 포함: 청년 이용자, 교대근무자, 시설 직원, 인근 주민.\n누락 가능: 야간 이동 취약자, 장애인 이용자, 자원봉사자, 청소년 보호자, 지역 경찰/순찰 담당."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "시민 정책",
+        "subdomain": "공개 의견 합성",
+        "primarySkill": "stakeholder_alignment",
+        "secondarySkills": [
+          "material_grounding",
+          "verification",
+          "problem_definition",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "policy PDF",
+          "public comments csv",
+          "meeting minutes",
+          "stakeholder note"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 5,
+        "primaryFailureMode": "댓글 다수의 분위기를 여론으로 단정하거나 찬반 양쪽의 근거와 운영 제약을 섞어버린다.",
+        "idealBottleneck": "Turn 3에서 의견 빈도보다 쟁점 다양성과 영향받는 집단을 중심으로 재구성하는 지점",
+        "graphPattern": "정책 목표 확인 → 시민 의견을 쟁점별 클러스터링 → 부서 메모로 실행 리스크 검증 → 추가 공론화 질문 도출 → 상태가 '의견 목록'에서 '균형 브리프'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "policy-feedback-synthesis-m1",
+          "policy-feedback-synthesis-m2",
+          "policy-feedback-synthesis-m3",
+          "policy-feedback-synthesis-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '시민 의견 정책 합성'이고 내 목표는 다음과 같아: 정책 담당자에게 전달할 수 있는 균형 잡힌 쟁점 브리프와 추가 공론화 질문을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "policy-feedback-synthesis-m1",
+              "policy-feedback-synthesis-m2",
+              "policy-feedback-synthesis-m3",
+              "policy-feedback-synthesis-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "policy-feedback-synthesis-m1",
+              "policy-feedback-synthesis-m2",
+              "policy-feedback-synthesis-m3",
+              "policy-feedback-synthesis-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "policy-feedback-synthesis-m1",
+              "policy-feedback-synthesis-m2",
+              "policy-feedback-synthesis-m3",
+              "policy-feedback-synthesis-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "댓글 다수의 분위기를 여론으로 단정하거나 찬반 양쪽의 근거와 운영 제약을 섞어버린다.",
+        "goodTracePattern": "정책 목표 확인 → 시민 의견을 쟁점별 클러스터링 → 부서 메모로 실행 리스크 검증 → 추가 공론화 질문 도출 → 상태가 '의견 목록'에서 '균형 브리프'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "nonprofit-campaign-concept",
+        "title": "비영리 캠페인 콘셉트 잡기",
+        "subtitle": "막연한 메시지를 기부자 행동으로 연결하기",
+        "category": "creative",
+        "difficulty": "intro",
+        "goalProfile": "exploration",
+        "estimatedMinutes": 25,
+        "statement": "작은 비영리 단체가 신규 후원자에게 보낼 캠페인을 준비 중이지만 메시지가 추상적이다. 사용자는 AI와 함께 대상, 감정, 행동 요청을 먼저 정의해야 한다.",
+        "userGoal": "후원 압박이 아니라 신뢰를 만드는 캠페인 콘셉트 3개와 검증 질문을 만든다.",
+        "constraints": [
+          "수혜자 사연을 자극적으로 꾸미지 않음",
+          "실제 수치가 없으면 placeholder로 표시",
+          "후원 강요 표현 금지",
+          "개인정보나 실제 사례 식별 정보 금지"
+        ],
+        "starterContext": [
+          "단체는 가명 '작은빛학교'",
+          "활동은 방과후 학습 지원",
+          "사용 가능한 사진은 아직 없음"
+        ],
+        "deliverables": [
+          "대상 독자 정의",
+          "핵심 메시지 후보",
+          "캠페인 콘셉트 3개",
+          "검증 질문",
+          "첫 뉴스레터 구조"
+        ],
+        "materials": [
+          {
+            "id": "nonprofit-campaign-concept-m1",
+            "title": "캠페인 브리프",
+            "description": "단체 내부자가 적은 초기 메모",
+            "kind": "text",
+            "fileName": "nonprofit_campaign_brief.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/nonprofit_campaign_brief.txt",
+            "extractedText": "목표: 정기후원 문의 증가.\n하고 싶은 말: 아이들이 포기하지 않게 곁에 있어 주세요.\n우려: 너무 불쌍하게 보이거나, 단체가 돈만 요구하는 느낌은 피하고 싶다.\n현재 자산: 활동 사진 일부, 교사 인터뷰 예정, 작년 프로그램 운영 횟수는 확인 필요."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "콘텐츠/비영리",
+        "subdomain": "캠페인 기획",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "adaptation",
+          "instruction_clarity",
+          "verification"
+        ],
+        "materialProfile": [
+          "creative brief"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "감성적인 카피만 여러 개 만들고 대상 독자와 검증 가능한 행동 목표를 정의하지 않는다.",
+        "idealBottleneck": "Turn 1에서 '좋은 문구' 요청을 '대상-감정-행동' 구조로 바꾸는 지점",
+        "graphPattern": "막연한 캠페인 목표 → 메시지 프레임 정의 → 콘셉트 후보 생성 → 윤리/검증 질문 추가 → 상태가 '추상 메시지'에서 '테스트 가능한 캠페인 방향'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "nonprofit-campaign-concept-m1"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '비영리 캠페인 콘셉트 잡기'이고 내 목표는 다음과 같아: 후원 압박이 아니라 신뢰를 만드는 캠페인 콘셉트 3개와 검증 질문을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "nonprofit-campaign-concept-m1"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "nonprofit-campaign-concept-m1"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "nonprofit-campaign-concept-m1"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "감성적인 카피만 여러 개 만들고 대상 독자와 검증 가능한 행동 목표를 정의하지 않는다.",
+        "goodTracePattern": "막연한 캠페인 목표 → 메시지 프레임 정의 → 콘셉트 후보 생성 → 윤리/검증 질문 추가 → 상태가 '추상 메시지'에서 '테스트 가능한 캠페인 방향'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "recipe-video-script-adaptation",
+        "title": "레시피 영상 스크립트 변환",
+        "subtitle": "긴 조리 메모를 초보자용 숏폼 대본으로 바꾸기",
+        "category": "creative",
+        "difficulty": "standard",
+        "goalProfile": "learning_oriented",
+        "estimatedMinutes": 35,
+        "statement": "요리 강사가 적어둔 긴 조리 메모를 초보자도 따라 할 수 있는 60초 영상 대본으로 바꾸려 한다. 사용자는 AI와 함께 핵심 단계, 실패 포인트, 화면 구성을 나누어야 한다.",
+        "userGoal": "정확한 조리 순서를 유지하면서 초보자 친화적인 숏폼 스크립트와 촬영 체크리스트를 만든다.",
+        "constraints": [
+          "알레르기나 영양 의학 조언 금지",
+          "조리 시간과 재료량은 자료 기준 유지",
+          "영상 길이는 60초 내외",
+          "초보자가 헷갈릴 수 있는 용어는 풀어서 설명"
+        ],
+        "starterContext": [
+          "요리는 버섯 크림 리조또",
+          "대상은 자취 초보",
+          "촬영 장비는 스마트폰"
+        ],
+        "deliverables": [
+          "단계 요약",
+          "60초 대본",
+          "화면 컷 구성",
+          "실패 방지 팁",
+          "촬영 체크리스트"
+        ],
+        "materials": [
+          {
+            "id": "recipe-video-script-adaptation-m1",
+            "title": "조리 메모",
+            "description": "강사의 원본 레시피 메모",
+            "kind": "text",
+            "fileName": "mushroom_risotto_notes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/mushroom_risotto_notes.txt",
+            "extractedText": "재료: 쌀 1컵, 양송이 120g, 양파 1/4개, 버터 1큰술, 우유 200ml, 물 300ml, 치즈 2큰술, 소금 약간.\n양파와 버섯을 약불에서 볶아 향을 낸다. 쌀은 씻지 않고 넣어 1분 볶는다. 물을 나눠 넣고 저어가며 익힌다. 거의 익으면 우유와 치즈를 넣고 농도를 맞춘다. 총 20분."
+          },
+          {
+            "id": "recipe-video-script-adaptation-m2",
+            "title": "시청자 댓글",
+            "description": "기존 요리 영상 댓글 발췌",
+            "kind": "csv",
+            "fileName": "beginner_cooking_comments.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/beginner_cooking_comments.csv",
+            "extractedText": "id,comment\n1,\"약불이 어느 정도인지 모르겠어요\"\n2,\"쌀을 씻지 않는 이유를 설명해 주세요\"\n3,\"우유 넣는 타이밍이 헷갈렸어요\"\n4,\"재료 자막이 빨리 지나가요\"\n5,\"실패했을 때 되돌리는 방법이 있으면 좋겠어요\""
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "콘텐츠 제작",
+        "subdomain": "교육형 영상 대본",
+        "primarySkill": "decomposition",
+        "secondarySkills": [
+          "material_grounding",
+          "adaptation",
+          "instruction_clarity"
+        ],
+        "materialProfile": [
+          "recipe notes",
+          "audience comments"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "맛있어 보이는 카피에 집중해 조리 순서와 초보자 혼란 포인트를 누락한다.",
+        "idealBottleneck": "Turn 2에서 원본 단계와 댓글의 혼란 포인트를 연결해 컷 구조를 짜는 지점",
+        "graphPattern": "제작 목표 확인 → 조리 단계를 학습 단위로 분해 → 댓글 기반 설명 보강 → 대본/촬영표 작성 → 상태가 '긴 메모'에서 '촬영 가능한 교육 스크립트'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "recipe-video-script-adaptation-m1",
+          "recipe-video-script-adaptation-m2"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '레시피 영상 스크립트 변환'이고 내 목표는 다음과 같아: 정확한 조리 순서를 유지하면서 초보자 친화적인 숏폼 스크립트와 촬영 체크리스트를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "recipe-video-script-adaptation-m1",
+              "recipe-video-script-adaptation-m2"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "recipe-video-script-adaptation-m1",
+              "recipe-video-script-adaptation-m2"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "recipe-video-script-adaptation-m1",
+              "recipe-video-script-adaptation-m2"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "맛있어 보이는 카피에 집중해 조리 순서와 초보자 혼란 포인트를 누락한다.",
+        "goodTracePattern": "제작 목표 확인 → 조리 단계를 학습 단위로 분해 → 댓글 기반 설명 보강 → 대본/촬영표 작성 → 상태가 '긴 메모'에서 '촬영 가능한 교육 스크립트'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "brand-voice-refresh-conflict",
+        "title": "브랜드 톤 리프레시",
+        "subtitle": "기존 콘텐츠·불만 로그·스타일 가이드를 조정해 새 톤 제안하기",
+        "category": "creative",
+        "difficulty": "advanced",
+        "goalProfile": "exploration",
+        "estimatedMinutes": 65,
+        "statement": "브랜드가 더 친근한 톤으로 바꾸고 싶지만, 기존 고객은 전문성과 신뢰감을 중요하게 본다. 사용자는 AI와 함께 톤 변화의 범위와 금지선을 설계해야 한다.",
+        "userGoal": "브랜드 신뢰를 해치지 않으면서 실험 가능한 새 보이스 가이드와 샘플 문안을 만든다.",
+        "constraints": [
+          "전문성을 낮추는 과도한 유행어 금지",
+          "불만 고객을 조롱하거나 방어적으로 표현하지 않음",
+          "기존 가이드와 충돌하는 부분은 명시",
+          "최종안은 A/B 테스트 가능한 수준"
+        ],
+        "starterContext": [
+          "서비스는 B2B 보안 교육 SaaS",
+          "고객은 HR/보안 담당자",
+          "실제 기업명은 없음"
+        ],
+        "deliverables": [
+          "현재 톤 진단",
+          "새 보이스 원칙",
+          "금지 표현",
+          "샘플 문안 5개",
+          "A/B 테스트 기준"
+        ],
+        "materials": [
+          {
+            "id": "brand-voice-refresh-conflict-m1",
+            "title": "기존 스타일 가이드",
+            "description": "현재 브랜드 문체 규칙",
+            "kind": "pdf",
+            "fileName": "current_voice_guide.pdf",
+            "mimeType": "application/pdf",
+            "href": "/synthetic/skai/batch-001/current_voice_guide.pdf",
+            "extractedText": "원칙: 명확함, 전문성, 과장 없는 표현. 고객의 보안 책임을 존중한다.\n금지: 공포를 조장하는 표현, 지나친 농담, 공격적 비교.\n권장: '위험을 줄입니다', '팀이 이해하기 쉽게', '관리자가 확인할 수 있습니다'."
+          },
+          {
+            "id": "brand-voice-refresh-conflict-m2",
+            "title": "최근 게시물 성과",
+            "description": "콘텐츠별 반응 요약 CSV",
+            "kind": "csv",
+            "fileName": "recent_content_performance.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/recent_content_performance.csv",
+            "extractedText": "post_id,tone,topic,open_rate,reply_note\nP1,formal,보안 교육 체크리스트,28%,\"실무적이라 좋다\"\nP2,casual,퀴즈형 피싱 테스트,34%,\"재미있지만 조금 가볍다\"\nP3,formal,감사 대비 문서,22%,\"어렵다\"\nP4,casual,신입 교육 팁,31%,\"공유하기 쉽다\""
+          },
+          {
+            "id": "brand-voice-refresh-conflict-m3",
+            "title": "고객 불만 로그",
+            "description": "고객성공팀이 정리한 톤 관련 의견",
+            "kind": "text",
+            "fileName": "voice_complaint_log.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/voice_complaint_log.txt",
+            "extractedText": "고객 A: 보안 사고를 너무 무섭게 표현하면 내부 설득이 어려워진다.\n고객 B: 쉬운 말은 좋지만, 장난스러운 문구는 임원 보고용으로 부적절하다.\n고객 C: 교육 참여율을 높이는 예시는 필요하다.\n고객 D: 감사·규정 관련 콘텐츠는 정확한 용어를 유지했으면 한다."
+          },
+          {
+            "id": "brand-voice-refresh-conflict-m4",
+            "title": "마케팅 요청서",
+            "description": "리프레시 목표 메모",
+            "kind": "text",
+            "fileName": "marketing_voice_refresh_request.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/marketing_voice_refresh_request.txt",
+            "extractedText": "목표: 딱딱한 이미지를 줄이고 교육 참여율을 높이고 싶다.\n희망: 제목은 더 짧고 행동 중심. 본문은 담당자의 부담을 이해하는 톤.\n우려: 보안 전문성이 약해 보이면 안 된다.\n실험 범위: 뉴스레터 제목, 온보딩 안내문, 기능 업데이트 공지."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "마케팅/브랜드",
+        "subdomain": "브랜드 보이스 시스템",
+        "primarySkill": "adaptation",
+        "secondarySkills": [
+          "stakeholder_alignment",
+          "material_grounding",
+          "verification",
+          "workflow_design"
+        ],
+        "materialProfile": [
+          "style guide PDF",
+          "performance csv",
+          "complaint log",
+          "marketing brief"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 5,
+        "primaryFailureMode": "친근한 톤을 유행어와 농담으로만 해석해 보안 SaaS의 신뢰 요구를 놓친다.",
+        "idealBottleneck": "Turn 3에서 콘텐츠 유형별 톤 허용 범위를 나누고 금지선을 정의하는 지점",
+        "graphPattern": "리프레시 목표 확인 → 기존 가이드/성과/불만 분석 → 톤 원칙과 경계 설정 → 샘플 문안 테스트 설계 → 상태가 '느낌 중심 요청'에서 '운영 가능한 보이스 가이드'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "brand-voice-refresh-conflict-m1",
+          "brand-voice-refresh-conflict-m2",
+          "brand-voice-refresh-conflict-m3",
+          "brand-voice-refresh-conflict-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '브랜드 톤 리프레시'이고 내 목표는 다음과 같아: 브랜드 신뢰를 해치지 않으면서 실험 가능한 새 보이스 가이드와 샘플 문안을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "brand-voice-refresh-conflict-m1",
+              "brand-voice-refresh-conflict-m2",
+              "brand-voice-refresh-conflict-m3",
+              "brand-voice-refresh-conflict-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "brand-voice-refresh-conflict-m1",
+              "brand-voice-refresh-conflict-m2",
+              "brand-voice-refresh-conflict-m3",
+              "brand-voice-refresh-conflict-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "brand-voice-refresh-conflict-m1",
+              "brand-voice-refresh-conflict-m2",
+              "brand-voice-refresh-conflict-m3",
+              "brand-voice-refresh-conflict-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "친근한 톤을 유행어와 농담으로만 해석해 보안 SaaS의 신뢰 요구를 놓친다.",
+        "goodTracePattern": "리프레시 목표 확인 → 기존 가이드/성과/불만 분석 → 톤 원칙과 경계 설정 → 샘플 문안 테스트 설계 → 상태가 '느낌 중심 요청'에서 '운영 가능한 보이스 가이드'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "museum-audio-guide-sprint",
+        "title": "전시 오디오 가이드 압축",
+        "subtitle": "작품 설명과 관람객 페르소나를 90초 안내문으로 만들기",
+        "category": "creative",
+        "difficulty": "standard",
+        "goalProfile": "speed_first",
+        "estimatedMinutes": 30,
+        "statement": "소규모 전시 개막이 임박했지만 오디오 가이드 대본이 없다. 사용자는 작품 설명과 관람객 페르소나를 근거로 짧고 이해하기 쉬운 안내문을 만들어야 한다.",
+        "userGoal": "개막 전 검수 가능한 90초 오디오 가이드 대본과 큐레이터 확인 질문을 만든다.",
+        "constraints": [
+          "작품 해석을 확정 사실처럼 과장하지 않음",
+          "어려운 미술 용어는 쉬운 설명으로 바꿈",
+          "전체 낭독 시간은 약 90초",
+          "작가의 실제 약력은 만들지 않음"
+        ],
+        "starterContext": [
+          "전시는 지역 작가 3인전",
+          "자료는 작품 설명 일부",
+          "관람객은 가족 단위와 청년층이 섞임"
+        ],
+        "deliverables": [
+          "대본 구조",
+          "90초 오디오 가이드",
+          "용어 풀이",
+          "큐레이터 확인 질문"
+        ],
+        "materials": [
+          {
+            "id": "museum-audio-guide-sprint-m1",
+            "title": "작품 설명 카드",
+            "description": "세 작품의 내부 설명 메모",
+            "kind": "text",
+            "fileName": "artwork_description_cards.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/artwork_description_cards.txt",
+            "extractedText": "작품 1: '겹친 골목' — 오래된 동네 골목 사진 위에 반투명한 색면을 겹친 혼합 매체 작업. 기억과 현재의 충돌을 다룸.\n작품 2: '낮은 파도' — 버려진 천 조각을 엮어 만든 설치. 반복 노동과 돌봄의 흔적을 표현.\n작품 3: '창문 없는 방' — 작은 스피커에서 낮은 도시 소음이 재생되는 사운드 작업. 고립감과 집중의 경계를 탐색."
+          },
+          {
+            "id": "museum-audio-guide-sprint-m2",
+            "title": "관람객 페르소나",
+            "description": "운영팀이 예상한 관람객 유형",
+            "kind": "text",
+            "fileName": "visitor_personas.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/visitor_personas.txt",
+            "extractedText": "가족 관람객: 아이와 함께 와서 3분 이상 한 작품 앞에 머물기 어렵다. 쉬운 질문을 좋아한다.\n청년 관람객: 사진 찍을 포인트와 작가의 문제의식에 관심이 있다.\n지역 주민: 작품 속 장소나 재료가 지역과 연결되는지 궁금해한다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "문화/전시",
+        "subdomain": "오디오 가이드 대본",
+        "primarySkill": "adaptation",
+        "secondarySkills": [
+          "material_grounding",
+          "instruction_clarity",
+          "decomposition"
+        ],
+        "materialProfile": [
+          "artwork cards",
+          "visitor personas"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "작품 설명을 화려하게 늘리며 관람객 수준, 시간 제한, 확인 질문을 반영하지 않는다.",
+        "idealBottleneck": "Turn 2에서 작품별 핵심 메시지와 관람객 질문을 연결해 90초 구조로 압축하는 지점",
+        "graphPattern": "제작 시간 제약 확인 → 작품/관람객 자료 추출 → 낭독 구조 압축 → 확인 질문 추가 → 상태가 '설명 카드'에서 '검수 가능한 대본'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "museum-audio-guide-sprint-m1",
+          "museum-audio-guide-sprint-m2"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '전시 오디오 가이드 압축'이고 내 목표는 다음과 같아: 개막 전 검수 가능한 90초 오디오 가이드 대본과 큐레이터 확인 질문을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "museum-audio-guide-sprint-m1",
+              "museum-audio-guide-sprint-m2"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "museum-audio-guide-sprint-m1",
+              "museum-audio-guide-sprint-m2"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "museum-audio-guide-sprint-m1",
+              "museum-audio-guide-sprint-m2"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "작품 설명을 화려하게 늘리며 관람객 수준, 시간 제한, 확인 질문을 반영하지 않는다.",
+        "goodTracePattern": "제작 시간 제약 확인 → 작품/관람객 자료 추출 → 낭독 구조 압축 → 확인 질문 추가 → 상태가 '설명 카드'에서 '검수 가능한 대본'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "branching-game-narrative-seed",
+        "title": "분기형 게임 서사 씨앗",
+        "subtitle": "세계관 아이디어를 선택지와 결과 구조로 바꾸기",
+        "category": "creative",
+        "difficulty": "intro",
+        "goalProfile": "learning_oriented",
+        "estimatedMinutes": 30,
+        "statement": "인디 게임 아이디어는 있지만 플레이어 선택이 이야기에 어떤 영향을 주는지 정리되어 있지 않다. 사용자는 AI와 함께 주제, 선택지, 결과, 검증 질문을 설계해야 한다.",
+        "userGoal": "작은 프로토타입에 넣을 수 있는 3개 장면의 분기 구조와 작가용 체크리스트를 만든다.",
+        "constraints": [
+          "폭력적 세부 묘사나 혐오 표현 금지",
+          "결말은 3개 이하",
+          "선택의 결과가 즉시/지연 효과로 나뉘게 설계",
+          "코딩 구현은 범위 밖"
+        ],
+        "starterContext": [
+          "장르는 조용한 탐험 게임",
+          "주제는 기억을 잃은 마을 기록관",
+          "플레이 시간 목표는 15분"
+        ],
+        "deliverables": [
+          "핵심 주제",
+          "장면 3개",
+          "선택지와 결과표",
+          "분기 검증 질문",
+          "작가 노트"
+        ],
+        "materials": [],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "게임/스토리텔링",
+        "subdomain": "분기 서사 설계",
+        "primarySkill": "decomposition",
+        "secondarySkills": [
+          "problem_definition",
+          "adaptation",
+          "workflow_design"
+        ],
+        "materialProfile": [
+          "no attachment"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "세계관 설명만 확장하고 실제 플레이어 선택과 상태 변화를 설계하지 않는다.",
+        "idealBottleneck": "Turn 1에서 '흥미로운 이야기'를 '선택-결과-상태 변화' 표로 바꾸는 지점",
+        "graphPattern": "아이디어 제시 → 주제/플레이 목표 정의 → 선택지와 상태 변화를 설계 → 프로토타입 검증 질문 작성 → 상태가 '세계관 메모'에서 '구현 전 내러티브 구조'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '분기형 게임 서사 씨앗'이고 내 목표는 다음과 같아: 작은 프로토타입에 넣을 수 있는 3개 장면의 분기 구조와 작가용 체크리스트를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [],
+            "prompt": "첨부 자료는 없어. 지금 제공한 세계관과 제약만 바탕으로 선택지가 실제로 상태를 바꾸는지 점검해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "세계관 설명만 확장하고 실제 플레이어 선택과 상태 변화를 설계하지 않는다.",
+        "goodTracePattern": "아이디어 제시 → 주제/플레이 목표 정의 → 선택지와 상태 변화를 설계 → 프로토타입 검증 질문 작성 → 상태가 '세계관 메모'에서 '구현 전 내러티브 구조'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "customer-review-priority-analysis",
+        "title": "고객 리뷰 우선순위 분석",
+        "subtitle": "리뷰 CSV를 기능 개선 후보로 변환하기",
+        "category": "data_analysis",
+        "difficulty": "standard",
+        "goalProfile": "exploration",
+        "estimatedMinutes": 45,
+        "statement": "앱 리뷰가 쌓였지만 불만 유형과 개선 우선순위가 정리되어 있지 않다. 사용자는 AI와 함께 리뷰를 분류하고 근거 있는 개선 후보를 뽑아야 한다.",
+        "userGoal": "작은 제품팀이 다음 스프린트에서 검토할 개선 후보 3개와 근거를 만든다.",
+        "constraints": [
+          "리뷰 표본이 전체 고객을 대표한다고 단정하지 않음",
+          "감성 점수는 자료 기반의 간단한 분류로만 사용",
+          "개인 식별 정보 생성 금지",
+          "기능 개선과 고객 응대 문구를 분리"
+        ],
+        "starterContext": [
+          "서비스는 모바일 학습 앱",
+          "리뷰는 최근 2주 표본",
+          "팀 리소스는 디자이너 1명, 개발자 2명"
+        ],
+        "deliverables": [
+          "리뷰 분류 기준",
+          "카테고리별 근거",
+          "개선 후보 3개",
+          "응답 템플릿",
+          "추가 데이터 필요 목록"
+        ],
+        "materials": [
+          {
+            "id": "customer-review-priority-analysis-m1",
+            "title": "앱 리뷰 표본",
+            "description": "최근 리뷰 12건 CSV",
+            "kind": "csv",
+            "fileName": "learning_app_reviews_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/learning_app_reviews_sample.csv",
+            "extractedText": "id,rating,review\nR01,2,\"강의 이어보기 위치가 자꾸 초기화돼요\"\nR02,4,\"짧은 퀴즈가 좋아요. 다만 오답 설명이 더 있으면 좋겠어요\"\nR03,1,\"결제했는데 프리미엄 표시가 늦게 떠서 당황했습니다\"\nR04,3,\"알림이 너무 자주 와요\"\nR05,2,\"다운로드 강의가 지하철에서 끊겨요\"\nR06,5,\"출퇴근길에 보기 좋습니다\"\nR07,2,\"검색이 과목명만 되는 것 같아요\"\nR08,3,\"배속 버튼이 작아요\"\nR09,1,\"로그인 후 흰 화면이 한 번 나왔어요\"\nR10,4,\"복습 카드 기능이 유용합니다\"\nR11,2,\"완강 표시 기준이 헷갈려요\"\nR12,3,\"초보자 코스 추천이 더 똑똑했으면 좋겠어요\""
+          },
+          {
+            "id": "customer-review-priority-analysis-m2",
+            "title": "팀 리소스 메모",
+            "description": "다음 스프린트 제약",
+            "kind": "text",
+            "fileName": "sprint_capacity_note.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/sprint_capacity_note.txt",
+            "extractedText": "다음 스프린트 2주. 결제 시스템 대규모 수정은 불가.\n가능: UI 문구 수정, 버튼 크기 조정, 알림 빈도 설정, 로그 수집 추가, 오답 설명 템플릿 개선.\n불확실: 다운로드 안정화는 원인 확인 필요. 검색 확장은 백엔드 영향 검토 필요."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "데이터 분석/제품",
+        "subdomain": "VOC 분류",
+        "primarySkill": "material_grounding",
+        "secondarySkills": [
+          "decomposition",
+          "verification",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "review csv",
+          "capacity note"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "평점 낮은 리뷰만 뽑거나 빈도와 실행 가능성을 구분하지 않고 우선순위를 정한다.",
+        "idealBottleneck": "Turn 2에서 리뷰 카테고리와 리소스 제약을 함께 반영하는 지점",
+        "graphPattern": "분석 목표 확인 → 리뷰 분류 기준 수립 → 표본 근거와 실행 가능성 대조 → 개선 후보 도출 → 상태가 '원문 리뷰 묶음'에서 '스프린트 후보'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "customer-review-priority-analysis-m1",
+          "customer-review-priority-analysis-m2"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '고객 리뷰 우선순위 분석'이고 내 목표는 다음과 같아: 작은 제품팀이 다음 스프린트에서 검토할 개선 후보 3개와 근거를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "customer-review-priority-analysis-m1",
+              "customer-review-priority-analysis-m2"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "customer-review-priority-analysis-m1",
+              "customer-review-priority-analysis-m2"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "customer-review-priority-analysis-m1",
+              "customer-review-priority-analysis-m2"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "평점 낮은 리뷰만 뽑거나 빈도와 실행 가능성을 구분하지 않고 우선순위를 정한다.",
+        "goodTracePattern": "분석 목표 확인 → 리뷰 분류 기준 수립 → 표본 근거와 실행 가능성 대조 → 개선 후보 도출 → 상태가 '원문 리뷰 묶음'에서 '스프린트 후보'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "monthly-kpi-anomaly-check",
+        "title": "월간 KPI 이상치 점검",
+        "subtitle": "스프레드시트 수치와 메모를 대조해 보고서 오류를 찾기",
+        "category": "data_analysis",
+        "difficulty": "standard",
+        "goalProfile": "accuracy_first",
+        "estimatedMinutes": 50,
+        "statement": "월간 KPI 보고서 초안에 수치가 들어 있지만, 일부 계산과 주석이 맞지 않을 수 있다. 사용자는 AI와 함께 지표 정의, 계산 검산, 이상치 설명을 분리해야 한다.",
+        "userGoal": "경영회의 전에 잘못된 수치나 과장된 해석을 줄인 KPI 검토 메모를 만든다.",
+        "constraints": [
+          "자료에 없는 원인을 단정하지 않음",
+          "증감률은 재계산",
+          "분모가 바뀐 지표는 별도 표시",
+          "최종 보고 문장은 보수적으로 작성"
+        ],
+        "starterContext": [
+          "기준 월은 2026년 5월",
+          "서비스는 B2B 구독형 도구",
+          "금액 단위는 만원"
+        ],
+        "deliverables": [
+          "검산표",
+          "이상치 목록",
+          "해석 위험 문장 수정안",
+          "추가 확인 질문"
+        ],
+        "materials": [
+          {
+            "id": "monthly-kpi-anomaly-check-m1",
+            "title": "KPI 원표",
+            "description": "월별 지표 스프레드시트 발췌",
+            "kind": "spreadsheet",
+            "fileName": "monthly_kpi_table_may2026.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/monthly_kpi_table_may2026.xlsx",
+            "extractedText": "지표,2026-04,2026-05,비고\n활성 계정,820,910,유료 계정 기준\n신규 리드,340,510,웨비나 포함\n전환율,12%,10%,신규 고객/신규 리드\nMRR,14800,15700,만원\n해지 계정,21,28,유료 계정 기준\n지원 티켓,180,265,분류 기준 동일"
+          },
+          {
+            "id": "monthly-kpi-anomaly-check-m2",
+            "title": "보고서 초안",
+            "description": "담당자가 쓴 해석 문장",
+            "kind": "text",
+            "fileName": "kpi_report_draft.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/kpi_report_draft.txt",
+            "extractedText": "5월 신규 리드는 전월 대비 60% 증가했다. 전환율은 소폭 하락했지만 신규 고객 수는 크게 증가했다. 지원 티켓 증가는 고객 증가에 따른 자연스러운 현상으로 보인다. MRR은 안정적으로 7% 성장했다."
+          },
+          {
+            "id": "monthly-kpi-anomaly-check-m3",
+            "title": "운영 메모",
+            "description": "지표 기준 변경과 이벤트 메모",
+            "kind": "text",
+            "fileName": "kpi_ops_notes.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/kpi_ops_notes.txt",
+            "extractedText": "5월 신규 리드에는 5/18 웨비나 신청자 130명이 포함됨. 4월에는 웨비나가 없었음.\n지원 티켓은 5/10부터 '사용 문의'와 '버그 의심'을 더 세분화해 집계함.\n신규 고객 수는 원표에 없음. 전환율 정의상 계산하려면 신규 리드와 전환율 곱으로 추정 가능하나 반올림 기준 필요."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "데이터 분석/보고",
+        "subdomain": "KPI 검산",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "material_grounding",
+          "accuracy_first",
+          "decomposition"
+        ],
+        "materialProfile": [
+          "KPI spreadsheet",
+          "draft report",
+          "ops notes"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "보고서 초안의 증감률과 원인 해석을 그대로 받아들인다.",
+        "idealBottleneck": "Turn 2에서 신규 리드 증가율과 MRR 성장률을 재계산하고 집계 기준 변경을 표시하는 지점",
+        "graphPattern": "보고 목적 확인 → 지표 정의/수치 추출 → 계산 검산과 기준 변경 탐지 → 문장 수정 → 상태가 '초안 보고'에서 '검증된 KPI 메모'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "monthly-kpi-anomaly-check-m1",
+          "monthly-kpi-anomaly-check-m2",
+          "monthly-kpi-anomaly-check-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '월간 KPI 이상치 점검'이고 내 목표는 다음과 같아: 경영회의 전에 잘못된 수치나 과장된 해석을 줄인 KPI 검토 메모를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "monthly-kpi-anomaly-check-m1",
+              "monthly-kpi-anomaly-check-m2",
+              "monthly-kpi-anomaly-check-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "monthly-kpi-anomaly-check-m1",
+              "monthly-kpi-anomaly-check-m2",
+              "monthly-kpi-anomaly-check-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "monthly-kpi-anomaly-check-m1",
+              "monthly-kpi-anomaly-check-m2",
+              "monthly-kpi-anomaly-check-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "보고서 초안의 증감률과 원인 해석을 그대로 받아들인다.",
+        "goodTracePattern": "보고 목적 확인 → 지표 정의/수치 추출 → 계산 검산과 기준 변경 탐지 → 문장 수정 → 상태가 '초안 보고'에서 '검증된 KPI 메모'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "survey-segmentation-plan",
+        "title": "설문 세그먼트 해석",
+        "subtitle": "정량표와 주관식 답변을 합쳐 사용자군별 전략 세우기",
+        "category": "data_analysis",
+        "difficulty": "advanced",
+        "goalProfile": "exploration",
+        "estimatedMinutes": 75,
+        "statement": "신규 서비스 설문 결과가 있지만, 평균 점수만 보면 중요한 사용자군 차이가 보이지 않는다. 사용자는 AI와 함께 세그먼트 가설, 자료 한계, 후속 실험을 설계해야 한다.",
+        "userGoal": "표본의 한계를 인정하면서도 우선 검증할 사용자 세그먼트와 맞춤 액션을 제안한다.",
+        "constraints": [
+          "통계적으로 유의하다고 단정하지 않음",
+          "소수 응답을 무시하지 않음",
+          "개인정보 추론 금지",
+          "세그먼트는 실행 가능한 행동 차이로 정의",
+          "최종안은 후속 실험 포함"
+        ],
+        "starterContext": [
+          "서비스는 온라인 협업 학습 도구",
+          "응답자는 베타 사용자 48명",
+          "자료는 요약 발췌"
+        ],
+        "deliverables": [
+          "세그먼트 가설",
+          "근거 표",
+          "한계와 반례",
+          "맞춤 액션",
+          "후속 검증 실험"
+        ],
+        "materials": [
+          {
+            "id": "survey-segmentation-plan-m1",
+            "title": "설문 요약표",
+            "description": "응답군별 평균 점수",
+            "kind": "spreadsheet",
+            "fileName": "beta_survey_summary.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/beta_survey_summary.xlsx",
+            "extractedText": "군,응답수,초기이해도,협업가치,가격민감도,재사용의향\n교사,16,3.1,4.4,3.8,4.0\n스터디리더,14,3.8,4.1,4.2,3.7\n기업교육담당,10,2.9,3.9,2.7,3.5\n개인학습자,8,4.0,2.8,4.5,2.9\n점수는 1~5점."
+          },
+          {
+            "id": "survey-segmentation-plan-m2",
+            "title": "주관식 답변 발췌",
+            "description": "응답자 의견 일부",
+            "kind": "csv",
+            "fileName": "open_ended_responses_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/open_ended_responses_sample.csv",
+            "extractedText": "segment,comment\n교사,\"수업 전 세팅이 어렵지만 조별 활동 기록은 유용하다\"\n교사,\"학생 초대가 쉬워지면 다시 쓰겠다\"\n스터디리더,\"가격이 낮으면 팀원들과 계속 쓸 수 있다\"\n기업교육담당,\"관리자 보고서가 더 명확해야 내부 설득 가능\"\n개인학습자,\"혼자 쓰기에는 협업 기능이 많아 복잡하다\"\n기업교육담당,\"보안 검토 자료가 필요하다\""
+          },
+          {
+            "id": "survey-segmentation-plan-m3",
+            "title": "제품팀 제약",
+            "description": "다음 6주 실험 가능 범위",
+            "kind": "text",
+            "fileName": "product_experiment_constraints.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/product_experiment_constraints.txt",
+            "extractedText": "가능: 온보딩 문구 변경, 초대 플로우 개선, 관리자 보고서 샘플, 가격 메시지 실험.\n어려움: 권한 구조 대개편, 모바일 앱 신규 개발.\n실험 트래픽: 베타 신규 유입 주 30명 수준.\n영업팀은 기업교육담당 대상 인터뷰 5건까지 가능."
+          },
+          {
+            "id": "survey-segmentation-plan-m4",
+            "title": "리스크 메모",
+            "description": "분석 담당자의 주의 사항",
+            "kind": "text",
+            "fileName": "survey_analysis_risks.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/survey_analysis_risks.txt",
+            "extractedText": "응답자 모집 경로가 다르다. 교사는 웨비나 후 응답, 개인학습자는 앱 내 배너 응답.\n가격 질문 문항은 결제 의사가 아니라 부담 인식에 가깝다.\n재사용의향은 1개월 후 실제 재방문과 다를 수 있다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "데이터 분석/UX 리서치",
+        "subdomain": "설문 세그먼테이션",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "material_grounding",
+          "verification",
+          "adaptation",
+          "stakeholder_alignment"
+        ],
+        "materialProfile": [
+          "survey spreadsheet",
+          "open-ended csv",
+          "constraints memo",
+          "risk note"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 5,
+        "primaryFailureMode": "평균 점수가 높은 군을 바로 타깃으로 정하고 모집 편향과 실행 가능성을 무시한다.",
+        "idealBottleneck": "Turn 3에서 통계 결론이 아니라 검증 가능한 세그먼트 가설로 표현을 낮추는 지점",
+        "graphPattern": "분석 목표 확인 → 정량/정성 자료 연결 → 표본 한계와 실행 제약 반영 → 세그먼트별 실험 설계 → 상태가 '평균표'에서 '검증 가능한 사용자군 전략'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "survey-segmentation-plan-m1",
+          "survey-segmentation-plan-m2",
+          "survey-segmentation-plan-m3",
+          "survey-segmentation-plan-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '설문 세그먼트 해석'이고 내 목표는 다음과 같아: 표본의 한계를 인정하면서도 우선 검증할 사용자 세그먼트와 맞춤 액션을 제안한다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "survey-segmentation-plan-m1",
+              "survey-segmentation-plan-m2",
+              "survey-segmentation-plan-m3",
+              "survey-segmentation-plan-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "survey-segmentation-plan-m1",
+              "survey-segmentation-plan-m2",
+              "survey-segmentation-plan-m3",
+              "survey-segmentation-plan-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "survey-segmentation-plan-m1",
+              "survey-segmentation-plan-m2",
+              "survey-segmentation-plan-m3",
+              "survey-segmentation-plan-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "평균 점수가 높은 군을 바로 타깃으로 정하고 모집 편향과 실행 가능성을 무시한다.",
+        "goodTracePattern": "분석 목표 확인 → 정량/정성 자료 연결 → 표본 한계와 실행 제약 반영 → 세그먼트별 실험 설계 → 상태가 '평균표'에서 '검증 가능한 사용자군 전략'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "inventory-forecast-cleaning",
+        "title": "재고 예측 전처리 판단",
+        "subtitle": "판매 CSV·품절 로그·프로모션 달력을 연결해 예측 리스크 줄이기",
+        "category": "data_analysis",
+        "difficulty": "advanced",
+        "goalProfile": "cost_constrained",
+        "estimatedMinutes": 80,
+        "statement": "소규모 쇼핑몰이 다음 달 재고를 예측하려 하지만, 판매량에는 품절과 프로모션 영향이 섞여 있다. 사용자는 AI와 함께 데이터 전처리 기준과 저비용 예측 절차를 설계해야 한다.",
+        "userGoal": "복잡한 모델보다 데이터 누락과 왜곡을 줄이는 전처리·검증 계획을 만든다.",
+        "constraints": [
+          "실제 매출 예측 수치를 단정하지 않음",
+          "외부 유료 도구 사용 금지",
+          "품절일 판매량은 수요가 아니라 관측치로 취급",
+          "프로모션 기간은 별도 태깅",
+          "최종안은 스프레드시트로 실행 가능해야 함"
+        ],
+        "starterContext": [
+          "상품군은 친환경 생활용품 4종",
+          "다음 달 발주 검토용",
+          "담당자는 데이터 분석 초보"
+        ],
+        "deliverables": [
+          "데이터 이슈 목록",
+          "전처리 규칙",
+          "간단 예측 절차",
+          "검증 체크리스트",
+          "운영자 입력 템플릿"
+        ],
+        "materials": [
+          {
+            "id": "inventory-forecast-cleaning-m1",
+            "title": "일별 판매 CSV",
+            "description": "최근 6주 판매량 일부",
+            "kind": "csv",
+            "fileName": "daily_sales_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/daily_sales_sample.csv",
+            "extractedText": "date,item,units_sold\n2026-04-21,soap_refill,18\n2026-04-22,soap_refill,21\n2026-04-23,soap_refill,0\n2026-04-24,soap_refill,0\n2026-04-25,soap_refill,35\n2026-05-01,bamboo_towel,12\n2026-05-02,bamboo_towel,28\n2026-05-03,bamboo_towel,31\n2026-05-04,bamboo_towel,9\n2026-05-05,reuse_bag,44"
+          },
+          {
+            "id": "inventory-forecast-cleaning-m2",
+            "title": "품절 로그",
+            "description": "상품별 품절 기간 메모",
+            "kind": "text",
+            "fileName": "stockout_log.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/stockout_log.txt",
+            "extractedText": "soap_refill: 2026-04-23 11:00부터 2026-04-24 18:00까지 품절. 2026-05-12 오후에도 5시간 품절.\nbamboo_towel: 품절 없음.\nreuse_bag: 2026-05-06~2026-05-08 일부 옵션 품절.\ncompost_sponge: 2026-04-30 입고 지연으로 판매 시작 하루 늦음."
+          },
+          {
+            "id": "inventory-forecast-cleaning-m3",
+            "title": "프로모션 달력",
+            "description": "할인/노출 이벤트 일정",
+            "kind": "spreadsheet",
+            "fileName": "promotion_calendar.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/promotion_calendar.xlsx",
+            "extractedText": "2026-04-25 지구의날 연장 쿠폰 15%: soap_refill, reuse_bag\n2026-05-02 메인 배너 노출: bamboo_towel\n2026-05-05 어린이날 무료배송: 전체 상품\n2026-05-15 뉴스레터 추천: compost_sponge"
+          },
+          {
+            "id": "inventory-forecast-cleaning-m4",
+            "title": "운영 제약",
+            "description": "발주와 분석 환경 제약",
+            "kind": "text",
+            "fileName": "inventory_ops_constraints.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/inventory_ops_constraints.txt",
+            "extractedText": "분석 도구는 Google Sheets만 사용. 담당자는 주 2시간만 분석 가능.\n최소 발주 단위: soap_refill 50개, bamboo_towel 30개, reuse_bag 100개, compost_sponge 40개.\n창고 공간이 부족해 전체 재고 금액을 전월 대비 10% 이상 늘리기 어렵다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "데이터 분석/재고 운영",
+        "subdomain": "예측 전처리",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "cost_control",
+          "material_grounding",
+          "decomposition",
+          "workflow_design"
+        ],
+        "materialProfile": [
+          "sales csv",
+          "stockout log",
+          "promotion calendar",
+          "ops constraints"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 5,
+        "primaryFailureMode": "0 판매일을 수요 없음으로 처리하거나 프로모션 효과를 일반 수요로 착각한다.",
+        "idealBottleneck": "Turn 2에서 품절·프로모션 태그를 판매량과 연결해 관측 왜곡을 표시하는 지점",
+        "graphPattern": "발주 목표 확인 → 판매 데이터 왜곡 요인 탐지 → 스프레드시트 전처리 규칙 설계 → 비용 제약 반영 → 상태가 '원시 판매량'에서 '검증 가능한 예측 입력'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "inventory-forecast-cleaning-m1",
+          "inventory-forecast-cleaning-m2",
+          "inventory-forecast-cleaning-m3",
+          "inventory-forecast-cleaning-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '재고 예측 전처리 판단'이고 내 목표는 다음과 같아: 복잡한 모델보다 데이터 누락과 왜곡을 줄이는 전처리·검증 계획을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "inventory-forecast-cleaning-m1",
+              "inventory-forecast-cleaning-m2",
+              "inventory-forecast-cleaning-m3",
+              "inventory-forecast-cleaning-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "inventory-forecast-cleaning-m1",
+              "inventory-forecast-cleaning-m2",
+              "inventory-forecast-cleaning-m3",
+              "inventory-forecast-cleaning-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "inventory-forecast-cleaning-m1",
+              "inventory-forecast-cleaning-m2",
+              "inventory-forecast-cleaning-m3",
+              "inventory-forecast-cleaning-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "0 판매일을 수요 없음으로 처리하거나 프로모션 효과를 일반 수요로 착각한다.",
+        "goodTracePattern": "발주 목표 확인 → 판매 데이터 왜곡 요인 탐지 → 스프레드시트 전처리 규칙 설계 → 비용 제약 반영 → 상태가 '원시 판매량'에서 '검증 가능한 예측 입력'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "personal-budget-category-cleanup",
+        "title": "개인 예산 카테고리 정리",
+        "subtitle": "거래 내역 표본을 생활비 분류 규칙으로 바꾸기",
+        "category": "data_analysis",
+        "difficulty": "intro",
+        "goalProfile": "cost_constrained",
+        "estimatedMinutes": 25,
+        "statement": "개인 지출 내역이 카테고리 없이 쌓여 있다. 사용자는 AI와 함께 민감정보를 노출하지 않으면서 분류 규칙과 월간 점검 방식을 만들어야 한다.",
+        "userGoal": "무료 도구로 유지할 수 있는 지출 카테고리 규칙과 검토 체크리스트를 만든다.",
+        "constraints": [
+          "금융 투자 조언 금지",
+          "상호명은 마스킹된 표기만 사용",
+          "개인 신상 추론 금지",
+          "금액은 예시 데이터 기준으로만 합산",
+          "자동화는 스프레드시트 함수 수준"
+        ],
+        "starterContext": [
+          "통화는 KRW",
+          "거래 내역은 일부 표본",
+          "목표는 절약 조언이 아니라 분류 체계"
+        ],
+        "deliverables": [
+          "카테고리 정의",
+          "분류 규칙",
+          "예외 처리",
+          "월간 점검표",
+          "스프레드시트 열 설계"
+        ],
+        "materials": [
+          {
+            "id": "personal-budget-category-cleanup-m1",
+            "title": "거래 내역 표본",
+            "description": "마스킹된 카드 사용 내역 CSV",
+            "kind": "csv",
+            "fileName": "masked_transactions_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/masked_transactions_sample.csv",
+            "extractedText": "date,description,amount\n2026-05-03,마트****,42500\n2026-05-04,카페****,5600\n2026-05-04,지하철충전,55000\n2026-05-05,OTT구독****,13900\n2026-05-07,약국****,8200\n2026-05-08,점심****,9800\n2026-05-10,문구****,15200\n2026-05-12,택시****,18600"
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "개인 생산성/예산",
+        "subdomain": "지출 분류",
+        "primarySkill": "workflow_design",
+        "secondarySkills": [
+          "cost_control",
+          "material_grounding",
+          "verification"
+        ],
+        "materialProfile": [
+          "masked csv"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "none",
+        "expectedTurns": 4,
+        "primaryFailureMode": "거래 내역을 보고 절약·투자 조언으로 넘어가거나 민감정보를 추론한다.",
+        "idealBottleneck": "Turn 1에서 목표를 재무 조언이 아니라 반복 가능한 분류 규칙으로 제한하는 지점",
+        "graphPattern": "분류 목표 제시 → 카테고리 체계 정의 → 표본 거래에 규칙 적용 → 예외/검토 흐름 작성 → 상태가 '무분류 내역'에서 '유지 가능한 예산 시스템'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "personal-budget-category-cleanup-m1"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '개인 예산 카테고리 정리'이고 내 목표는 다음과 같아: 무료 도구로 유지할 수 있는 지출 카테고리 규칙과 검토 체크리스트를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "personal-budget-category-cleanup-m1"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "personal-budget-category-cleanup-m1"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "personal-budget-category-cleanup-m1"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "거래 내역을 보고 절약·투자 조언으로 넘어가거나 민감정보를 추론한다.",
+        "goodTracePattern": "분류 목표 제시 → 카테고리 체계 정의 → 표본 거래에 규칙 적용 → 예외/검토 흐름 작성 → 상태가 '무분류 내역'에서 '유지 가능한 예산 시스템'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "api-timeout-debugging",
+        "title": "API 타임아웃 디버깅",
+        "subtitle": "버그 리포트와 로그로 원인 가설을 좁히기",
+        "category": "coding",
+        "difficulty": "standard",
+        "goalProfile": "speed_first",
+        "estimatedMinutes": 40,
+        "statement": "서비스의 외부 API 호출이 간헐적으로 타임아웃된다. 사용자는 AI에게 바로 코드를 고치라고 하기보다, 증상·재현 조건·로그 근거를 정리하고 빠른 완화책을 찾아야 한다.",
+        "userGoal": "당장 배포 가능한 완화책과 추가 디버깅 계획을 구분해 엔지니어링 핸드오프 메모를 만든다.",
+        "constraints": [
+          "외부 API 제공사 내부 원인을 단정하지 않음",
+          "보안 토큰/API key 생성 금지",
+          "코드 수정안은 pseudocode 수준 가능",
+          "완화책과 근본 해결을 구분",
+          "사용자 영향 설명 포함"
+        ],
+        "starterContext": [
+          "백엔드 언어는 Node.js",
+          "장애는 결제 확인 작업에서 발생",
+          "실제 서비스명은 익명화"
+        ],
+        "deliverables": [
+          "증상 요약",
+          "원인 가설",
+          "로그 기반 근거",
+          "빠른 완화책",
+          "추가 계측 계획"
+        ],
+        "materials": [
+          {
+            "id": "api-timeout-debugging-m1",
+            "title": "버그 리포트",
+            "description": "QA가 작성한 현상 설명",
+            "kind": "text",
+            "fileName": "api_timeout_bug_report.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/api_timeout_bug_report.txt",
+            "extractedText": "현상: 결제 완료 후 주문 상태가 '확인 중'에 머무는 사례가 간헐 발생.\n빈도: 2026-06-01 14:00~17:00 사이 37건 중 6건.\n재시도 버튼을 누르면 대부분 정상 완료.\n프론트 에러 메시지: payment verification delayed.\n사용자 결제 자체는 취소되지 않음."
+          },
+          {
+            "id": "api-timeout-debugging-m2",
+            "title": "서버 로그 발췌",
+            "description": "타임아웃 주변 로그",
+            "kind": "text",
+            "fileName": "server_timeout_logs.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/server_timeout_logs.txt",
+            "extractedText": "14:12:33 verifyPayment request order=masked-101 elapsed=2998ms status=timeout\n14:12:34 retry scheduled order=masked-101 delay=0ms\n14:12:37 verifyPayment retry success elapsed=812ms\n15:04:10 verifyPayment request order=masked-144 elapsed=3000ms status=timeout\n15:04:10 worker queue length=48\n15:04:15 verifyPayment retry success elapsed=1200ms\n16:22:01 worker queue length=12"
+          },
+          {
+            "id": "api-timeout-debugging-m3",
+            "title": "코드 스니펫",
+            "description": "현재 결제 확인 함수 일부",
+            "kind": "text",
+            "fileName": "payment_verify_snippet.js",
+            "mimeType": "text/javascript",
+            "href": "/synthetic/skai/batch-001/payment_verify_snippet.js",
+            "extractedText": "async function verifyPayment(orderId) {\n  const result = await client.get(`/payments/${orderId}`, { timeout: 3000 });\n  await updateOrder(orderId, result.status);\n  return result.status;\n}\n\nqueue.process(async job => {\n  return verifyPayment(job.orderId);\n});"
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "소프트웨어 개발",
+        "subdomain": "장애 디버깅",
+        "primarySkill": "decomposition",
+        "secondarySkills": [
+          "verification",
+          "material_grounding",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "bug report",
+          "server logs",
+          "code snippet"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "타임아웃 값을 무작정 늘리는 코드 수정만 제안하고 큐 길이·재시도·사용자 영향 분리를 놓친다.",
+        "idealBottleneck": "Turn 2에서 로그의 3000ms timeout과 queue length 증가를 가설로 연결하되 단정하지 않는 지점",
+        "graphPattern": "증상 설명 → 로그/코드에서 관찰 사실 추출 → 빠른 완화와 근본 원인 가설 분리 → 핸드오프 작성 → 상태가 '간헐 오류'에서 '검증 가능한 디버깅 계획'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "api-timeout-debugging-m1",
+          "api-timeout-debugging-m2",
+          "api-timeout-debugging-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 'API 타임아웃 디버깅'이고 내 목표는 다음과 같아: 당장 배포 가능한 완화책과 추가 디버깅 계획을 구분해 엔지니어링 핸드오프 메모를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "api-timeout-debugging-m1",
+              "api-timeout-debugging-m2",
+              "api-timeout-debugging-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "api-timeout-debugging-m1",
+              "api-timeout-debugging-m2",
+              "api-timeout-debugging-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "api-timeout-debugging-m1",
+              "api-timeout-debugging-m2",
+              "api-timeout-debugging-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "타임아웃 값을 무작정 늘리는 코드 수정만 제안하고 큐 길이·재시도·사용자 영향 분리를 놓친다.",
+        "goodTracePattern": "증상 설명 → 로그/코드에서 관찰 사실 추출 → 빠른 완화와 근본 원인 가설 분리 → 핸드오프 작성 → 상태가 '간헐 오류'에서 '검증 가능한 디버깅 계획'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "sql-query-validation-basics",
+        "title": "SQL 쿼리 검증 입문",
+        "subtitle": "스키마와 잘못된 쿼리를 보고 의도를 먼저 확인하기",
+        "category": "coding",
+        "difficulty": "intro",
+        "goalProfile": "learning_oriented",
+        "estimatedMinutes": 25,
+        "statement": "초보자가 작성한 SQL 쿼리가 원하는 결과와 다르게 나온다. 사용자는 AI와 함께 테이블 관계, 집계 기준, 필터 의도를 먼저 정리해야 한다.",
+        "userGoal": "정답 쿼리만 받는 것이 아니라 왜 기존 쿼리가 틀렸는지 이해하고 검증용 테스트 케이스를 만든다.",
+        "constraints": [
+          "실제 DB 접속 정보 생성 금지",
+          "쿼리는 ANSI SQL에 가깝게 작성",
+          "날짜 기준은 명시",
+          "학습 설명을 포함",
+          "결과 숫자는 샘플 데이터로만 계산"
+        ],
+        "starterContext": [
+          "목표는 2026년 5월 신규 가입자 중 첫 구매한 사용자 수",
+          "사용자는 SQL 초보",
+          "샘플 데이터는 작음"
+        ],
+        "deliverables": [
+          "의도 재정의",
+          "오류 설명",
+          "수정 쿼리",
+          "샘플 검증",
+          "학습 포인트"
+        ],
+        "materials": [
+          {
+            "id": "sql-query-validation-basics-m1",
+            "title": "테이블 스키마",
+            "description": "users와 orders 샘플 스키마",
+            "kind": "text",
+            "fileName": "simple_sql_schema.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/simple_sql_schema.txt",
+            "extractedText": "users(user_id, signup_date, channel)\norders(order_id, user_id, order_date, amount)\n신규 가입자 기준: signup_date가 2026-05-01 이상 2026-06-01 미만.\n첫 구매 기준: 해당 사용자의 가장 이른 order_date."
+          },
+          {
+            "id": "sql-query-validation-basics-m2",
+            "title": "잘못된 쿼리",
+            "description": "사용자가 작성한 기존 SQL",
+            "kind": "text",
+            "fileName": "wrong_first_purchase_query.sql",
+            "mimeType": "application/sql",
+            "href": "/synthetic/skai/batch-001/wrong_first_purchase_query.sql",
+            "extractedText": "SELECT COUNT(*)\nFROM users u\nJOIN orders o ON u.user_id = o.user_id\nWHERE u.signup_date >= '2026-05-01'\n  AND o.order_date >= '2026-05-01';"
+          },
+          {
+            "id": "sql-query-validation-basics-m3",
+            "title": "샘플 데이터",
+            "description": "검증용 작은 데이터",
+            "kind": "csv",
+            "fileName": "sample_users_orders.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/sample_users_orders.csv",
+            "extractedText": "users: U1 2026-05-02 ad, U2 2026-05-20 organic, U3 2026-04-28 ad\norders: O1 U1 2026-05-04 12000, O2 U1 2026-05-10 9000, O3 U2 2026-06-03 15000, O4 U3 2026-05-02 8000"
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "코딩/데이터베이스",
+        "subdomain": "SQL 학습 디버깅",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "verification",
+          "material_grounding",
+          "learning_oriented"
+        ],
+        "materialProfile": [
+          "schema text",
+          "SQL snippet",
+          "sample data"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "COUNT(*)만 DISTINCT로 바꾸고 첫 구매 조건이나 가입 기간 상한을 제대로 다루지 않는다.",
+        "idealBottleneck": "Turn 1에서 '첫 구매한 사용자 수'의 기간 기준을 명확히 묻고 집계 단위를 user로 고정하는 지점",
+        "graphPattern": "쿼리 의도 확인 → 스키마/샘플로 오류 설명 → 수정 쿼리 제안 → 샘플 검증 → 상태가 '작동 안 하는 쿼리'에서 '이해 가능한 쿼리 패턴'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "sql-query-validation-basics-m1",
+          "sql-query-validation-basics-m2",
+          "sql-query-validation-basics-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 'SQL 쿼리 검증 입문'이고 내 목표는 다음과 같아: 정답 쿼리만 받는 것이 아니라 왜 기존 쿼리가 틀렸는지 이해하고 검증용 테스트 케이스를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "sql-query-validation-basics-m1",
+              "sql-query-validation-basics-m2",
+              "sql-query-validation-basics-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "sql-query-validation-basics-m1",
+              "sql-query-validation-basics-m2",
+              "sql-query-validation-basics-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "sql-query-validation-basics-m1",
+              "sql-query-validation-basics-m2",
+              "sql-query-validation-basics-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "COUNT(*)만 DISTINCT로 바꾸고 첫 구매 조건이나 가입 기간 상한을 제대로 다루지 않는다.",
+        "goodTracePattern": "쿼리 의도 확인 → 스키마/샘플로 오류 설명 → 수정 쿼리 제안 → 샘플 검증 → 상태가 '작동 안 하는 쿼리'에서 '이해 가능한 쿼리 패턴'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "spreadsheet-script-refactor",
+        "title": "스프레드시트 자동화 리팩터링",
+        "subtitle": "Apps Script 오류와 요구사항을 나눠 유지 가능한 워크플로 만들기",
+        "category": "coding",
+        "difficulty": "advanced",
+        "goalProfile": "workflow_adoption",
+        "estimatedMinutes": 75,
+        "statement": "운영팀이 쓰는 스프레드시트 자동화 스크립트가 자주 실패한다. 사용자는 AI와 함께 코드 오류, 데이터 구조 문제, 운영 절차를 분리해 리팩터링 계획을 세워야 한다.",
+        "userGoal": "코드 한 줄 수정이 아니라 운영자가 이해하고 유지할 수 있는 자동화 개선 계획과 안전한 pseudocode를 만든다.",
+        "constraints": [
+          "실제 계정/토큰/API key 금지",
+          "운영자가 수동 복구할 수 있는 절차 포함",
+          "대량 메일 발송 코드는 실제 실행 가능하게 만들지 않음",
+          "오류 처리와 로그 설계 포함",
+          "개인정보는 익명화"
+        ],
+        "starterContext": [
+          "도구는 Google Sheets와 Apps Script",
+          "운영팀은 비개발자",
+          "매주 교육 신청자 안내 메일을 보냄"
+        ],
+        "deliverables": [
+          "문제 원인 분류",
+          "리팩터링 계획",
+          "안전한 pseudocode",
+          "로그/재시도 설계",
+          "운영 매뉴얼 초안"
+        ],
+        "materials": [
+          {
+            "id": "spreadsheet-script-refactor-m1",
+            "title": "현재 스크립트",
+            "description": "실패하는 Apps Script 일부",
+            "kind": "text",
+            "fileName": "current_apps_script.js",
+            "mimeType": "text/javascript",
+            "href": "/synthetic/skai/batch-001/current_apps_script.js",
+            "extractedText": "function sendNotices() {\n  var sheet = SpreadsheetApp.getActive().getSheetByName('신청자');\n  var rows = sheet.getDataRange().getValues();\n  for (var i = 1; i < rows.length; i++) {\n    var email = rows[i][2];\n    var status = rows[i][5];\n    if (status != 'sent') {\n      MailApp.sendEmail(email, '안내', '교육 안내문입니다');\n      sheet.getRange(i+1, 6).setValue('sent');\n    }\n  }\n}"
+          },
+          {
+            "id": "spreadsheet-script-refactor-m2",
+            "title": "오류 로그",
+            "description": "최근 실행 실패 기록",
+            "kind": "text",
+            "fileName": "apps_script_error_log.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/apps_script_error_log.txt",
+            "extractedText": "2026-05-20 09:01 Exception: Service invoked too many times for one day: email.\n2026-05-27 09:04 TypeError: Cannot read properties of undefined reading index 2 at row 48.\n2026-05-27 09:05 일부 수신자가 중복 발송을 신고.\n2026-06-01 09:02 실행 중단 후 status가 sent로 표시된 행과 실제 발송 여부가 불일치."
+          },
+          {
+            "id": "spreadsheet-script-refactor-m3",
+            "title": "시트 구조",
+            "description": "신청자 시트 열 설명",
+            "kind": "spreadsheet",
+            "fileName": "applicant_sheet_structure.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/applicant_sheet_structure.xlsx",
+            "extractedText": "A: 신청일, B: 이름(가명), C: 이메일(마스킹), D: 과정명, E: 발송대상여부, F: 발송상태, G: 마지막오류, H: 발송시각\n문제: 중간에 빈 행이 있고, 이메일이 비어 있는 행이 있음. 같은 이메일로 여러 과정 신청 가능."
+          },
+          {
+            "id": "spreadsheet-script-refactor-m4",
+            "title": "운영 요구사항",
+            "description": "운영팀이 원하는 개선 사항",
+            "kind": "text",
+            "fileName": "ops_automation_requirements.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/ops_automation_requirements.txt",
+            "extractedText": "하루 발송 한도를 넘기면 다음 날 이어서 보내기.\n발송 전 대상자 수를 미리 확인하기.\n실패한 행은 마지막오류에 이유를 남기기.\n중복 발송을 막기.\n비개발자도 '테스트 모드'로 3명에게만 보내볼 수 있으면 좋겠다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "코딩/업무 자동화",
+        "subdomain": "Apps Script 리팩터링",
+        "primarySkill": "workflow_design",
+        "secondarySkills": [
+          "decomposition",
+          "verification",
+          "material_grounding",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "code snippet",
+          "error logs",
+          "spreadsheet schema",
+          "requirements"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 5,
+        "primaryFailureMode": "반복문 코드만 고치고 발송 한도, 중복, 상태 불일치, 운영 복구 절차를 놓친다.",
+        "idealBottleneck": "Turn 3에서 코드 결함과 업무 프로세스 결함을 분리해 테스트 모드와 상태 전이를 설계하는 지점",
+        "graphPattern": "자동화 목표 확인 → 코드/로그/시트 구조에서 실패 모드 추출 → 상태 머신과 안전장치 설계 → pseudocode/운영 매뉴얼 작성 → 상태가 '깨지는 스크립트'에서 '운영 가능한 자동화'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "spreadsheet-script-refactor-m1",
+          "spreadsheet-script-refactor-m2",
+          "spreadsheet-script-refactor-m3",
+          "spreadsheet-script-refactor-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '스프레드시트 자동화 리팩터링'이고 내 목표는 다음과 같아: 코드 한 줄 수정이 아니라 운영자가 이해하고 유지할 수 있는 자동화 개선 계획과 안전한 pseudocode를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "spreadsheet-script-refactor-m1",
+              "spreadsheet-script-refactor-m2",
+              "spreadsheet-script-refactor-m3",
+              "spreadsheet-script-refactor-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "spreadsheet-script-refactor-m1",
+              "spreadsheet-script-refactor-m2",
+              "spreadsheet-script-refactor-m3",
+              "spreadsheet-script-refactor-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "spreadsheet-script-refactor-m1",
+              "spreadsheet-script-refactor-m2",
+              "spreadsheet-script-refactor-m3",
+              "spreadsheet-script-refactor-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "반복문 코드만 고치고 발송 한도, 중복, 상태 불일치, 운영 복구 절차를 놓친다.",
+        "goodTracePattern": "자동화 목표 확인 → 코드/로그/시트 구조에서 실패 모드 추출 → 상태 머신과 안전장치 설계 → pseudocode/운영 매뉴얼 작성 → 상태가 '깨지는 스크립트'에서 '운영 가능한 자동화'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "accessibility-regression-test-plan",
+        "title": "접근성 회귀 테스트 계획",
+        "subtitle": "HTML 변경과 이슈 리포트를 근거로 점검 시나리오 만들기",
+        "category": "coding",
+        "difficulty": "standard",
+        "goalProfile": "workflow_adoption",
+        "estimatedMinutes": 45,
+        "statement": "프론트엔드 배포 후 키보드 접근성 문제가 다시 발생했다. 사용자는 AI와 함께 이슈 리포트와 HTML 스니펫을 분석해 재발 방지 테스트 계획을 만들어야 한다.",
+        "userGoal": "개발자와 QA가 함께 쓸 수 있는 접근성 회귀 테스트 체크리스트와 수정 후보를 만든다.",
+        "constraints": [
+          "장애인을 일반화하거나 부적절하게 묘사하지 않음",
+          "WCAG 세부 조항을 모르면 확인 필요로 표시",
+          "코드 수정은 예시 수준",
+          "키보드/스크린리더 관점의 테스트 포함"
+        ],
+        "starterContext": [
+          "서비스는 예약 폼",
+          "문제는 모달 창에서 발생",
+          "실제 사용자 정보 없음"
+        ],
+        "deliverables": [
+          "문제 재현 단계",
+          "원인 후보",
+          "테스트 체크리스트",
+          "수정 예시",
+          "회귀 방지 기준"
+        ],
+        "materials": [
+          {
+            "id": "accessibility-regression-test-plan-m1",
+            "title": "이슈 리포트",
+            "description": "QA가 기록한 접근성 문제",
+            "kind": "text",
+            "fileName": "accessibility_issue_report.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/accessibility_issue_report.txt",
+            "extractedText": "증상: 예약 확인 모달이 열린 뒤 Tab 키를 누르면 배경 페이지의 링크로 포커스가 이동한다.\nEsc 키로 닫히지 않는 경우가 있다.\n스크린리더에서 모달 제목이 바로 읽히지 않는다.\n재현 브라우저: Chrome 최신, Safari 일부."
+          },
+          {
+            "id": "accessibility-regression-test-plan-m2",
+            "title": "HTML 스니펫",
+            "description": "모달 컴포넌트 일부",
+            "kind": "text",
+            "fileName": "booking_modal_snippet.html",
+            "mimeType": "text/html",
+            "href": "/synthetic/skai/batch-001/booking_modal_snippet.html",
+            "extractedText": "<div class=\"modal\" id=\"confirmModal\">\n  <div class=\"modal-content\">\n    <h2>예약 확인</h2>\n    <p>선택한 일정을 확인해 주세요.</p>\n    <button id=\"okBtn\">확인</button>\n    <button id=\"cancelBtn\">취소</button>\n  </div>\n</div>"
+          },
+          {
+            "id": "accessibility-regression-test-plan-m3",
+            "title": "릴리즈 메모",
+            "description": "최근 변경 사항",
+            "kind": "text",
+            "fileName": "frontend_release_note.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/frontend_release_note.txt",
+            "extractedText": "예약 폼 디자인 개편. 모달 애니메이션 라이브러리 교체.\n이전 버전에는 포커스 트랩 유틸이 있었으나 새 컴포넌트에서 명시적으로 호출하지 않음.\n닫기 버튼 아이콘은 디자인 검토 중이라 현재 텍스트 버튼만 유지."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "프론트엔드/품질",
+        "subdomain": "접근성 회귀 테스트",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "workflow_design",
+          "material_grounding",
+          "decomposition"
+        ],
+        "materialProfile": [
+          "issue report",
+          "HTML snippet",
+          "release note"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 4,
+        "primaryFailureMode": "aria 속성 한두 개만 추가하고 실제 키보드 포커스 흐름과 회귀 테스트 기준을 만들지 않는다.",
+        "idealBottleneck": "Turn 2에서 증상, HTML 결여 요소, 릴리즈 변경점을 연결해 테스트 항목으로 바꾸는 지점",
+        "graphPattern": "문제 상황 확인 → 자료에서 재현 조건/코드 단서 추출 → 테스트 시나리오와 수정 후보 분리 → QA 기준 작성 → 상태가 '접근성 버그'에서 '반복 가능한 회귀 테스트'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "accessibility-regression-test-plan-m1",
+          "accessibility-regression-test-plan-m2",
+          "accessibility-regression-test-plan-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '접근성 회귀 테스트 계획'이고 내 목표는 다음과 같아: 개발자와 QA가 함께 쓸 수 있는 접근성 회귀 테스트 체크리스트와 수정 후보를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "accessibility-regression-test-plan-m1",
+              "accessibility-regression-test-plan-m2",
+              "accessibility-regression-test-plan-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "accessibility-regression-test-plan-m1",
+              "accessibility-regression-test-plan-m2",
+              "accessibility-regression-test-plan-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "accessibility-regression-test-plan-m1",
+              "accessibility-regression-test-plan-m2",
+              "accessibility-regression-test-plan-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "aria 속성 한두 개만 추가하고 실제 키보드 포커스 흐름과 회귀 테스트 기준을 만들지 않는다.",
+        "goodTracePattern": "문제 상황 확인 → 자료에서 재현 조건/코드 단서 추출 → 테스트 시나리오와 수정 후보 분리 → QA 기준 작성 → 상태가 '접근성 버그'에서 '반복 가능한 회귀 테스트'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "data-pipeline-incident-replay",
+        "title": "데이터 파이프라인 사고 재현",
+        "subtitle": "DAG 로그와 샘플 행으로 누락 원인을 좁히기",
+        "category": "coding",
+        "difficulty": "standard",
+        "goalProfile": "accuracy_first",
+        "estimatedMinutes": 55,
+        "statement": "일일 리포트의 일부 행이 누락되었지만 어디서 빠졌는지 확실하지 않다. 사용자는 AI와 함께 파이프라인 단계, 로그, 샘플 데이터를 대조해 재현 계획을 세워야 한다.",
+        "userGoal": "데이터 손실 범위를 과장하지 않고 원인 후보와 검증 쿼리 초안을 만든다.",
+        "constraints": [
+          "실제 운영 DB에 바로 실행하는 파괴적 쿼리 금지",
+          "샘플 행 외의 누락 규모를 추정하지 않음",
+          "원인 가설마다 확인 방법 제시",
+          "개인정보 컬럼은 마스킹",
+          "롤백보다 재현/검증 계획에 집중"
+        ],
+        "starterContext": [
+          "파이프라인은 매일 02:00 실행",
+          "리포트 대상은 전날 이벤트",
+          "분석용 사전 점검"
+        ],
+        "deliverables": [
+          "파이프라인 단계 맵",
+          "누락 가능 지점",
+          "검증 쿼리 초안",
+          "재처리 전 체크리스트",
+          "커뮤니케이션 메모"
+        ],
+        "materials": [
+          {
+            "id": "data-pipeline-incident-replay-m1",
+            "title": "DAG 실행 로그",
+            "description": "일일 파이프라인 로그 발췌",
+            "kind": "text",
+            "fileName": "daily_dag_run_log.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/daily_dag_run_log.txt",
+            "extractedText": "02:00 extract_events started\n02:08 extract_events success rows=128,420\n02:09 transform_sessions started\n02:17 transform_sessions success rows=76,300 warning=late_events_excluded: 412\n02:18 load_daily_report started\n02:21 load_daily_report success rows=75,888\n02:23 quality_check warning: report_rows lower than transform_rows by 412"
+          },
+          {
+            "id": "data-pipeline-incident-replay-m2",
+            "title": "설정 파일 발췌",
+            "description": "파이프라인 필터 설정",
+            "kind": "text",
+            "fileName": "pipeline_config_excerpt.yml",
+            "mimeType": "text/yaml",
+            "href": "/synthetic/skai/batch-001/pipeline_config_excerpt.yml",
+            "extractedText": "report_date: execution_date - 1 day\nlate_event_cutoff_minutes: 30\nsession_required_fields: [user_id_hash, event_time, session_id]\nload_mode: overwrite_partition\nquality_threshold:\n  max_row_loss: 100"
+          },
+          {
+            "id": "data-pipeline-incident-replay-m3",
+            "title": "샘플 이벤트 행",
+            "description": "누락 의심 이벤트 표본",
+            "kind": "csv",
+            "fileName": "suspected_missing_events_sample.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/suspected_missing_events_sample.csv",
+            "extractedText": "event_id,user_id_hash,event_time,ingested_at,session_id\nE101,u***1,2026-05-31T23:58:10,2026-06-01T00:42:30,S77\nE102,u***2,2026-05-31T20:14:00,2026-05-31T20:14:10,\nE103,u***3,2026-05-31T22:30:00,2026-05-31T22:31:00,S81\nE104,u***4,2026-05-31T23:59:40,2026-06-01T00:20:00,S82"
+          },
+          {
+            "id": "data-pipeline-incident-replay-m4",
+            "title": "분석가 메모",
+            "description": "리포트 사용자 문의 내용",
+            "kind": "text",
+            "fileName": "analyst_report_note.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/analyst_report_note.txt",
+            "extractedText": "마케팅팀이 5/31 밤 캠페인 유입이 리포트에 적게 보인다고 문의.\n캠페인은 5/31 23:30~23:59에 발송됨.\n이전에도 자정 근처 이벤트가 다음 날로 밀리는 것 같다는 의심이 있었음."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "데이터 엔지니어링",
+        "subdomain": "파이프라인 검증",
+        "primarySkill": "verification",
+        "secondarySkills": [
+          "material_grounding",
+          "decomposition",
+          "accuracy_first"
+        ],
+        "materialProfile": [
+          "DAG log",
+          "config yaml",
+          "sample csv",
+          "analyst note"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 4,
+        "primaryFailureMode": "412행 차이를 모두 데이터 손실로 단정하거나 late event와 required field 문제를 구분하지 않는다.",
+        "idealBottleneck": "Turn 2에서 로그의 late_events_excluded와 샘플의 ingested_at/session_id 결측을 별도 원인으로 나누는 지점",
+        "graphPattern": "누락 문의 확인 → 파이프라인 단계/필터 추출 → 샘플 행으로 가설 분리 → 검증 쿼리와 커뮤니케이션 작성 → 상태가 '누락 의심'에서 '재현 가능한 원인 후보'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "data-pipeline-incident-replay-m1",
+          "data-pipeline-incident-replay-m2",
+          "data-pipeline-incident-replay-m3",
+          "data-pipeline-incident-replay-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '데이터 파이프라인 사고 재현'이고 내 목표는 다음과 같아: 데이터 손실 범위를 과장하지 않고 원인 후보와 검증 쿼리 초안을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "data-pipeline-incident-replay-m1",
+              "data-pipeline-incident-replay-m2",
+              "data-pipeline-incident-replay-m3",
+              "data-pipeline-incident-replay-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "data-pipeline-incident-replay-m1",
+              "data-pipeline-incident-replay-m2",
+              "data-pipeline-incident-replay-m3",
+              "data-pipeline-incident-replay-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "data-pipeline-incident-replay-m1",
+              "data-pipeline-incident-replay-m2",
+              "data-pipeline-incident-replay-m3",
+              "data-pipeline-incident-replay-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "412행 차이를 모두 데이터 손실로 단정하거나 late event와 required field 문제를 구분하지 않는다.",
+        "goodTracePattern": "누락 문의 확인 → 파이프라인 단계/필터 추출 → 샘플 행으로 가설 분리 → 검증 쿼리와 커뮤니케이션 작성 → 상태가 '누락 의심'에서 '재현 가능한 원인 후보'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "community-event-under-budget",
+        "title": "커뮤니티 행사 예산 최적화",
+        "subtitle": "장소표와 봉사자 일정으로 현실적인 운영안 만들기",
+        "category": "strategy",
+        "difficulty": "standard",
+        "goalProfile": "cost_constrained",
+        "estimatedMinutes": 50,
+        "statement": "지역 커뮤니티가 작은 오프라인 행사를 열려 하지만 예산과 봉사자 시간이 제한되어 있다. 사용자는 AI와 함께 행사 규모, 장소, 운영 리스크를 균형 있게 정해야 한다.",
+        "userGoal": "예산 80만원 이하에서 무리 없이 운영 가능한 행사안과 대체 시나리오를 만든다.",
+        "constraints": [
+          "실제 주소나 연락처 생성 금지",
+          "안전·보험 같은 전문 판단은 체크리스트 수준",
+          "봉사자 근무는 1인 4시간 이하",
+          "참가비는 무료",
+          "우천 대안 포함"
+        ],
+        "starterContext": [
+          "행사는 토요일 오후",
+          "예상 참가자는 40~60명",
+          "주제는 동네 책 교환과 미니 강연"
+        ],
+        "deliverables": [
+          "장소 선택 근거",
+          "예산안",
+          "봉사자 배치",
+          "우천/노쇼 대안",
+          "행사 공지 초안"
+        ],
+        "materials": [
+          {
+            "id": "community-event-under-budget-m1",
+            "title": "장소 후보표",
+            "description": "대관 후보 요약",
+            "kind": "spreadsheet",
+            "fileName": "venue_options.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/venue_options.xlsx",
+            "extractedText": "장소 A: 실내 50명, 대관 35만원, 빔프로젝터 포함, 역에서 가까움, 음식 반입 제한.\n장소 B: 야외 광장 80명, 대관 10만원, 우천 취약, 음향 별도.\n장소 C: 주민센터 강의실 40명, 대관 20만원, 주차 어려움, 18시 종료 필수."
+          },
+          {
+            "id": "community-event-under-budget-m2",
+            "title": "예산 항목 메모",
+            "description": "운영자가 예상한 비용",
+            "kind": "text",
+            "fileName": "event_budget_items.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/event_budget_items.txt",
+            "extractedText": "간단 다과 18만원, 포스터 인쇄 6만원, 진행자 사례 20만원, 음향 렌탈 15만원, 예비비 10만원.\n장소 A는 음식 반입 제한 때문에 다과비가 낮아질 수 있음. 장소 B는 음향 렌탈이 필요할 가능성이 높음."
+          },
+          {
+            "id": "community-event-under-budget-m3",
+            "title": "봉사자 가능 시간",
+            "description": "가명 봉사자 일정",
+            "kind": "csv",
+            "fileName": "volunteer_availability.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/volunteer_availability.csv",
+            "extractedText": "volunteer,available_hours,preferred_task\nV1,13-17,접수\nV2,14-18,책 분류\nV3,13-16,안내\nV4,15-19,정리\nV5,12-15,세팅"
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "커뮤니티 운영",
+        "subdomain": "행사 기획",
+        "primarySkill": "cost_control",
+        "secondarySkills": [
+          "workflow_design",
+          "stakeholder_alignment",
+          "material_grounding"
+        ],
+        "materialProfile": [
+          "venue spreadsheet",
+          "budget memo",
+          "volunteer csv"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "가장 싼 장소만 고르고 수용 인원, 우천, 봉사자 근무 제약을 놓친다.",
+        "idealBottleneck": "Turn 3에서 장소 비용과 운영 리스크를 함께 비교해 대체 시나리오를 만드는 지점",
+        "graphPattern": "행사 목표 확인 → 장소/예산/인력 자료 추출 → 비용과 리스크 비교 → 운영안과 대안 작성 → 상태가 '하고 싶은 행사'에서 '실행 가능한 운영 계획'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "community-event-under-budget-m1",
+          "community-event-under-budget-m2",
+          "community-event-under-budget-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '커뮤니티 행사 예산 최적화'이고 내 목표는 다음과 같아: 예산 80만원 이하에서 무리 없이 운영 가능한 행사안과 대체 시나리오를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "community-event-under-budget-m1",
+              "community-event-under-budget-m2",
+              "community-event-under-budget-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "community-event-under-budget-m1",
+              "community-event-under-budget-m2",
+              "community-event-under-budget-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "community-event-under-budget-m1",
+              "community-event-under-budget-m2",
+              "community-event-under-budget-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "가장 싼 장소만 고르고 수용 인원, 우천, 봉사자 근무 제약을 놓친다.",
+        "goodTracePattern": "행사 목표 확인 → 장소/예산/인력 자료 추출 → 비용과 리스크 비교 → 운영안과 대안 작성 → 상태가 '하고 싶은 행사'에서 '실행 가능한 운영 계획'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "product-prioritization-conflict",
+        "title": "제품 우선순위 갈등 조정",
+        "subtitle": "VOC·로드맵·개발 용량을 근거로 분기 계획 만들기",
+        "category": "strategy",
+        "difficulty": "advanced",
+        "goalProfile": "cost_constrained",
+        "estimatedMinutes": 80,
+        "statement": "영업, 고객성공, 개발팀이 서로 다른 기능을 우선 요청하고 있다. 사용자는 AI와 함께 근거와 비용, 리스크를 나눠 다음 분기 우선순위 결정을 지원해야 한다.",
+        "userGoal": "모든 요청을 다 수용하지 않고, 의사결정 기준이 투명한 분기 우선순위 메모를 만든다.",
+        "constraints": [
+          "특정 팀의 의견을 무시하지 않음",
+          "개발 용량 18인주를 초과하지 않음",
+          "매출 영향은 자료에 있는 범위로만 표현",
+          "우선순위는 Now/Next/Later로 정리",
+          "반려된 요청의 커뮤니케이션 포함"
+        ],
+        "starterContext": [
+          "제품은 B2B 업무 자동화 도구",
+          "다음 분기는 12주",
+          "고객명은 코드명"
+        ],
+        "deliverables": [
+          "의사결정 기준",
+          "요청별 근거표",
+          "Now/Next/Later 로드맵",
+          "트레이드오프 설명",
+          "팀별 커뮤니케이션 초안"
+        ],
+        "materials": [
+          {
+            "id": "product-prioritization-conflict-m1",
+            "title": "VOC 요약",
+            "description": "고객성공팀 기능 요청 모음",
+            "kind": "csv",
+            "fileName": "feature_voc_summary.csv",
+            "mimeType": "text/csv",
+            "href": "/synthetic/skai/batch-001/feature_voc_summary.csv",
+            "extractedText": "request,customer_count,urgency,note\n권한 템플릿,8,high,\"관리자 설정 시간이 길다\"\n대시보드 PDF 내보내기,5,medium,\"월간 보고용\"\n외부 캘린더 연동,3,high,\"영업팀 대형 고객 요구\"\n감사 로그 검색,6,high,\"보안 검토에서 반복 문의\"\n모바일 승인,4,low,\"현장 관리자 편의\""
+          },
+          {
+            "id": "product-prioritization-conflict-m2",
+            "title": "개발 추정",
+            "description": "기능별 대략적인 인주와 리스크",
+            "kind": "spreadsheet",
+            "fileName": "engineering_estimates.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "href": "/synthetic/skai/batch-001/engineering_estimates.xlsx",
+            "extractedText": "권한 템플릿: 6인주, 권한 모델 영향 중간\nPDF 내보내기: 4인주, 렌더링 품질 리스크 낮음\n외부 캘린더 연동: 10인주, 외부 API 변경 리스크 높음\n감사 로그 검색: 8인주, 인덱싱 비용 검토 필요\n모바일 승인: 7인주, 모바일 UX 리서치 필요\n총 가용 용량: 18인주"
+          },
+          {
+            "id": "product-prioritization-conflict-m3",
+            "title": "영업 메모",
+            "description": "잠재 매출 관련 영업팀 의견",
+            "kind": "text",
+            "fileName": "sales_priority_memo.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/sales_priority_memo.txt",
+            "extractedText": "대형 후보 고객 K는 외부 캘린더 연동을 중요하게 본다. 다만 계약 확정은 아니고 보안 검토도 남아 있다.\n기존 고객 L/M은 감사 로그 검색이 없으면 갱신 논의가 길어진다고 말했다.\nPDF 내보내기는 영업 데모에서 자주 받는 질문이지만 구매 조건으로 명시된 사례는 적다."
+          },
+          {
+            "id": "product-prioritization-conflict-m4",
+            "title": "전략 원칙",
+            "description": "대표가 제시한 분기 방향",
+            "kind": "text",
+            "fileName": "quarter_strategy_principles.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/quarter_strategy_principles.txt",
+            "extractedText": "이번 분기는 기존 고객 유지와 관리자 생산성 개선을 우선한다.\n대형 신규 고객을 위한 커스텀 기능은 신중히 본다.\n기술 부채가 커지는 선택은 근거가 강할 때만 허용한다.\n작게 검증할 수 있으면 먼저 실험한다."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "제품 전략",
+        "subdomain": "로드맵 우선순위",
+        "primarySkill": "stakeholder_alignment",
+        "secondarySkills": [
+          "cost_control",
+          "material_grounding",
+          "verification",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "VOC csv",
+          "estimate spreadsheet",
+          "sales memo",
+          "strategy principles"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 5,
+        "primaryFailureMode": "가장 큰 고객 요청이나 가장 쉬운 기능 중 하나만 선택하고 전략 원칙·용량·기존 고객 리스크를 함께 보지 못한다.",
+        "idealBottleneck": "Turn 3에서 18인주 제약 안에서 Now 조합을 만들고 제외 기능의 설명을 설계하는 지점",
+        "graphPattern": "갈등 상황 제시 → 요청별 근거/비용/전략 적합성 추출 → 용량 제약으로 조합 비교 → 커뮤니케이션까지 작성 → 상태가 '팀 간 주장 경쟁'에서 '설명 가능한 로드맵'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "multi-step-replay",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "product-prioritization-conflict-m1",
+          "product-prioritization-conflict-m2",
+          "product-prioritization-conflict-m3",
+          "product-prioritization-conflict-m4"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '제품 우선순위 갈등 조정'이고 내 목표는 다음과 같아: 모든 요청을 다 수용하지 않고, 의사결정 기준이 투명한 분기 우선순위 메모를 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "product-prioritization-conflict-m1",
+              "product-prioritization-conflict-m2",
+              "product-prioritization-conflict-m3",
+              "product-prioritization-conflict-m4"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "product-prioritization-conflict-m1",
+              "product-prioritization-conflict-m2",
+              "product-prioritization-conflict-m3",
+              "product-prioritization-conflict-m4"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "product-prioritization-conflict-m1",
+              "product-prioritization-conflict-m2",
+              "product-prioritization-conflict-m3",
+              "product-prioritization-conflict-m4"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "가장 큰 고객 요청이나 가장 쉬운 기능 중 하나만 선택하고 전략 원칙·용량·기존 고객 리스크를 함께 보지 못한다.",
+        "goodTracePattern": "갈등 상황 제시 → 요청별 근거/비용/전략 적합성 추출 → 용량 제약으로 조합 비교 → 커뮤니케이션까지 작성 → 상태가 '팀 간 주장 경쟁'에서 '설명 가능한 로드맵'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "job-hunt-weekly-system",
+        "title": "구직 주간 시스템 만들기",
+        "subtitle": "막연한 취업 준비를 반복 가능한 루틴으로 설계하기",
+        "category": "strategy",
+        "difficulty": "intro",
+        "goalProfile": "learning_oriented",
+        "estimatedMinutes": 30,
+        "statement": "사용자는 취업 준비를 하고 있지만 매주 무엇을 해야 하는지 흔들린다. AI와 함께 목표 직무, 시간 제약, 지원·학습·회고 루틴을 구조화해야 한다.",
+        "userGoal": "과도한 자기비판 없이 지속 가능한 1주 단위 구직 시스템을 만든다.",
+        "constraints": [
+          "실제 이력서 개인정보 생성 금지",
+          "채용 합격을 보장하는 표현 금지",
+          "하루 2시간 이하",
+          "직무가 불명확하면 탐색 루틴 포함",
+          "정신건강/법률 조언으로 확대하지 않음"
+        ],
+        "starterContext": [
+          "희망 직무는 콘텐츠 마케터 또는 주니어 PM 사이에서 고민",
+          "현재 포트폴리오 1개 있음",
+          "평일 저녁과 토요일 오전만 가능"
+        ],
+        "deliverables": [
+          "목표 정의",
+          "주간 시간표",
+          "지원/학습/네트워킹 비율",
+          "회고 질문",
+          "AI에게 맡길 작업과 직접 할 작업 구분"
+        ],
+        "materials": [],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "개인 전략/커리어",
+        "subdomain": "구직 루틴 설계",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "decomposition",
+          "workflow_design",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "no attachment"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "medium",
+        "expectedTurns": 4,
+        "primaryFailureMode": "막연한 동기부여 문구나 과도한 할 일 목록만 만들고 시간 제약과 직무 탐색을 반영하지 않는다.",
+        "idealBottleneck": "Turn 1에서 직무 선택을 확정하지 않고 탐색-실험 루틴으로 설계하는 지점",
+        "graphPattern": "불안정한 목표 제시 → 모델이 직무 가설과 시간 제약을 정리 → 주간 루틴과 AI 활용 범위 설계 → 회고 방식 작성 → 상태가 '막연한 취준'에서 '반복 가능한 시스템'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '구직 주간 시스템 만들기'이고 내 목표는 다음과 같아: 과도한 자기비판 없이 지속 가능한 1주 단위 구직 시스템을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [],
+            "prompt": "첨부 자료는 없어. 지금 조건만으로 직무 탐색이 가능한 주간 루틴 후보를 2개 비교해줘. 채용시장 최신 정보는 필요하면 내가 나중에 별도 검색하겠다고 표시해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "막연한 동기부여 문구나 과도한 할 일 목록만 만들고 시간 제약과 직무 탐색을 반영하지 않는다.",
+        "goodTracePattern": "불안정한 목표 제시 → 모델이 직무 가설과 시간 제약을 정리 → 주간 루틴과 AI 활용 범위 설계 → 회고 방식 작성 → 상태가 '막연한 취준'에서 '반복 가능한 시스템'으로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "emergency-communication-tree",
+        "title": "비상 커뮤니케이션 트리",
+        "subtitle": "작은 조직의 위기 연락 흐름을 개인정보 없이 설계하기",
+        "category": "strategy",
+        "difficulty": "standard",
+        "goalProfile": "speed_first",
+        "estimatedMinutes": 40,
+        "statement": "작은 교육기관이 기상 악화나 시설 문제 발생 시 누구에게 어떤 순서로 알릴지 정리하지 못했다. 사용자는 AI와 함께 역할 기반 커뮤니케이션 트리를 만들어야 한다.",
+        "userGoal": "실제 연락처 없이도 운영 가능한 역할별 비상 연락 절차와 메시지 템플릿을 만든다.",
+        "constraints": [
+          "전화번호·주소 등 실제 개인정보 생성 금지",
+          "긴급 구조/의료 판단은 전문기관 연락 권고 수준",
+          "메시지는 과장 없이 사실/조치/다음 업데이트로 구성",
+          "15분 내 1차 공지를 목표",
+          "장애인·아동 등 취약 이용자를 별도 고려"
+        ],
+        "starterContext": [
+          "기관은 방과후 교육센터",
+          "학생·보호자·강사·운영진이 있음",
+          "상황은 폭우로 인한 등원 지연 가능성"
+        ],
+        "deliverables": [
+          "역할 기반 연락 트리",
+          "상황별 판단 기준",
+          "1차 공지 템플릿",
+          "업데이트 주기",
+          "훈련 체크리스트"
+        ],
+        "materials": [
+          {
+            "id": "emergency-communication-tree-m1",
+            "title": "역할 목록",
+            "description": "개인정보 없는 조직 역할표",
+            "kind": "text",
+            "fileName": "role_based_contact_list.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/role_based_contact_list.txt",
+            "extractedText": "센터장: 최종 공지 승인, 교육청/건물관리 연락 판단.\n운영 매니저: 강사와 보호자 공지 발송, 출석 상태 취합.\n강사 리더: 강사별 수업 가능 여부 확인.\n현장 스태프: 시설 입구와 교실 상태 확인.\n보호자 대표 채널: 공지 수신 후 문의 취합."
+          },
+          {
+            "id": "emergency-communication-tree-m2",
+            "title": "상황 시나리오",
+            "description": "비상 공지 훈련용 가상 상황",
+            "kind": "text",
+            "fileName": "rain_delay_scenario.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/rain_delay_scenario.txt",
+            "extractedText": "기준 시각 13:10. 폭우로 일부 도로가 지연되고 있다.\n14:00 수업 시작 예정. 건물 누수는 없지만 입구 바닥이 미끄럽다.\n강사 2명 중 1명은 20분 늦을 수 있다고 보고.\n보호자 문의가 채널에 빠르게 늘고 있다."
+          },
+          {
+            "id": "emergency-communication-tree-m3",
+            "title": "기존 공지 초안",
+            "description": "운영자가 급히 쓴 메시지",
+            "kind": "text",
+            "fileName": "rough_emergency_notice.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/rough_emergency_notice.txt",
+            "extractedText": "오늘 비가 많이 와서 수업이 어려울 수도 있습니다. 자세한 건 다시 알려드리겠습니다. 모두 조심히 오세요."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "위기 대응/교육 운영",
+        "subdomain": "비상 커뮤니케이션",
+        "primarySkill": "workflow_design",
+        "secondarySkills": [
+          "decomposition",
+          "stakeholder_alignment",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "role list",
+          "scenario text",
+          "draft notice"
+        ],
+        "ambiguityLevel": "medium",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "공지 문구만 다듬고 역할별 확인 순서, 업데이트 주기, 취약 이용자 고려를 빠뜨린다.",
+        "idealBottleneck": "Turn 2에서 역할표를 연락처가 아닌 책임 흐름으로 변환하는 지점",
+        "graphPattern": "비상 상황 설명 → 역할과 정보 흐름 정의 → 시나리오에 맞춘 공지/업데이트 설계 → 훈련 체크리스트 작성 → 상태가 '급한 공지'에서 '반복 가능한 대응 절차'로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "evidence-grounded",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "emergency-communication-tree-m1",
+          "emergency-communication-tree-m2",
+          "emergency-communication-tree-m3"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '비상 커뮤니케이션 트리'이고 내 목표는 다음과 같아: 실제 연락처 없이도 운영 가능한 역할별 비상 연락 절차와 메시지 템플릿을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "emergency-communication-tree-m1",
+              "emergency-communication-tree-m2",
+              "emergency-communication-tree-m3"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "emergency-communication-tree-m1",
+              "emergency-communication-tree-m2",
+              "emergency-communication-tree-m3"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "emergency-communication-tree-m1",
+              "emergency-communication-tree-m2",
+              "emergency-communication-tree-m3"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "공지 문구만 다듬고 역할별 확인 순서, 업데이트 주기, 취약 이용자 고려를 빠뜨린다.",
+        "goodTracePattern": "비상 상황 설명 → 역할과 정보 흐름 정의 → 시나리오에 맞춘 공지/업데이트 설계 → 훈련 체크리스트 작성 → 상태가 '급한 공지'에서 '반복 가능한 대응 절차'로 이동"
+      }
+    },
+    {
+      "appProblem": {
+        "id": "micro-course-launch-go-no-go",
+        "title": "미니 강의 출시 Go/No-Go",
+        "subtitle": "제한된 정보로 출시 판단 질문을 먼저 만들기",
+        "category": "strategy",
+        "difficulty": "intro",
+        "goalProfile": "speed_first",
+        "estimatedMinutes": 25,
+        "statement": "크리에이터가 2주 뒤 미니 강의를 출시하고 싶지만 완성도, 수요, 운영 준비 상태가 불명확하다. 사용자는 AI와 함께 바로 마케팅 문구를 만들기보다 출시 판단 기준을 세워야 한다.",
+        "userGoal": "짧은 시간 안에 출시/연기/축소 출시 중 하나를 결정하기 위한 체크리스트와 다음 액션을 만든다.",
+        "constraints": [
+          "매출 보장 표현 금지",
+          "가격·시장 수요 수치를 지어내지 않음",
+          "2주 안에 검증 가능한 항목만 포함",
+          "고객 개인정보 수집은 최소화",
+          "최종 판단은 조건부로 표현"
+        ],
+        "starterContext": [
+          "강의 주제는 Notion으로 개인 지식관리 시작하기",
+          "촬영분은 40% 완료",
+          "기존 뉴스레터 구독자에게 먼저 안내 가능"
+        ],
+        "deliverables": [
+          "Go/No-Go 기준",
+          "가정과 리스크",
+          "2주 검증 계획",
+          "축소 출시안",
+          "첫 안내 메시지 구조"
+        ],
+        "materials": [
+          {
+            "id": "micro-course-launch-go-no-go-m1",
+            "title": "출시 준비 메모",
+            "description": "크리에이터의 현재 상태 정리",
+            "kind": "text",
+            "fileName": "micro_course_launch_memo.txt",
+            "mimeType": "text/plain",
+            "href": "/synthetic/skai/batch-001/micro_course_launch_memo.txt",
+            "extractedText": "강의: Notion으로 개인 지식관리 시작하기. 총 5강 계획, 2강 촬영 완료.\n자료: 템플릿 1개 초안, 워크북 없음.\n채널: 뉴스레터 구독자 1,200명, 최근 평균 오픈율 28%.\n불안: 완성도가 낮으면 신뢰가 떨어질까 걱정. 하지만 너무 늦추면 동력이 사라질 것 같음.\n가능 작업: 2주 동안 평일 밤 1시간, 주말 5시간."
+          }
+        ],
+        "allowedProviders": [
+          "mock",
+          "groq",
+          "xai",
+          "openai",
+          "openrouter",
+          "gemini"
+        ],
+        "rubricKey": "defaultRubric",
+        "createdAt": "2026-06-02T00:00:00.000Z"
+      },
+      "classification": {
+        "domain": "교육/크리에이터 전략",
+        "subdomain": "출시 의사결정",
+        "primarySkill": "problem_definition",
+        "secondarySkills": [
+          "decomposition",
+          "verification",
+          "adaptation"
+        ],
+        "materialProfile": [
+          "launch memo"
+        ],
+        "ambiguityLevel": "high",
+        "externalKnowledgeNeed": "low",
+        "expectedTurns": 4,
+        "primaryFailureMode": "바로 판매 페이지나 홍보 문구를 작성하고 출시 판단 기준과 축소 옵션을 만들지 않는다.",
+        "idealBottleneck": "Turn 1에서 '출시하고 싶다'를 Go/No-Go 기준과 검증 질문으로 바꾸는 지점",
+        "graphPattern": "출시 욕구 제시 → 모델이 가정/리스크/판단 기준 정의 → 자료 기반 작업 가능량 대조 → 출시/축소/연기 옵션 작성 → 상태가 '불안한 출시 계획'에서 '조건부 의사결정'으로 이동"
+      },
+      "playbook": {
+        "recommendedMode": "guided-collaboration",
+        "recommendedModel": "strong-general-reasoning-model",
+        "attachments": [
+          "micro-course-launch-go-no-go-m1"
+        ],
+        "turns": [
+          {
+            "turn": 1,
+            "attachMaterialIds": [],
+            "prompt": "이 상황을 처음 보는 모델이라고 가정하고, 바로 최종안을 만들지 말고 먼저 문제 정의, 불확실한 점, 자료 확인 순서를 잡아줘. 주제는 '미니 강의 출시 Go/No-Go'이고 내 목표는 다음과 같아: 짧은 시간 안에 출시/연기/축소 출시 중 하나를 결정하기 위한 체크리스트와 다음 액션을 만든다."
+          },
+          {
+            "turn": 2,
+            "attachMaterialIds": [
+              "micro-course-launch-go-no-go-m1"
+            ],
+            "prompt": "첨부 자료를 근거로 핵심 사실과 모순/누락을 분리해줘. 자료 밖 추측은 표시하고, 다음 턴에서 결정해야 할 선택지를 3개 이하로 정리해줘."
+          },
+          {
+            "turn": 3,
+            "attachMaterialIds": [
+              "micro-course-launch-go-no-go-m1"
+            ],
+            "prompt": "제약조건을 반영해 실행 가능한 대안을 비교해줘. 각 대안의 리스크, 검증 방법, 사용자에게 다시 물어볼 질문을 구분해줘."
+          },
+          {
+            "turn": 4,
+            "attachMaterialIds": [
+              "micro-course-launch-go-no-go-m1"
+            ],
+            "prompt": "지금까지의 검토를 바탕으로 최종 제출물을 만들어줘. 반드시 근거, 우선순위, 남은 리스크, 검증 체크리스트를 포함해줘."
+          }
+        ],
+        "optionalFinalAnswerFieldDraft": "최종 답안은 요구 deliverables 순서대로 작성하고, 각 항목마다 사용한 자료 ID 또는 판단 근거를 괄호로 표시한다.",
+        "smokeNotes": [
+          "Turn 1에서 바로 최종안을 만들면 감점",
+          "자료 근거와 추측을 구분하는지 확인",
+          "마지막 답안에 검증 절차가 포함되는지 확인"
+        ],
+        "weakTracePattern": "바로 판매 페이지나 홍보 문구를 작성하고 출시 판단 기준과 축소 옵션을 만들지 않는다.",
+        "goodTracePattern": "출시 욕구 제시 → 모델이 가정/리스크/판단 기준 정의 → 자료 기반 작업 가능량 대조 → 출시/축소/연기 옵션 작성 → 상태가 '불안한 출시 계획'에서 '조건부 의사결정'으로 이동"
+      }
+    }
+  ],
+  "coverageSummary": {
+    "categories": {
+      "workplace": 5,
+      "research": 5,
+      "creative": 5,
+      "data_analysis": 5,
+      "coding": 5,
+      "strategy": 5
+    },
+    "difficulties": {
+      "standard": 14,
+      "advanced": 8,
+      "intro": 8
+    },
+    "goalProfiles": {
+      "workflow_adoption": 5,
+      "accuracy_first": 5,
+      "speed_first": 5,
+      "learning_oriented": 5,
+      "cost_constrained": 5,
+      "exploration": 5
+    },
+    "materialKinds": {
+      "text": 52,
+      "spreadsheet": 9,
+      "image": 1,
+      "pdf": 4,
+      "csv": 12
+    },
+    "domains": [
+      "개인 생산성/예산",
+      "개인 전략/커리어",
+      "게임/스토리텔링",
+      "고객지원",
+      "교육/지역사회",
+      "교육/크리에이터 전략",
+      "데이터 분석/UX 리서치",
+      "데이터 분석/보고",
+      "데이터 분석/재고 운영",
+      "데이터 분석/제품",
+      "데이터 엔지니어링",
+      "마케팅/브랜드",
+      "문화/전시",
+      "비영리/지원사업",
+      "소프트웨어 개발",
+      "시민 정책",
+      "업무 운영",
+      "위기 대응/교육 운영",
+      "인사/조직운영",
+      "제품 리서치",
+      "제품 전략",
+      "커뮤니티 운영",
+      "코딩/데이터베이스",
+      "코딩/업무 자동화",
+      "콘텐츠 제작",
+      "콘텐츠/비영리",
+      "프론트엔드/품질",
+      "학술 리서치",
+      "회계/정산"
+    ]
+  },
+  "nextBatchStrategy": "다음 배치에서는 이번 배치의 업무 운영·리서치·콘텐츠·데이터·코딩·전략 패턴을 피하고, 법률 문서 체크리스트, 의료 상담 전 질문 정리, 제조 품질, 여행 운영, 공공 데이터 감사, 학부모 커뮤니케이션, 오픈소스 유지보수, 국제 협업 같은 새 도메인을 중심으로 구성한다. 자료 패턴도 회의록+채팅, 리뷰 CSV, 지원사업 공고, 장애 로그 조합을 반복하지 않고 이미지 OCR, 다국어 문서, 지도형 표, 캘린더 충돌, 긴 이메일 thread 등을 우선 사용한다."
+}

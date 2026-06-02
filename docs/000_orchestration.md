@@ -24,6 +24,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
+- ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
+- 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
 - Admin founder review dashboard는 Supabase remote cohort snapshot도 함께 표시한다. Service-role 전체 cohort 조회는 `SKAI_FOUNDER_EMAILS` allowlist가 있을 때만 사용하고, 아니면 현재 사용자 RLS 범위로 내려간다.
@@ -116,6 +118,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
+- Generated problem batch는 typed app data로 들어왔지만, 아직 검색/필터/난이도별 browsing UI는 없다.
 - 공개 풀이 댓글은 1차 privacy/misuse guardrail과 edit/soft-delete/report baseline이 있다. notification, founder moderation queue, ML moderation은 아직 없다.
 - Founder review dashboard는 localStorage와 Supabase cohort snapshot을 함께 본다. Remote founder notes, export, advanced filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
@@ -314,6 +317,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/045_supabase_cohort_review_dashboard.md`: Supabase remote cohort snapshot을 founder dashboard에 표시.
 - `docs/technical/plan/046_comment_edit_delete_and_reports.md`: 공개 댓글 edit, soft-delete, report baseline.
 - `docs/technical/plan/047_brand_mark_logo_lockup.md`: 3-node mark와 wordmark/full name을 묶은 reusable lockup.
+- `docs/technical/plan/048_bulk_problem_batch_ingestion.md`: 생성 문제 batch 001 검토, 원본 archive, 앱용 normalization/import.
 
 다음 plan 후보:
 

@@ -1,7 +1,8 @@
 import { defaultRubric } from "@/data/rubric";
+import { generatedProblemBatch001Problems } from "@/data/generated-problem-batch-001";
 import type { Problem } from "@/lib/types";
 
-export const problems: Problem[] = [
+const seedProblems: Problem[] = [
   {
     id: "ambiguous-research-brief",
     title: "흐릿한 자료조사 요청을 실행 가능한 리서치 브리프로 바꾸기",
@@ -138,6 +139,8 @@ export const problems: Problem[] = [
     createdAt: "2026-06-01T00:00:00.000Z",
   },
 ];
+
+export const problems: Problem[] = [...seedProblems, ...generatedProblemBatch001Problems];
 
 export function getProblem(problemId: string): Problem | undefined {
   return problems.find((problem) => problem.id === problemId);
