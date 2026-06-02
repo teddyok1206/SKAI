@@ -48,6 +48,7 @@ Remove the duplicated SKAI lockup from the home hero and prepare sharper headlin
 - Final founder decision: use the Prometheus Hearth line as the only hero copy.
 - Updated the home headline to `불꽃은 주어졌습니다. 이제 당신의 장작을 넣을 차례입니다.`
 - Rendered the headline as two visual lines: `불꽃은 주어졌습니다.` and `이제 당신의 장작을 넣을 차례입니다.`
+- Follow-up line integrity fix: each sentence is wrapped in its own non-wrapping line span, with hero-specific responsive font sizing.
 - Removed the lead/subtitle from the hero.
 
 ## Risks

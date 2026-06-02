@@ -39,10 +39,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="home-hero">
-        <h1>
-          불꽃은 주어졌습니다.
-          <br />
-          이제 당신의 장작을 넣을 차례입니다.
+        <h1 className="home-hero-title">
+          <span className="home-hero-title-line">불꽃은 주어졌습니다.</span>
+          <span className="home-hero-title-line">이제 당신의 장작을 넣을 차례입니다.</span>
         </h1>
         <div className="hero-actions">
           <Link className="button primary" href={`/problems/${problems[0].id}`}>

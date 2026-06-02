@@ -591,6 +591,18 @@ button {
   text-align: center;
 }
 
+.home-hero-title {
+  width: 100%;
+  max-width: 1040px;
+  font-size: clamp(18px, 5.6vw, 72px);
+  line-height: 1.08;
+}
+
+.home-hero-title-line {
+  display: block;
+  white-space: nowrap;
+}
+
 .page-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
