@@ -129,13 +129,30 @@ Control style:
 
 ## Brand Mark Direction
 
-Keep the flame icon only as a compact brand signal. Do not turn the whole UI into fire imagery.
+The primary brand mark should be the 3-node directed dual graph, not the flame.
 
-Possible future mark:
+The flame/Prometheus metaphor remains an origin metaphor:
 
-- A small flame inside a square workbench tile.
-- A spark connected to trace nodes.
-- A monogram `SKAI` with one amber cut.
+- fire as capability,
+- fuel as problem framing,
+- furnace as workflow,
+- safety as verification.
+
+It should not become the permanent icon system or a mythic visual theme.
+
+Primary mark:
+
+- Left upper node: Human Intent / Framing.
+- Left lower node: Messy Reality / Materials.
+- Right node: Synthesized Outcome / Artifact.
+- Directed edges converge from the two left nodes into the right artifact node.
+
+Implementation direction:
+
+- Human Mode: circles, softer stroke, calm sans wordmark.
+- Engine Mode: hairline precision, optional hex/pixel-matched node treatment, mono-compatible wordmark.
+- Avoid heavy fills, decorative gradients, or large black cinematic surfaces in the default demo.
+- Amber can signal bottlenecks, warnings, and "fire" moments, but should remain sparse.
 
 ## Information Design
 

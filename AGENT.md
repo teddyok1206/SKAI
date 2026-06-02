@@ -18,6 +18,7 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 - Never overwrite an existing archive file.
 - If a long prompt is not already archived, create the next numbered markdown file before doing substantial work.
 - Philosophy, mission, positioning, and legacy thinking belong in `docs/philosophy/`.
+- Raw Gemini strategy/transcript archives belong in `docs/philosophy/Gemini/` with numbered filenames such as `001.md`.
 - Technical implementation decisions, architecture, schemas, deployment, APIs, and operations belong in `docs/technical/`.
 - Design principles, visual direction, interaction patterns, and theme decisions belong in `docs/design/`.
 - Detailed programming plans belong in `docs/technical/plan/`.
@@ -26,6 +27,11 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 
 ## Product Principles
 
+- SKAI must teach the invariant structure of intelligence and orchestration, not decaying prompt tricks.
+- Do not frame AI as an obedient servant, slave, magic worker, or productivity vending machine. Frame AI use as disciplined orchestration over intent, materials, tasks, verification, and artifact creation.
+- The primary SKAI brand/data metaphor is the 3-node directed dual graph: Human Intent / Framing + Messy Reality / Materials -> Synthesized Outcome / Artifact.
+- Prometheus/fire is an origin metaphor for capability and discipline, not the primary icon system or decorative theme.
+- Maintain contextual typography: Human Mode uses clear sans surfaces for access/community/review; Engine Mode uses mono/evidence emphasis for solving/trace/graph/judge/replay.
 - Measure what can be measured, but do not force fake precision onto judgment-heavy work.
 - Treat the user's prompt sequence as a first-class artifact, not as disposable chat history.
 - Evaluate both outcome quality and process quality.
@@ -110,6 +116,8 @@ The first demo should prove as many of these as possible:
 ## Open Questions Index
 
 - Project seed and legacy summary: `docs/philosophy/000_project_seed.md`
+- Intelligence and brand manifesto: `docs/philosophy/007_intelligence_and_brand_manifesto.md`
+- Raw Gemini branding/philosophy transcript: `docs/philosophy/Gemini/001.md`
 - Project orchestration: `docs/000_orchestration.md`
 - Philosophy and direction questions: `docs/philosophy/001_foundation_questions.md`
 - Initial demo answers: `docs/philosophy/002_initial_demo_answers.md`

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Flame } from "lucide-react";
 import { AuthStatus } from "@/components/auth-status";
+import { SkaiMark } from "@/components/skai-mark";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSelector } from "@/components/theme-selector";
 import "pretendard/dist/web/variable/pretendardvariable.css";
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div className="topbar-inner">
                 <Link className="brand" href="/">
                   <span className="brand-mark" aria-hidden="true">
-                    <Flame size={18} />
+                    <SkaiMark size={22} />
                   </span>
                   <span>SKAI</span>
                 </Link>

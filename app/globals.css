@@ -148,6 +148,63 @@ button {
   color: var(--accent-strong);
 }
 
+.skai-mark {
+  display: block;
+  overflow: visible;
+}
+
+.skai-mark-edge,
+.skai-mark-arrow,
+.skai-mark-node {
+  vector-effect: non-scaling-stroke;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.skai-mark-edge {
+  stroke-width: 1.7;
+  opacity: 0.78;
+}
+
+.skai-mark-arrow {
+  stroke-width: 1.7;
+}
+
+.skai-mark-node {
+  stroke-width: 1.5;
+}
+
+.skai-mark-node-circle {
+  fill: color-mix(in srgb, var(--surface) 78%, transparent);
+}
+
+.skai-mark-node-hex {
+  display: none;
+  fill: color-mix(in srgb, var(--surface) 70%, transparent);
+}
+
+:root:has(.solve-layout) .skai-mark-node-circle,
+:root:has(.pre-attempt-layout) .skai-mark-node-circle {
+  display: none;
+}
+
+:root:has(.solve-layout) .skai-mark-node-hex,
+:root:has(.pre-attempt-layout) .skai-mark-node-hex {
+  display: block;
+}
+
+:root:has(.solve-layout) .brand,
+:root:has(.pre-attempt-layout) .brand {
+  font-family: var(--font-mono);
+}
+
+:root:has(.solve-layout) .brand-mark,
+:root:has(.pre-attempt-layout) .brand-mark {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: color-mix(in srgb, var(--surface) 85%, var(--accent-soft));
+}
+
 .nav {
   display: flex;
   align-items: center;

@@ -15,6 +15,10 @@ Reasoning:
 - SKAI is Korean-first in the current demo but should not feel local-only.
 - Pretendard handles dense Korean UI text cleanly and does not make the product look decorative.
 - JetBrains Mono gives materials, extracted text, token metrics, and trace metadata a technical surface without turning the whole app into a terminal.
+- This implements SKAI's Human Mode / Engine Mode split:
+  - Human Mode: access, home, admin, community, review use the sans UI layer.
+  - Engine Mode: problem solving, prompt composer, material viewer, graph, judge, replay, and metrics lean into mono/evidence surfaces.
+- Geist Sans/Mono remains a future candidate for Latin-heavy brand surfaces, but Pretendard/JetBrains Mono is the correct Korean-first demo stack.
 
 Fallback:
 
@@ -34,6 +38,16 @@ Reason:
 - A provider brand should not define the user's workflow or evaluation lens.
 
 Mode selection may change UI emphasis and later judge weighting, but it must not inject hidden instructions into the live model prompt. Model selection chooses the execution engine. Once the demo attempt starts, both are locked for that attempt.
+
+## Brand Mark Rule
+
+The top-level SKAI mark is the 3-node directed dual graph:
+
+```text
+intent + materials -> artifact
+```
+
+Provider surfaces may change accent colors, but they must never override this mark or make SKAI look like a branded skin over another model product.
 
 Allowed:
 

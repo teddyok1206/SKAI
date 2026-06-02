@@ -19,6 +19,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 완료된 큰 덩어리:
 
 - Next.js 기반 SKAI 데모 앱이 동작한다.
+- Gemini branding/philosophy transcript는 `docs/philosophy/Gemini/001.md`로 보존했고, 핵심 원칙은 `docs/philosophy/007_intelligence_and_brand_manifesto.md`에 반영했다.
+- Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
@@ -51,6 +53,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - branch restart는 parent attempt를 파괴하지 않고 새 breakpoint replay attempt를 만든다.
 - theme selector와 3개 디자인 옵션이 있다.
 - Pretendard Variable + JetBrains Mono font system이 적용됐다.
+- Human Mode / Engine Mode typography principle이 문서화됐고, problem-solving surfaces에서는 brand mark가 engine-oriented hex treatment로 전환된다.
 - provider별 chat surface mood가 적용됐다.
 - 홈과 풀이 시작 화면은 내부 설명을 줄이고 현재 행동 중심의 미니멀 UI로 정리됐다.
 - Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
@@ -115,6 +118,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
+- 3-node mark는 topbar에 1차 적용됐지만, packet-flow animation, full logo lockup, Human/Engine mode tokenization은 아직 없다.
 - 장시간 로컬 운영은 아직 terminal-run 방식이며, launchd/터널/Vercel 선택은 smoke 이후 결정해야 한다.
 
 ## Demo Contract
@@ -290,11 +294,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/038_branch_tree_explorer.md`: local attempts parent/child breakpoint lineage explorer.
 - `docs/technical/plan/039_founder_review_dashboard.md`: local smoke attempt founder review dashboard와 local qualitative notes.
 - `docs/technical/plan/040_comment_moderation_and_privacy.md`: 공개 댓글의 민감정보 redaction과 1차 misuse guardrail.
+- `docs/technical/plan/041_gemini_manifesto_brand_mark.md`: Gemini 철학 대화 반영, 3-node directed graph brand mark 1차 적용.
 
 다음 plan 후보:
 
-- `041_supabase_cohort_review_dashboard.md`
-- `042_comment_edit_delete_and_reports.md`
+- `042_supabase_cohort_review_dashboard.md`
+- `043_comment_edit_delete_and_reports.md`
+- `044_brand_mark_motion_and_engine_mode_tokens.md`
 
 ## Reading Map
 

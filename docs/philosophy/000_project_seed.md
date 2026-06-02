@@ -10,6 +10,8 @@ The follow-up insight was that the current market lacks a Baekjoon-like training
 
 The original long-form prompt is archived at `ARCHIVE_prompt_long/001.md`.
 
+The first Gemini branding/philosophy transcript is archived at `docs/philosophy/Gemini/001.md`, with extracted doctrine in `docs/philosophy/007_intelligence_and_brand_manifesto.md`.
+
 ## Working Definition
 
 SKAI evaluates and trains the ability to solve unclear real-world problems with AI systems.
@@ -31,6 +33,8 @@ This is not only prompt engineering. The target skill includes:
 ## Core Belief
 
 The key AI-era skill is not "using English as a programming language" in a shallow sense. After natural language becomes the interface, the differentiator is still design: abstraction, decomposition, constraint management, verification, and orchestration.
+
+SKAI should also reject the shallow fantasy of AI as an obedient servant. The product's deeper stance is that intelligence is a structure of intent, materials, delegation, verification, and artifact creation. SKAI teaches that structure.
 
 ## Initial Product Hypothesis
 

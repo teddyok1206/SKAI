@@ -29,6 +29,20 @@ The user should feel:
 
 The design should make process visible before outcome.
 
+## Intelligence Stance
+
+SKAI should not frame AI as an obedient servant, slave, magic worker, or productivity vending machine.
+
+The design should frame AI use as disciplined orchestration:
+
+- human intent,
+- messy reality and materials,
+- structured task delegation,
+- verification,
+- synthesized artifact.
+
+This stance matters more than surface novelty. The interface should quietly teach that intelligence is not domination over a model, but the design of a reliable structure of work.
+
 ## Minimal Interface Standard
 
 SKAI should be minimal in the Apple sense of discipline, not in the sense of hiding the product.
@@ -77,6 +91,10 @@ The total score should be visible but never visually dominate the whole experien
 - Do not use oversized hero type inside tool surfaces.
 - Keep letter spacing at 0.
 - Do not scale font size with viewport width beyond normal responsive breakpoints.
+- Maintain contextual typography:
+  - Human Mode uses clean sans surfaces for access, navigation, community, and admin review.
+  - Engine Mode uses mono/evidence emphasis for solving, trace, materials, graph, judge, and replay surfaces.
+  - Korean readability remains primary; mono should add precision without making Korean text awkward.
 
 ## Color Principles
 
