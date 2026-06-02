@@ -2,6 +2,7 @@ import { z } from "zod";
 import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
 import { buildConversationGraph } from "@/lib/conversation-graph";
+import { normalizeJudgeGraphAnnotations } from "@/lib/judge-graph-annotations";
 import { getProvider } from "@/lib/providers";
 import type {
   AxisScore,
@@ -26,6 +27,20 @@ const scoreAxisValues = [
   "verification",
   "efficiency",
   "final_quality",
+] as const;
+const graphAnnotationKindValues = [
+  "framing",
+  "decomposition",
+  "delegation",
+  "material_grounding",
+  "verification",
+  "adaptation",
+  "context_drift",
+  "bottleneck",
+  "recovery",
+  "finalization",
+  "model_behavior",
+  "cost_efficiency",
 ] as const;
 
 const axisLabels: Record<AxisScore["axis"], string> = {
@@ -70,6 +85,23 @@ const llmJudgeSchema = z.object({
     )
     .default([]),
   nextPracticeTargets: z.array(z.string()).default([]),
+  graphAnnotations: z
+    .array(
+      z.object({
+        targetTraceEventId: z.string().optional(),
+        targetKind: z.enum(["pair", "node"]).optional(),
+        kind: z.enum(graphAnnotationKindValues),
+        severity: z.enum(["info", "positive", "watch", "critical"]),
+        axis: z.enum(scoreAxisValues).optional(),
+        scoreImpact: z.coerce.number().min(-25).max(25).optional(),
+        confidence: z.coerce.number().min(0).max(100).optional(),
+        title: z.string().min(1).max(140),
+        explanation: z.string().min(1).max(1000),
+        evidenceTraceEventIds: z.array(z.string()).default([]),
+      }),
+    )
+    .max(12)
+    .default([]),
 });
 
 interface JudgeInput {
@@ -370,7 +402,7 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
     };
   });
 
-  return {
+  const report: ScoreReport = {
     id: crypto.randomUUID(),
     attemptId: input.attemptId,
     problemId: input.problem.id,
@@ -386,6 +418,17 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
     judgeModel: config.model,
     judgeMode: "llm",
     createdAt: new Date().toISOString(),
+  };
+
+  return {
+    ...report,
+    graphAnnotations: normalizeJudgeGraphAnnotations({
+      attemptId: input.attemptId,
+      trace: input.trace,
+      scoreReport: report,
+      rawAnnotations: raw.graphAnnotations,
+      problemMaterialCount: input.problem.materials.length,
+    }),
   };
 }
 
@@ -452,6 +495,8 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<Judg
         "You are SKAI Judge, an evaluator for AI orchestration skill.",
         "Evaluate the human user's process, not the model's raw intelligence.",
         "Focus on problem definition, decomposition, instruction clarity, adaptation, verification, efficiency, material use, and final artifact quality.",
+        "For graphAnnotations, target trace event ids from the supplied trace. Do not invent trace ids.",
+        "Use pair targets for prompt-response orchestration states unless a specific prompt or response node is the issue.",
         "Do not reward fake precision. Explain bottlenecks concretely.",
         "Return only valid JSON. Do not include markdown fences.",
       ].join(" "),
@@ -468,7 +513,11 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<Judg
             "bottlenecks: array of {traceEventId?, label, severity, explanation, replaySuggestion}",
             "workflow: array of {title, summary, relatedTraceEventIds}",
             "nextPracticeTargets: string[]",
+            "graphAnnotations: array of {targetTraceEventId?, targetKind?, kind, severity, axis?, scoreImpact?, confidence?, title, explanation, evidenceTraceEventIds}",
             `Allowed axes: ${scoreAxisValues.join(", ")}`,
+            `Allowed graph annotation kinds: ${graphAnnotationKindValues.join(", ")}`,
+            "Allowed graph annotation severities: info, positive, watch, critical",
+            "For confidence, use 0-1 or 0-100. The server will normalize it.",
           ].join("\n"),
         },
       ],
@@ -564,6 +613,7 @@ function aggregateReports(input: JudgeInput, reports: ScoreReport[]): ScoreRepor
     bottlenecks: primary.bottlenecks,
     workflow: primary.workflow,
     nextPracticeTargets: uniqueStrings(reports.flatMap((report) => report.nextPracticeTargets), 4),
+    graphAnnotations: primary.graphAnnotations,
     judgeProvider: primary.judgeProvider,
     judgeModel: `ensemble(${reports.map((report) => report.judgeModel).join(",")})`,
     judgeMode: "ensemble",

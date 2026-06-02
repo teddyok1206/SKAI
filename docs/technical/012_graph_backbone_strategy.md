@@ -35,14 +35,15 @@ Already implemented:
 - Sparse annotation indexes support lookup by target id, trace event id, and kind.
 - The Graph tab detail panel renders selected node/pair annotations and evidence.
 - Score reports carry derived graph annotations.
+- LLM judge can emit trace-event-targeted graph annotations that the server maps to graph pair/node targets.
 - Branch diffs carry parent/child graph-state transitions.
 - Counterfactual judge consumes graph-state status and annotation delta as evidence.
 - Shared graph skeletons are generated from graph pairs, task status, and annotations.
 
 Current limitation:
 
-- Judge output has a graph annotation bridge, but LLM judge does not yet emit a custom graph-native annotation schema.
-- Graph nodes/pairs do not yet carry rich LLM judge-native annotations.
+- LLM judge graph annotation schema exists, but calibration quality is not yet verified on golden attempts.
+- Graph nodes/pairs can carry LLM judge-native annotations, but UI confidence treatment is still basic.
 - Shared attempt UX now has a skeleton-first path, but cross-attempt skeleton comparison is not implemented.
 - User habit reporting does not yet aggregate graph motifs.
 - Graph snapshots are not yet persisted for offline research/search.
@@ -294,7 +295,7 @@ Behavior:
 ## Implementation Order
 
 1. Add graph annotation types and deterministic annotation builder. Done in `028`.
-2. Attach heuristic/LLM judge feedback to graph pairs. Baseline done in `029`; LLM custom schema remains.
+2. Attach heuristic/LLM judge feedback to graph pairs. Baseline done in `029`; LLM custom schema done in `031`.
 3. Render annotations in the Graph tab detail panel. Done in `028`.
 4. Convert branch diff UI into graph-state transition UI. Done in `029`.
 5. Build graph skeleton generator and use it in shared attempts. Done in `032`.
