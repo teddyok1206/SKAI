@@ -144,7 +144,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
 - 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
 - Evaluation Overlay는 1차 구현됐지만, edge-native weak-edge annotation은 아직 제한적이다. 현재는 pair-level annotation fallback이 local node/rung/cell styling을 만든다.
-- 공개 share에서 parent/child full graph 병렬 비교를 안정적으로 하려면 parent graph snapshot persistence가 필요하다. 현재 share는 `GraphStateTransition` fallback만 가진다.
+- [MUST FIX] 공개 share에서 parent/child full graph 병렬 비교를 안정적으로 재현하려면 parent/child graph snapshot persistence가 필요하다. 현재 share는 `GraphStateTransition` fallback만 가진다. 다음 graph slice의 최우선 todo다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
@@ -247,6 +247,13 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - parent/child branch는 텍스트 diff보다 두 graph를 나란히 놓고 annotation delta를 읽는 comparison surface로 확장한다.
 - multi-model/harness graph는 당장 구현하지 않고, single-model attempt 구조를 깨지 않는 `model lane` / `inter-model edge` 설계 hook을 먼저 문서화한다.
 - 완료 조건: 사용자가 detail panel을 읽기 전에도 graph 위에서 병목과 회복 지점을 대략 볼 수 있고, branch가 무엇을 고쳤는지 병렬 graph로 설명할 수 있다.
+
+우선순위 1.7: shared branch graph snapshot persistence
+
+- 공개 share 화면에서도 parent/child 3D Dual Graph comparison을 local parent attempt 없이 재현할 수 있어야 한다.
+- publish 또는 counterfactual judge 저장 시점에 parent/child `ConversationGraph` snapshot 또는 compact graph comparison payload를 schema version과 함께 저장한다.
+- `GraphStateTransition` fallback은 유지하되, 공개 branch replay의 primary comparison은 parent/child graph surface가 되어야 한다.
+- 완료 조건: `/share/[attemptId]`에 직접 진입해도 parent/child full graph comparison, breakpoint focus, overlay signal이 동일하게 재현된다.
 
 우선순위 2: golden attempts and LLM judge calibration
 

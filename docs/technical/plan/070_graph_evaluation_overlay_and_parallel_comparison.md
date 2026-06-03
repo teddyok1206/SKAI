@@ -421,6 +421,14 @@ Implementation result:
 - Prompt before/after text diff is kept as evidence below graph comparison.
 - Share screen now places saved `GraphStateTransitionView` before prompt diff as a fallback when parent full graph is unavailable.
 
+Must-fix follow-up:
+
+- The solve screen can compare parent/child full graphs because the parent attempt exists in local state.
+- The public share screen cannot reliably reconstruct the parent full trace/graph after direct entry, reload, or external link sharing.
+- Persist a branch comparison snapshot after counterfactual judge or publish sync.
+- Store either parent/child `ConversationGraph` snapshots or a compact graph comparison payload with schema version, breakpoint pair id, annotation delta, and overlay-relevant summaries.
+- Keep `GraphStateTransitionView` as a fallback, but do not treat published branch replay as complete until the share screen can show the same parent/child graph comparison surface.
+
 ### Slice 4: Multi-Model/Harness Design Hook
 
 Goal:
