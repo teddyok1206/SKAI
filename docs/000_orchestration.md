@@ -103,7 +103,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Graph tab detail panel은 선택한 graph node/pair의 annotation과 evidence trace를 보여준다.
 - Score report는 judge 결과에서 파생된 graph annotations를 포함한다.
 - LLM judge는 trace event id를 기준으로 graph annotation 후보를 낼 수 있고, 서버가 이를 graph pair/node target으로 검증 매핑한다.
-- 다음 graph UX 축은 평가 결과를 graph 위에 직접 씌우는 Evaluation Overlay다. 병목 노드, 약한 엣지, 회복 지점, 검증/자료 grounding을 색/두께/움직임으로 표시하고, detail panel은 그 근거를 펼치는 역할로 둔다.
+- 다음 graph UX 축은 평가 결과를 graph 위에 직접 씌우는 Evaluation Overlay다. 병목 노드, 약한 엣지, 회복 지점, 검증/자료 grounding을 색/두께/움직임으로 표시하고, detail panel은 그 근거를 펼치는 역할로 둔다. 단, overlay는 기본 graph 구조와 분리된 lens여야 하므로 사용자가 전체/개별 layer를 켜고 끌 수 있어야 한다.
 - `buildConversationGraph`는 score report annotations와 deterministic annotations를 중복 제거해 sparse index에 올린다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
@@ -139,7 +139,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
 - 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
-- Evaluation Overlay는 아직 시각 surface에 구현되지 않았다. 현재 annotation은 detail panel에서 읽히지만, graph 자체의 노드/엣지 색상, 두께, pulse, weak-edge treatment로 바로 읽히지는 않는다.
+- Evaluation Overlay는 아직 시각 surface에 구현되지 않았다. 현재 annotation은 detail panel에서 읽히지만, graph 자체의 노드/엣지 색상, 두께, pulse, weak-edge treatment로 바로 읽히지는 않는다. Overlay layer toggle도 아직 없다.
 - branch/counterfactual comparison은 graph-state transition 데이터는 있으나, parent/child 3D Dual graph를 병렬 배치해 직접 비교하는 UI는 아직 없다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
@@ -239,6 +239,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 - judge/deterministic annotations를 3D Dual Graph의 node/edge overlay로 표현한다.
 - bottleneck node, weak edge, recovery/material/verification signal을 색/두께/pulse로 구분하되, 초보자에게 graph theory 용어를 과노출하지 않는다.
+- overlay는 구조 graph 위에 씌우는 lens이므로 전체 on/off와 개별 layer toggles를 제공한다.
 - parent/child branch는 텍스트 diff보다 두 graph를 나란히 놓고 annotation delta를 읽는 comparison surface로 확장한다.
 - multi-model/harness graph는 당장 구현하지 않고, single-model attempt 구조를 깨지 않는 `model lane` / `inter-model edge` 설계 hook을 먼저 문서화한다.
 - 완료 조건: 사용자가 detail panel을 읽기 전에도 graph 위에서 병목과 회복 지점을 대략 볼 수 있고, branch가 무엇을 고쳤는지 병렬 graph로 설명할 수 있다.

@@ -94,6 +94,7 @@
 | TDR-088 | Graph evaluation overlay | Judge and deterministic annotations should be visible as node/edge/pair overlay on the 3D Dual Graph, not only as text in the detail panel | Accepted | Gemini 006 clarified that users should see bottlenecks, weak edges, recovery, verification, and material grounding directly on the graph before reading a report | 2026-06-04 |
 | TDR-089 | Counterfactual graph comparison | Branch replay comparison should prioritize side-by-side parent/child graph state over prompt text diff | Accepted | The learning value of replay is seeing that a changed prompt altered orchestration state, so graph-state transition and annotation delta must be the primary comparison surface | 2026-06-04 |
 | TDR-090 | Multi-model graph lanes | Future multi-AI/harness solving should use model-specific graph lanes plus inter-model edges, while keeping first-smoke attempts single-model | Accepted | Multiple AI engines are useful only when SKAI can show how the human routes intent, materials, and artifacts across them; exposing this as a leaderboard would weaken the human orchestration thesis | 2026-06-04 |
+| TDR-091 | Toggleable graph overlays | Evaluation overlays are user-controllable graph lenses with whole-overlay and per-layer toggles | Accepted | The clean 3D Dual Graph is the base structure; forcing every judge signal to stay visible would create noise and make users read warnings instead of orchestration structure | 2026-06-04 |
 
 ## Decision Template
 

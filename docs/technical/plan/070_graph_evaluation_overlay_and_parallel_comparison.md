@@ -28,7 +28,8 @@ Included:
 
 - derive a visual overlay model from existing `ConversationGraph.annotations`, `pairs`, and edges;
 - apply overlay classes to 3D Dual prompt/response/status nodes and ladder rungs;
-- surface a small legend in beginner-safe language;
+- surface a small legend and layer controls in beginner-safe language;
+- allow users to toggle the whole overlay or individual overlay layers;
 - keep the detail panel as evidence expansion, not the primary signal;
 - add a parent/child graph comparison plan and first UI integration point;
 - document future `model lane` / `inter-model edge` design hooks.
@@ -56,6 +57,7 @@ Excluded from the first slice:
   - `cost_efficiency`.
 - Pair-level annotations can drive local cell styling even when edge-specific annotations are not yet present.
 - Beginner-facing copy should say "병목", "약한 연결", "검증", "자료 사용", "회복" rather than incidence, duality, or edge-target semantics.
+- Overlay is a lens over the base graph, not the graph itself. Users must be able to turn it off to inspect the clean structure.
 
 ## Affected Files / Modules
 
@@ -113,6 +115,36 @@ interface GraphOverlayTarget {
 }
 ```
 
+Candidate local UI state:
+
+```ts
+interface GraphOverlayControls {
+  enabled: boolean;
+  layers: {
+    bottleneck: boolean;
+    weakEdge: boolean;
+    verification: boolean;
+    materialGrounding: boolean;
+    recovery: boolean;
+    modelBehavior: boolean;
+    costEfficiency: boolean;
+  };
+}
+```
+
+Initial default:
+
+- `enabled: true`
+- `bottleneck: true`
+- `weakEdge: true`
+- `recovery: true`
+- `verification: false`
+- `materialGrounding: false`
+- `modelBehavior: false`
+- `costEfficiency: false`
+
+Reason: first smoke users should immediately see the critical learning signals, but should not face every analysis layer at once.
+
 Persistence should wait until graph snapshots are implemented. The first version should be recomputable from `ConversationGraph`.
 
 Future multi-model/harness types should remain design hooks until the product explicitly enters multi-AI solving:
@@ -163,18 +195,28 @@ Steps:
    - apply overlay class to ladder rungs when the pair/cell has a weak-edge or bottleneck signal;
    - keep same-index selection behavior intact;
    - do not make origin stub active.
-5. Add a compact legend:
+5. Add compact overlay controls:
+   - 전체 overlay on/off;
+   - 병목;
+   - 약한 연결;
+   - 검증;
+   - 자료 사용;
+   - 회복;
+   - advanced-only model/cost layers.
+6. Add a compact legend:
    - 병목,
    - 약한 연결,
    - 검증,
    - 자료 사용,
    - 회복.
-6. Keep the detail panel as the explanation/evidence surface.
+7. Keep the detail panel as the explanation/evidence surface.
 
 Done criteria:
 
 - A judged attempt with bottleneck annotations shows visible warning treatment on the relevant graph cell.
 - A material/verification/recovery signal is visible without opening raw transcript.
+- Turning overlay off returns the graph to the clean structural ladder view.
+- Turning individual layers on/off changes only visual treatment, not graph data or detail evidence.
 - No graph theory vocabulary is required to interpret the overlay.
 
 ### Slice 2: Weak Edge And Pair-Level Fallback
@@ -221,8 +263,9 @@ Steps:
    - new bottleneck appeared;
    - no meaningful state change.
 5. Reuse the same overlay helper from Slice 1.
-6. Put text diff below graph comparison as evidence.
-7. Use the comparison in:
+6. Reuse the same overlay controls in comparison mode, with linked toggles across parent and child graphs.
+7. Put text diff below graph comparison as evidence.
+8. Use the comparison in:
    - solve branch/counterfactual panel;
    - shared attempt counterfactual section.
 
@@ -270,6 +313,8 @@ For Slice 1 implementation:
   - open a judged attempt;
   - enter Graph tab;
   - confirm annotation overlay appears;
+  - toggle overlay off and confirm the clean structural graph remains readable;
+  - toggle individual layers and confirm unrelated layers disappear;
   - select `P_i/R_i/S_i`;
   - confirm detail panel evidence matches overlay;
   - confirm origin stub does not activate.
@@ -284,6 +329,7 @@ For Slice 3 implementation:
 ## Risks
 
 - Overlay can become visually noisy if every annotation gets a strong treatment.
+- Too many toggles can become an expert dashboard. Keep first-smoke controls compact and use beginner-safe layer labels.
 - Users may mistake judge confidence for objective truth if confidence/source is hidden.
 - Weak-edge styling can overclaim causality before LLM judge calibration improves.
 - Parallel graph comparison can become too wide for mobile.
@@ -292,6 +338,7 @@ For Slice 3 implementation:
 ## Rollback Notes
 
 - Overlay classes should be removable without changing graph data.
+- Overlay controls should be local UI state first. Persisting user overlay preferences can wait.
 - The detail panel should continue to work if overlay helper is disabled.
 - Branch text diff/counterfactual report should remain available if graph comparison is hidden.
 - Multi-model lane types should not be persisted until the feature is real.
@@ -299,6 +346,7 @@ For Slice 3 implementation:
 ## Open Questions
 
 - Should overlay severity be computed from max severity, weighted confidence, or source priority?
+- What should the first-smoke default layer set be: bottleneck-only, bottleneck+recovery, or bottleneck+weak-edge+recovery?
 - Should pair-level bottleneck highlight all three local nodes, or only the status node plus affected rung?
 - How much animation is acceptable before the graph stops feeling precise?
 - Should weak edges be generated deterministically, or only by LLM/human judge?

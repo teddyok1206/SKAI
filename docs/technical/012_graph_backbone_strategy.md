@@ -191,6 +191,25 @@ Implementation principle:
 - Do not duplicate raw judge text into a separate source of truth.
 - In the first slice, pair-level annotations can drive local node/edge treatment even when edge-specific annotations are sparse.
 - Overlay must degrade gracefully when judge annotations are missing.
+- Overlay must be toggleable. The base 3D Dual Graph is the structure; bottleneck, weak-edge, verification, material, recovery, model behavior, and cost overlays are lenses that users can turn on/off.
+- Default smoke-test view should avoid overwhelming users. Prefer a minimal active set such as bottleneck + recovery, while leaving verification/material/cost/model layers available.
+
+Candidate control state:
+
+```ts
+interface GraphOverlayControls {
+  enabled: boolean;
+  layers: {
+    bottleneck: boolean;
+    weakEdge: boolean;
+    verification: boolean;
+    materialGrounding: boolean;
+    recovery: boolean;
+    modelBehavior: boolean;
+    costEfficiency: boolean;
+  };
+}
+```
 
 ### Parallel Graph Comparison
 
