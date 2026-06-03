@@ -1,38 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GitBranch, Info, Network, Route, Workflow } from "lucide-react";
+import { GitBranch, Info, Network, Workflow } from "lucide-react";
 import type {
   ConversationGraph,
   ConversationGraphAnnotation,
-  ConversationGraphEdge,
   ConversationGraphNode,
   ConversationGraphPair,
-  ConversationGraphProjection,
   TraceEvent,
 } from "@/lib/types";
-
-type GraphTab = "dual" | ConversationGraphProjection | "index";
-
-const graphTabs: Array<{ id: GraphTab; label: string }> = [
-  { id: "dual", label: "3D Dual" },
-  { id: "prompt_graph", label: "Prompt" },
-  { id: "response_graph", label: "Response" },
-  { id: "status_layer", label: "Status" },
-  { id: "index", label: "Index" },
-];
-
-function projectionLabel(projection: ConversationGraphProjection) {
-  if (projection === "prompt_graph") {
-    return "Prompt graph";
-  }
-
-  if (projection === "response_graph") {
-    return "Response graph";
-  }
-
-  return "Task-status layer";
-}
 
 function nodeKindLabel(kind: ConversationGraphNode["kind"]) {
   if (kind === "prompt") {
@@ -48,10 +24,6 @@ function nodeKindLabel(kind: ConversationGraphNode["kind"]) {
 
 function statusClass(pair?: ConversationGraphPair) {
   return pair ? `graph-status ${pair.status} ${pair.isBreakpoint ? "breakpoint" : ""}` : "graph-status";
-}
-
-function degreeLabel(incoming = 0, outgoing = 0) {
-  return `in ${incoming} · out ${outgoing}`;
 }
 
 function annotationKindLabel(kind: ConversationGraphAnnotation["kind"]) {
@@ -155,116 +127,6 @@ function GraphNodeButton({
   );
 }
 
-function GraphEdgeNodeRef({
-  node,
-  fallbackId,
-  selected,
-  onSelect,
-}: {
-  node?: ConversationGraphNode;
-  fallbackId: string;
-  selected: boolean;
-  onSelect: (nodeId: string) => void;
-}) {
-  if (!node) {
-    return <span className="graph-edge-node-ref missing">{fallbackId}</span>;
-  }
-
-  return (
-    <button
-      className={`graph-edge-node-ref ${node.kind} ${selected ? "active" : ""}`}
-      onClick={() => onSelect(node.id)}
-      title={node.summary}
-      type="button"
-    >
-      <strong>{nodeToken(node)}</strong>
-      <span>{fixedNodeCaption(node)}</span>
-    </button>
-  );
-}
-
-function GraphSequencePath({
-  edges,
-  nodeById,
-  selectedNodeId,
-  onSelect,
-}: {
-  edges: ConversationGraphEdge[];
-  nodeById: Map<string, ConversationGraphNode>;
-  selectedNodeId?: string | null;
-  onSelect: (nodeId: string) => void;
-}) {
-  if (edges.length === 0) {
-    return <p className="muted">No edges in this projection yet.</p>;
-  }
-
-  const orderedEdges = [...edges].sort((a, b) => a.sequence - b.sequence || a.id.localeCompare(b.id));
-  const parts: Array<
-    | { type: "node"; id: string; nodeId: string; node?: ConversationGraphNode }
-    | { type: "edge"; id: string; edge: ConversationGraphEdge }
-    | { type: "continuation"; id: string }
-  > = [];
-  let lastNodeId = "";
-
-  for (const edge of orderedEdges) {
-    if (edge.sourceNodeId !== lastNodeId) {
-      if (lastNodeId) {
-        parts.push({ type: "continuation", id: `${edge.id}:continuation` });
-      }
-
-      parts.push({
-        type: "node",
-        id: `${edge.id}:source:${edge.sourceNodeId}`,
-        nodeId: edge.sourceNodeId,
-        node: nodeById.get(edge.sourceNodeId),
-      });
-    }
-
-    parts.push({ type: "edge", id: edge.id, edge });
-    parts.push({
-      type: "node",
-      id: `${edge.id}:target:${edge.targetNodeId}`,
-      nodeId: edge.targetNodeId,
-      node: nodeById.get(edge.targetNodeId),
-    });
-    lastNodeId = edge.targetNodeId;
-  }
-
-  return (
-    <div className="graph-sequence-path" aria-label="Directed graph sequence">
-      {parts.map((part) => {
-        if (part.type === "edge") {
-          const isActive = selectedNodeId === part.edge.sourceNodeId || selectedNodeId === part.edge.targetNodeId;
-
-          return (
-            <span className={`graph-sequence-arrow ${isActive ? "active" : ""}`} key={part.id} title={part.edge.label}>
-              <Route size={14} />
-            </span>
-          );
-        }
-
-        if (part.type === "continuation") {
-          return (
-            <span className="graph-sequence-arrow continuation" key={part.id} title="next pair">
-              <Route size={14} />
-            </span>
-          );
-        }
-
-        return (
-          <GraphEdgeNodeRef
-            fallbackId={part.nodeId}
-            key={part.id}
-            node={part.node}
-            onSelect={onSelect}
-            selected={selectedNodeId === part.node?.id}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 export function ConversationGraphView({
   graph,
   trace,
@@ -274,7 +136,6 @@ export function ConversationGraphView({
   trace: TraceEvent[];
   onBranchTraceEvent?: (traceEventId: string) => void;
 }) {
-  const [activeTab, setActiveTab] = useState<GraphTab>("dual");
   const allNodes = useMemo(
     () => [...graph.promptNodes, ...graph.responseNodes, ...graph.statusNodes],
     [graph.promptNodes, graph.responseNodes, graph.statusNodes],
@@ -298,7 +159,6 @@ export function ConversationGraphView({
         pair.statusNodeId === selectedNode?.id,
     ) ?? undefined;
   const selectedTrace = selectedNode?.traceEventId ? traceById.get(selectedNode.traceEventId) : undefined;
-  const selectedIncidence = selectedNode ? graph.index.incidence[selectedNode.id] : undefined;
   const branchTraceEventId =
     selectedTrace?.id ?? selectedPair?.promptTraceEventId ?? selectedPair?.responseTraceEventId ?? undefined;
   const selectedAnnotations = useMemo(() => {
@@ -400,7 +260,7 @@ export function ConversationGraphView({
                     <path className="graph-ladder-arrowhead" d="M 0 0 L 8 4 L 0 8 z" />
                   </marker>
                 </defs>
-                {hasOriginStub ? <line className={`graph-ladder-origin-stub ${pairSetActive ? "active" : ""}`} x1="300" x2="300" y1="54" y2="130" /> : null}
+                {hasOriginStub ? <line className="graph-ladder-origin-stub" x1="300" x2="300" y1="54" y2="130" /> : null}
                 {topRungVisible ? (
                   <line
                     className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
@@ -482,92 +342,6 @@ export function ConversationGraphView({
     );
   }
 
-  function renderProjection(projection: ConversationGraphProjection) {
-    const nodes =
-      projection === "prompt_graph"
-        ? graph.promptNodes
-        : projection === "response_graph"
-          ? graph.responseNodes
-          : graph.statusNodes;
-    const edges =
-      projection === "prompt_graph"
-        ? graph.promptEdges
-        : projection === "response_graph"
-          ? graph.responseEdges
-          : graph.statusEdges;
-
-    return (
-      <div className="graph-projection">
-        <div className="graph-projection-header">
-          <strong>{projectionLabel(projection)}</strong>
-          <span>
-            {nodes.length} nodes · {edges.length} edges
-          </span>
-        </div>
-        <div className="graph-node-strip">
-          {nodes.map((node) => (
-            <GraphNodeButton
-              key={node.id}
-              node={node}
-              selected={effectiveSelectedNodeId === node.id}
-              pair={graph.pairs.find(
-                (pair) => pair.promptNodeId === node.id || pair.responseNodeId === node.id || pair.statusNodeId === node.id,
-              )}
-              annotationCount={annotationCountForNode(
-                node,
-                graph.pairs.find(
-                  (pair) => pair.promptNodeId === node.id || pair.responseNodeId === node.id || pair.statusNodeId === node.id,
-                ),
-              )}
-              onSelect={selectNode}
-            />
-          ))}
-        </div>
-        <GraphSequencePath edges={edges} nodeById={nodeById} selectedNodeId={effectiveSelectedNodeId} onSelect={selectNode} />
-      </div>
-    );
-  }
-
-  function renderIndex() {
-    const selectedIncoming = selectedIncidence?.incoming ?? [];
-    const selectedOutgoing = selectedIncidence?.outgoing ?? [];
-
-    return (
-      <div className="graph-index-grid">
-        <div className="graph-stat">
-          <strong>{Object.keys(graph.index.promptNodeByTraceEventId).length}</strong>
-          <span>prompt trace index</span>
-        </div>
-        <div className="graph-stat">
-          <strong>{Object.keys(graph.index.responseNodeByTraceEventId).length}</strong>
-          <span>response trace index</span>
-        </div>
-        <div className="graph-stat">
-          <strong>{Object.keys(graph.index.adjacency).length}</strong>
-          <span>adjacency keys</span>
-        </div>
-        <div className="graph-stat">
-          <strong>{Object.keys(graph.index.incidence).length}</strong>
-          <span>incidence rows</span>
-        </div>
-        <div className="graph-index-detail">
-          <strong>Selected incidence</strong>
-          <p className="muted">{selectedNode?.id ?? "No node selected"}</p>
-        <div className="graph-edge-list">
-            <div className="graph-edge-chip">
-              <span>target/incoming</span>
-              <small>{selectedIncoming.length > 0 ? selectedIncoming.join(", ") : "none"}</small>
-            </div>
-            <div className="graph-edge-chip">
-              <span>source/outgoing</span>
-              <small>{selectedOutgoing.length > 0 ? selectedOutgoing.join(", ") : "none"}</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="conversation-graph-view">
       <div className="graph-overview">
@@ -593,29 +367,8 @@ export function ConversationGraphView({
         </div>
       </div>
 
-      <div className="graph-tabs" role="tablist" aria-label="Graph projections">
-        {graphTabs.map((tab) => (
-          <button
-            aria-selected={activeTab === tab.id}
-            className={activeTab === tab.id ? "active" : ""}
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            role="tab"
-            type="button"
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
       <div className="graph-workspace">
-        <div className="graph-canvas">
-          {activeTab === "dual" ? renderDualGraph() : null}
-          {activeTab === "prompt_graph" ? renderProjection("prompt_graph") : null}
-          {activeTab === "response_graph" ? renderProjection("response_graph") : null}
-          {activeTab === "status_layer" ? renderProjection("status_layer") : null}
-          {activeTab === "index" ? renderIndex() : null}
-        </div>
+        <div className="graph-canvas">{renderDualGraph()}</div>
 
         <aside className="graph-detail-panel">
           <div>
@@ -680,14 +433,6 @@ export function ConversationGraphView({
               ))
             )}
           </div>
-          {selectedIncidence ? (
-            <div className="graph-reason-list">
-              <strong>Directed incidence</strong>
-              <span>{degreeLabel(selectedIncidence.incoming.length, selectedIncidence.outgoing.length)}</span>
-              <span>incoming means this node is an edge target</span>
-              <span>outgoing means this node is an edge source</span>
-            </div>
-          ) : null}
           {onBranchTraceEvent && branchTraceEventId ? (
             <button className="button primary" onClick={() => onBranchTraceEvent(branchTraceEventId)} type="button">
               <GitBranch size={15} /> Branch from node
