@@ -90,6 +90,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
 - 3D Dual view는 row-lane table이 아니라 Prompt spine, Response spine, Status spine의 3-spine layout으로 표현한다. Prompt/Response가 직접 pair를 이루고, Status는 항상 오른쪽 세 번째 spine에 놓인다. Status는 중간 causal node가 아니라 각 prompt-response pair를 묶는 세 번째 graph/binding layer다.
+- 3D Dual view에서 `R_i`는 `P_i`와 같은 높이의 chat bubble이 아니라 `P_i -> P_{i+1}` prompt transition edge의 dual node다. 따라서 `R_i`와 `S_i`는 `P_i`와 `P_{i+1}`의 중점 높이에 놓이고, `P_i -> R_i`는 오른쪽 아래 방향의 사선 edge로 표시한다.
 - Prompt/Response/Status projection은 중복 edge card 목록이 아니라 long-exact-sequence처럼 이어지는 directed sequence path로 표현한다. Status projection은 Prompt/Response 노드를 반복하지 않고 `S1 -> S2 -> S3` status progression만 보여준다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - 풀이 화면 sidebar에는 local attempts의 parent/child breakpoint lineage를 보는 Branch Tree explorer가 있다.
@@ -356,6 +357,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/060_three_spine_dual_graph_pair_status.md`: P/R/S 3-spine 구조, prompt-response direct pair, status pair-binding layer, selected node border emphasis.
 - `docs/technical/plan/061_status_right_spine_and_dedup_status_graph.md`: Status를 항상 오른쪽 spine으로 유지하고, Status graph를 P/R 반복 없이 status-to-status progression으로 정정.
 - `docs/technical/plan/062_dual_graph_closed_pair_frame.md`: 3D Dual의 prompt-response pair frame을 닫힌 binding container로 보정하고 Status 연결선/Response offset을 정렬.
+- `docs/technical/plan/063_dual_graph_diagonal_response_geometry.md`: `R_i`를 `P_i/P_{i+1}` 중점 높이에 배치하고, P->R 사선 edge와 평행사변형형 binding frame으로 3D Dual geometry를 보정.
 
 다음 plan 후보:
 

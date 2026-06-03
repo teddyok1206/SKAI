@@ -370,11 +370,31 @@ export function ConversationGraphView({
           const promptNode = nodeById.get(pair.promptNodeId);
           const statusNode = nodeById.get(pair.statusNodeId);
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
+          const promptResponseArrowId = `graph-pr-arrow-${pair.sequence}`;
 
           return (
             <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
-              <div className="graph-pair-frame" aria-hidden="true" />
-              <div className="graph-pr-link" aria-hidden="true" />
+              <svg aria-hidden="true" className="graph-pair-frame" preserveAspectRatio="none" viewBox="0 0 600 168">
+                <polygon className="graph-pair-frame-shape" points="56,10 356,94 356,166 56,82" />
+                <line className="graph-pair-status-link" x1="356" x2="500" y1="130" y2="130" />
+              </svg>
+              <svg aria-hidden="true" className="graph-pr-link" preserveAspectRatio="none" viewBox="0 0 600 168">
+                <defs>
+                  <marker
+                    id={promptResponseArrowId}
+                    markerHeight="8"
+                    markerUnits="strokeWidth"
+                    markerWidth="8"
+                    orient="auto"
+                    refX="8"
+                    refY="4"
+                    viewBox="0 0 8 8"
+                  >
+                    <path className="graph-pr-link-arrow" d="M 0 0 L 8 4 L 0 8 z" />
+                  </marker>
+                </defs>
+                <line className="graph-pr-link-line" markerEnd={`url(#${promptResponseArrowId})`} x1="100" x2="300" y1="44" y2="128" />
+              </svg>
 
               <div className="graph-spine-slot prompt-spine">
                 <div className="graph-node-slot">

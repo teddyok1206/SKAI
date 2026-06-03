@@ -2791,10 +2791,10 @@ h3 {
 .graph-dual-spine-row {
   display: grid;
   grid-template-columns: minmax(84px, 1fr) minmax(84px, 1fr) minmax(84px, 1fr);
-  gap: 10px;
+  gap: 0;
   align-items: center;
-  min-width: 540px;
-  width: max(100%, 540px);
+  min-width: 600px;
+  width: max(100%, 600px);
 }
 
 .graph-spine-slot {
@@ -2812,7 +2812,11 @@ h3 {
 
 .graph-dual-spine-row {
   position: relative;
-  min-height: 108px;
+  --dual-node-top: 10px;
+  --dual-node-size: 68px;
+  --dual-node-bottom: calc(var(--dual-node-top) + var(--dual-node-size));
+  --dual-half-step: 84px;
+  min-height: 168px;
 }
 
 .graph-dual-spine-row.breakpoint {
@@ -2824,14 +2828,15 @@ h3 {
   position: relative;
   display: grid;
   min-width: 0;
-  min-height: 94px;
-  place-items: center;
+  min-height: 168px;
+  padding-top: var(--dual-node-top);
+  place-items: start center;
 }
 
 .graph-spine-slot::after {
   position: absolute;
-  top: calc(50% + 35px);
-  bottom: calc(-50% + 35px);
+  top: var(--dual-node-bottom);
+  bottom: calc(var(--dual-node-top) * -1);
   left: 50%;
   width: 3px;
   border-radius: 999px;
@@ -2842,7 +2847,7 @@ h3 {
 
 .graph-spine-slot::before {
   position: absolute;
-  bottom: calc(-50% + 24px);
+  bottom: calc(var(--dual-node-top) * -1 + 4px);
   left: 50%;
   width: 10px;
   height: 10px;
@@ -2858,7 +2863,7 @@ h3 {
 }
 
 .response-spine {
-  transform: translateY(8px);
+  transform: translateY(var(--dual-half-step));
 }
 
 .response-spine::after {
@@ -2871,7 +2876,7 @@ h3 {
 }
 
 .status-spine {
-  transform: translateY(6px);
+  transform: translateY(var(--dual-half-step));
 }
 
 .status-spine::after {
@@ -2886,50 +2891,46 @@ h3 {
 .graph-pair-frame {
   position: absolute;
   z-index: 0;
-  --status-connector-width: max(28px, calc(25% - 37px));
-  top: 14px;
-  bottom: 4px;
-  left: calc((100% - 20px) / 3 * 0 + 10px);
-  width: calc((100% - 20px) / 3 * 2 + 10px);
-  border: 2px solid color-mix(in srgb, var(--gold) 32%, var(--line));
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--gold-soft) 12%, transparent);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  overflow: visible;
 }
 
-.graph-pair-frame::after {
-  position: absolute;
-  top: 50%;
-  right: calc(var(--status-connector-width) * -1);
-  width: var(--status-connector-width);
-  height: 2px;
-  background: color-mix(in srgb, var(--gold) 40%, var(--line));
-  content: "";
-  transform: translateY(-50%);
+.graph-pair-frame-shape {
+  fill: color-mix(in srgb, var(--gold-soft) 12%, transparent);
+  stroke: color-mix(in srgb, var(--gold) 34%, var(--line));
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.graph-pair-status-link {
+  stroke: color-mix(in srgb, var(--gold) 44%, var(--line));
+  stroke-linecap: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
 }
 
 .graph-pr-link {
   position: absolute;
   z-index: 0;
-  top: 50%;
-  left: calc(100% / 3 - 34px);
-  width: calc(100% / 3 - 14px);
-  height: 3px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--blue) 34%, var(--line));
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  overflow: visible;
 }
 
-.graph-pr-link::after {
-  position: absolute;
-  top: 50%;
-  right: -1px;
-  width: 11px;
-  height: 11px;
-  border-top: 3px solid color-mix(in srgb, var(--blue) 56%, var(--line));
-  border-right: 3px solid color-mix(in srgb, var(--blue) 56%, var(--line));
-  content: "";
-  transform: translateY(-50%) rotate(45deg);
+.graph-pr-link-line {
+  stroke: color-mix(in srgb, var(--blue) 58%, var(--line));
+  stroke-linecap: round;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.graph-pr-link-arrow {
+  fill: color-mix(in srgb, var(--blue) 68%, var(--line));
 }
 
 .graph-status-bridge {
@@ -4141,12 +4142,12 @@ summary {
 
   .graph-dual-spine-row {
     grid-template-columns: minmax(84px, 1fr) minmax(84px, 1fr) minmax(84px, 1fr);
-    gap: 10px;
+    gap: 0;
     padding: 0;
   }
 
   .graph-spine-slot {
-    min-height: 94px;
+    min-height: 168px;
   }
 
   .graph-dual-spine-row:not(:last-child) .graph-spine-slot::before,
@@ -4155,11 +4156,11 @@ summary {
   }
 
   .response-spine {
-    transform: translateY(8px);
+    transform: translateY(var(--dual-half-step));
   }
 
   .status-spine {
-    transform: translateY(6px);
+    transform: translateY(var(--dual-half-step));
   }
 
   .graph-pair-frame,
