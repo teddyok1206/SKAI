@@ -2658,6 +2658,7 @@ h3 {
 
 .graph-node {
   position: relative;
+  z-index: 1;
   display: grid;
   width: min(68px, 100%);
   aspect-ratio: 1;
@@ -2762,6 +2763,140 @@ h3 {
   text-align: center;
 }
 
+.graph-dual-spine {
+  display: grid;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 14%, var(--line));
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    color-mix(in srgb, var(--evidence-bg) 76%, #fff);
+  background-size: 28px 28px;
+  padding: 14px;
+}
+
+.graph-dual-spine-head,
+.graph-dual-spine-row {
+  display: grid;
+  grid-template-columns: minmax(84px, 1fr) minmax(116px, 1.35fr) minmax(84px, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.graph-dual-spine-head {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.graph-dual-spine-row {
+  position: relative;
+  min-height: 108px;
+}
+
+.graph-dual-spine-row.breakpoint {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--gold-soft) 22%, transparent);
+}
+
+.graph-spine-slot {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 94px;
+  place-items: center;
+}
+
+.graph-spine-slot::after {
+  position: absolute;
+  top: calc(50% + 35px);
+  bottom: calc(-50% + 35px);
+  left: 50%;
+  width: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--provider-accent, var(--accent)) 28%, var(--line));
+  content: "";
+  transform: translateX(-50%);
+}
+
+.graph-spine-slot::before {
+  position: absolute;
+  bottom: calc(-50% + 24px);
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 52%, var(--line));
+  border-bottom: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 52%, var(--line));
+  content: "";
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.graph-dual-spine-row:last-child .graph-spine-slot::before,
+.graph-dual-spine-row:last-child .graph-spine-slot::after {
+  display: none;
+}
+
+.response-spine {
+  transform: translateY(18px);
+}
+
+.response-spine::after {
+  background: color-mix(in srgb, var(--blue) 26%, var(--line));
+}
+
+.response-spine::before {
+  border-right-color: color-mix(in srgb, var(--blue) 48%, var(--line));
+  border-bottom-color: color-mix(in srgb, var(--blue) 48%, var(--line));
+}
+
+.graph-status-bridge {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(24px, 1fr) auto minmax(24px, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.graph-bridge-line {
+  position: relative;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gold) 34%, var(--line));
+}
+
+.graph-bridge-line::after {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  border-top: 3px solid color-mix(in srgb, var(--gold) 54%, var(--line));
+  border-right: 3px solid color-mix(in srgb, var(--gold) 54%, var(--line));
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.graph-bridge-line.left {
+  opacity: 0.82;
+}
+
+.graph-bridge-line.right {
+  background: color-mix(in srgb, var(--blue) 24%, var(--line));
+}
+
+.graph-bridge-line.right::after {
+  border-top-color: color-mix(in srgb, var(--blue) 48%, var(--line));
+  border-right-color: color-mix(in srgb, var(--blue) 48%, var(--line));
+}
+
 .graph-projection {
   display: grid;
   gap: 12px;
@@ -2801,6 +2936,84 @@ h3 {
   gap: 7px;
 }
 
+.graph-sequence-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    var(--evidence-bg);
+  background-size: 28px 28px;
+  padding: 14px;
+}
+
+.graph-sequence-arrow {
+  position: relative;
+  display: inline-flex;
+  width: 54px;
+  height: 32px;
+  flex: 0 0 54px;
+  align-items: center;
+  justify-content: center;
+  color: var(--provider-accent-strong, var(--accent-strong));
+}
+
+.graph-sequence-arrow::before {
+  position: absolute;
+  right: 2px;
+  left: 2px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--provider-accent, var(--accent)) 34%, var(--line));
+  content: "";
+}
+
+.graph-sequence-arrow::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  border-top: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 62%, var(--line));
+  border-right: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 62%, var(--line));
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.graph-sequence-arrow.active::before {
+  background: var(--provider-accent, var(--accent));
+}
+
+.graph-sequence-arrow.continuation {
+  opacity: 0.56;
+}
+
+.graph-sequence-arrow.continuation::before {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--muted) 42%, var(--line)) 0 6px,
+      transparent 6px 10px
+    );
+}
+
+.graph-sequence-arrow.continuation::after {
+  border-top-color: color-mix(in srgb, var(--muted) 52%, var(--line));
+  border-right-color: color-mix(in srgb, var(--muted) 52%, var(--line));
+}
+
+.graph-sequence-arrow svg {
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  background: var(--evidence-bg);
+}
+
 .graph-edge-path {
   display: grid;
   grid-template-columns: minmax(84px, 1fr) minmax(56px, 96px) minmax(84px, 1fr);
@@ -2830,6 +3043,7 @@ h3 {
 
 .graph-edge-node-ref {
   display: grid;
+  flex: 0 0 auto;
   min-width: 0;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 6px;
@@ -2840,6 +3054,11 @@ h3 {
   color: var(--ink);
   padding: 6px 8px;
   text-align: left;
+}
+
+.graph-edge-node-ref.active {
+  border-color: var(--provider-accent, var(--accent));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 72%, transparent);
 }
 
 .graph-edge-node-ref strong {
@@ -3826,6 +4045,33 @@ summary {
 
   .graph-lane-row {
     grid-template-columns: 1fr;
+  }
+
+  .graph-dual-spine-head {
+    display: none;
+  }
+
+  .graph-dual-spine-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 10px 0;
+  }
+
+  .graph-spine-slot {
+    min-height: 78px;
+  }
+
+  .graph-spine-slot::before,
+  .graph-spine-slot::after {
+    display: none;
+  }
+
+  .response-spine {
+    transform: none;
+  }
+
+  .graph-status-bridge {
+    grid-template-columns: minmax(22px, 1fr) auto minmax(22px, 1fr);
   }
 
   .graph-edge-path {

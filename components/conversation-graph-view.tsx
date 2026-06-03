@@ -155,7 +155,35 @@ function GraphNodeButton({
   );
 }
 
-function EdgeList({
+function GraphEdgeNodeRef({
+  node,
+  fallbackId,
+  selected,
+  onSelect,
+}: {
+  node?: ConversationGraphNode;
+  fallbackId: string;
+  selected: boolean;
+  onSelect: (nodeId: string) => void;
+}) {
+  if (!node) {
+    return <span className="graph-edge-node-ref missing">{fallbackId}</span>;
+  }
+
+  return (
+    <button
+      className={`graph-edge-node-ref ${node.kind} ${selected ? "active" : ""}`}
+      onClick={() => onSelect(node.id)}
+      title={node.summary}
+      type="button"
+    >
+      <strong>{nodeToken(node)}</strong>
+      <span>{fixedNodeCaption(node)}</span>
+    </button>
+  );
+}
+
+function GraphSequencePath({
   edges,
   nodeById,
   selectedNodeId,
@@ -170,48 +198,67 @@ function EdgeList({
     return <p className="muted">No edges in this projection yet.</p>;
   }
 
-  return (
-    <div className="graph-edge-list">
-      {edges.map((edge) => {
-        const source = nodeById.get(edge.sourceNodeId);
-        const target = nodeById.get(edge.targetNodeId);
+  const orderedEdges = [...edges].sort((a, b) => a.sequence - b.sequence || a.id.localeCompare(b.id));
+  const parts: Array<
+    | { type: "node"; id: string; nodeId: string; node?: ConversationGraphNode }
+    | { type: "edge"; id: string; edge: ConversationGraphEdge }
+    | { type: "continuation"; id: string }
+  > = [];
+  let lastNodeId = "";
 
-        return (
-          <article
-            className={`graph-edge-path ${selectedNodeId === edge.sourceNodeId || selectedNodeId === edge.targetNodeId ? "active" : ""}`}
-            key={edge.id}
-          >
-            {source ? (
-              <button
-                className={`graph-edge-node-ref ${source.kind}`}
-                onClick={() => onSelect(source.id)}
-                title={source.summary}
-                type="button"
-              >
-                <strong>{nodeToken(source)}</strong>
-                <span>{fixedNodeCaption(source)}</span>
-              </button>
-            ) : (
-              <span className="graph-edge-node-ref missing">{edge.sourceNodeId}</span>
-            )}
-            <span className="graph-edge-vector" aria-hidden="true">
+  for (const edge of orderedEdges) {
+    if (edge.sourceNodeId !== lastNodeId) {
+      if (lastNodeId) {
+        parts.push({ type: "continuation", id: `${edge.id}:continuation` });
+      }
+
+      parts.push({
+        type: "node",
+        id: `${edge.id}:source:${edge.sourceNodeId}`,
+        nodeId: edge.sourceNodeId,
+        node: nodeById.get(edge.sourceNodeId),
+      });
+    }
+
+    parts.push({ type: "edge", id: edge.id, edge });
+    parts.push({
+      type: "node",
+      id: `${edge.id}:target:${edge.targetNodeId}`,
+      nodeId: edge.targetNodeId,
+      node: nodeById.get(edge.targetNodeId),
+    });
+    lastNodeId = edge.targetNodeId;
+  }
+
+  return (
+    <div className="graph-sequence-path" aria-label="Directed graph sequence">
+      {parts.map((part) => {
+        if (part.type === "edge") {
+          const isActive = selectedNodeId === part.edge.sourceNodeId || selectedNodeId === part.edge.targetNodeId;
+
+          return (
+            <span className={`graph-sequence-arrow ${isActive ? "active" : ""}`} key={part.id} title={part.edge.label}>
               <Route size={14} />
             </span>
-            {target ? (
-              <button
-                className={`graph-edge-node-ref ${target.kind}`}
-                onClick={() => onSelect(target.id)}
-                title={target.summary}
-                type="button"
-              >
-                <strong>{nodeToken(target)}</strong>
-                <span>{fixedNodeCaption(target)}</span>
-              </button>
-            ) : (
-              <span className="graph-edge-node-ref missing">{edge.targetNodeId}</span>
-            )}
-            <small>{edge.label}</small>
-          </article>
+          );
+        }
+
+        if (part.type === "continuation") {
+          return (
+            <span className="graph-sequence-arrow continuation" key={part.id} title="next pair">
+              <Route size={14} />
+            </span>
+          );
+        }
+
+        return (
+          <GraphEdgeNodeRef
+            fallbackId={part.nodeId}
+            key={part.id}
+            node={part.node}
+            onSelect={onSelect}
+            selected={selectedNodeId === part.node?.id}
+          />
         );
       })}
     </div>
@@ -313,11 +360,11 @@ export function ConversationGraphView({
     }
 
     return (
-      <div className="graph-lanes" aria-label="3 dimensional dual graph">
-        <div className="graph-lane-head">
-          <span>Prompt nodes</span>
-          <span>Task-status layer</span>
-          <span>Response nodes</span>
+      <div className="graph-dual-spine" aria-label="3 dimensional dual graph">
+        <div className="graph-dual-spine-head">
+          <span>Prompt graph</span>
+          <span>Status bridge</span>
+          <span>Response graph</span>
         </div>
         {graph.pairs.map((pair) => {
           const promptNode = nodeById.get(pair.promptNodeId);
@@ -325,12 +372,8 @@ export function ConversationGraphView({
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
 
           return (
-            <div className={`graph-lane-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
-              <div className="graph-flow-index">
-                <span>{pair.sequence + 1}</span>
-                <small>flow</small>
-              </div>
-              <div className="graph-node-slot">
+            <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
+              <div className="graph-spine-slot prompt-spine">
                 <GraphNodeButton
                   node={promptNode}
                   pair={pair}
@@ -339,22 +382,22 @@ export function ConversationGraphView({
                   onSelect={selectNode}
                 />
               </div>
-              <div className="graph-lane-link">
-                <span aria-hidden="true" className="graph-connector" />
+
+              <div className="graph-status-bridge">
+                <span className="graph-bridge-line left" aria-hidden="true" />
+                <div className="graph-node-slot">
+                  <GraphNodeButton
+                    node={statusNode}
+                    pair={pair}
+                    annotationCount={annotationCountForNode(statusNode, pair)}
+                    selected={effectiveSelectedNodeId === statusNode?.id}
+                    onSelect={selectNode}
+                  />
+                </div>
+                <span className="graph-bridge-line right" aria-hidden="true" />
               </div>
-              <div className="graph-node-slot">
-                <GraphNodeButton
-                  node={statusNode}
-                  pair={pair}
-                  annotationCount={annotationCountForNode(statusNode, pair)}
-                  selected={effectiveSelectedNodeId === statusNode?.id}
-                  onSelect={selectNode}
-                />
-              </div>
-              <div className="graph-lane-link response-link">
-                <span aria-hidden="true" className="graph-connector" />
-              </div>
-              <div className="graph-node-slot">
+
+              <div className="graph-spine-slot response-spine">
                 {responseNode ? (
                   <GraphNodeButton
                     node={responseNode}
@@ -415,7 +458,7 @@ export function ConversationGraphView({
             />
           ))}
         </div>
-        <EdgeList edges={edges} nodeById={nodeById} selectedNodeId={effectiveSelectedNodeId} onSelect={selectNode} />
+        <GraphSequencePath edges={edges} nodeById={nodeById} selectedNodeId={effectiveSelectedNodeId} onSelect={selectNode} />
       </div>
     );
   }
