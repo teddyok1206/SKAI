@@ -2858,7 +2858,7 @@ h3 {
 }
 
 .response-spine {
-  transform: translateY(12px);
+  transform: translateY(8px);
 }
 
 .response-spine::after {
@@ -2886,13 +2886,13 @@ h3 {
 .graph-pair-frame {
   position: absolute;
   z-index: 0;
-  top: 18px;
-  bottom: 10px;
+  --status-connector-width: max(28px, calc(25% - 37px));
+  top: 14px;
+  bottom: 4px;
   left: calc((100% - 20px) / 3 * 0 + 10px);
   width: calc((100% - 20px) / 3 * 2 + 10px);
   border: 2px solid color-mix(in srgb, var(--gold) 32%, var(--line));
-  border-right: 0;
-  border-radius: 18px 0 0 18px;
+  border-radius: 18px;
   background: color-mix(in srgb, var(--gold-soft) 12%, transparent);
   pointer-events: none;
 }
@@ -2900,8 +2900,8 @@ h3 {
 .graph-pair-frame::after {
   position: absolute;
   top: 50%;
-  right: -18px;
-  width: 18px;
+  right: calc(var(--status-connector-width) * -1);
+  width: var(--status-connector-width);
   height: 2px;
   background: color-mix(in srgb, var(--gold) 40%, var(--line));
   content: "";
@@ -4155,7 +4155,7 @@ summary {
   }
 
   .response-spine {
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
 
   .status-spine {

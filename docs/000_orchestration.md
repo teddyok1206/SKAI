@@ -355,6 +355,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/059_dual_graph_spine_sequence_layout.md`: 3D Dual two-spine/status bridge와 projection sequence path로 graph 시각화를 원래 철학에 맞게 재정렬.
 - `docs/technical/plan/060_three_spine_dual_graph_pair_status.md`: P/R/S 3-spine 구조, prompt-response direct pair, status pair-binding layer, selected node border emphasis.
 - `docs/technical/plan/061_status_right_spine_and_dedup_status_graph.md`: Status를 항상 오른쪽 spine으로 유지하고, Status graph를 P/R 반복 없이 status-to-status progression으로 정정.
+- `docs/technical/plan/062_dual_graph_closed_pair_frame.md`: 3D Dual의 prompt-response pair frame을 닫힌 binding container로 보정하고 Status 연결선/Response offset을 정렬.
 
 다음 plan 후보:
 
