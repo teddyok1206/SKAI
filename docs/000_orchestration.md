@@ -89,7 +89,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 댓글은 local/Supabase edit, soft-delete, report action을 가진다. Supabase edit/delete는 작성자 RLS로 제한되고 report는 별도 report table과 count trigger를 사용한다.
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
-- 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
+- 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭의 사용자-facing surface는 단일 3D Dual Graph다.
 - 3D Dual view는 row-lane table이 아니라 Prompt spine과 Response spine 사이의 ladder geometry로 표현한다. Status graph 자체는 별도 projection으로 유지하되, 3D Dual에서는 오른쪽 connector endpoint가 아니라 각 prompt-response local cell의 중심 상태 marker로 표시한다.
 - 3D Dual view에서 `R_i`는 `P_i`와 같은 높이의 chat bubble이 아니라 `P_i -> P_{i+1}` prompt transition edge의 dual node다. 따라서 `R_i`는 `P_i`와 `P_{i+1}`의 중점 높이에 놓인다. Dual relation은 사선 node-to-node shortcut이 아니라 horizontal ladder rung으로 표현한다: `P_i` node는 `R_{i-1}->R_i` response edge midpoint와 연결되고, `R_i` node는 `P_i->P_{i+1}` prompt edge midpoint로 왼쪽 방향 연결을 가진다. Status marker는 이 두 rung이 만드는 local rectangle의 중심에 놓이며, 직접 connector edge 없이 clockwise swirl로 P/R cell에서 업데이트된 상태임을 표시한다.
 - 3D Dual view의 active state는 same-index local set을 따른다. `P_i`, `R_i`, `S_i` 중 하나를 선택하면 같은 번호의 세 노드와 해당 local ladder rung만 활성화한다. 첫 row는 이전 response edge가 없으므로 `R_1` 위에 짧은 visual origin stub을 두고 `P_1` rung이 그 stub 시작점에 닿게 한다.
@@ -104,6 +104,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Score report는 judge 결과에서 파생된 graph annotations를 포함한다.
 - LLM judge는 trace event id를 기준으로 graph annotation 후보를 낼 수 있고, 서버가 이를 graph pair/node target으로 검증 매핑한다.
 - 다음 graph UX 축은 평가 결과를 graph 위에 직접 씌우는 Evaluation Overlay다. 병목 노드, 약한 엣지, 회복 지점, 검증/자료 grounding을 색/두께/움직임으로 표시하고, detail panel은 그 근거를 펼치는 역할로 둔다. 단, overlay는 기본 graph 구조와 분리된 lens여야 하므로 사용자가 전체/개별 layer를 켜고 끌 수 있어야 한다.
+- backend overlay 정보는 새 canonical 데이터가 아니라 `ConversationGraph.annotations`에서 파생한 sparse `GraphOverlayIndex`로 관리한다. target/pair/sequence/layer별 dictionary lookup을 사용해 빠르게 렌더링하되, 모든 overlay는 annotation id와 evidence trace로 역추적 가능해야 한다.
 - `buildConversationGraph`는 score report annotations와 deterministic annotations를 중복 제거해 sparse index에 올린다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.

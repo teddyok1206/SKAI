@@ -194,6 +194,55 @@ Implementation principle:
 - Overlay must be toggleable. The base 3D Dual Graph is the structure; bottleneck, weak-edge, verification, material, recovery, model behavior, and cost overlays are lenses that users can turn on/off.
 - Default smoke-test view should avoid overwhelming users. Prefer a minimal active set such as bottleneck + recovery, while leaving verification/material/cost/model layers available.
 
+Backend principle:
+
+- Build a sparse `GraphOverlayIndex` from `ConversationGraph.annotations` after `buildConversationGraph` has created nodes, edges, pairs, and annotation indexes.
+- Keep lookup dictionary-based:
+  - by overlay target id,
+  - by graph target id,
+  - by pair id,
+  - by sequence,
+  - by layer,
+  - by edge id when the annotation is edge-native.
+- Do not scan the full trace during rendering. Rendering should ask: "for this pair/node/edge and active overlay layers, what overlay summary exists?"
+- Controls should filter a precomputed overlay index; toggling a layer should not rebuild `ConversationGraph`.
+- Complexity target:
+  - graph build remains `O(V + E + A)`;
+  - overlay index build is `O(A + P + E)` where A is annotations, P is pairs, E is edges;
+  - node/pair/edge lookup is `O(1)`;
+  - applying controls is `O(k)` for the small number of overlay targets attached to the visible graph cell.
+
+Candidate sparse index:
+
+```ts
+interface GraphOverlayIndex {
+  schemaVersion: string;
+  targetsById: Record<string, GraphOverlayTarget>;
+  targetIdsByGraphTargetId: Record<string, string[]>;
+  targetIdsByPairId: Record<string, string[]>;
+  targetIdsBySequence: Record<number, string[]>;
+  targetIdsByLayer: Record<keyof GraphOverlayControls["layers"], string[]>;
+  targetIdsByEdgeId: Record<string, string[]>;
+  summaryByNodeId: Record<string, GraphOverlaySummary>;
+  summaryByEdgeId: Record<string, GraphOverlaySummary>;
+  summaryByPairId: Record<string, GraphOverlaySummary>;
+}
+
+interface GraphOverlaySummary {
+  severity: GraphOverlaySeverity;
+  signals: GraphOverlayTarget["signal"][];
+  annotationIds: string[];
+  label: string;
+  confidence: number;
+}
+```
+
+Accuracy rule:
+
+- Never infer a pedagogical claim from CSS or layout alone.
+- Each overlay target must point back to annotation ids, evidence trace event ids, source, and confidence.
+- Pair-level fallback may mark a local graph cell as weak/bottleneck, but should not pretend to know a specific edge is weak unless the annotation is edge-targeted or the mapping rule is explicit.
+
 Candidate control state:
 
 ```ts

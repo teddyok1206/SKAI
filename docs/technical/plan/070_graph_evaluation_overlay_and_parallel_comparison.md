@@ -145,7 +145,131 @@ Initial default:
 
 Reason: first smoke users should immediately see the critical learning signals, but should not face every analysis layer at once.
 
-Persistence should wait until graph snapshots are implemented. The first version should be recomputable from `ConversationGraph`.
+## Backend Strategy
+
+### Core Principle
+
+Use the existing SKAI graph stack instead of inventing a separate overlay data model:
+
+```text
+immutable TraceEvent[]
+-> ConversationGraph nodes/edges/pairs
+-> ConversationGraphAnnotation[]
+-> sparse GraphOverlayIndex
+-> UI layer controls
+```
+
+The overlay is not a new judgment source. It is a fast, toggleable projection of existing graph annotations onto graph nodes, edges, and pair cells.
+
+### Why This Fits The Existing Philosophy
+
+- `TraceEvent[]` remains canonical.
+- `ConversationGraph` remains the structural representation of prompt/response/status.
+- `ConversationGraphAnnotation` remains the auditable judgment/evidence layer.
+- `GraphOverlayIndex` becomes only a visual lookup layer.
+- Toggling overlay layers never changes the underlying graph, score report, judge output, or trace.
+
+### Proposed Derived Index
+
+```ts
+interface GraphOverlayIndex {
+  schemaVersion: string;
+  targetsById: Record<string, GraphOverlayTarget>;
+  targetIdsByGraphTargetId: Record<string, string[]>;
+  targetIdsByPairId: Record<string, string[]>;
+  targetIdsBySequence: Record<number, string[]>;
+  targetIdsByLayer: Record<keyof GraphOverlayControls["layers"], string[]>;
+  targetIdsByEdgeId: Record<string, string[]>;
+  summaryByNodeId: Record<string, GraphOverlaySummary>;
+  summaryByEdgeId: Record<string, GraphOverlaySummary>;
+  summaryByPairId: Record<string, GraphOverlaySummary>;
+}
+
+interface GraphOverlaySummary {
+  severity: GraphOverlaySeverity;
+  signals: GraphOverlaySignal[];
+  annotationIds: string[];
+  label: string;
+  confidence: number;
+}
+```
+
+### Build Algorithm
+
+1. Start from a fully built `ConversationGraph`.
+2. Create O(1) maps:
+   - `nodeById`;
+   - `edgeById`;
+   - `pairById`;
+   - `pairByNodeId`;
+   - `pairByEdgeId`;
+   - `pairByTraceEventId` from existing graph index.
+3. For every `ConversationGraphAnnotation`:
+   - map annotation kind/severity/source/confidence to one or more `GraphOverlayTarget`s;
+   - keep `annotationIds` and evidence references;
+   - attach to exact `node`/`edge` target if available;
+   - attach to `pair` when target is pair-level;
+   - use pair fallback only when the rule is explicit.
+4. Aggregate summaries:
+   - for each node;
+   - for each edge;
+   - for each pair/cell.
+5. Store lookup dictionaries by layer and by local graph cell.
+
+### Complexity Target
+
+- `buildConversationGraph`: stays `O(V + E + A)`.
+- `buildGraphOverlayIndex`: `O(A + P + E)`.
+- Looking up overlays for a selected node/pair/edge: `O(1)`.
+- Applying layer controls: `O(k)` where `k` is the small number of overlay targets attached to that visible cell, not the full trace.
+- Branch comparison: build two overlay indexes independently, then compare only breakpoint/focus pair summaries unless the user expands all deltas.
+
+### Accuracy Rules
+
+- Do not let CSS infer semantics. CSS only renders the result of `GraphOverlayTarget`.
+- Every visible overlay must be traceable to annotation ids, evidence trace event ids, source, and confidence.
+- Pair-level bottleneck can mark the local P/R/S cell, but should not claim a specific edge is weak unless:
+  - the annotation targets that edge; or
+  - the fallback mapping rule is documented, such as `context_drift` on a pair maps to the local response-to-prompt rung.
+- Source priority should be explicit:
+  - human override,
+  - LLM judge,
+  - heuristic judge,
+  - deterministic signal.
+- Confidence should break ties, not replace source/evidence.
+
+### Toggle Strategy
+
+Controls should filter the prebuilt overlay index:
+
+```text
+activeTargetIds = enabled
+  ? union(targetIdsByLayer[layer] for active layers)
+  : empty
+```
+
+For rendering a graph row:
+
+```text
+pairTargetIds = targetIdsByPairId[pair.id]
+visibleTargetIds = pairTargetIds ∩ activeTargetIds
+summary = aggregate(visibleTargetIds)
+```
+
+For performance, the first implementation can compute these in `useMemo` from `graph` and `overlayControls`. The pure helper should remain UI-independent so it can later move server-side or into persisted graph snapshots.
+
+### Persistence Strategy
+
+Do not persist overlay index first.
+
+Order:
+
+1. derive overlay index in memory;
+2. verify it teaches users in smoke tests;
+3. when graph snapshots are introduced, persist `ConversationGraph` + annotations + overlay schema version as derived snapshot metadata;
+4. keep raw trace canonical.
+
+The first version should be recomputable from `ConversationGraph`.
 
 Future multi-model/harness types should remain design hooks until the product explicitly enters multi-AI solving:
 
