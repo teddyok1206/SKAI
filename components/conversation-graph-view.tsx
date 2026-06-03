@@ -363,8 +363,8 @@ export function ConversationGraphView({
       <div className="graph-dual-spine" aria-label="3 dimensional dual graph">
         <div className="graph-dual-spine-head">
           <span>Prompt graph</span>
-          <span>Status bridge</span>
           <span>Response graph</span>
+          <span>Status graph</span>
         </div>
         {graph.pairs.map((pair) => {
           const promptNode = nodeById.get(pair.promptNodeId);
@@ -373,18 +373,38 @@ export function ConversationGraphView({
 
           return (
             <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
+              <div className="graph-pair-frame" aria-hidden="true" />
+              <div className="graph-pr-link" aria-hidden="true" />
+
               <div className="graph-spine-slot prompt-spine">
-                <GraphNodeButton
-                  node={promptNode}
-                  pair={pair}
-                  annotationCount={annotationCountForNode(promptNode, pair)}
-                  selected={effectiveSelectedNodeId === promptNode?.id}
-                  onSelect={selectNode}
-                />
+                <div className="graph-node-slot">
+                  <GraphNodeButton
+                    node={promptNode}
+                    pair={pair}
+                    annotationCount={annotationCountForNode(promptNode, pair)}
+                    selected={effectiveSelectedNodeId === promptNode?.id}
+                    onSelect={selectNode}
+                  />
+                </div>
               </div>
 
-              <div className="graph-status-bridge">
-                <span className="graph-bridge-line left" aria-hidden="true" />
+              <div className="graph-spine-slot response-spine">
+                <div className="graph-node-slot">
+                  {responseNode ? (
+                    <GraphNodeButton
+                      node={responseNode}
+                      pair={pair}
+                      annotationCount={annotationCountForNode(responseNode, pair)}
+                      selected={effectiveSelectedNodeId === responseNode.id}
+                      onSelect={selectNode}
+                    />
+                  ) : (
+                    <div className="graph-node missing">wait</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="graph-spine-slot status-spine">
                 <div className="graph-node-slot">
                   <GraphNodeButton
                     node={statusNode}
@@ -394,21 +414,6 @@ export function ConversationGraphView({
                     onSelect={selectNode}
                   />
                 </div>
-                <span className="graph-bridge-line right" aria-hidden="true" />
-              </div>
-
-              <div className="graph-spine-slot response-spine">
-                {responseNode ? (
-                  <GraphNodeButton
-                    node={responseNode}
-                    pair={pair}
-                    annotationCount={annotationCountForNode(responseNode, pair)}
-                    selected={effectiveSelectedNodeId === responseNode.id}
-                    onSelect={selectNode}
-                  />
-                ) : (
-                  <div className="graph-node missing">wait</div>
-                )}
               </div>
             </div>
           );

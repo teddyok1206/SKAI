@@ -89,7 +89,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 flat trace에서 파생한 prompt-response dual graph와 task-status layer를 표시한다.
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
-- 3D Dual view는 row-lane table이 아니라 왼쪽 prompt spine, 가운데 status bridge, 오른쪽 response spine의 two-spine layout으로 표현한다.
+- 3D Dual view는 row-lane table이 아니라 Prompt spine, Response spine, Status spine의 3-spine layout으로 표현한다. Prompt/Response가 직접 pair를 이루고, Status는 중간 causal node가 아니라 각 prompt-response pair를 묶는 세 번째 graph/binding layer다.
 - Prompt/Response/Status projection은 중복 edge card 목록이 아니라 long-exact-sequence처럼 이어지는 directed sequence path로 표현한다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - 풀이 화면 sidebar에는 local attempts의 parent/child breakpoint lineage를 보는 Branch Tree explorer가 있다.
@@ -353,6 +353,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/057_gemini_default_openai_optional.md`: Gemini를 전체 기본값으로 복구하고 OpenAI nano는 선택 옵션으로 유지했으나, 이후 `058`과 TDR-087이 visible default 정책을 supersede했다.
 - `docs/technical/plan/058_explicit_model_choice_message_copy_and_graph_visual_fix.md`: visible model default 제거, message copy, Markdown rendering, directed graph/3D graph 시각화 보정.
 - `docs/technical/plan/059_dual_graph_spine_sequence_layout.md`: 3D Dual two-spine/status bridge와 projection sequence path로 graph 시각화를 원래 철학에 맞게 재정렬.
+- `docs/technical/plan/060_three_spine_dual_graph_pair_status.md`: P/R/S 3-spine 구조, prompt-response direct pair, status pair-binding layer, selected node border emphasis.
 
 다음 plan 후보:
 

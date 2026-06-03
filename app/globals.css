@@ -2724,30 +2724,38 @@ h3 {
 }
 
 .graph-node.prompt {
-  border-color: color-mix(in srgb, var(--provider-accent, var(--accent)) 24%, var(--line));
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 24%, #fff);
 }
 
 .graph-node.response {
-  border-color: color-mix(in srgb, var(--blue) 22%, var(--line));
+  border-color: color-mix(in srgb, var(--blue) 46%, var(--line));
+  background: color-mix(in srgb, var(--blue) 8%, #fff);
 }
 
 .graph-node.task_status {
-  border-color: color-mix(in srgb, var(--gold) 24%, var(--line));
+  border-color: color-mix(in srgb, var(--gold) 56%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 44%, #fff);
 }
 
 .graph-node.selected {
   border-color: var(--provider-accent, var(--accent));
+  border-width: 4px;
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 82%, transparent),
-    0 8px 18px rgba(23, 26, 31, 0.06);
+    0 0 0 5px color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 78%, transparent),
+    0 10px 22px rgba(23, 26, 31, 0.08);
 }
 
-.graph-node.selected::after {
-  color: var(--provider-accent-strong, var(--accent-strong));
-  content: "selected";
-  font-size: 8px;
-  font-weight: 900;
-  text-transform: uppercase;
+.graph-node.prompt.selected {
+  border-color: var(--accent-strong);
+}
+
+.graph-node.response.selected {
+  border-color: var(--blue);
+}
+
+.graph-node.task_status.selected {
+  border-color: var(--gold);
 }
 
 .graph-node.breakpoint {
@@ -2781,7 +2789,7 @@ h3 {
 .graph-dual-spine-head,
 .graph-dual-spine-row {
   display: grid;
-  grid-template-columns: minmax(84px, 1fr) minmax(116px, 1.35fr) minmax(84px, 1fr);
+  grid-template-columns: minmax(84px, 1fr) minmax(84px, 1fr) minmax(84px, 1fr);
   gap: 10px;
   align-items: center;
   min-width: 0;
@@ -2844,7 +2852,7 @@ h3 {
 }
 
 .response-spine {
-  transform: translateY(18px);
+  transform: translateY(12px);
 }
 
 .response-spine::after {
@@ -2854,6 +2862,68 @@ h3 {
 .response-spine::before {
   border-right-color: color-mix(in srgb, var(--blue) 48%, var(--line));
   border-bottom-color: color-mix(in srgb, var(--blue) 48%, var(--line));
+}
+
+.status-spine {
+  transform: translateY(6px);
+}
+
+.status-spine::after {
+  background: color-mix(in srgb, var(--gold) 30%, var(--line));
+}
+
+.status-spine::before {
+  border-right-color: color-mix(in srgb, var(--gold) 54%, var(--line));
+  border-bottom-color: color-mix(in srgb, var(--gold) 54%, var(--line));
+}
+
+.graph-pair-frame {
+  position: absolute;
+  z-index: 0;
+  top: 18px;
+  bottom: 10px;
+  left: calc((100% - 20px) / 3 * 0 + 10px);
+  width: calc((100% - 20px) / 3 * 2 + 10px);
+  border: 2px solid color-mix(in srgb, var(--gold) 32%, var(--line));
+  border-right: 0;
+  border-radius: 18px 0 0 18px;
+  background: color-mix(in srgb, var(--gold-soft) 12%, transparent);
+  pointer-events: none;
+}
+
+.graph-pair-frame::after {
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  width: 18px;
+  height: 2px;
+  background: color-mix(in srgb, var(--gold) 40%, var(--line));
+  content: "";
+  transform: translateY(-50%);
+}
+
+.graph-pr-link {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: calc(100% / 3 - 34px);
+  width: calc(100% / 3 - 14px);
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--blue) 34%, var(--line));
+  pointer-events: none;
+}
+
+.graph-pr-link::after {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 11px;
+  height: 11px;
+  border-top: 3px solid color-mix(in srgb, var(--blue) 56%, var(--line));
+  border-right: 3px solid color-mix(in srgb, var(--blue) 56%, var(--line));
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .graph-status-bridge {
@@ -3059,6 +3129,18 @@ h3 {
 .graph-edge-node-ref.active {
   border-color: var(--provider-accent, var(--accent));
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 72%, transparent);
+}
+
+.graph-edge-node-ref.prompt.active {
+  border-color: var(--accent-strong);
+}
+
+.graph-edge-node-ref.response.active {
+  border-color: var(--blue);
+}
+
+.graph-edge-node-ref.task_status.active {
+  border-color: var(--gold);
 }
 
 .graph-edge-node-ref strong {
@@ -4068,6 +4150,15 @@ summary {
 
   .response-spine {
     transform: none;
+  }
+
+  .status-spine {
+    transform: none;
+  }
+
+  .graph-pair-frame,
+  .graph-pr-link {
+    display: none;
   }
 
   .graph-status-bridge {
