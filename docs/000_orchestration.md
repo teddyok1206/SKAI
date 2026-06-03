@@ -134,9 +134,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
-- Prompt/response graph 탭에서 directed edge의 방향성이 충분히 보이지 않는다.
-- 3D dual graph 탭에서 일부 행이 흰색 직사각형 graph container 밖으로 오른쪽 overflow된다.
-- 3D dual graph edge 주변 텍스트 박스는 현재 demo readability를 해치므로 제거하고 directed edge와 detail panel 중심으로 전환해야 한다.
+- 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
