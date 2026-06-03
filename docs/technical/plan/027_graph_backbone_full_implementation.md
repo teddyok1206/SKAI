@@ -62,19 +62,22 @@ Existing behavior:
 
 - `TraceEvent[]` is canonical.
 - Graph is derived in memory.
-- Graph tab can render 3D dual graph/projections/index.
+- Graph tab renders a single user-facing 3D Dual ladder view. Prompt/Response/Status projections and sparse index remain backend/research/debug structures.
 - Score report has workflow and bottleneck data.
 - Branch replay and counterfactual report exist.
 - Shared page shows workflow before raw transcript.
+- Graph annotations exist and can be generated deterministically or by judge output.
+- Graph detail panel shows selected node/pair annotations and evidence.
+- Branch diff includes graph-state transition and annotation delta.
+- Shared page has graph skeleton / artifact surfaces.
 
 Main missing behavior:
 
-- Graph targets do not yet carry rich annotation payloads.
-- Judge is not yet graph-target-native.
-- Branch diff is not yet graph-state-first.
-- Shared graph skeleton is not yet the dominant public learning artifact.
+- Graph annotations are visible in detail, but not yet overlaid directly onto graph nodes/edges/pairs as bottleneck/weak-edge/recovery signals.
+- Branch diff is graph-state-aware, but not yet rendered as side-by-side parent/child 3D Dual graph comparison.
 - Habit motifs are not extracted.
 - Graph snapshots are not persisted.
+- Multi-model graph lanes and inter-model edges are not yet modeled; first smoke remains single-model.
 
 ## Phase 1: Graph Annotation Schema
 
@@ -427,7 +430,7 @@ Each phase should be independently reversible:
 
 ## Immediate First Implementation Slice
 
-The first code implementation should be:
+Historical first code implementation from this plan was:
 
 1. Add graph annotation types.
 2. Build deterministic annotations.
@@ -435,7 +438,7 @@ The first code implementation should be:
 4. Show annotation chips/detail in Graph tab.
 5. Map existing bottlenecks to graph pair annotations.
 
-This slice is small enough to implement safely and proves the whole backbone direction.
+This slice has largely been implemented. The next focused implementation slice is now `docs/technical/plan/070_graph_evaluation_overlay_and_parallel_comparison.md`: derive graph overlay targets from annotations, render bottleneck/weak-edge/recovery signals on the 3D Dual Graph, then extend branch replay into side-by-side graph comparison.
 
 ## Philosophy Check
 

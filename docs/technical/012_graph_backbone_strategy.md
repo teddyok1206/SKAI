@@ -4,6 +4,8 @@ Date: 2026-06-02
 
 Source: `docs/philosophy/006_3d_dual_graph_system_backbone.md`
 
+Latest extension: `docs/philosophy/Gemini/006.md`
+
 ## Thesis
 
 The 3D dual graph should become SKAI's system backbone.
@@ -39,12 +41,15 @@ Already implemented:
 - Branch diffs carry parent/child graph-state transitions.
 - Counterfactual judge consumes graph-state status and annotation delta as evidence.
 - Shared graph skeletons are generated from graph pairs, task status, and annotations.
+- The solve Graph surface is now a single 3D Dual ladder view. Prompt/Response/Status projections and sparse index remain backend/research/debug structures rather than user-facing tabs.
 
 Current limitation:
 
 - LLM judge graph annotation schema exists, but calibration quality is not yet verified on golden attempts.
-- Graph nodes/pairs can carry LLM judge-native annotations, but UI confidence treatment is still basic.
+- Graph nodes/pairs can carry LLM judge-native annotations, but the visual surface does not yet overlay annotation severity onto nodes/edges. Bottlenecks, weak edges, recovery, verification, and material grounding are mostly read through the detail panel.
 - Shared attempt UX now has a skeleton-first path, but cross-attempt skeleton comparison is not implemented.
+- Parent/child branch diff carries graph-state transitions, but the UI does not yet render parent and child 3D Dual graphs side by side as a counterfactual comparison canvas.
+- Multi-model/harness solving is still outside the demo contract. There is no `model lane` or `inter-model edge` data model yet.
 - User habit reporting does not yet aggregate graph motifs.
 - Graph snapshots are not yet persisted for offline research/search.
 
@@ -59,6 +64,10 @@ What task state did that create?
 What evidence/material entered the loop?
 What did the judge infer at that node/pair/edge?
 What changed after replay?
+What graph node or edge became a bottleneck?
+What graph node or edge recovered after branch replay?
+What changed between parent and child graph surfaces?
+What changed when the same orchestration was routed through another model lane?
 What pattern repeats across attempts?
 ```
 
@@ -142,6 +151,109 @@ interface GraphStateTransition {
   scoreDelta?: Record<string, number>;
 }
 ```
+
+### Graph Evaluation Overlay
+
+Represent judge/deterministic annotations as a graph-readable visual layer.
+
+Candidate type:
+
+```ts
+type GraphOverlaySeverity = "neutral" | "positive" | "watch" | "critical";
+type GraphOverlayTargetKind = "node" | "edge" | "pair";
+
+interface GraphOverlayTarget {
+  id: string;
+  targetKind: GraphOverlayTargetKind;
+  targetId: string;
+  pairId?: string;
+  sequence?: number;
+  severity: GraphOverlaySeverity;
+  signal:
+    | "bottleneck_node"
+    | "weak_edge"
+    | "recovery"
+    | "verification"
+    | "material_grounding"
+    | "model_drift"
+    | "cost_anomaly"
+    | "neutral";
+  annotationIds: string[];
+  confidence: number;
+  label: string;
+  explanation: string;
+}
+```
+
+Implementation principle:
+
+- This should be derived from `ConversationGraph.annotations` and existing `pairs/edges`.
+- Do not duplicate raw judge text into a separate source of truth.
+- In the first slice, pair-level annotations can drive local node/edge treatment even when edge-specific annotations are sparse.
+- Overlay must degrade gracefully when judge annotations are missing.
+
+### Parallel Graph Comparison
+
+Represent counterfactual replay as two graph surfaces with a transition bridge.
+
+Candidate type:
+
+```ts
+interface ParallelGraphComparison {
+  id: string;
+  parentAttemptId: string;
+  childAttemptId: string;
+  breakpointTraceEventId: string;
+  parentGraph: ConversationGraph;
+  childGraph: ConversationGraph;
+  transition?: GraphStateTransition;
+  focusPairIds: {
+    parentPairId?: string;
+    childPairId?: string;
+  };
+  summaryLabels: string[];
+}
+```
+
+Implementation principle:
+
+- Parent/child comparison should make annotation delta visible before text diff.
+- A branch is successful when the user can see what orchestration state changed, not only which prompt wording changed.
+- The comparison should initially be scoped to branch attempts, not arbitrary cross-user attempts.
+
+### Multi-Model Graph Lanes
+
+Represent future multi-AI/harness solving without breaking single-model attempts.
+
+Candidate direction:
+
+```ts
+interface GraphModelLane {
+  id: string;
+  provider: ProviderId;
+  model: string;
+  label: string;
+  graph: ConversationGraph;
+}
+
+interface InterModelEdge {
+  id: string;
+  sourceLaneId: string;
+  sourceNodeId: string;
+  targetLaneId: string;
+  targetNodeId: string;
+  sourceTraceEventId?: string;
+  targetTraceEventId?: string;
+  transferKind: "copy" | "summary" | "artifact" | "verification_request" | "tool_result";
+  label: string;
+}
+```
+
+Implementation principle:
+
+- Do not expose this as a model leaderboard.
+- The research question is how the human routed intent/material/artifact between execution engines.
+- The first demo remains single-model; multi-model lanes are a future-compatible shape.
 
 ### Graph Skeleton
 

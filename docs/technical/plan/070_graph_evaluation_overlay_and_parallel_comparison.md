@@ -1,0 +1,309 @@
+# 070 Graph Evaluation Overlay And Parallel Comparison
+
+Date: 2026-06-04
+
+## Goal
+
+Reflect `docs/philosophy/Gemini/006.md` by turning the 3D Dual Graph from a clean structural view into a graph-readable learning surface:
+
+- show bottleneck nodes and weak edges directly on the graph;
+- show recovery, verification, and material grounding as graph overlay signals;
+- compare parent/child replay branches as side-by-side graph states;
+- prepare future multi-model/harness graph lanes without breaking the current single-model demo.
+
+The immediate implementation target is not a full analytics system. It is a smoke-test-ready visual layer that lets a user see "where my orchestration broke or recovered" before reading the textual report.
+
+## Source Inputs
+
+- `docs/philosophy/Gemini/006.md`
+- `docs/philosophy/006_3d_dual_graph_system_backbone.md`
+- `docs/technical/012_graph_backbone_strategy.md`
+- `docs/technical/010_branch_diff_and_counterfactual_judge.md`
+- `docs/technical/plan/027_graph_backbone_full_implementation.md`
+- `docs/technical/plan/069_graph_surface_ladder_alignment_and_tab_simplification.md`
+
+## Scope
+
+Included:
+
+- derive a visual overlay model from existing `ConversationGraph.annotations`, `pairs`, and edges;
+- apply overlay classes to 3D Dual prompt/response/status nodes and ladder rungs;
+- surface a small legend in beginner-safe language;
+- keep the detail panel as evidence expansion, not the primary signal;
+- add a parent/child graph comparison plan and first UI integration point;
+- document future `model lane` / `inter-model edge` design hooks.
+
+Excluded from the first slice:
+
+- full multi-AI solving mode;
+- graph snapshot persistence;
+- arbitrary cross-user graph comparison;
+- ML-based weak-edge detection;
+- certification-grade model/prompt audit;
+- dense matrix storage in online product paths.
+
+## Assumptions
+
+- `TraceEvent[]` remains the canonical raw record.
+- `ConversationGraph` remains a derived object built from trace, score report, and branch metadata.
+- Current graph annotations already include enough signal for a first overlay:
+  - `bottleneck`,
+  - `verification`,
+  - `material_grounding`,
+  - `adaptation`,
+  - `recovery`,
+  - `model_behavior`,
+  - `cost_efficiency`.
+- Pair-level annotations can drive local cell styling even when edge-specific annotations are not yet present.
+- Beginner-facing copy should say "병목", "약한 연결", "검증", "자료 사용", "회복" rather than incidence, duality, or edge-target semantics.
+
+## Affected Files / Modules
+
+Likely implementation files:
+
+- `lib/types.ts`
+- `lib/conversation-graph.ts`
+- `lib/graph-annotations.ts`
+- `lib/branch-diff.ts`
+- `components/conversation-graph-view.tsx`
+- `components/graph-state-transition-view.tsx`
+- `components/problem-solver.tsx`
+- `components/share-attempt-client.tsx`
+- `app/globals.css`
+
+Documentation files:
+
+- `docs/000_orchestration.md`
+- `docs/technical/012_graph_backbone_strategy.md`
+- `docs/technical/010_branch_diff_and_counterfactual_judge.md`
+- `docs/technical/000_decision_register.md`
+- this plan file.
+
+## Data Model / API Changes
+
+Slice 1 can avoid persistence/API changes by deriving overlay data in the client or a pure helper.
+
+Candidate derived type:
+
+```ts
+type GraphOverlaySeverity = "neutral" | "positive" | "watch" | "critical";
+
+type GraphOverlaySignal =
+  | "bottleneck_node"
+  | "weak_edge"
+  | "recovery"
+  | "verification"
+  | "material_grounding"
+  | "model_drift"
+  | "cost_anomaly"
+  | "neutral";
+
+interface GraphOverlayTarget {
+  id: string;
+  targetKind: "node" | "edge" | "pair";
+  targetId: string;
+  pairId?: string;
+  sequence?: number;
+  severity: GraphOverlaySeverity;
+  signal: GraphOverlaySignal;
+  annotationIds: string[];
+  confidence: number;
+  label: string;
+  explanation: string;
+}
+```
+
+Persistence should wait until graph snapshots are implemented. The first version should be recomputable from `ConversationGraph`.
+
+Future multi-model/harness types should remain design hooks until the product explicitly enters multi-AI solving:
+
+```ts
+interface GraphModelLane {
+  id: string;
+  provider: ProviderId;
+  model: string;
+  label: string;
+  graph: ConversationGraph;
+}
+
+interface InterModelEdge {
+  id: string;
+  sourceLaneId: string;
+  sourceNodeId: string;
+  targetLaneId: string;
+  targetNodeId: string;
+  transferKind: "copy" | "summary" | "artifact" | "verification_request" | "tool_result";
+  label: string;
+}
+```
+
+## Implementation Slices
+
+### Slice 1: Single-Attempt Evaluation Overlay
+
+Goal:
+
+- make the existing 3D Dual Graph visually communicate annotation severity.
+
+Steps:
+
+1. Add a pure helper, likely `lib/graph-overlay.ts`, that maps `ConversationGraph` to overlay targets.
+2. Build severity aggregation:
+   - `critical` wins over `watch`;
+   - `positive` marks recovery/verification/material success;
+   - low-confidence annotations should not dominate the surface.
+3. Map annotation kinds to visual signals:
+   - `bottleneck` -> bottleneck node/cell;
+   - `context_drift` or negative `model_behavior` -> weak edge / drift;
+   - `verification` -> verification ring or blue/green signal;
+   - `material_grounding` -> material grounding signal;
+   - `recovery` / `adaptation` -> recovery signal.
+4. Update `ConversationGraphView`:
+   - apply overlay class to `GraphNodeButton`;
+   - apply overlay class to ladder rungs when the pair/cell has a weak-edge or bottleneck signal;
+   - keep same-index selection behavior intact;
+   - do not make origin stub active.
+5. Add a compact legend:
+   - 병목,
+   - 약한 연결,
+   - 검증,
+   - 자료 사용,
+   - 회복.
+6. Keep the detail panel as the explanation/evidence surface.
+
+Done criteria:
+
+- A judged attempt with bottleneck annotations shows visible warning treatment on the relevant graph cell.
+- A material/verification/recovery signal is visible without opening raw transcript.
+- No graph theory vocabulary is required to interpret the overlay.
+
+### Slice 2: Weak Edge And Pair-Level Fallback
+
+Goal:
+
+- represent "weak edge" even before edge-target-native judge output is common.
+
+Steps:
+
+1. Treat pair-level `context_drift`, `bottleneck`, and negative `model_behavior` annotations as weak local transition signals.
+2. Prefer edge-target annotations when present.
+3. For the current ladder geometry:
+   - prompt-side rung represents how user prompt enters response-state flow;
+   - response-side rung represents how model response updates next prompt-state flow.
+4. Add CSS treatments:
+   - thin/dim/dashed for weak;
+   - critical pulse for bottleneck;
+   - constructive pulse for recovery/material/verification.
+5. Ensure accessibility:
+   - preserve text labels in detail panel;
+   - use color plus stroke/shape, not color alone.
+
+Done criteria:
+
+- Even if annotations target `pair`, the graph can still show weak local flow.
+- Edge treatment does not make the ladder visually noisy in a 5-8 turn attempt.
+
+### Slice 3: Parent/Child Parallel Graph Comparison
+
+Goal:
+
+- show counterfactual replay as graph-state comparison before text diff.
+
+Steps:
+
+1. Create a reusable comparison component, likely `GraphComparisonView`.
+2. Render parent graph and child graph side by side.
+3. Anchor both graphs at the branch breakpoint pair.
+4. Use existing `BranchDiff.graphTransition` and `annotationDelta` to produce comparison labels:
+   - bottleneck removed;
+   - verification added;
+   - material grounding added;
+   - new bottleneck appeared;
+   - no meaningful state change.
+5. Reuse the same overlay helper from Slice 1.
+6. Put text diff below graph comparison as evidence.
+7. Use the comparison in:
+   - solve branch/counterfactual panel;
+   - shared attempt counterfactual section.
+
+Done criteria:
+
+- A user can see parent vs child graph difference without reading the raw prompts first.
+- Branch replay communicates state repair, not prompt beautification.
+
+### Slice 4: Multi-Model/Harness Design Hook
+
+Goal:
+
+- prepare the graph architecture for future multi-AI orchestration without shipping a premature feature.
+
+Steps:
+
+1. Document `GraphModelLane` and `InterModelEdge` in `docs/technical/012_graph_backbone_strategy.md`.
+2. Keep existing `Attempt` single-model in the first smoke contract.
+3. If adding code hooks, keep them optional and unused:
+   - no UI toggle;
+   - no public model comparison;
+   - no attempt schema migration unless a real multi-model solving mode is built.
+4. Define future event semantics:
+   - response from model A copied/summarized into prompt for model B;
+   - artifact from one lane verified by another lane;
+   - cross-lane material transformation.
+
+Done criteria:
+
+- Future multi-model design is clear, but current demo remains focused.
+
+## Verification Steps
+
+For docs-only planning:
+
+- `git diff --check`
+- manual review of docs for consistency.
+
+For Slice 1 implementation:
+
+- `conda run -n SKAI npm run typecheck`
+- `conda run -n SKAI npm run lint`
+- `conda run -n SKAI npm run build`
+- browser smoke:
+  - open a judged attempt;
+  - enter Graph tab;
+  - confirm annotation overlay appears;
+  - select `P_i/R_i/S_i`;
+  - confirm detail panel evidence matches overlay;
+  - confirm origin stub does not activate.
+
+For Slice 3 implementation:
+
+- create a parent attempt and child branch;
+- submit/judge both if needed;
+- run counterfactual judge;
+- verify side-by-side graph comparison highlights the breakpoint and annotation delta.
+
+## Risks
+
+- Overlay can become visually noisy if every annotation gets a strong treatment.
+- Users may mistake judge confidence for objective truth if confidence/source is hidden.
+- Weak-edge styling can overclaim causality before LLM judge calibration improves.
+- Parallel graph comparison can become too wide for mobile.
+- Multi-model lane design can pull SKAI toward model benchmarking if exposed too early.
+
+## Rollback Notes
+
+- Overlay classes should be removable without changing graph data.
+- The detail panel should continue to work if overlay helper is disabled.
+- Branch text diff/counterfactual report should remain available if graph comparison is hidden.
+- Multi-model lane types should not be persisted until the feature is real.
+
+## Open Questions
+
+- Should overlay severity be computed from max severity, weighted confidence, or source priority?
+- Should pair-level bottleneck highlight all three local nodes, or only the status node plus affected rung?
+- How much animation is acceptable before the graph stops feeling precise?
+- Should weak edges be generated deterministically, or only by LLM/human judge?
+- In branch comparison, should parent/child graphs share scroll position and selected sequence?
+
+## Philosophy Check
+
+This plan advances SKAI's core direction because it makes orchestration state visible. The graph overlay should teach users to debug framing, material use, verification, and recovery, not to chase decorative graph effects. The main watchpoint is model comparison: future multi-model lanes must show human routing decisions, not become a model leaderboard detached from human orchestration skill.

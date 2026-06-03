@@ -102,6 +102,30 @@ Current MVP path:
 
 The original judge report remains immutable. Counterfactual judge is a second-order evaluation over two attempts.
 
+## Parallel Graph Comparison Direction
+
+Gemini 006 clarified the strongest UI interpretation of branch replay:
+
+- Do not make the primary comparison a prompt text diff.
+- Render the parent 3D Dual Graph and child 3D Dual Graph side by side.
+- Anchor both views at the breakpoint pair.
+- Overlay annotation delta directly on the graph:
+  - bottleneck removed,
+  - verification added,
+  - material grounding added,
+  - new bottleneck introduced,
+  - weak edge persisted.
+- Keep the text diff as evidence, not the first surface.
+
+The key user insight should be:
+
+```text
+I did not merely rewrite a prompt.
+I changed the orchestration state at this point in the graph.
+```
+
+Initial implementation should reuse the existing `GraphStateTransition` in `BranchDiff` and the same Evaluation Overlay model used by the single-attempt Graph tab.
+
 ## Current Implementation
 
 - `lib/branch-diff.ts`

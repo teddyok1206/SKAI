@@ -93,3 +93,32 @@ Child:  P3' -> S3'(verification) -> R3'(grounded)
 이 문서는 SKAI가 prompt gallery, generic chatbot, model leaderboard로 흐르지 않게 잡아주는 핵심 철학이다.
 
 SKAI의 3D dual graph는 사용자의 사고와 AI 응답과 task status를 같은 구조 안에 묶는다. 따라서 이 graph는 UI 탭 하나가 아니라 judge, feedback, replay, sharing, habit report, model analysis, research export의 공통 substrate가 되어야 한다.
+
+## Gemini 006 Extension: Overlay And Parallel Graphs
+
+Source: `docs/philosophy/Gemini/006.md`
+
+Gemini 006에서 추가로 확인한 방향은 graph backbone을 "자료구조"에서 "읽히는 학습 표면"으로 끌어올리는 것이다.
+
+핵심 확장:
+
+1. Evaluation Overlay
+   - judge annotation과 deterministic annotation은 detail panel에만 숨어 있으면 안 된다.
+   - 병목인 node, 약한 edge, 회복된 상태, verification/material grounding은 graph 자체의 색상, 두께, pulse, 흐림 정도로 먼저 보여야 한다.
+   - 사용자는 텍스트 리포트를 읽기 전에 "어느 지점에서 흐름이 막혔는가"를 눈으로 먼저 봐야 한다.
+
+2. Counterfactual Parallel Canvas
+   - breakpoint replay의 본질은 parent transcript와 child transcript의 문장 차이가 아니다.
+   - 좌측 parent graph와 우측 child graph를 병렬 배치하고, breakpoint와 annotation delta를 연결해야 한다.
+   - "P2에서 자료를 주입했더니 S2의 bottleneck이 verification/material grounding으로 바뀌었다"처럼 orchestration state의 변화가 보여야 한다.
+
+3. Multi-Model Graph Lanes
+   - multi-AI/harness solving mode가 열리면 모델마다 graph lane을 병렬로 둔다.
+   - 한 모델의 response node가 다른 모델의 prompt input으로 넘어가는 순간 inter-model edge를 기록한다.
+   - 이 구조는 모델 순위표가 아니라 인간이 여러 실행 엔진 사이에 intent/material/artifact를 어떻게 흐르게 했는지 보여주는 orchestration map이어야 한다.
+
+철학적 제한:
+
+- SKAI는 AI 모델의 힘을 과시하는 서비스가 아니다.
+- graph overlay는 사용자의 구조화/검증/자료 통제 능력을 보이게 해야 하며, 모델별 성능 경쟁을 기본 UX로 만들면 안 된다.
+- multi-model 확장은 "모델이 많아서 강하다"가 아니라 "사용자가 task와 evidence flow를 더 정밀하게 설계한다"는 방향일 때만 SKAI답다.

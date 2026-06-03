@@ -23,6 +23,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Gemini에게 현재 프로젝트 상태를 설명하기 위한 최신 briefing은 `docs/philosophy/Gemini/003.md`에 있다.
 - Gemini의 smoke-test 리스크 답변은 `docs/philosophy/Gemini/004.md`로 보존했고, generated problem editorial gate에 반영했다.
 - Gemini의 dynamic flame/logo 답변은 `docs/philosophy/Gemini/005.md`로 보존했고, literal flame 대신 activity-aware graph packet-flow로 반영했다.
+- Gemini의 graph overlay / counterfactual parallel / multi-model graph 답변은 `docs/philosophy/Gemini/006.md`로 보존했고, graph를 평가 overlay와 병렬 비교 surface로 끌어올리는 후속 계획에 반영했다.
 - Topbar primary mark는 flame icon이 아니라 3-node directed dual graph mark다.
 - Reusable SKAI logo lockup은 3-node mark, SKAI wordmark, Social Knowledge of AI full name을 함께 보여준다.
 - Engine Mode의 topbar mark는 풀이 상태에 따라 ready/primed/busy/structured packet-flow intensity가 바뀐다. 이는 flame shape가 아니라 graph 내부 에너지 표현이다.
@@ -102,12 +103,15 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Graph tab detail panel은 선택한 graph node/pair의 annotation과 evidence trace를 보여준다.
 - Score report는 judge 결과에서 파생된 graph annotations를 포함한다.
 - LLM judge는 trace event id를 기준으로 graph annotation 후보를 낼 수 있고, 서버가 이를 graph pair/node target으로 검증 매핑한다.
+- 다음 graph UX 축은 평가 결과를 graph 위에 직접 씌우는 Evaluation Overlay다. 병목 노드, 약한 엣지, 회복 지점, 검증/자료 grounding을 색/두께/움직임으로 표시하고, detail panel은 그 근거를 펼치는 역할로 둔다.
 - `buildConversationGraph`는 score report annotations와 deterministic annotations를 중복 제거해 sparse index에 올린다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 - Branch diff는 parent/child graph-state transition을 포함한다.
 - Counterfactual judge는 prompt text delta뿐 아니라 graph-state status/annotation delta를 증거로 사용한다.
+- counterfactual/replay의 장기 UI는 parent graph와 child graph를 병렬로 놓고, breakpoint 및 annotation delta를 연결해 "문장이 아니라 orchestration state가 어떻게 바뀌었는지"를 보이게 하는 방향이다.
 - Graph skeleton generator는 graph pair/status/annotation에서 공유용 구조 요약을 파생한다.
+- multi-AI/harness solving mode는 아직 데모 밖이지만, 장기 구조는 모델별 graph lane을 병렬 배치하고 model boundary를 넘는 inter-model edge를 기록하는 방식으로 확장한다. 단, primary learner UX가 model leaderboard로 흐르지 않도록 human orchestration 중심을 유지한다.
 - Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
 
 현재 데모가 증명하는 것:
@@ -135,7 +139,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
 - 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
+- Evaluation Overlay는 아직 시각 surface에 구현되지 않았다. 현재 annotation은 detail panel에서 읽히지만, graph 자체의 노드/엣지 색상, 두께, pulse, weak-edge treatment로 바로 읽히지는 않는다.
+- branch/counterfactual comparison은 graph-state transition 데이터는 있으나, parent/child 3D Dual graph를 병렬 배치해 직접 비교하는 UI는 아직 없다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
+- multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
@@ -227,6 +234,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - graph skeleton generator를 만들어 공유 화면에서 raw transcript보다 먼저 노출한다. (완료)
 - SKAI Artifact card와 universal reading layer를 만들어 공유 화면에서 score/transcript보다 먼저 구조를 읽게 한다. (완료)
 - 완료 조건: judge/replay/sharing 중 하나 이상이 graph annotation을 1차 입력으로 사용한다. (완료)
+
+우선순위 1.6: graph evaluation overlay and parallel comparison
+
+- judge/deterministic annotations를 3D Dual Graph의 node/edge overlay로 표현한다.
+- bottleneck node, weak edge, recovery/material/verification signal을 색/두께/pulse로 구분하되, 초보자에게 graph theory 용어를 과노출하지 않는다.
+- parent/child branch는 텍스트 diff보다 두 graph를 나란히 놓고 annotation delta를 읽는 comparison surface로 확장한다.
+- multi-model/harness graph는 당장 구현하지 않고, single-model attempt 구조를 깨지 않는 `model lane` / `inter-model edge` 설계 hook을 먼저 문서화한다.
+- 완료 조건: 사용자가 detail panel을 읽기 전에도 graph 위에서 병목과 회복 지점을 대략 볼 수 있고, branch가 무엇을 고쳤는지 병렬 graph로 설명할 수 있다.
 
 우선순위 2: golden attempts and LLM judge calibration
 
@@ -365,10 +380,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/067_ladder_edge_presence_and_status_swirl.md`: ladder rung 존재 조건, R->P-edge leftward flow, centered status marker, 초기 status swirl을 반영.
 - `docs/technical/plan/068_ladder_same_index_activation_and_origin_stub.md`: same-index P/R/S activation, clockwise status swirl, first-row R-origin visual stub을 반영.
 - `docs/technical/plan/069_graph_surface_ladder_alignment_and_tab_simplification.md`: 3D Dual ladder와 backend graph/index 정합성을 확인하고, 사용자-facing projection/index tabs를 제거.
+- `docs/technical/plan/070_graph_evaluation_overlay_and_parallel_comparison.md`: Gemini 006 반영, graph evaluation overlay와 parent/child 병렬 비교 UI, multi-model graph 설계 hook 계획.
 
 다음 plan 후보:
 
-- 다음 slice는 실제 브라우저 smoke 후 graph readability, node density, branch anchor visibility를 기준으로 재선정한다.
+- 다음 slice는 `070`의 Slice 1인 Evaluation Overlay를 우선 구현하고, 실제 브라우저 smoke 후 node density, selected-set readability, branch anchor visibility를 재평가한다.
 
 ## Reading Map
 
@@ -380,6 +396,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/philosophy/006_3d_dual_graph_system_backbone.md`
 - `docs/philosophy/007_intelligence_and_brand_manifesto.md`
 - `docs/philosophy/Gemini/002.md`
+- `docs/philosophy/Gemini/006.md`
 
 기술:
 
