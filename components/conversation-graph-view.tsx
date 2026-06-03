@@ -370,18 +370,24 @@ export function ConversationGraphView({
           const promptNode = nodeById.get(pair.promptNodeId);
           const statusNode = nodeById.get(pair.statusNodeId);
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
-          const promptResponseArrowId = `graph-pr-arrow-${pair.sequence}`;
+          const selectedPromptSequence = selectedNode?.kind === "prompt" ? selectedNode.sequence : undefined;
+          const selectedResponseSequence = selectedNode?.kind === "response" ? selectedNode.sequence : undefined;
+          const promptEdgeActive = selectedPromptSequence === pair.sequence || selectedPromptSequence === pair.sequence + 1;
+          const responseEdgeActive = selectedResponseSequence === pair.sequence || selectedResponseSequence === pair.sequence + 1;
+          const promptNodeActive = effectiveSelectedNodeId === promptNode?.id;
+          const responseNodeActive = effectiveSelectedNodeId === responseNode?.id;
+          const statusNodeActive = effectiveSelectedNodeId === statusNode?.id;
+          const topRungActive = promptNodeActive || responseEdgeActive;
+          const lowerRungActive = responseNodeActive || promptEdgeActive;
+          const statusRungActive = statusNodeActive || responseNodeActive;
+          const ladderArrowId = `graph-ladder-arrow-${pair.sequence}`;
 
           return (
             <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
-              <svg aria-hidden="true" className="graph-pair-frame" preserveAspectRatio="none" viewBox="0 0 600 280">
-                <polygon className="graph-pair-frame-shape" points="60,0 340,196 340,280 60,84" />
-                <line className="graph-pair-status-link" x1="340" x2="466" y1="210" y2="210" />
-              </svg>
-              <svg aria-hidden="true" className="graph-pr-link" preserveAspectRatio="none" viewBox="0 0 600 280">
+              <svg aria-hidden="true" className="graph-dual-ladder" preserveAspectRatio="none" viewBox="0 0 600 220">
                 <defs>
                   <marker
-                    id={promptResponseArrowId}
+                    id={ladderArrowId}
                     markerHeight="8"
                     markerUnits="strokeWidth"
                     markerWidth="8"
@@ -390,10 +396,48 @@ export function ConversationGraphView({
                     refY="4"
                     viewBox="0 0 8 8"
                   >
-                    <path className="graph-pr-link-arrow" d="M 0 0 L 8 4 L 0 8 z" />
+                    <path className="graph-ladder-arrowhead" d="M 0 0 L 8 4 L 0 8 z" />
                   </marker>
                 </defs>
-                <line className="graph-pr-link-line" markerEnd={`url(#${promptResponseArrowId})`} x1="100" x2="300" y1="70" y2="210" />
+                <line
+                  className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
+                  markerEnd={`url(#${ladderArrowId})`}
+                  x1="100"
+                  x2="300"
+                  y1="54"
+                  y2="54"
+                />
+                <line
+                  className={`graph-ladder-rung edge-to-node ${lowerRungActive ? "active" : ""}`}
+                  markerEnd={`url(#${ladderArrowId})`}
+                  x1="100"
+                  x2="300"
+                  y1="164"
+                  y2="164"
+                />
+                <line
+                  className={`graph-ladder-rung status-binding ${statusRungActive ? "active" : ""}`}
+                  markerEnd={`url(#${ladderArrowId})`}
+                  x1="300"
+                  x2="500"
+                  y1="164"
+                  y2="164"
+                />
+                {topRungActive ? (
+                  <circle className="graph-ladder-packet" r="3">
+                    <animateMotion dur="1500ms" path="M100 54 H300" repeatCount="indefinite" />
+                  </circle>
+                ) : null}
+                {lowerRungActive ? (
+                  <circle className="graph-ladder-packet secondary" r="3">
+                    <animateMotion dur="1350ms" path="M100 164 H300" repeatCount="indefinite" />
+                  </circle>
+                ) : null}
+                {statusRungActive ? (
+                  <circle className="graph-ladder-packet status" r="3">
+                    <animateMotion dur="1250ms" path="M300 164 H500" repeatCount="indefinite" />
+                  </circle>
+                ) : null}
               </svg>
 
               <div className="graph-spine-slot prompt-spine">
