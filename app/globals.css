@@ -2812,11 +2812,11 @@ h3 {
 
 .graph-dual-spine-row {
   position: relative;
-  --dual-node-top: 29px;
+  --dual-node-top: 36px;
   --dual-node-size: 68px;
   --dual-node-bottom: calc(var(--dual-node-top) + var(--dual-node-size));
-  --dual-half-step: 126px;
-  min-height: 252px;
+  --dual-half-step: 140px;
+  min-height: 280px;
 }
 
 .graph-dual-spine-row.breakpoint {
@@ -2828,7 +2828,7 @@ h3 {
   position: relative;
   display: grid;
   min-width: 0;
-  min-height: 252px;
+  min-height: 280px;
   padding-top: var(--dual-node-top);
   place-items: start center;
 }
@@ -4147,7 +4147,7 @@ summary {
   }
 
   .graph-spine-slot {
-    min-height: 252px;
+    min-height: 280px;
   }
 
   .graph-dual-spine-row:not(:last-child) .graph-spine-slot::before,

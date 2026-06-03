@@ -359,6 +359,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/062_dual_graph_closed_pair_frame.md`: 3D Dual의 prompt-response pair frame을 닫힌 binding container로 보정하고 Status 연결선/Response offset을 정렬.
 - `docs/technical/plan/063_dual_graph_diagonal_response_geometry.md`: `R_i`를 `P_i/P_{i+1}` 중점 높이에 배치하고, P->R 사선 edge와 평행사변형형 binding frame으로 3D Dual geometry를 보정.
 - `docs/technical/plan/064_dual_graph_precise_pair_parallelogram.md`: P/R 노드를 관통하지 않고 실제로 감싸는 평행사변형 좌표계로 3D Dual frame을 정밀 보정.
+- `docs/technical/plan/065_dual_graph_frame_slope_match.md`: P/R 연결 vector와 frame 위아래 변의 기울기를 더 명확히 맞추도록 3D Dual frame 좌표를 재보정.
 
 다음 plan 후보:
 
