@@ -105,12 +105,15 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - LLM judge는 trace event id를 기준으로 graph annotation 후보를 낼 수 있고, 서버가 이를 graph pair/node target으로 검증 매핑한다.
 - 다음 graph UX 축은 평가 결과를 graph 위에 직접 씌우는 Evaluation Overlay다. 병목 노드, 약한 엣지, 회복 지점, 검증/자료 grounding을 색/두께/움직임으로 표시하고, detail panel은 그 근거를 펼치는 역할로 둔다. 단, overlay는 기본 graph 구조와 분리된 lens여야 하므로 사용자가 전체/개별 layer를 켜고 끌 수 있어야 한다.
 - backend overlay 정보는 새 canonical 데이터가 아니라 `ConversationGraph.annotations`에서 파생한 sparse `GraphOverlayIndex`로 관리한다. target/pair/sequence/layer별 dictionary lookup을 사용해 빠르게 렌더링하되, 모든 overlay는 annotation id와 evidence trace로 역추적 가능해야 한다.
+- `lib/graph-overlay.ts`는 `ConversationGraph.annotations`에서 `GraphOverlayIndex`를 파생하고, Graph 탭은 전체 overlay on/off와 layer별 toggle을 제공한다. Toggle은 graph/trace/judge output을 바꾸지 않고 visual lens만 필터링한다.
 - `buildConversationGraph`는 score report annotations와 deterministic annotations를 중복 제거해 sparse index에 올린다.
 - `/api/chat`은 provider thread memory가 아니라 immutable trace에서 매번 materialized context를 컴파일해 호출한다.
 - parent/child branch diff와 counterfactual judge baseline이 있다.
 - Branch diff는 parent/child graph-state transition을 포함한다.
 - Counterfactual judge는 prompt text delta뿐 아니라 graph-state status/annotation delta를 증거로 사용한다.
 - counterfactual/replay의 장기 UI는 parent graph와 child graph를 병렬로 놓고, breakpoint 및 annotation delta를 연결해 "문장이 아니라 orchestration state가 어떻게 바뀌었는지"를 보이게 하는 방향이다.
+- solve 화면의 branch/counterfactual report는 parent attempt가 local에 있을 때 parent/child 3D Dual Graph를 병렬 렌더링하고, prompt diff보다 graph comparison을 먼저 보여준다.
+- shared attempt의 counterfactual section은 parent full graph가 없을 수 있으므로 저장된 `GraphStateTransition`을 prompt diff보다 먼저 보여주는 fallback을 사용한다.
 - Graph skeleton generator는 graph pair/status/annotation에서 공유용 구조 요약을 파생한다.
 - multi-AI/harness solving mode는 아직 데모 밖이지만, 장기 구조는 모델별 graph lane을 병렬 배치하고 model boundary를 넘는 inter-model edge를 기록하는 방식으로 확장한다. 단, primary learner UX가 model leaderboard로 흐르지 않도록 human orchestration 중심을 유지한다.
 - Mac local runtime은 개발용 `dev:lan`과 안정 데모용 `build + serve:lan`으로 분리한다.
@@ -140,8 +143,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
 - 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
-- Evaluation Overlay는 아직 시각 surface에 구현되지 않았다. 현재 annotation은 detail panel에서 읽히지만, graph 자체의 노드/엣지 색상, 두께, pulse, weak-edge treatment로 바로 읽히지는 않는다. Overlay layer toggle도 아직 없다.
-- branch/counterfactual comparison은 graph-state transition 데이터는 있으나, parent/child 3D Dual graph를 병렬 배치해 직접 비교하는 UI는 아직 없다.
+- Evaluation Overlay는 1차 구현됐지만, edge-native weak-edge annotation은 아직 제한적이다. 현재는 pair-level annotation fallback이 local node/rung/cell styling을 만든다.
+- 공개 share에서 parent/child full graph 병렬 비교를 안정적으로 하려면 parent graph snapshot persistence가 필요하다. 현재 share는 `GraphStateTransition` fallback만 가진다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
 - Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.

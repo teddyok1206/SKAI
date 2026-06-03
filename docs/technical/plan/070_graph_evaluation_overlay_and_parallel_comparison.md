@@ -343,6 +343,14 @@ Done criteria:
 - Turning individual layers on/off changes only visual treatment, not graph data or detail evidence.
 - No graph theory vocabulary is required to interpret the overlay.
 
+Implementation result:
+
+- Implemented `lib/graph-overlay.ts`.
+- Added `GraphOverlayTarget`, `GraphOverlaySummary`, `GraphOverlayIndex`, and `GraphOverlayControls` types.
+- `GraphOverlayIndex` is derived from `ConversationGraph.annotations`; it is not canonical storage.
+- `ConversationGraphView` now derives overlay summaries through the sparse index and renders whole-overlay/layer toggles.
+- Node, rung, status swirl, and pair cell styling now respond to active overlay summaries.
+
 ### Slice 2: Weak Edge And Pair-Level Fallback
 
 Goal:
@@ -368,6 +376,13 @@ Done criteria:
 
 - Even if annotations target `pair`, the graph can still show weak local flow.
 - Edge treatment does not make the ladder visually noisy in a 5-8 turn attempt.
+
+Implementation result:
+
+- Pair-level annotations flow into `summaryByNodeId`, `summaryByEdgeId`, and `summaryByPairId`.
+- Edge-native annotations remain preferred when available.
+- Pair-level fallback is explicit and traceable to annotation ids.
+- Visual weak/bottleneck treatment is filtered by layer controls.
 
 ### Slice 3: Parent/Child Parallel Graph Comparison
 
@@ -397,6 +412,14 @@ Done criteria:
 
 - A user can see parent vs child graph difference without reading the raw prompts first.
 - Branch replay communicates state repair, not prompt beautification.
+
+Implementation result:
+
+- Added `components/graph-comparison-view.tsx`.
+- Solve screen now renders parent/child 3D Dual Graphs side by side when the parent attempt is available locally.
+- The comparison reuses the same overlay controls and sparse overlay helper.
+- Prompt before/after text diff is kept as evidence below graph comparison.
+- Share screen now places saved `GraphStateTransitionView` before prompt diff as a fallback when parent full graph is unavailable.
 
 ### Slice 4: Multi-Model/Harness Design Hook
 
@@ -449,6 +472,13 @@ For Slice 3 implementation:
 - submit/judge both if needed;
 - run counterfactual judge;
 - verify side-by-side graph comparison highlights the breakpoint and annotation delta.
+
+## Verification Result
+
+- `git diff --check`: passed.
+- `conda run -n SKAI npm run typecheck`: passed.
+- `conda run -n SKAI npm run lint`: passed.
+- `conda run -n SKAI npm run build`: passed.
 
 ## Risks
 

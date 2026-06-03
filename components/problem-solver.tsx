@@ -43,6 +43,7 @@ import type {
 } from "@/lib/types";
 import { ConversationGraphView } from "@/components/conversation-graph-view";
 import { BranchTreeExplorer } from "@/components/branch-tree-explorer";
+import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
@@ -177,6 +178,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           })
         : null,
     [attempt, problem.materials.length],
+  );
+  const parentConversationGraph = useMemo(
+    () =>
+      parentAttempt
+        ? buildConversationGraph(parentAttempt.trace, parentAttempt.scoreReport, parentAttempt.branch, {
+            problemMaterialCount: problem.materials.length,
+          })
+        : null,
+    [parentAttempt, problem.materials.length],
   );
   const skaiActivity = useMemo<SkaiActivity>(() => {
     if (isLoading) {
@@ -1270,6 +1280,17 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 {attempt.counterfactualReport.verdict} · {attempt.counterfactualReport.confidence}% confidence
               </div>
               <p>{attempt.counterfactualReport.summary}</p>
+              {parentConversationGraph && conversationGraph ? (
+                <GraphComparisonView
+                  childGraph={conversationGraph}
+                  childTrace={attempt.trace}
+                  parentGraph={parentConversationGraph}
+                  parentTrace={parentAttempt?.trace ?? []}
+                  transition={attempt.counterfactualReport.branchDiff.graphTransition}
+                />
+              ) : (
+                <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
+              )}
               <div className="branch-diff-grid">
                 <div className="diff-card">
                   <strong>Prompt before</strong>
@@ -1280,7 +1301,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found yet."}</p>
                 </div>
               </div>
-              <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
+              {parentConversationGraph && conversationGraph ? (
+                <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
+              ) : null}
               <div className="signal-row">
                 {attempt.counterfactualReport.causalClaims.map((claim) => (
                   <span className={`signal-chip claim-${claim.effect}`} key={`${claim.label}-${claim.effect}`}>

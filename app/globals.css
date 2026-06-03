@@ -2506,11 +2506,37 @@ h3 {
   gap: 14px;
 }
 
+.conversation-graph-view.compact {
+  gap: 10px;
+}
+
+.graph-view-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.graph-view-title strong {
+  color: var(--ink);
+}
+
+.graph-view-title span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
 .graph-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
   gap: 12px;
   align-items: start;
+}
+
+.graph-workspace-compact {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .graph-canvas,
@@ -2527,6 +2553,59 @@ h3 {
   gap: 12px;
   position: sticky;
   top: 76px;
+}
+
+.conversation-graph-view.compact .graph-overview {
+  display: none;
+}
+
+.conversation-graph-view.compact .graph-dual-spine {
+  max-height: 480px;
+  padding: 10px;
+}
+
+.conversation-graph-view.compact .graph-dual-spine-head,
+.conversation-graph-view.compact .graph-dual-spine-row {
+  min-width: 360px;
+  width: max(100%, 360px);
+}
+
+.conversation-graph-view.compact .graph-dual-spine-row {
+  --dual-node-size: 58px;
+  --dual-node-bottom: calc(var(--dual-node-top) + var(--dual-node-size));
+  --dual-half-step: 96px;
+  min-height: 194px;
+}
+
+.conversation-graph-view.compact .graph-spine-slot {
+  min-height: 194px;
+}
+
+.conversation-graph-view.compact .graph-node {
+  width: min(58px, 100%);
+  padding: 7px;
+}
+
+.conversation-graph-view.compact .graph-node span {
+  max-width: 48px;
+  font-size: 9px;
+}
+
+.conversation-graph-view.compact .graph-status-cell-node {
+  top: 62px;
+  left: calc(50% - 35px);
+  width: 70px;
+  height: 70px;
+}
+
+.conversation-graph-view.compact .graph-status-cell-node .graph-node {
+  width: 70px;
+}
+
+.conversation-graph-view.compact .graph-status-swirl {
+  inset: -7px;
+  width: 84px;
+  height: 84px;
 }
 
 .graph-lanes {
@@ -2758,6 +2837,32 @@ h3 {
   border-color: color-mix(in srgb, var(--gold) 42%, var(--line));
 }
 
+.graph-node.has-overlay.overlay-positive {
+  border-color: color-mix(in srgb, var(--success) 68%, var(--line));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--success) 12%, transparent);
+}
+
+.graph-node.has-overlay.overlay-watch {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--gold) 72%, var(--line));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-soft) 44%, transparent);
+}
+
+.graph-node.has-overlay.overlay-critical {
+  border-color: color-mix(in srgb, var(--red) 72%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--red) 13%, transparent),
+    0 0 18px color-mix(in srgb, var(--red) 18%, transparent);
+}
+
+.graph-node.has-overlay.overlay-layer-recovery,
+.graph-node.has-overlay.overlay-layer-verification,
+.graph-node.has-overlay.overlay-layer-materialGrounding {
+  background:
+    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--success) 9%, transparent), transparent 58%),
+    var(--surface);
+}
+
 .graph-node.missing {
   align-content: center;
   justify-items: center;
@@ -2818,6 +2923,18 @@ h3 {
 .graph-dual-spine-row.breakpoint {
   border-radius: 8px;
   background: color-mix(in srgb, var(--gold-soft) 22%, transparent);
+}
+
+.graph-dual-spine-row.has-overlay.overlay-critical {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--red) 7%, transparent), transparent 46%),
+    color-mix(in srgb, var(--red) 4%, transparent);
+}
+
+.graph-dual-spine-row.has-overlay.overlay-watch {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--gold-soft) 36%, transparent), transparent 54%),
+    transparent;
 }
 
 .graph-spine-slot {
@@ -2911,6 +3028,30 @@ h3 {
   stroke: var(--blue);
 }
 
+.graph-ladder-rung.has-overlay {
+  opacity: 0.9;
+  stroke-width: 3;
+}
+
+.graph-ladder-rung.has-overlay.overlay-positive {
+  stroke: color-mix(in srgb, var(--success) 76%, var(--line));
+}
+
+.graph-ladder-rung.has-overlay.overlay-watch {
+  stroke: color-mix(in srgb, var(--gold) 80%, var(--line));
+  stroke-dasharray: 8 7;
+}
+
+.graph-ladder-rung.has-overlay.overlay-critical {
+  stroke: color-mix(in srgb, var(--red) 82%, var(--line));
+  stroke-dasharray: 5 6;
+}
+
+.graph-ladder-rung.has-overlay.overlay-signal-weak-edge {
+  opacity: 0.72;
+  stroke-dasharray: 4 8;
+}
+
 .graph-ladder-arrowhead {
   fill: color-mix(in srgb, var(--provider-accent, var(--accent)) 58%, var(--line));
 }
@@ -2967,6 +3108,25 @@ h3 {
 .graph-status-cell-node.active .graph-status-swirl {
   animation-duration: 1050ms;
   filter: drop-shadow(0 0 7px color-mix(in srgb, var(--gold) 48%, transparent));
+}
+
+.graph-status-cell-node.has-overlay.overlay-positive .graph-status-swirl-track {
+  stroke: color-mix(in srgb, var(--success) 66%, var(--line));
+}
+
+.graph-status-cell-node.has-overlay.overlay-watch .graph-status-swirl-track {
+  stroke: color-mix(in srgb, var(--gold) 82%, var(--line));
+  stroke-dasharray: 10 8;
+}
+
+.graph-status-cell-node.has-overlay.overlay-critical .graph-status-swirl-track {
+  stroke: color-mix(in srgb, var(--red) 74%, var(--line));
+  stroke-dasharray: 7 7;
+}
+
+.graph-status-cell-node.has-overlay.overlay-critical .graph-status-swirl {
+  animation-duration: 920ms;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--red) 38%, transparent));
 }
 
 @keyframes graph-status-clockwise-spin {
@@ -3105,6 +3265,129 @@ h3 {
   overflow-wrap: anywhere;
 }
 
+.graph-overlay-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 9px;
+}
+
+.graph-overlay-master.active {
+  border-color: color-mix(in srgb, var(--provider-accent, var(--accent)) 34%, var(--line));
+  background: color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 58%, #fff);
+}
+
+.graph-overlay-layer-list {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.graph-overlay-layer {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.graph-overlay-layer.active {
+  border-color: color-mix(in srgb, var(--provider-accent, var(--accent)) 30%, var(--line));
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.graph-overlay-layer:disabled {
+  opacity: 0.52;
+}
+
+.graph-overlay-layer small {
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.graph-overlay-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.graph-overlay-dot.overlay-layer-bottleneck {
+  background: var(--red);
+}
+
+.graph-overlay-dot.overlay-layer-weakEdge {
+  border: 2px solid var(--gold);
+  background: transparent;
+}
+
+.graph-overlay-dot.overlay-layer-verification {
+  background: var(--blue);
+}
+
+.graph-overlay-dot.overlay-layer-materialGrounding {
+  background: var(--success);
+}
+
+.graph-overlay-dot.overlay-layer-recovery {
+  background: var(--gold);
+}
+
+.graph-overlay-summary {
+  display: grid;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 10px;
+}
+
+.graph-overlay-summary.positive {
+  border-color: color-mix(in srgb, var(--success) 28%, var(--line));
+  background: color-mix(in srgb, var(--success) 8%, var(--surface));
+}
+
+.graph-overlay-summary.watch {
+  border-color: color-mix(in srgb, var(--gold) 32%, var(--line));
+  background: color-mix(in srgb, var(--gold-soft) 40%, var(--surface));
+}
+
+.graph-overlay-summary.critical {
+  border-color: color-mix(in srgb, var(--red) 28%, var(--line));
+  background: color-mix(in srgb, var(--red) 7%, var(--surface));
+}
+
+.graph-overlay-summary strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.graph-overlay-summary span,
+.graph-overlay-summary small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
 .graph-detail-content {
   max-height: 240px;
   overflow: auto;
@@ -3184,6 +3467,54 @@ h3 {
   border-radius: 8px;
   background: var(--surface);
   padding: 12px;
+}
+
+.graph-comparison-view {
+  display: grid;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 16%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 88%, var(--evidence-bg));
+  padding: 12px;
+}
+
+.graph-comparison-header {
+  display: grid;
+  gap: 8px;
+}
+
+.graph-comparison-header strong {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  color: var(--ink);
+}
+
+.graph-comparison-header p {
+  margin: 4px 0 0;
+}
+
+.graph-comparison-labels,
+.graph-comparison-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.graph-comparison-legend span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.graph-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .graph-transition-header,
@@ -3841,6 +4172,10 @@ summary {
   }
 
   .branch-diff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .graph-comparison-grid {
     grid-template-columns: 1fr;
   }
 

@@ -1079,6 +1079,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               {attempt.counterfactualReport.verdict} · {attempt.counterfactualReport.confidence}% confidence
             </div>
             <p>{attempt.counterfactualReport.summary}</p>
+            <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
             <div className="branch-diff-grid">
               <div className="diff-card">
                 <strong>Prompt before</strong>
@@ -1089,7 +1090,6 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                 <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found."}</p>
               </div>
             </div>
-            <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
             <div className="signal-row">
               {attempt.counterfactualReport.causalClaims.map((claim) => (
                 <span className={`signal-chip claim-${claim.effect}`} key={`${claim.label}-${claim.effect}`}>

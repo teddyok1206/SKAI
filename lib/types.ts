@@ -268,6 +268,72 @@ export interface ConversationGraphAnnotation {
   createdAt: string;
 }
 
+export type GraphOverlaySeverity = "neutral" | "positive" | "watch" | "critical";
+
+export type GraphOverlayLayer =
+  | "bottleneck"
+  | "weakEdge"
+  | "verification"
+  | "materialGrounding"
+  | "recovery"
+  | "modelBehavior"
+  | "costEfficiency";
+
+export type GraphOverlaySignal =
+  | "bottleneck_node"
+  | "weak_edge"
+  | "recovery"
+  | "verification"
+  | "material_grounding"
+  | "model_drift"
+  | "cost_anomaly"
+  | "neutral";
+
+export interface GraphOverlayTarget {
+  id: string;
+  targetKind: ConversationGraphAnnotationTargetKind;
+  targetId: string;
+  layer: GraphOverlayLayer;
+  pairId?: string;
+  sequence?: number;
+  edgeId?: string;
+  severity: GraphOverlaySeverity;
+  signal: GraphOverlaySignal;
+  annotationIds: string[];
+  source: ConversationGraphAnnotationSource;
+  confidence: number;
+  label: string;
+  explanation: string;
+}
+
+export interface GraphOverlaySummary {
+  severity: GraphOverlaySeverity;
+  layers: GraphOverlayLayer[];
+  signals: GraphOverlaySignal[];
+  targetIds: string[];
+  annotationIds: string[];
+  label: string;
+  confidence: number;
+}
+
+export interface GraphOverlayIndex {
+  schemaVersion: string;
+  targetsById: Record<string, GraphOverlayTarget>;
+  targetIdsByGraphTargetId: Record<string, string[]>;
+  targetIdsByPairId: Record<string, string[]>;
+  targetIdsBySequence: Record<number, string[]>;
+  targetIdsByLayer: Record<GraphOverlayLayer, string[]>;
+  targetIdsByEdgeId: Record<string, string[]>;
+  summaryByNodeId: Record<string, GraphOverlaySummary>;
+  summaryByEdgeId: Record<string, GraphOverlaySummary>;
+  summaryByPairId: Record<string, GraphOverlaySummary>;
+}
+
+export interface GraphOverlayControls {
+  enabled: boolean;
+  layers: Record<GraphOverlayLayer, boolean>;
+}
+
 export type JudgeMode = "heuristic" | "llm" | "ensemble";
 
 export interface JudgeRunSummary {

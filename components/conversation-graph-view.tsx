@@ -1,10 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GitBranch, Info, Network, Workflow } from "lucide-react";
+import { Eye, EyeOff, GitBranch, Info, Network, Workflow } from "lucide-react";
+import {
+  buildGraphOverlayIndex,
+  defaultGraphOverlayControls,
+  filterGraphOverlaySummary,
+  graphOverlayLayerLabels,
+  graphOverlayLayerOrder,
+} from "@/lib/graph-overlay";
 import type {
   ConversationGraph,
   ConversationGraphAnnotation,
+  GraphOverlayControls,
+  GraphOverlayLayer,
+  GraphOverlaySummary,
   ConversationGraphNode,
   ConversationGraphPair,
   TraceEvent,
@@ -95,28 +105,49 @@ function fixedNodeCaption(node: ConversationGraphNode, pair?: ConversationGraphP
   return nodeKindLabel(node.kind).replace(" node", "");
 }
 
+function overlaySignalClass(signal: string) {
+  return `overlay-signal-${signal.replaceAll("_", "-")}`;
+}
+
+function overlayClass(summary?: GraphOverlaySummary) {
+  if (!summary) {
+    return "";
+  }
+
+  return [
+    "has-overlay",
+    `overlay-${summary.severity}`,
+    ...summary.layers.map((layer) => `overlay-layer-${layer}`),
+    ...summary.signals.map(overlaySignalClass),
+  ].join(" ");
+}
+
 function GraphNodeButton({
   node,
   selected,
   pair,
   annotationCount = 0,
+  overlaySummary,
   onSelect,
 }: {
   node?: ConversationGraphNode;
   selected: boolean;
   pair?: ConversationGraphPair;
   annotationCount?: number;
+  overlaySummary?: GraphOverlaySummary;
   onSelect: (nodeId: string) => void;
 }) {
   if (!node) {
     return <div className="graph-node missing">NA</div>;
   }
 
+  const title = overlaySummary ? `${node.summary} / overlay: ${overlaySummary.label}` : node.summary;
+
   return (
     <button
-      className={`graph-node ${node.kind} ${selected ? "selected" : ""} ${pair?.isBreakpoint ? "breakpoint" : ""}`}
+      className={`graph-node ${node.kind} ${selected ? "selected" : ""} ${pair?.isBreakpoint ? "breakpoint" : ""} ${overlayClass(overlaySummary)}`}
       onClick={() => onSelect(node.id)}
-      title={node.summary}
+      title={title}
       type="button"
     >
       <strong>{nodeToken(node)}</strong>
@@ -131,23 +162,43 @@ export function ConversationGraphView({
   graph,
   trace,
   onBranchTraceEvent,
+  title,
+  compact = false,
+  hideDetailPanel = false,
+  hideOverlayControls = false,
+  focusPairId,
+  overlayControls,
+  onOverlayControlsChange,
 }: {
   graph: ConversationGraph;
   trace: TraceEvent[];
   onBranchTraceEvent?: (traceEventId: string) => void;
+  title?: string;
+  compact?: boolean;
+  hideDetailPanel?: boolean;
+  hideOverlayControls?: boolean;
+  focusPairId?: string;
+  overlayControls?: GraphOverlayControls;
+  onOverlayControlsChange?: (controls: GraphOverlayControls) => void;
 }) {
   const allNodes = useMemo(
     () => [...graph.promptNodes, ...graph.responseNodes, ...graph.statusNodes],
     [graph.promptNodes, graph.responseNodes, graph.statusNodes],
   );
   const nodeById = useMemo(() => new Map(allNodes.map((node) => [node.id, node])), [allNodes]);
+  const promptEdgeByPairId = useMemo(() => new Map(graph.promptEdges.map((edge) => [edge.pairId, edge])), [graph.promptEdges]);
+  const responseEdgeByPairId = useMemo(() => new Map(graph.responseEdges.map((edge) => [edge.pairId, edge])), [graph.responseEdges]);
+  const overlayIndex = useMemo(() => buildGraphOverlayIndex(graph), [graph]);
   const annotationById = useMemo(
     () => new Map(graph.annotations.map((annotation) => [annotation.id, annotation])),
     [graph.annotations],
   );
   const traceById = useMemo(() => new Map(trace.map((event) => [event.id, event])), [trace]);
-  const firstSelectableNode = allNodes.find((node) => !node.synthetic)?.id ?? allNodes[0]?.id ?? null;
+  const focusPair = focusPairId ? graph.pairs.find((pair) => pair.id === focusPairId) : undefined;
+  const firstSelectableNode = focusPair?.promptNodeId ?? allNodes.find((node) => !node.synthetic)?.id ?? allNodes[0]?.id ?? null;
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(firstSelectableNode);
+  const [internalOverlayControls, setInternalOverlayControls] = useState<GraphOverlayControls>(defaultGraphOverlayControls);
+  const activeOverlayControls = overlayControls ?? internalOverlayControls;
   const effectiveSelectedNodeId = selectedNodeId && nodeById.has(selectedNodeId) ? selectedNodeId : firstSelectableNode;
   const selectedNode = effectiveSelectedNodeId ? nodeById.get(effectiveSelectedNodeId) : undefined;
   const selectedPair =
@@ -182,6 +233,26 @@ export function ConversationGraphView({
 
     return [...annotationIds].map((annotationId) => annotationById.get(annotationId)).filter(Boolean) as ConversationGraphAnnotation[];
   }, [annotationById, graph.index.annotationIdsByTargetId, graph.index.annotationIdsByTraceEventId, selectedNode, selectedPair, selectedTrace]);
+  const selectedOverlaySummary = selectedPair
+    ? filterGraphOverlaySummary(overlayIndex, overlayIndex.summaryByPairId[selectedPair.id], activeOverlayControls)
+    : selectedNode
+      ? filterGraphOverlaySummary(overlayIndex, overlayIndex.summaryByNodeId[selectedNode.id], activeOverlayControls)
+      : undefined;
+
+  function visibleOverlay(summary?: GraphOverlaySummary) {
+    return filterGraphOverlaySummary(overlayIndex, summary, activeOverlayControls);
+  }
+
+  function updateOverlayControls(updater: (current: GraphOverlayControls) => GraphOverlayControls) {
+    const next = updater(activeOverlayControls);
+
+    if (onOverlayControlsChange) {
+      onOverlayControlsChange(next);
+      return;
+    }
+
+    setInternalOverlayControls(next);
+  }
 
   function annotationCountForNode(node?: ConversationGraphNode, pair?: ConversationGraphPair) {
     if (!node) {
@@ -207,6 +278,20 @@ export function ConversationGraphView({
     setSelectedNodeId(nodeId);
   }
 
+  function toggleOverlayEnabled() {
+    updateOverlayControls((current) => ({ ...current, enabled: !current.enabled }));
+  }
+
+  function toggleOverlayLayer(layer: GraphOverlayLayer) {
+    updateOverlayControls((current) => ({
+      ...current,
+      layers: {
+        ...current.layers,
+        [layer]: !current.layers[layer],
+      },
+    }));
+  }
+
   function renderDualGraph() {
     if (graph.pairs.length === 0) {
       return (
@@ -229,6 +314,8 @@ export function ConversationGraphView({
           const promptNode = nodeById.get(pair.promptNodeId);
           const statusNode = nodeById.get(pair.statusNodeId);
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
+          const promptEdge = promptEdgeByPairId.get(pair.id);
+          const responseEdge = responseEdgeByPairId.get(pair.id);
           const hasPromptNode = Boolean(promptNode && !promptNode.synthetic);
           const hasResponseNode = Boolean(responseNode && !responseNode.synthetic);
           const hasPreviousResponseNode = graph.responseNodes.some((node) => node.sequence === pair.sequence - 1 && !node.synthetic);
@@ -242,9 +329,15 @@ export function ConversationGraphView({
           const topRungActive = topRungVisible && pairSetActive;
           const lowerRungActive = lowerRungVisible && pairSetActive;
           const ladderArrowId = `graph-ladder-arrow-${pair.sequence}`;
+          const pairOverlaySummary = visibleOverlay(overlayIndex.summaryByPairId[pair.id]);
+          const promptOverlaySummary = promptNode ? visibleOverlay(overlayIndex.summaryByNodeId[promptNode.id]) : undefined;
+          const responseOverlaySummary = responseNode ? visibleOverlay(overlayIndex.summaryByNodeId[responseNode.id]) : undefined;
+          const statusOverlaySummary = statusNode ? visibleOverlay(overlayIndex.summaryByNodeId[statusNode.id]) : undefined;
+          const topRungSummary = responseEdge ? visibleOverlay(overlayIndex.summaryByEdgeId[responseEdge.id]) : pairOverlaySummary;
+          const lowerRungSummary = promptEdge ? visibleOverlay(overlayIndex.summaryByEdgeId[promptEdge.id]) : pairOverlaySummary;
 
           return (
-            <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
+            <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""} ${overlayClass(pairOverlaySummary)}`} key={pair.id}>
               <svg aria-hidden="true" className="graph-dual-ladder" preserveAspectRatio="none" viewBox="0 0 400 220">
                 <defs>
                   <marker
@@ -263,7 +356,7 @@ export function ConversationGraphView({
                 {hasOriginStub ? <line className="graph-ladder-origin-stub" x1="300" x2="300" y1="54" y2="130" /> : null}
                 {topRungVisible ? (
                   <line
-                    className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
+                    className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""} ${overlayClass(topRungSummary)}`}
                     markerEnd={`url(#${ladderArrowId})`}
                     x1="100"
                     x2="300"
@@ -273,7 +366,7 @@ export function ConversationGraphView({
                 ) : null}
                 {lowerRungVisible ? (
                   <line
-                    className={`graph-ladder-rung response-to-prompt-edge ${lowerRungActive ? "active" : ""}`}
+                    className={`graph-ladder-rung response-to-prompt-edge ${lowerRungActive ? "active" : ""} ${overlayClass(lowerRungSummary)}`}
                     markerEnd={`url(#${ladderArrowId})`}
                     x1="300"
                     x2="100"
@@ -293,7 +386,7 @@ export function ConversationGraphView({
                 ) : null}
               </svg>
               {statusVisible ? (
-                <div className={`graph-status-cell-node ${pairSetActive ? "active" : ""}`}>
+                <div className={`graph-status-cell-node ${pairSetActive ? "active" : ""} ${overlayClass(statusOverlaySummary ?? pairOverlaySummary)}`}>
                   <svg aria-hidden="true" className="graph-status-swirl" viewBox="0 0 96 96">
                     <path className="graph-status-swirl-track" d="M69 23A32 32 0 1 0 78 58" />
                     <path className="graph-status-swirl-arrow" d="M71 14L68 27L82 24Z" />
@@ -302,6 +395,7 @@ export function ConversationGraphView({
                     node={statusNode}
                     pair={pair}
                     annotationCount={annotationCountForNode(statusNode, pair)}
+                    overlaySummary={statusOverlaySummary ?? pairOverlaySummary}
                     selected={pairSetActive}
                     onSelect={selectNode}
                   />
@@ -314,6 +408,7 @@ export function ConversationGraphView({
                     node={promptNode}
                     pair={pair}
                     annotationCount={annotationCountForNode(promptNode, pair)}
+                    overlaySummary={promptOverlaySummary ?? pairOverlaySummary}
                     selected={pairSetActive}
                     onSelect={selectNode}
                   />
@@ -327,6 +422,7 @@ export function ConversationGraphView({
                       node={responseNode}
                       pair={pair}
                       annotationCount={annotationCountForNode(responseNode, pair)}
+                      overlaySummary={responseOverlaySummary ?? pairOverlaySummary}
                       selected={pairSetActive}
                       onSelect={selectNode}
                     />
@@ -343,7 +439,13 @@ export function ConversationGraphView({
   }
 
   return (
-    <div className="conversation-graph-view">
+    <div className={`conversation-graph-view ${compact ? "compact" : ""}`}>
+      {title ? (
+        <div className="graph-view-title">
+          <strong>{title}</strong>
+          {focusPair ? <span>focus pair {focusPair.sequence + 1}</span> : null}
+        </div>
+      ) : null}
       <div className="graph-overview">
         <div className="graph-stat">
           <strong>{graph.promptNodes.length}</strong>
@@ -367,9 +469,43 @@ export function ConversationGraphView({
         </div>
       </div>
 
-      <div className="graph-workspace">
+      {!hideOverlayControls ? (
+      <div className="graph-overlay-controls" aria-label="Graph overlay layers">
+        <button
+          className={`button quiet graph-overlay-master ${activeOverlayControls.enabled ? "active" : ""}`}
+          onClick={toggleOverlayEnabled}
+          type="button"
+        >
+          {activeOverlayControls.enabled ? <Eye size={15} /> : <EyeOff size={15} />}
+          {activeOverlayControls.enabled ? "Overlay on" : "Overlay off"}
+        </button>
+        <div className="graph-overlay-layer-list">
+          {graphOverlayLayerOrder.map((layer) => {
+            const count = overlayIndex.targetIdsByLayer[layer].length;
+            const active = activeOverlayControls.enabled && activeOverlayControls.layers[layer];
+
+            return (
+              <button
+                className={`graph-overlay-layer ${active ? "active" : ""}`}
+                disabled={!activeOverlayControls.enabled}
+                key={layer}
+                onClick={() => toggleOverlayLayer(layer)}
+                type="button"
+              >
+                <span className={`graph-overlay-dot overlay-layer-${layer}`} />
+                {graphOverlayLayerLabels[layer]}
+                <small>{count}</small>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      ) : null}
+
+      <div className={`graph-workspace ${hideDetailPanel ? "graph-workspace-compact" : ""}`}>
         <div className="graph-canvas">{renderDualGraph()}</div>
 
+        {!hideDetailPanel ? (
         <aside className="graph-detail-panel">
           <div>
             <p className="eyebrow">Selected Node</p>
@@ -384,6 +520,13 @@ export function ConversationGraphView({
                   <GitBranch size={13} /> breakpoint
                 </span>
               ) : null}
+            </div>
+          ) : null}
+          {selectedOverlaySummary ? (
+            <div className={`graph-overlay-summary ${selectedOverlaySummary.severity}`}>
+              <strong>{selectedOverlaySummary.label}</strong>
+              <span>{selectedOverlaySummary.layers.map((layer) => graphOverlayLayerLabels[layer]).join(" / ")}</span>
+              <small>confidence {Math.round(selectedOverlaySummary.confidence * 100)}%</small>
             </div>
           ) : null}
           {selectedTrace ? (
@@ -442,6 +585,7 @@ export function ConversationGraphView({
             <Workflow size={14} /> Graph is derived from the immutable trace. Edits happen through new prompts or replay branches.
           </p>
         </aside>
+        ) : null}
       </div>
     </div>
   );
