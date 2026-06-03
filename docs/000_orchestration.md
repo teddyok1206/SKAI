@@ -90,7 +90,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - conversation graph builder는 single trace pass와 sparse indexes로 생성된다.
 - 풀이 화면에는 `Chat / Graph` 탭이 있고, Graph 탭에서 3D dual graph, projection graph, sparse index를 볼 수 있다.
 - 3D Dual view는 row-lane table이 아니라 Prompt spine과 Response spine 사이의 ladder geometry로 표현한다. Status graph 자체는 별도 projection으로 유지하되, 3D Dual에서는 오른쪽 connector endpoint가 아니라 각 prompt-response local cell의 중심 상태 marker로 표시한다.
-- 3D Dual view에서 `R_i`는 `P_i`와 같은 높이의 chat bubble이 아니라 `P_i -> P_{i+1}` prompt transition edge의 dual node다. 따라서 `R_i`는 `P_i`와 `P_{i+1}`의 중점 높이에 놓인다. Dual relation은 사선 node-to-node shortcut이 아니라 horizontal ladder rung으로 표현한다: `P_i` node는 `R_{i-1}->R_i` response edge midpoint와 연결되고, `R_i` node는 `P_i->P_{i+1}` prompt edge midpoint로 왼쪽 방향 연결을 가진다. Status marker는 이 두 rung이 만드는 local rectangle의 중심에 놓이며, 직접 connector edge 없이 counterclockwise swirl로 P/R cell에서 업데이트된 상태임을 표시한다.
+- 3D Dual view에서 `R_i`는 `P_i`와 같은 높이의 chat bubble이 아니라 `P_i -> P_{i+1}` prompt transition edge의 dual node다. 따라서 `R_i`는 `P_i`와 `P_{i+1}`의 중점 높이에 놓인다. Dual relation은 사선 node-to-node shortcut이 아니라 horizontal ladder rung으로 표현한다: `P_i` node는 `R_{i-1}->R_i` response edge midpoint와 연결되고, `R_i` node는 `P_i->P_{i+1}` prompt edge midpoint로 왼쪽 방향 연결을 가진다. Status marker는 이 두 rung이 만드는 local rectangle의 중심에 놓이며, 직접 connector edge 없이 clockwise swirl로 P/R cell에서 업데이트된 상태임을 표시한다.
+- 3D Dual view의 active state는 same-index local set을 따른다. `P_i`, `R_i`, `S_i` 중 하나를 선택하면 같은 번호의 세 노드와 해당 local ladder rung만 활성화한다. 첫 row는 이전 response edge가 없으므로 `R_1` 위에 짧은 visual origin stub을 두고 `P_1` rung이 그 stub 시작점에 닿게 한다.
 - Prompt/Response/Status projection은 중복 edge card 목록이 아니라 long-exact-sequence처럼 이어지는 directed sequence path로 표현한다. Status projection은 Prompt/Response 노드를 반복하지 않고 `S1 -> S2 -> S3` status progression만 보여준다.
 - Graph 탭의 trace node에서 바로 breakpoint replay branch를 만들 수 있다.
 - 풀이 화면 sidebar에는 local attempts의 parent/child breakpoint lineage를 보는 Branch Tree explorer가 있다.
@@ -361,7 +362,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/064_dual_graph_precise_pair_parallelogram.md`: P/R 노드를 관통하지 않고 실제로 감싸는 평행사변형 좌표계로 3D Dual frame을 정밀 보정.
 - `docs/technical/plan/065_dual_graph_frame_slope_match.md`: P/R 연결 vector와 frame 위아래 변의 기울기를 더 명확히 맞추도록 3D Dual frame 좌표를 재보정.
 - `docs/technical/plan/066_dual_graph_ladder_geometry.md`: 063-065의 사선/평행사변형 표현을 supersede하고, dual graph를 P/R vertical spines와 horizontal ladder rungs로 재표현.
-- `docs/technical/plan/067_ladder_edge_presence_and_status_swirl.md`: ladder rung 존재 조건, R->P-edge leftward flow, centered status marker, counterclockwise status swirl을 반영.
+- `docs/technical/plan/067_ladder_edge_presence_and_status_swirl.md`: ladder rung 존재 조건, R->P-edge leftward flow, centered status marker, 초기 status swirl을 반영.
+- `docs/technical/plan/068_ladder_same_index_activation_and_origin_stub.md`: same-index P/R/S activation, clockwise status swirl, first-row R-origin visual stub을 반영.
 
 다음 plan 후보:
 

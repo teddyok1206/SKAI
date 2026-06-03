@@ -369,22 +369,18 @@ export function ConversationGraphView({
           const promptNode = nodeById.get(pair.promptNodeId);
           const statusNode = nodeById.get(pair.statusNodeId);
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
-          const selectedPromptSequence = selectedNode?.kind === "prompt" ? selectedNode.sequence : undefined;
-          const selectedResponseSequence = selectedNode?.kind === "response" ? selectedNode.sequence : undefined;
           const hasPromptNode = Boolean(promptNode && !promptNode.synthetic);
           const hasResponseNode = Boolean(responseNode && !responseNode.synthetic);
-          const hasPreviousResponseNode = graph.responseNodes.some((node) => node.sequence === pair.sequence - 1);
-          const hasNextPromptNode = graph.promptNodes.some((node) => node.sequence === pair.sequence + 1);
-          const topRungVisible = hasPromptNode && hasResponseNode && hasPreviousResponseNode;
+          const hasPreviousResponseNode = graph.responseNodes.some((node) => node.sequence === pair.sequence - 1 && !node.synthetic);
+          const hasNextPromptNode = graph.promptNodes.some((node) => node.sequence === pair.sequence + 1 && !node.synthetic);
+          const hasOriginStub = pair.sequence === 0 && hasPromptNode && hasResponseNode;
+          const topRungVisible = hasPromptNode && hasResponseNode && (hasOriginStub || hasPreviousResponseNode);
           const lowerRungVisible = hasPromptNode && hasResponseNode && hasNextPromptNode;
           const statusVisible = hasPromptNode && hasResponseNode;
-          const promptEdgeActive = selectedPromptSequence === pair.sequence || selectedPromptSequence === pair.sequence + 1;
-          const responseEdgeActive = selectedResponseSequence === pair.sequence || selectedResponseSequence === pair.sequence - 1;
-          const promptNodeActive = effectiveSelectedNodeId === promptNode?.id;
-          const responseNodeActive = effectiveSelectedNodeId === responseNode?.id;
-          const statusNodeActive = effectiveSelectedNodeId === statusNode?.id;
-          const topRungActive = topRungVisible && (promptNodeActive || responseEdgeActive);
-          const lowerRungActive = lowerRungVisible && (responseNodeActive || promptEdgeActive);
+          const selectedNodeSequence = selectedNode && !selectedNode.synthetic ? selectedNode.sequence : undefined;
+          const pairSetActive = selectedNodeSequence === pair.sequence;
+          const topRungActive = topRungVisible && pairSetActive;
+          const lowerRungActive = lowerRungVisible && pairSetActive;
           const ladderArrowId = `graph-ladder-arrow-${pair.sequence}`;
 
           return (
@@ -404,6 +400,7 @@ export function ConversationGraphView({
                     <path className="graph-ladder-arrowhead" d="M 0 0 L 8 4 L 0 8 z" />
                   </marker>
                 </defs>
+                {hasOriginStub ? <line className={`graph-ladder-origin-stub ${pairSetActive ? "active" : ""}`} x1="300" x2="300" y1="54" y2="130" /> : null}
                 {topRungVisible ? (
                   <line
                     className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
@@ -436,7 +433,7 @@ export function ConversationGraphView({
                 ) : null}
               </svg>
               {statusVisible ? (
-                <div className={`graph-status-cell-node ${statusNodeActive ? "active" : ""}`}>
+                <div className={`graph-status-cell-node ${pairSetActive ? "active" : ""}`}>
                   <svg aria-hidden="true" className="graph-status-swirl" viewBox="0 0 96 96">
                     <path className="graph-status-swirl-track" d="M69 23A32 32 0 1 0 78 58" />
                     <path className="graph-status-swirl-arrow" d="M71 14L68 27L82 24Z" />
@@ -445,7 +442,7 @@ export function ConversationGraphView({
                     node={statusNode}
                     pair={pair}
                     annotationCount={annotationCountForNode(statusNode, pair)}
-                    selected={statusNodeActive}
+                    selected={pairSetActive}
                     onSelect={selectNode}
                   />
                 </div>
@@ -457,7 +454,7 @@ export function ConversationGraphView({
                     node={promptNode}
                     pair={pair}
                     annotationCount={annotationCountForNode(promptNode, pair)}
-                    selected={effectiveSelectedNodeId === promptNode?.id}
+                    selected={pairSetActive}
                     onSelect={selectNode}
                   />
                 </div>
@@ -470,7 +467,7 @@ export function ConversationGraphView({
                       node={responseNode}
                       pair={pair}
                       annotationCount={annotationCountForNode(responseNode, pair)}
-                      selected={effectiveSelectedNodeId === responseNode.id}
+                      selected={pairSetActive}
                       onSelect={selectNode}
                     />
                   ) : (

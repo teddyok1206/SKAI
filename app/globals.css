@@ -2903,6 +2903,20 @@ h3 {
   stroke: color-mix(in srgb, var(--blue) 34%, var(--line));
 }
 
+.graph-ladder-origin-stub {
+  opacity: 0.64;
+  stroke: color-mix(in srgb, var(--blue) 30%, var(--line));
+  stroke-linecap: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.graph-ladder-origin-stub.active {
+  opacity: 1;
+  stroke: var(--blue);
+  stroke-width: 3;
+}
+
 .graph-ladder-rung.active {
   opacity: 1;
   stroke-width: 3;
@@ -2951,7 +2965,7 @@ h3 {
   overflow: visible;
   pointer-events: none;
   transform-origin: 50% 50%;
-  animation: graph-status-counterspin 1900ms linear infinite;
+  animation: graph-status-clockwise-spin 1900ms linear infinite;
 }
 
 .graph-status-swirl-track {
@@ -2971,13 +2985,13 @@ h3 {
   filter: drop-shadow(0 0 7px color-mix(in srgb, var(--gold) 48%, transparent));
 }
 
-@keyframes graph-status-counterspin {
+@keyframes graph-status-clockwise-spin {
   from {
     transform: rotate(0deg);
   }
 
   to {
-    transform: rotate(-360deg);
+    transform: rotate(360deg);
   }
 }
 
