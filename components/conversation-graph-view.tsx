@@ -364,7 +364,6 @@ export function ConversationGraphView({
         <div className="graph-dual-spine-head">
           <span>Prompt graph</span>
           <span>Response graph</span>
-          <span>Status graph</span>
         </div>
         {graph.pairs.map((pair) => {
           const promptNode = nodeById.get(pair.promptNodeId);
@@ -372,19 +371,25 @@ export function ConversationGraphView({
           const responseNode = pair.responseNodeId ? nodeById.get(pair.responseNodeId) : undefined;
           const selectedPromptSequence = selectedNode?.kind === "prompt" ? selectedNode.sequence : undefined;
           const selectedResponseSequence = selectedNode?.kind === "response" ? selectedNode.sequence : undefined;
+          const hasPromptNode = Boolean(promptNode && !promptNode.synthetic);
+          const hasResponseNode = Boolean(responseNode && !responseNode.synthetic);
+          const hasPreviousResponseNode = graph.responseNodes.some((node) => node.sequence === pair.sequence - 1);
+          const hasNextPromptNode = graph.promptNodes.some((node) => node.sequence === pair.sequence + 1);
+          const topRungVisible = hasPromptNode && hasResponseNode && hasPreviousResponseNode;
+          const lowerRungVisible = hasPromptNode && hasResponseNode && hasNextPromptNode;
+          const statusVisible = hasPromptNode && hasResponseNode;
           const promptEdgeActive = selectedPromptSequence === pair.sequence || selectedPromptSequence === pair.sequence + 1;
-          const responseEdgeActive = selectedResponseSequence === pair.sequence || selectedResponseSequence === pair.sequence + 1;
+          const responseEdgeActive = selectedResponseSequence === pair.sequence || selectedResponseSequence === pair.sequence - 1;
           const promptNodeActive = effectiveSelectedNodeId === promptNode?.id;
           const responseNodeActive = effectiveSelectedNodeId === responseNode?.id;
           const statusNodeActive = effectiveSelectedNodeId === statusNode?.id;
-          const topRungActive = promptNodeActive || responseEdgeActive;
-          const lowerRungActive = responseNodeActive || promptEdgeActive;
-          const statusRungActive = statusNodeActive || responseNodeActive;
+          const topRungActive = topRungVisible && (promptNodeActive || responseEdgeActive);
+          const lowerRungActive = lowerRungVisible && (responseNodeActive || promptEdgeActive);
           const ladderArrowId = `graph-ladder-arrow-${pair.sequence}`;
 
           return (
             <div className={`graph-dual-spine-row ${pair.isBreakpoint ? "breakpoint" : ""}`} key={pair.id}>
-              <svg aria-hidden="true" className="graph-dual-ladder" preserveAspectRatio="none" viewBox="0 0 600 220">
+              <svg aria-hidden="true" className="graph-dual-ladder" preserveAspectRatio="none" viewBox="0 0 400 220">
                 <defs>
                   <marker
                     id={ladderArrowId}
@@ -399,30 +404,26 @@ export function ConversationGraphView({
                     <path className="graph-ladder-arrowhead" d="M 0 0 L 8 4 L 0 8 z" />
                   </marker>
                 </defs>
-                <line
-                  className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
-                  markerEnd={`url(#${ladderArrowId})`}
-                  x1="100"
-                  x2="300"
-                  y1="54"
-                  y2="54"
-                />
-                <line
-                  className={`graph-ladder-rung edge-to-node ${lowerRungActive ? "active" : ""}`}
-                  markerEnd={`url(#${ladderArrowId})`}
-                  x1="100"
-                  x2="300"
-                  y1="164"
-                  y2="164"
-                />
-                <line
-                  className={`graph-ladder-rung status-binding ${statusRungActive ? "active" : ""}`}
-                  markerEnd={`url(#${ladderArrowId})`}
-                  x1="300"
-                  x2="500"
-                  y1="164"
-                  y2="164"
-                />
+                {topRungVisible ? (
+                  <line
+                    className={`graph-ladder-rung node-to-edge ${topRungActive ? "active" : ""}`}
+                    markerEnd={`url(#${ladderArrowId})`}
+                    x1="100"
+                    x2="300"
+                    y1="54"
+                    y2="54"
+                  />
+                ) : null}
+                {lowerRungVisible ? (
+                  <line
+                    className={`graph-ladder-rung response-to-prompt-edge ${lowerRungActive ? "active" : ""}`}
+                    markerEnd={`url(#${ladderArrowId})`}
+                    x1="300"
+                    x2="100"
+                    y1="164"
+                    y2="164"
+                  />
+                ) : null}
                 {topRungActive ? (
                   <circle className="graph-ladder-packet" r="3">
                     <animateMotion dur="1500ms" path="M100 54 H300" repeatCount="indefinite" />
@@ -430,15 +431,25 @@ export function ConversationGraphView({
                 ) : null}
                 {lowerRungActive ? (
                   <circle className="graph-ladder-packet secondary" r="3">
-                    <animateMotion dur="1350ms" path="M100 164 H300" repeatCount="indefinite" />
-                  </circle>
-                ) : null}
-                {statusRungActive ? (
-                  <circle className="graph-ladder-packet status" r="3">
-                    <animateMotion dur="1250ms" path="M300 164 H500" repeatCount="indefinite" />
+                    <animateMotion dur="1350ms" path="M300 164 H100" repeatCount="indefinite" />
                   </circle>
                 ) : null}
               </svg>
+              {statusVisible ? (
+                <div className={`graph-status-cell-node ${statusNodeActive ? "active" : ""}`}>
+                  <svg aria-hidden="true" className="graph-status-swirl" viewBox="0 0 96 96">
+                    <path className="graph-status-swirl-track" d="M69 23A32 32 0 1 0 78 58" />
+                    <path className="graph-status-swirl-arrow" d="M71 14L68 27L82 24Z" />
+                  </svg>
+                  <GraphNodeButton
+                    node={statusNode}
+                    pair={pair}
+                    annotationCount={annotationCountForNode(statusNode, pair)}
+                    selected={statusNodeActive}
+                    onSelect={selectNode}
+                  />
+                </div>
+              ) : null}
 
               <div className="graph-spine-slot prompt-spine">
                 <div className="graph-node-slot">
@@ -465,18 +476,6 @@ export function ConversationGraphView({
                   ) : (
                     <div className="graph-node missing">wait</div>
                   )}
-                </div>
-              </div>
-
-              <div className="graph-spine-slot status-spine">
-                <div className="graph-node-slot">
-                  <GraphNodeButton
-                    node={statusNode}
-                    pair={pair}
-                    annotationCount={annotationCountForNode(statusNode, pair)}
-                    selected={effectiveSelectedNodeId === statusNode?.id}
-                    onSelect={selectNode}
-                  />
                 </div>
               </div>
             </div>
