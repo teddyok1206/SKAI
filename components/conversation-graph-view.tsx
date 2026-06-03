@@ -155,24 +155,65 @@ function GraphNodeButton({
   );
 }
 
-function EdgeList({ edges }: { edges: ConversationGraphEdge[] }) {
+function EdgeList({
+  edges,
+  nodeById,
+  selectedNodeId,
+  onSelect,
+}: {
+  edges: ConversationGraphEdge[];
+  nodeById: Map<string, ConversationGraphNode>;
+  selectedNodeId?: string | null;
+  onSelect: (nodeId: string) => void;
+}) {
   if (edges.length === 0) {
     return <p className="muted">No edges in this projection yet.</p>;
   }
 
   return (
     <div className="graph-edge-list">
-      {edges.map((edge) => (
-        <div className="graph-edge-chip" key={edge.id}>
-          <Route size={14} />
-          <em>source</em>
-          <span>{edge.sourceNodeId}</span>
-          <strong>→</strong>
-          <em>target</em>
-          <span>{edge.targetNodeId}</span>
-          <small>{edge.label}</small>
-        </div>
-      ))}
+      {edges.map((edge) => {
+        const source = nodeById.get(edge.sourceNodeId);
+        const target = nodeById.get(edge.targetNodeId);
+
+        return (
+          <article
+            className={`graph-edge-path ${selectedNodeId === edge.sourceNodeId || selectedNodeId === edge.targetNodeId ? "active" : ""}`}
+            key={edge.id}
+          >
+            {source ? (
+              <button
+                className={`graph-edge-node-ref ${source.kind}`}
+                onClick={() => onSelect(source.id)}
+                title={source.summary}
+                type="button"
+              >
+                <strong>{nodeToken(source)}</strong>
+                <span>{fixedNodeCaption(source)}</span>
+              </button>
+            ) : (
+              <span className="graph-edge-node-ref missing">{edge.sourceNodeId}</span>
+            )}
+            <span className="graph-edge-vector" aria-hidden="true">
+              <Route size={14} />
+            </span>
+            {target ? (
+              <button
+                className={`graph-edge-node-ref ${target.kind}`}
+                onClick={() => onSelect(target.id)}
+                title={target.summary}
+                type="button"
+              >
+                <strong>{nodeToken(target)}</strong>
+                <span>{fixedNodeCaption(target)}</span>
+              </button>
+            ) : (
+              <span className="graph-edge-node-ref missing">{edge.targetNodeId}</span>
+            )}
+            <small>{edge.label}</small>
+          </article>
+        );
+      })}
     </div>
   );
 }
@@ -300,9 +341,6 @@ export function ConversationGraphView({
               </div>
               <div className="graph-lane-link">
                 <span aria-hidden="true" className="graph-connector" />
-                <small>prompt out</small>
-                <span className={statusClass(pair)}>{pair.status}</span>
-                <small>status in</small>
               </div>
               <div className="graph-node-slot">
                 <GraphNodeButton
@@ -315,7 +353,6 @@ export function ConversationGraphView({
               </div>
               <div className="graph-lane-link response-link">
                 <span aria-hidden="true" className="graph-connector" />
-                <small>response in</small>
               </div>
               <div className="graph-node-slot">
                 {responseNode ? (
@@ -378,7 +415,7 @@ export function ConversationGraphView({
             />
           ))}
         </div>
-        <EdgeList edges={edges} />
+        <EdgeList edges={edges} nodeById={nodeById} selectedNodeId={effectiveSelectedNodeId} onSelect={selectNode} />
       </div>
     );
   }

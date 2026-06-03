@@ -58,6 +58,29 @@ Remove visible model defaulting from the solving experience and tighten the next
 
 ## Implementation Steps
 
+### 3-Hour Execution Slices
+
+Slice A: Explicit parallel model choice.
+
+- Remove visible model defaults from the pre-attempt solver.
+- Require one explicit model choice before attempt creation.
+- Remove backend `/api/chat` provider/model defaults so malformed direct calls do not silently become Gemini.
+- Keep provider/model fixed once the attempt starts or an existing attempt is restored.
+
+Slice B: Message copy and Markdown rendering.
+
+- Add a per-assistant-response copy button that copies the whole raw assistant message.
+- Keep copy controls low-emphasis and near the message footer.
+- Route AI responses through the shared Markdown renderer and normalize escaped emphasis markers such as `\*\*bold\*\*`.
+
+Slice C: Directed graph readability.
+
+- Make projection graph edges visually directed from source node to target node.
+- Remove edge-adjacent text pills from the 3D dual graph.
+- Constrain 3D dual graph rows so they do not push outside the graph container.
+
+### Detailed Steps
+
 1. Replace solving setup's initial `modelOptionId` with an unselected state.
 2. Disable `Start attempt` until both solving mode and model are explicitly selected.
 3. Update model cards so none has default/recommended wording or initial active styling.
@@ -94,6 +117,36 @@ Remove visible model defaulting from the solving experience and tighten the next
   - Prompt/response graph edges show direction.
   - 3D dual graph rows stay inside the container.
   - 3D dual graph edge text boxes are gone.
+
+## Implementation Result
+
+- Slice A completed:
+  - `modelOptionId` now starts as `null`; no model card is selected before the user acts.
+  - `Start attempt` is disabled until a model is explicitly selected.
+  - `newAttempt` requires a `ModelOption`; there is no implicit model option fallback for new attempts.
+  - Existing/restored attempts rehydrate their recorded provider/model state.
+  - `/api/chat` now requires explicit `provider` and `model` in the request body.
+  - `lib/model-options.ts` no longer exports a default model option or returns Gemini as a lookup fallback.
+- Slice B completed:
+  - Assistant messages now expose a low-emphasis `Copy answer` footer button.
+  - The button copies the raw full assistant message for that trace event.
+  - `MarkdownContent` normalizes escaped emphasis markers before rendering and styles rendered `strong` text.
+- Slice C completed:
+  - Projection graph edges render as source node -> directed vector -> target node paths.
+  - 3D dual graph lane links no longer show edge-adjacent text/status pills.
+  - 3D lane columns and node sizing were tightened to reduce horizontal overflow.
+
+## Verification Result
+
+- `conda run -n SKAI npm run typecheck`: passed.
+- `git diff --check`: passed.
+- `conda run -n SKAI npm run lint`: passed.
+- `conda run -n SKAI npm run build`: passed.
+- Local production smoke:
+  - `GET /`: returned `200`.
+  - `POST /api/chat` without `provider`/`model`: returned `400` with explicit field errors for both fields.
+  - Smoke server was stopped after the check.
+- Browser visual smoke was not run because Playwright/browser automation is not installed in this repo.
 
 ## Risks
 

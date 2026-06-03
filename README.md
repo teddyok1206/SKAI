@@ -111,13 +111,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ### Live Model Provider
 
-The current default live baseline is Gemini Flash-Lite when `GEMINI_API_KEY` is configured. The problem solver, shared model fallback, and raw `/api/chat` fallback all default to Gemini. OpenAI `gpt-4.1-nano` is available as an additional low-cost comparison option when `OPENAI_API_KEY` is configured. Mock remains available for zero-key UI demos.
+SKAI does not present a default solving model. Configure one or more provider keys, then the user explicitly chooses exactly one model before starting an attempt. Gemini Flash-Lite and OpenAI `gpt-4.1-nano` are the current low-cost live options. Mock remains available for zero-key UI demos.
 
 For Gemini:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=gemini
-SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash-lite
 ```
@@ -133,16 +131,12 @@ OPENAI_MODEL=gpt-4.1-nano
 For Groq:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=groq
-SKAI_DEFAULT_MODEL=llama-3.3-70b-versatile
 GROQ_API_KEY=
 ```
 
 For xAI Grok:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=xai
-SKAI_DEFAULT_MODEL=grok-4-fast
 XAI_API_KEY=
 ```
 

@@ -211,18 +211,16 @@ These are allowed to be visible to the browser because they are `NEXT_PUBLIC_`.
 
 ### Required Provider Config
 
-Use one live provider first. Recommended default deployment:
+Configure at least one live provider key. SKAI does not present a default solving model; users explicitly choose exactly one model before starting an attempt.
+
+Recommended first live provider:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=gemini
-SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
 GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
 Mark `GEMINI_API_KEY` as sensitive.
-
-With this config, SKAI's solver UI, model option fallback, and raw `/api/chat` fallback all start from Gemini. OpenAI can still be configured below as a selectable comparison engine.
 
 Add OpenAI as an optional low-cost comparison provider:
 
@@ -240,12 +238,7 @@ If using the generated local import helper, copy values from:
 .env.vercel.import
 ```
 
-That file is ignored by git and includes Gemini default values plus OpenAI optional values. Keep these values if Gemini should remain the default:
-
-```bash
-SKAI_DEFAULT_PROVIDER=gemini
-SKAI_DEFAULT_MODEL=gemini-2.5-flash-lite
-```
+That file is ignored by git. Do not add `SKAI_DEFAULT_PROVIDER` or `SKAI_DEFAULT_MODEL`; those variables are obsolete for the solving UI.
 
 You do not need to set `OPENAI_BASE_URL` or `GEMINI_BASE_URL` unless changing adapters. The code defaults to:
 
@@ -254,29 +247,15 @@ OpenAI: https://api.openai.com/v1
 Gemini: https://generativelanguage.googleapis.com/v1beta/openai
 ```
 
-Alternative OpenAI-as-default config:
-
-```bash
-SKAI_DEFAULT_PROVIDER=openai
-SKAI_DEFAULT_MODEL=gpt-4.1-nano
-OPENAI_API_KEY=YOUR_OPENAI_API_KEY
-OPENAI_BASE_URL=https://api.openai.com/v1
-OPENAI_MODEL=gpt-4.1-nano
-```
-
 Alternative Groq config:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=groq
-SKAI_DEFAULT_MODEL=llama-3.3-70b-versatile
 GROQ_API_KEY=YOUR_GROQ_API_KEY
 ```
 
 Alternative xAI config:
 
 ```bash
-SKAI_DEFAULT_PROVIDER=xai
-SKAI_DEFAULT_MODEL=grok-4-fast
 XAI_API_KEY=YOUR_XAI_API_KEY
 ```
 

@@ -5,6 +5,8 @@ import type { DragEvent } from "react";
 import Link from "next/link";
 import {
   BookOpen,
+  Check,
+  Copy,
   FilePlus2,
   GitBranch,
   MessageSquare,
@@ -24,7 +26,7 @@ import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } f
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
-import { getDefaultModelOption, getModelOption, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
+import { getModelOption, getModelOptionByProviderModel, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
 import { providerUiProfiles } from "@/lib/provider-ui";
 import { getSolvingMode, solvingModes } from "@/lib/solving-modes";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
@@ -66,7 +68,7 @@ function formatKrw(value: number) {
 
 function newAttempt(
   problem: Problem,
-  modelOption: ModelOption = getDefaultModelOption(),
+  modelOption: ModelOption,
   solvingModeId: SolvingModeId = "single_model",
 ): Attempt {
   const now = new Date().toISOString();
@@ -117,12 +119,11 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
-  const defaultModelOption = getDefaultModelOption();
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
-  const [modelOptionId, setModelOptionId] = useState<ModelOptionId>(defaultModelOption.id);
-  const [provider, setProvider] = useState<ProviderId>(defaultModelOption.provider);
-  const [model, setModel] = useState(defaultModelOption.model);
+  const [modelOptionId, setModelOptionId] = useState<ModelOptionId | null>(null);
+  const [provider, setProvider] = useState<ProviderId | null>(null);
+  const [model, setModel] = useState("");
   const [input, setInput] = useState("");
   const [finalAnswer, setFinalAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -133,16 +134,17 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? "");
   const [isDraggingAttachment, setIsDraggingAttachment] = useState(false);
   const [attachmentNotice, setAttachmentNotice] = useState("");
+  const [copiedTraceEventId, setCopiedTraceEventId] = useState("");
   const [workspaceTab, setWorkspaceTab] = useState<"chat" | "graph">("chat");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedSolvingMode = useMemo(() => getSolvingMode(solvingModeId), [solvingModeId]);
-  const selectedModelOption = useMemo(() => getModelOption(modelOptionId), [modelOptionId]);
+  const selectedModelOption = useMemo(() => (modelOptionId ? getModelOption(modelOptionId) : null), [modelOptionId]);
   const availableModelOptions = useMemo(
     () => modelOptions.filter((option) => problem.allowedProviders.includes(option.provider)),
     [problem.allowedProviders],
   );
-  const providerProfile = providerUiProfiles[provider];
+  const providerProfile = provider ? providerUiProfiles[provider] : null;
   const problemAttempts = getAttempts().filter((item) => item.problemId === problem.id);
   const branchTree = buildBranchTree(problemAttempts, problem.id);
   const leaderboard = problemAttempts
@@ -228,19 +230,39 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
   function updateAttempt(next: Attempt) {
     setAttempt(next);
+    setProvider(next.provider);
+    setModel(next.model);
     saveAttempt(next);
     void syncAttemptToSupabase(next, problem);
   }
 
+  function restoreAttemptRuntime(next: Attempt) {
+    const option = getModelOptionByProviderModel(next.provider, next.model);
+    setProvider(next.provider);
+    setModel(next.model);
+    setModelOptionId(option?.id ?? null);
+  }
+
   function handleModelOptionChange(nextModelOptionId: ModelOptionId) {
     const option = getModelOption(nextModelOptionId);
+    if (!option) {
+      return;
+    }
+
     setModelOptionId(option.id);
     setProvider(option.provider);
     setModel(option.model);
   }
 
   function startAttempt() {
+    if (!selectedModelOption) {
+      setAttachmentNotice("풀이를 시작하려면 사용할 모델을 먼저 선택해야 합니다.");
+      return;
+    }
+
     const next = newAttempt(problem, selectedModelOption, selectedSolvingMode.id);
+    setProvider(selectedModelOption.provider);
+    setModel(selectedModelOption.model);
     setAttempt(next);
     setFinalAnswer("");
     setInput("");
@@ -323,6 +345,23 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     });
   }
 
+  async function copyTraceEventContent(event: TraceEvent) {
+    if (!navigator.clipboard) {
+      setAttachmentNotice("이 브라우저에서는 clipboard API를 사용할 수 없습니다.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(event.content);
+      setCopiedTraceEventId(event.id);
+      window.setTimeout(() => {
+        setCopiedTraceEventId((current) => (current === event.id ? "" : current));
+      }, 1600);
+    } catch {
+      setAttachmentNotice("답변을 복사하지 못했습니다. 브라우저 권한을 확인해 주세요.");
+    }
+  }
+
   async function addFiles(files: FileList | File[]) {
     const incomingFiles = Array.from(files);
 
@@ -370,7 +409,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   }
 
   async function sendMessage() {
-    if (!attempt || !input.trim() || isLoading) {
+    if (!attempt || !provider || !model || !input.trim() || isLoading) {
       return;
     }
 
@@ -590,6 +629,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
   function restart() {
     setAttempt(null);
+    setProvider(null);
+    setModel("");
+    setModelOptionId(null);
     setFinalAnswer("");
     setInput("");
     setShareUrl("");
@@ -604,6 +646,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
     const saved = getAttempt(attempt.id);
     if (saved) {
+      restoreAttemptRuntime(saved);
       setAttempt(saved);
       setFinalAnswer(saved.finalAnswer ?? "");
     }
@@ -617,6 +660,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
+    restoreAttemptRuntime(saved);
     setAttempt(saved);
     setFinalAnswer(saved.finalAnswer ?? "");
     setShareUrl(saved.publishedAt ? `${window.location.origin}/share/${saved.id}` : "");
@@ -671,7 +715,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   if (!attempt) {
     return (
       <div className="pre-attempt-layout">
-        <section className="panel pre-attempt-panel provider-shell" data-provider={provider}>
+        <section className="panel pre-attempt-panel provider-shell" data-provider={provider ?? "unselected"}>
           <div className="panel-header">
             <p className="eyebrow">풀이 설정</p>
             <h2>{problem.title}</h2>
@@ -726,13 +770,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <div className="pre-attempt-selected">
               <div>
                 <strong>
-                  {selectedSolvingMode.shortLabel} · {selectedModelOption.shortLabel}
+                  {selectedSolvingMode.shortLabel} · {selectedModelOption ? selectedModelOption.shortLabel : "모델 선택 필요"}
                 </strong>
                 <p className="muted">
-                  선택한 모드는 평가 렌즈이고, 선택한 모델은 실행 엔진입니다. 이 attempt에서는 {providerUiProfiles[provider].label} · {model}로 고정됩니다.
+                  {selectedModelOption
+                    ? `선택한 모드는 평가 렌즈이고, 선택한 모델은 실행 엔진입니다. 이 attempt에서는 ${providerUiProfiles[selectedModelOption.provider].label} · ${selectedModelOption.model}로 고정됩니다.`
+                    : "모델은 프로그래밍 언어처럼 명시적으로 고르는 실행 엔진입니다. 하나를 선택해야 풀이를 시작할 수 있습니다."}
                 </p>
               </div>
-              <button className="button primary" onClick={startAttempt} type="button">
+              <button className="button primary" disabled={!selectedModelOption} onClick={startAttempt} type="button">
                 <Play size={16} /> 풀이 시작
               </button>
             </div>
@@ -971,7 +1017,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <span className="lock-dot" aria-hidden="true" />
             <strong>{activeSolvingMode.shortLabel}</strong>
             <span className="environment-meta">
-              {providerProfile.label} · {model}
+              {providerProfile?.label ?? attempt.provider} · {model}
             </span>
           </div>
           {attempt.branch ? (
@@ -997,7 +1043,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             ) : (
               attempt.trace.map((event, index) => (
                 <article className={`message ${event.role}`} key={event.id}>
-                  <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile.label}`}</strong>
+                  <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile?.label ?? "Model"}`}</strong>
                   {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
                     <span className="trace-warning breakpoint">
                       <GitBranch size={14} /> breakpoint
@@ -1015,6 +1061,17 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                     </div>
                   ) : null}
                   <div className="actions">
+                    {event.role === "assistant" ? (
+                      <button
+                        className="button quiet message-copy-button"
+                        onClick={() => void copyTraceEventContent(event)}
+                        title="이 AI 답변 전체 복사"
+                        type="button"
+                      >
+                        {copiedTraceEventId === event.id ? <Check size={15} /> : <Copy size={15} />}
+                        {copiedTraceEventId === event.id ? "Copied" : "Copy answer"}
+                      </button>
+                    ) : null}
                     <button className="button" onClick={() => branchFrom(index)} title="이 지점에서 replay branch 생성">
                       <GitBranch size={15} /> Branch
                     </button>

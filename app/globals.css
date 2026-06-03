@@ -1487,6 +1487,13 @@ h3 {
   --provider-surface: var(--surface);
 }
 
+.provider-shell[data-provider="unselected"] {
+  --provider-accent: #626975;
+  --provider-accent-strong: #30343b;
+  --provider-soft: #f1f3f5;
+  --provider-surface: var(--surface);
+}
+
 .provider-shell[data-provider="openai"] {
   --provider-accent: #30343b;
   --provider-accent-strong: #171a1f;
@@ -1797,6 +1804,11 @@ h3 {
   text-underline-offset: 3px;
 }
 
+.markdown-content strong {
+  color: var(--provider-accent-strong, var(--accent-strong));
+  font-weight: 900;
+}
+
 .markdown-content code {
   border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 18%, var(--line));
   border-radius: 6px;
@@ -2003,6 +2015,10 @@ h3 {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+}
+
+.message-copy-button {
+  min-width: 118px;
 }
 
 .report-grid {
@@ -2503,6 +2519,7 @@ h3 {
 
 .graph-canvas,
 .graph-detail-panel {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -2518,15 +2535,19 @@ h3 {
 
 .graph-lanes {
   display: grid;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   gap: 10px;
 }
 
 .graph-lane-head,
 .graph-lane-row {
   display: grid;
-  grid-template-columns: 42px minmax(78px, 1fr) minmax(96px, 136px) minmax(78px, 1fr) minmax(72px, 96px) minmax(78px, 1fr);
-  gap: 8px;
+  grid-template-columns: 34px minmax(58px, 0.9fr) minmax(34px, 54px) minmax(58px, 0.9fr) minmax(34px, 54px) minmax(58px, 0.9fr);
+  gap: 6px;
   align-items: center;
+  min-width: 0;
 }
 
 .graph-lane-head {
@@ -2549,6 +2570,7 @@ h3 {
 }
 
 .graph-lane-row {
+  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 14%, var(--line));
   border-radius: 8px;
   background:
@@ -2569,6 +2591,7 @@ h3 {
   position: relative;
   display: flex;
   min-width: 0;
+  min-height: 72px;
   align-items: center;
   justify-content: center;
   color: var(--muted);
@@ -2607,26 +2630,6 @@ h3 {
   opacity: 0.72;
 }
 
-.graph-lane-link small {
-  position: relative;
-  z-index: 1;
-  max-width: 76px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface);
-  padding: 2px 6px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.graph-lane-link .graph-status {
-  position: absolute;
-  z-index: 2;
-  top: calc(50% + 13px);
-  max-width: 96px;
-}
-
 .graph-connector {
   position: absolute;
   right: 0;
@@ -2656,8 +2659,9 @@ h3 {
 .graph-node {
   position: relative;
   display: grid;
-  width: 72px;
-  min-height: 72px;
+  width: min(68px, 100%);
+  aspect-ratio: 1;
+  min-height: 0;
   align-content: center;
   justify-items: center;
   gap: 3px;
@@ -2795,6 +2799,125 @@ h3 {
 .graph-edge-list {
   display: grid;
   gap: 7px;
+}
+
+.graph-edge-path {
+  display: grid;
+  grid-template-columns: minmax(84px, 1fr) minmax(56px, 96px) minmax(84px, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 8px;
+}
+
+.graph-edge-path.active {
+  border-color: color-mix(in srgb, var(--provider-accent, var(--accent)) 30%, var(--line));
+  background: color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 46%, #fff);
+}
+
+.graph-edge-path > small {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graph-edge-node-ref {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 16%, var(--line));
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.graph-edge-node-ref strong {
+  display: grid;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 58%, #fff);
+  color: var(--provider-accent-strong, var(--accent-strong));
+  font-size: 11px;
+  line-height: 1;
+}
+
+.graph-edge-node-ref span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.graph-edge-node-ref.prompt strong {
+  background: color-mix(in srgb, var(--provider-soft, var(--accent-soft)) 72%, #fff);
+}
+
+.graph-edge-node-ref.response strong {
+  background: color-mix(in srgb, var(--blue) 12%, #fff);
+}
+
+.graph-edge-node-ref.task_status strong {
+  background: color-mix(in srgb, var(--gold-soft) 64%, #fff);
+}
+
+.graph-edge-node-ref.missing {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.graph-edge-vector {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  color: var(--provider-accent-strong, var(--accent-strong));
+}
+
+.graph-edge-vector::before {
+  position: absolute;
+  right: 4px;
+  left: 4px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--provider-accent, var(--accent)) 34%, var(--line));
+  content: "";
+}
+
+.graph-edge-vector::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  border-top: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 62%, var(--line));
+  border-right: 3px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 62%, var(--line));
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.graph-edge-vector svg {
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  background: var(--evidence-bg);
 }
 
 .graph-edge-chip {
@@ -3703,6 +3826,14 @@ summary {
 
   .graph-lane-row {
     grid-template-columns: 1fr;
+  }
+
+  .graph-edge-path {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .graph-edge-vector {
+    justify-self: stretch;
   }
 
   h1 {

@@ -1,7 +1,6 @@
 import type { ProviderId } from "@/lib/types";
 
 export type ModelOptionId = "skai-mock" | "openai-gpt-4-1-nano" | "gemini-flash-lite" | "groq-llama" | "xai-grok-fast";
-export const defaultModelOptionId: ModelOptionId = "gemini-flash-lite";
 
 export interface ModelOption {
   id: ModelOptionId;
@@ -61,14 +60,10 @@ export const modelOptions: ModelOption[] = [
   },
 ];
 
-export function getModelOption(id: ModelOptionId): ModelOption {
-  return modelOptions.find((option) => option.id === id) ?? getDefaultModelOption();
+export function getModelOption(id: ModelOptionId): ModelOption | undefined {
+  return modelOptions.find((option) => option.id === id);
 }
 
-export function getModelOptionByProviderModel(provider: ProviderId, model: string): ModelOption {
-  return modelOptions.find((option) => option.provider === provider && option.model === model) ?? getDefaultModelOption();
-}
-
-export function getDefaultModelOption(): ModelOption {
-  return modelOptions.find((option) => option.id === defaultModelOptionId) ?? modelOptions[0];
+export function getModelOptionByProviderModel(provider: ProviderId, model: string): ModelOption | undefined {
+  return modelOptions.find((option) => option.provider === provider && option.model === model);
 }

@@ -1,5 +1,7 @@
 # 057 Gemini Default OpenAI Optional
 
+Status: Superseded by `058_explicit_model_choice_message_copy_and_graph_visual_fix.md` and TDR-087. This document records the short-lived Gemini-default transition; the current product policy is explicit parallel model choice with no visible/default solving model.
+
 ## Goal
 
 Keep Gemini Flash-Lite as the default solving model everywhere, while keeping OpenAI `gpt-4.1-nano` available as an optional low-cost provider.

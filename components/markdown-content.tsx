@@ -9,7 +9,17 @@ interface MarkdownContentProps {
   content: string;
 }
 
+function normalizeMarkdown(content: string) {
+  return content
+    .replace(/\\\*\\\*/g, "**")
+    .replace(/\\_\\_/g, "__")
+    .replace(/\\\*(?=\S)/g, "*")
+    .replace(/(\S)\\\*/g, "$1*");
+}
+
 export function MarkdownContent({ content }: MarkdownContentProps) {
+  const normalizedContent = normalizeMarkdown(content);
+
   return (
     <div className="markdown-content">
       <ReactMarkdown
@@ -28,7 +38,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           ),
         }}
       >
-        {content}
+        {normalizedContent}
       </ReactMarkdown>
     </div>
   );
