@@ -2775,7 +2775,8 @@ h3 {
   display: grid;
   min-width: 0;
   max-width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid color-mix(in srgb, var(--provider-accent, var(--accent)) 14%, var(--line));
   border-radius: 8px;
   background:
@@ -2792,6 +2793,11 @@ h3 {
   grid-template-columns: minmax(84px, 1fr) minmax(84px, 1fr) minmax(84px, 1fr);
   gap: 10px;
   align-items: center;
+  min-width: 540px;
+  width: max(100%, 540px);
+}
+
+.graph-spine-slot {
   min-width: 0;
 }
 
@@ -4130,35 +4136,35 @@ summary {
   }
 
   .graph-dual-spine-head {
-    display: none;
+    display: grid;
   }
 
   .graph-dual-spine-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 6px;
-    padding: 10px 0;
+    grid-template-columns: minmax(84px, 1fr) minmax(84px, 1fr) minmax(84px, 1fr);
+    gap: 10px;
+    padding: 0;
   }
 
   .graph-spine-slot {
-    min-height: 78px;
+    min-height: 94px;
   }
 
-  .graph-spine-slot::before,
-  .graph-spine-slot::after {
-    display: none;
+  .graph-dual-spine-row:not(:last-child) .graph-spine-slot::before,
+  .graph-dual-spine-row:not(:last-child) .graph-spine-slot::after {
+    display: block;
   }
 
   .response-spine {
-    transform: none;
+    transform: translateY(12px);
   }
 
   .status-spine {
-    transform: none;
+    transform: translateY(6px);
   }
 
   .graph-pair-frame,
   .graph-pr-link {
-    display: none;
+    display: block;
   }
 
   .graph-status-bridge {

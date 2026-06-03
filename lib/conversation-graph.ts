@@ -140,6 +140,7 @@ export function buildConversationGraph(
   let promptSequence = 0;
   let responseSequence = 0;
   let lastResponseNodeId = `response-origin:${attemptId}`;
+  let lastStatusNodeId = "";
   let pendingPrompt:
     | {
         event: TraceEvent;
@@ -248,30 +249,23 @@ export function buildConversationGraph(
         label: compact(promptEvent.content, 80),
         sequence,
       });
+    }
+
+    if (lastStatusNodeId) {
       statusEdges.push({
-        id: edgeId("status-edge", pairId, "status-response"),
+        id: edgeId("status-edge", pairId, "status-progression"),
         projection: "status_layer",
-        sourceNodeId: statusNodeId,
-        targetNodeId: responseNodeId,
-        traceEventId: responseEvent.id,
+        sourceNodeId: lastStatusNodeId,
+        targetNodeId: statusNodeId,
+        traceEventId: promptEvent.id,
         pairId,
         dualNodeId: promptNodeId,
-        label: "status -> response",
+        label: "status progression",
         sequence,
       });
     }
 
-    statusEdges.push({
-      id: edgeId("status-edge", pairId, "prompt-status"),
-      projection: "status_layer",
-      sourceNodeId: promptNodeId,
-      targetNodeId: statusNodeId,
-      traceEventId: promptEvent.id,
-      pairId,
-      dualNodeId: responseNodeId,
-      label: "prompt -> status",
-      sequence,
-    });
+    lastStatusNodeId = statusNodeId;
   }
 
   // Single-pass pairing: a prompt is finalized when the next prompt appears or the trace ends.
