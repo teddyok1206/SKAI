@@ -1,0 +1,592 @@
+[
+  {
+    "key": "home.hero.line1",
+    "domain": "brand",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "불꽃은 주어졌습니다.",
+      "en": "The fire has been given."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "210a3052c9c5032bec1fb4d49258e63a517f30e0b2d97493e0c4bce73b427e71",
+    "updatedAt": "2026-06-05T00:00:00.000Z",
+    "notes": "Official philosophy copy. Rewrite per language, do not literal-translate."
+  },
+  {
+    "key": "home.hero.line2",
+    "domain": "brand",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이제 당신의 장작을 넣을 차례입니다.",
+      "en": "Now bring your own fuel."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4b1a094b95224fefb33c4d3e2e0a0da2b26af989275de6ee30b047e2be2b6b47",
+    "updatedAt": "2026-06-05T00:00:00.000Z",
+    "notes": "Official philosophy copy. Rewrite per language, do not literal-translate."
+  },
+  {
+    "key": "home.cta.firstProblem",
+    "domain": "navigation",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첫 문제 풀기",
+      "en": "Start first problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c80b8211f410b550c904b96e897f5af4eae828534b88c753a8954eb9ebf0b961",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "home.cta.viewProblems",
+    "domain": "navigation",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 보기",
+      "en": "Browse problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc770cad0ef961bff5c330101b9a6f7216db3e6a5de883a8ddf0dc009c1981a8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "nav.problems",
+    "domain": "navigation",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Problems",
+      "en": "Problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bde2ae68398a418ba2f7755904afd07bebdfa1fabf1b47d6a086146b0d679a8a",
+    "updatedAt": "2026-06-05T00:00:00.000Z",
+    "notes": "Keep product navigation short for now."
+  },
+  {
+    "key": "nav.admin",
+    "domain": "navigation",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Admin",
+      "en": "Admin"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "937bb1b47a2504a9f5f96579713e86f4d31ccbd2a8b00224c076d34ccb205b84",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.googleSignIn",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Google"
+    ],
+    "values": {
+      "ko": "Google 로그인",
+      "en": "Sign in with Google"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7542515f47a95bf9f35825803c46376ffa511f4d851b2c694d4cffbaf1039d4e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.localDemo",
+    "domain": "auth",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local demo",
+      "en": "Local demo"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8a625a4a12bb47c08a0af3a398e21828a308c3cc00028198154fa969868d1ed4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.eyebrow",
+    "domain": "problem_browser",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Problems",
+      "en": "Problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bde2ae68398a418ba2f7755904afd07bebdfa1fabf1b47d6a086146b0d679a8a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.title",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "오늘 풀 수 있는 문제",
+      "en": "Problems Available Today"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c8d92d8a6132a576f3bd2c6fc5064a2ea9e20c63f7070dd900cbd0e8d9b3daa8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.search.placeholder",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제나 자료 검색",
+      "en": "Search problems or materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "41b517e32ab29f3ac35505a9b3cd4016224f14ca792716719c73ad45e498fae2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.curation.all",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Smoke"
+    ],
+    "values": {
+      "ko": "Smoke 후보",
+      "en": "Smoke candidates"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "187e65f7544953c21e90c6cdc09c1f0f7b7d0d7ab16774eba2d148fdec35aee7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.curation.firstRun",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "처음 체감",
+      "en": "First experience"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4712c61e5f81e3ff1ada3f504e73531aa88117508c880143bced45b9095dc9b2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.curation.materialControl",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 다루기",
+      "en": "Material control"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b10d0580c910e99f98b5f18e47b4fdabb8dc06c8c4ef0670fd5465d9f430d190",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.curation.verificationReplay",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Replay"
+    ],
+    "values": {
+      "ko": "검증/Replay",
+      "en": "Verification/Replay"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0732bf3331cf94769aa1fcfbe9693ebbb31c89f788b281fcf5b067e6f843da8b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.details",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "세부 필터",
+      "en": "Advanced filters"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "217a39cdac924db6dd28cf8fbab1d0022f282a626fc04809e939db3ea6ced4ef",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.empty.title",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "조건에 맞는 문제가 없습니다.",
+      "en": "No problems match these filters."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fa8f7d2c755e1653cf617fc3e97cbc35b70c88b6467a6c9e953cf62967847602",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.empty.reset",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "전체 보기",
+      "en": "Show all"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "887ae6c2c796b2275606f0f091a0515792aae0b86200da3067d528b7f0a812c7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.page.lead",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "하나의 viewer에서 SKAI graph Artifact를 열고, 저장하고, 공유하고, PDF로 출력합니다.",
+      "en": "Open, save, share, and print SKAI graph Artifacts from one viewer."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4743513980906ddf24c0433bb38779a30633ed9681d9bb31ef96b93f9d51c734",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.openTitle",
+    "domain": "skai_viewer",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      ".skai",
+      "Artifact"
+    ],
+    "values": {
+      "ko": ".skai Artifact 열기",
+      "en": "Open a .skai Artifact"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b6f0777fa0e37c5e5f38cb71d2a586bf29f5da5af31596fbd357e60858184142",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.action.save",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": ".skai 저장",
+      "en": "Save .skai"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fe290e4b82041fbf4be1ee93dc9b46a38786923e7be11548993dd112eec6efad",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.action.share",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유",
+      "en": "Share"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "89fd80ef2e27b71787eb0b2ed05e440699257baa99906413afd40e71b2713017",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.action.pdf",
+    "domain": "skai_viewer",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "PDF",
+      "en": "PDF"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc6782253e2d76269f799b265e36c80cfd194c8a0e8467ff87754f0b8752d3da",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.traceEvidence",
+    "domain": "skai_viewer",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      "Trace"
+    ],
+    "values": {
+      "ko": "Trace Evidence",
+      "en": "Trace Evidence"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7ba1c0631eb14a7252be3502fb71a39bb711229caff2ef8007b57f022e2da94d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.graphTitle",
+    "domain": "graph",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      "3D Dual Graph"
+    ],
+    "values": {
+      "ko": "3D Dual Graph",
+      "en": "3D Dual Graph"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f2eec9c58d421ac625e3cc4ef34de094b149fd0e49b6a708bcef785ef45bb7ce",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.registry.title",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      "Extension"
+    ],
+    "values": {
+      "ko": "Optional Extensions",
+      "en": "Optional Extensions"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7635229f2507b3b6e001641e3e3302a93d6f47c85892eb62fc79d6ac581c872b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.registry.derivedLayers",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Derived Layers",
+      "en": "Derived Layers"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cd829e6dcd6bae47ad86ebb4c381b80c28f060d604bf70548ccc2f59522320a7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.judge.layer",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      "Judge"
+    ],
+    "values": {
+      "ko": "Judge Layer",
+      "en": "Judge Layer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d9c16d1fe41731403860756df49a941e17361e2c9dc2bf641a8624a1c28ecd90",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.coach.layer",
+    "domain": "coaching",
+    "sourceLocale": "en",
+    "protectedTerms": [
+      "Coaching"
+    ],
+    "values": {
+      "ko": "Coaching Layer",
+      "en": "Coaching Layer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "950a5703e078234e9acef8290e733493e171232deac2051f08efba5cb73e7286",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.status.humanReview",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "human review",
+      "en": "human review"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7f96007d753586f28c796e5aec51a1a8c3843e148d1124371951474072e69c9a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.status.baselineOk",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "baseline ok",
+      "en": "baseline ok"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7306641cf7a326d49dd5f8287fb49aaf841aeab780ff0ee047e7dd42a12765be",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skai.oldSnapshot",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": "이 공유본은 .skai snapshot이 없는 이전 publish입니다. 파일 저장, graph viewer, PDF 출력이 필요하면 같은 attempt를 다시 publish하세요.",
+      "en": "This shared view predates the .skai snapshot. Republish the attempt to use file saving, graph viewing, and PDF output."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c986816116b446e4121d036c3ae38cf65150a77cda672e9680f0969c846492e3",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.mantra",
+    "domain": "brand",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "프롬프트를 외우지 마십시오. 일의 구조를 설계하십시오.",
+      "en": "Do not memorize prompts. Design the structure of work."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a164679a4f2cfa53dbba8ec99a2a8781a43689161f29038517df209e1037f887",
+    "updatedAt": "2026-06-05T00:00:00.000Z",
+    "notes": "Philosophy mantra; keep user agency over prompt tricks."
+  },
+  {
+    "key": "language.toggle.ko",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "한국어",
+      "en": "Korean"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0d1a6c997d22ae408f6991f0dc8616f5420f55dd56a182808383a2bb10508837",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "language.toggle.en",
+    "domain": "system",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "English",
+      "en": "English"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ed234b4faa5cff6861b2e56795dfaf08f41ca73c1cf4034d919f19a60e2e60ad",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  }
+]

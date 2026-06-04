@@ -174,4 +174,6 @@ The first demo should prove as many of these as possible:
 - Design principles: `docs/design/000_design_principles.md`
 - Theme recommendation: `docs/design/001_theme_recommendation.md`
 - Font and provider surfaces: `docs/design/002_font_and_provider_surfaces.md`
+- Copy inventory and language posture: `docs/design/004_copy_inventory.md`
+- Language system track: `docs/technical/plan/075_language_system_track.md`
 - Implementation plans: `docs/technical/plan/`

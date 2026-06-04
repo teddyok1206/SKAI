@@ -172,6 +172,8 @@ Deliverables:
 
 ### 076. Copy Inventory
 
+Status: completed.
+
 Goal: collect current UI copy and classify it before moving strings.
 
 Deliverables:
@@ -194,6 +196,8 @@ Deliverables:
 
 ### 077. I18n Registry Foundation
 
+Status: completed.
+
 Goal: implement the smallest copy registry.
 
 Files:
@@ -215,6 +219,8 @@ Rules:
 - no URL locale routing yet.
 
 ### 078. Copy Sync Tooling
+
+Status: completed.
 
 Goal: make one-sided edits safe.
 
@@ -434,4 +440,3 @@ The initial slices should not require URL routing, database migrations, or chang
 - registry;
 - language toggle;
 - missing/stale checker.
-
