@@ -49,9 +49,11 @@ import {
 import type { GraphSkeletonStep, GraphSkeletonStepRole, PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
 import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
+import { useLanguagePreference } from "@/components/language-toggle";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
 import { SkaiFileViewer } from "@/components/skai-file-viewer";
+import { getCopy, type Locale } from "@/lib/i18n";
 
 const signalDefinitions = [
   { label: "목표", keywords: ["목표", "성공", "원하는", "해야", "해결"] },
@@ -73,16 +75,16 @@ function compactText(value: string, limit = 150) {
   return `${normalized.slice(0, limit - 1)}…`;
 }
 
-function roleLabel(role: TraceEvent["role"]) {
+function roleLabel(role: TraceEvent["role"], locale: Locale) {
   if (role === "user") {
-    return "사용자 프롬프트";
+    return getCopy("share.role.userPrompt", locale);
   }
 
   if (role === "assistant") {
-    return "모델 응답";
+    return getCopy("share.role.modelResponse", locale);
   }
 
-  return "시스템";
+  return getCopy("share.role.system", locale);
 }
 
 function promptSignals(event: TraceEvent) {
@@ -94,34 +96,34 @@ function promptSignals(event: TraceEvent) {
   return matched.length > 0 ? matched : ["일반 요청"];
 }
 
-function promptIntent(event: TraceEvent, index: number) {
+function promptIntent(event: TraceEvent, index: number, locale: Locale) {
   const signals = promptSignals(event);
 
   if (index === 0) {
-    return "초기 문제 설정";
+    return getCopy("share.promptIntent.initial", locale);
   }
 
   if (signals.includes("수정")) {
-    return "중간 산출물 보정";
+    return getCopy("share.promptIntent.revision", locale);
   }
 
   if (signals.includes("검증")) {
-    return "검증 요청";
+    return getCopy("share.promptIntent.verification", locale);
   }
 
   if (signals.includes("세분화")) {
-    return "작업 분해";
+    return getCopy("share.promptIntent.decomposition", locale);
   }
 
   if (signals.includes("자료")) {
-    return "자료 기반 요청";
+    return getCopy("share.promptIntent.material", locale);
   }
 
   if (signals.includes("출력")) {
-    return "산출물 형식화";
+    return getCopy("share.promptIntent.artifact", locale);
   }
 
-  return "후속 지시";
+  return getCopy("share.promptIntent.followup", locale);
 }
 
 function findNextAssistant(trace: TraceEvent[], userEventIndex: number) {
@@ -154,8 +156,8 @@ const skeletonRoleLabels: Record<GraphSkeletonStepRole, string> = {
   other: "진행",
 };
 
-function skeletonRoleLabel(role: GraphSkeletonStepRole) {
-  return skeletonRoleLabels[role];
+function skeletonRoleLabel(role: GraphSkeletonStepRole, locale: Locale) {
+  return getCopy(`share.skeletonRole.${role}`, locale) || skeletonRoleLabels[role];
 }
 
 function skeletonRoleClass(step: GraphSkeletonStep) {
@@ -163,6 +165,8 @@ function skeletonRoleClass(step: GraphSkeletonStep) {
 }
 
 export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const [attemptState, setAttemptState] = useState<{ attempt: PublishedAttempt | null; isLoading: boolean }>(() => {
     const localAttempt = getPublishedAttempt(attemptId) ?? null;
     return {
@@ -251,8 +255,8 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <main className="container ui-mode-surface" data-ui-mode="human">
         <div className="empty">
           <div>
-            <h1>공개 풀이를 불러오는 중입니다.</h1>
-            <p className="muted">Supabase 공유 저장소와 현재 브라우저의 local snapshot을 확인하고 있습니다.</p>
+            <h1>{t("share.loading.title")}</h1>
+            <p className="muted">{t("share.loading.description")}</p>
           </div>
         </div>
       </main>
@@ -264,10 +268,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <main className="container ui-mode-surface" data-ui-mode="human">
         <div className="empty">
           <div>
-            <h1>공개 풀이를 찾을 수 없습니다.</h1>
-            <p className="muted">공유 저장이 아직 완료되지 않았거나, 이 URL의 공개 snapshot을 읽을 수 없습니다.</p>
+            <h1>{t("share.notFound.title")}</h1>
+            <p className="muted">{t("share.notFound.description")}</p>
             <Link className="button primary" href="/">
-              문제 목록으로
+              {t("share.notFound.backToProblems")}
             </Link>
           </div>
         </div>
@@ -323,14 +327,14 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     });
 
     if (!moderation.ok) {
-      setCommentNotice(moderation.blockedReason ?? "Comment was blocked.");
+      setCommentNotice(moderation.blockedReason ?? t("share.comment.blocked"));
       return;
     }
 
     setCommentNotice(
       moderation.warnings.length > 0
-        ? `Privacy guardrail: ${moderation.warnings.join(" ")}`
-        : "Comment saved.",
+        ? `${t("share.comment.privacyGuardrail")}: ${moderation.warnings.join(" ")}`
+        : t("share.comment.saved"),
     );
 
     const comment: PromptComment = {
@@ -379,7 +383,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     const draft = editDrafts[comment.id]?.trim();
 
     if (!draft) {
-      setCommentNotice("Comment is empty.");
+      setCommentNotice(t("share.comment.empty"));
       return;
     }
 
@@ -390,7 +394,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     });
 
     if (!moderation.ok) {
-      setCommentNotice(moderation.blockedReason ?? "Comment was blocked.");
+      setCommentNotice(moderation.blockedReason ?? t("share.comment.blocked"));
       return;
     }
 
@@ -407,8 +411,8 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     setEditingCommentId(null);
     setCommentNotice(
       moderation.warnings.length > 0
-        ? `Privacy guardrail: ${moderation.warnings.join(" ")}`
-        : "Comment updated.",
+        ? `${t("share.comment.privacyGuardrail")}: ${moderation.warnings.join(" ")}`
+        : t("share.comment.updated"),
     );
     void updatePromptCommentInSupabase({
       commentId: comment.id,
@@ -417,7 +421,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       authorName: moderation.authorName,
     }).then((synced) => {
       if (!synced) {
-        setCommentNotice("Comment updated locally. Remote update requires the original authenticated author.");
+        setCommentNotice(t("share.comment.updatedLocalOnly"));
       }
     });
   }
@@ -426,20 +430,20 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     const deletedAt = new Date().toISOString();
     const nextComment: PromptComment = {
       ...comment,
-      body: "Comment deleted.",
+      body: t("share.comment.deletedBody"),
       updatedAt: deletedAt,
       deletedAt,
     };
 
     replaceComment(nextComment);
     softDeletePromptComment(comment.id);
-    setCommentNotice("Comment deleted locally.");
+    setCommentNotice(t("share.comment.deletedLocal"));
     void deletePromptCommentInSupabase({
       commentId: comment.id,
       attemptId: comment.attemptId,
     }).then((synced) => {
       if (!synced) {
-        setCommentNotice("Comment deleted locally. Remote delete requires the original authenticated author.");
+        setCommentNotice(t("share.comment.deletedLocalOnly"));
       }
     });
   }
@@ -452,7 +456,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
 
     replaceComment(nextComment);
     reportPromptComment(comment.id);
-    setCommentNotice("Comment reported.");
+    setCommentNotice(t("share.comment.reported"));
     void reportPromptCommentInSupabase({
       commentId: comment.id,
       attemptId: comment.attemptId,
@@ -464,12 +468,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     const text = skaiArtifactToText(skaiArtifact);
 
     if (!navigator.clipboard) {
-      setArtifactNotice("이 브라우저에서는 clipboard API를 사용할 수 없습니다.");
+      setArtifactNotice(t("share.artifact.clipboardUnavailable"));
       return;
     }
 
     await navigator.clipboard.writeText(text);
-    setArtifactNotice("Artifact summary copied.");
+    setArtifactNotice(t("share.artifact.summaryCopied"));
   }
 
   function downloadArtifactSvg() {
@@ -481,42 +485,42 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     anchor.download = `${publishedAttempt.title.replace(/[^a-z0-9가-힣_-]+/gi, "-").slice(0, 48) || "skai-artifact"}.svg`;
     anchor.click();
     URL.revokeObjectURL(url);
-    setArtifactNotice("Artifact SVG downloaded.");
+    setArtifactNotice(t("share.artifact.svgDownloaded"));
   }
 
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
         <div>
-          <p className="eyebrow">Published Attempt</p>
+          <p className="eyebrow">{t("share.header.eyebrow")}</p>
           <h1>{attempt.title}</h1>
-          <p className="lead">문제 접근, 지시 흐름, 병목과 재시작 지점을 먼저 읽고 원문은 마지막에 확인합니다.</p>
+          <p className="lead">{t("share.header.lead")}</p>
         </div>
         <Link className="button" href={`/problems/${attempt.problemId}`}>
-          같은 문제 풀기
+          {t("share.header.solveSameProblem")}
         </Link>
       </section>
 
-      <section className="share-overview" aria-label="Published attempt overview">
+      <section className="share-overview" aria-label={t("share.overview.aria")}>
         <div className="share-stat">
           <strong>{userEvents.length}</strong>
-          <span>user prompts</span>
+          <span>{t("share.overview.userPrompts")}</span>
         </div>
         <div className="share-stat">
           <strong>{assistantEvents.length}</strong>
-          <span>model turns</span>
+          <span>{t("share.overview.modelTurns")}</span>
         </div>
         <div className="share-stat">
           <strong>{attachmentCount}</strong>
-          <span>materials used</span>
+          <span>{t("share.overview.materialsUsed")}</span>
         </div>
         <div className="share-stat">
           <strong>{attempt.scoreReport.totalScore}</strong>
-          <span>coach score</span>
+          <span>{t("share.overview.coachScore")}</span>
         </div>
       </section>
 
-      <section className="skai-artifact-section" aria-label="SKAI artifact">
+      <section className="skai-artifact-section" aria-label={t("share.artifact.aria")}>
         <article className="skai-artifact-card">
           <div className="skai-artifact-topline">
             <span>SKAI Artifact</span>
@@ -552,7 +556,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           </div>
           <div className="artifact-timeline">
             {skaiArtifact.timeline.length === 0 ? (
-              <p>아직 공유할 graph timeline이 없습니다.</p>
+              <p>{t("share.artifact.noTimeline")}</p>
             ) : (
               skaiArtifact.timeline.map((step) => (
                 <span key={step.id}>
@@ -561,14 +565,14 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               ))
             )}
           </div>
-          <p className="artifact-mantra">Do not memorize prompts. Design the structure of work.</p>
+          <p className="artifact-mantra">{t("share.artifact.mantra")}</p>
         </article>
         <div className="artifact-actions">
           <button className="button" type="button" onClick={() => void copyArtifactSummary()}>
-            <ClipboardCopy size={16} /> 요약 복사
+            <ClipboardCopy size={16} /> {t("share.artifact.copySummary")}
           </button>
           <button className="button" type="button" onClick={downloadArtifactSvg}>
-            <Download size={16} /> SVG 저장
+            <Download size={16} /> {t("share.artifact.saveSvg")}
           </button>
           {skaiFile ? (
             <p className="attachment-notice neutral">
@@ -587,7 +591,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         <section className="panel share-skai-viewer">
           <div className="panel-body">
             <p className="muted">
-              이 공유본은 `.skai` snapshot이 없는 이전 publish입니다. 파일 저장, graph viewer, PDF 출력이 필요하면 같은 attempt를 다시 publish하세요.
+              {t("share.skai.oldSnapshot")}
             </p>
           </div>
         </section>
@@ -595,8 +599,8 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
-          <h2>Universal Reading Layer</h2>
-          <p className="muted">Graph 용어를 몰라도 문제, 자료, 진행, 확인 흐름으로 읽을 수 있습니다.</p>
+          <h2>{t("share.universal.title")}</h2>
+          <p className="muted">{t("share.universal.description")}</p>
         </div>
         <div className="panel-body universal-summary-grid">
           {universalSummary.map((item) => (
@@ -612,13 +616,13 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
           <h2>
-            <Workflow size={20} /> Graph Skeleton
+            <Workflow size={20} /> {t("share.graphSkeleton.title")}
           </h2>
-          <p className="muted">문제 접근 흐름을 graph pair, task status, annotation 기준으로 압축했습니다.</p>
+          <p className="muted">{t("share.graphSkeleton.description")}</p>
         </div>
         <div className="panel-body graph-skeleton-list">
           {graphSkeleton.length === 0 ? (
-            <p className="muted">아직 graph skeleton으로 만들 prompt-response pair가 없습니다.</p>
+            <p className="muted">{t("share.graphSkeleton.empty")}</p>
           ) : (
             graphSkeleton.map((step) => (
               <article className="graph-skeleton-step" key={step.id}>
@@ -629,7 +633,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                 <div className="graph-skeleton-body">
                   <div className="graph-skeleton-heading">
                     <div>
-                      <span className={skeletonRoleClass(step)}>{skeletonRoleLabel(step.role)}</span>
+                      <span className={skeletonRoleClass(step)}>{skeletonRoleLabel(step.role, locale)}</span>
                       <h3>{step.label}</h3>
                     </div>
                     {step.isBreakpoint ? (
@@ -659,9 +663,9 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                     </div>
                   ) : null}
                   <div className="trace-link-row">
-                    <a href={`#trace-${step.promptTraceEventId}`}>prompt skeleton</a>
-                    {step.responseTraceEventId ? <a href={`#raw-${step.responseTraceEventId}`}>response raw</a> : null}
-                    <a href={`#raw-${step.promptTraceEventId}`}>prompt raw</a>
+                    <a href={`#trace-${step.promptTraceEventId}`}>{t("share.traceLink.promptSkeleton")}</a>
+                    {step.responseTraceEventId ? <a href={`#raw-${step.responseTraceEventId}`}>{t("share.traceLink.responseRaw")}</a> : null}
+                    <a href={`#raw-${step.promptTraceEventId}`}>{t("share.traceLink.promptRaw")}</a>
                   </div>
                 </div>
               </article>
@@ -672,12 +676,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
-          <h2>Graph Transition Log</h2>
-          <p className="muted">Trace에서 파생된 graph state 전환을 알고리즘 흐름처럼 읽습니다.</p>
+          <h2>{t("share.transitionLog.title")}</h2>
+          <p className="muted">{t("share.transitionLog.description")}</p>
         </div>
         <div className="panel-body transition-log-list">
           {transitionLog.length === 0 ? (
-            <p className="muted">아직 전환 로그가 없습니다.</p>
+            <p className="muted">{t("share.transitionLog.empty")}</p>
           ) : (
             transitionLog.map((entry) => (
               <article className="transition-log-entry" key={entry.id}>
@@ -706,10 +710,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           <h2>
             <GitBranch size={20} /> Dual Graph
           </h2>
-          <p className="muted">Prompt nodes, response edges, response nodes, prompt edges, and task-status layer are derived from this trace.</p>
+          <p className="muted">{t("share.dualGraph.description")}</p>
           {conversationGraph.branch ? (
             <p className="muted">
-              Breakpoint replay from parent trace {conversationGraph.branch.parentTraceIndex + 1}
+              {t("share.dualGraph.breakpointReplay")} {conversationGraph.branch.parentTraceIndex + 1}
               {conversationGraph.branch.breakpointPairId ? ` · pair ${conversationGraph.branch.breakpointPairId.slice(0, 18)}` : ""}
             </p>
           ) : null}
@@ -717,19 +721,19 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         <div className="panel-body graph-overview">
           <div className="graph-stat">
             <strong>{conversationGraph.promptNodes.filter((node) => !node.synthetic).length}</strong>
-            <span>prompt nodes</span>
+            <span>{t("graph.stat.promptNodes")}</span>
           </div>
           <div className="graph-stat">
             <strong>{conversationGraph.responseNodes.filter((node) => !node.synthetic).length}</strong>
-            <span>response nodes</span>
+            <span>{t("graph.stat.responseNodes")}</span>
           </div>
           <div className="graph-stat">
             <strong>{conversationGraph.promptEdges.length + conversationGraph.responseEdges.length}</strong>
-            <span>dual edges</span>
+            <span>{t("share.dualGraph.dualEdges")}</span>
           </div>
           <div className="graph-stat">
             <strong>{conversationGraph.statusNodes.length}</strong>
-            <span>status layer</span>
+            <span>{t("share.dualGraph.statusLayer")}</span>
           </div>
           {conversationGraph.branch ? (
             <div className="graph-stat">
@@ -740,7 +744,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         </div>
         <div className="panel-body graph-pair-list">
           {conversationGraph.pairs.length === 0 ? (
-            <p className="muted">아직 graph로 변환할 prompt-response pair가 없습니다.</p>
+            <p className="muted">{t("share.dualGraph.empty")}</p>
           ) : (
             conversationGraph.pairs.map((pair) => {
               const promptNode = graphNodeById.get(pair.promptNodeId);
@@ -759,13 +763,13 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                     </div>
                     <span className="graph-arrow">→</span>
                     <div>
-                      <strong>{responseNode?.label ?? "No response"}</strong>
-                      <p>{responseNode?.summary ?? "이 prompt에는 아직 response node가 없습니다."}</p>
+                      <strong>{responseNode?.label ?? t("share.dualGraph.noResponse")}</strong>
+                      <p>{responseNode?.summary ?? t("share.dualGraph.noResponseNode")}</p>
                     </div>
                   </div>
                   <p className="muted">
-                    sparse incidence: {conversationGraph.index.incidence[pair.promptNodeId]?.outgoing.length ?? 0} outgoing prompt edges ·{" "}
-                    {pair.responseNodeId ? (conversationGraph.index.incidence[pair.responseNodeId]?.incoming.length ?? 0) : 0} incoming response edges
+                    sparse incidence: {conversationGraph.index.incidence[pair.promptNodeId]?.outgoing.length ?? 0} {t("share.dualGraph.outgoingPromptEdges")} ·{" "}
+                    {pair.responseNodeId ? (conversationGraph.index.incidence[pair.responseNodeId]?.incoming.length ?? 0) : 0} {t("share.dualGraph.incomingResponseEdges")}
                   </p>
                   {pair.statusReasons.length > 0 ? <p className="graph-reason">{pair.statusReasons.join(" / ")}</p> : null}
                 </article>
@@ -787,12 +791,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <section className="panel">
         <div className="panel-header">
           <h2>
-            <Workflow size={20} /> Workflow Map
+            <Workflow size={20} /> {t("share.workflow.title")}
           </h2>
         </div>
         <div className="panel-body share-timeline">
           {attempt.workflow.length === 0 ? (
-            <p className="muted">공개된 workflow가 없습니다.</p>
+            <p className="muted">{t("share.workflow.empty")}</p>
           ) : (
             attempt.workflow.map((step, index) => (
               <article className="timeline-step" key={`${step.title}-${index}`}>
@@ -819,14 +823,14 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
           <h2>
-            <GitBranch size={20} /> Prompt Detail Anchors
+            <GitBranch size={20} /> {t("share.promptDetail.title")}
           </h2>
-          <p className="muted">댓글과 원문 확인이 필요한 prompt 지점입니다.</p>
+          <p className="muted">{t("share.promptDetail.description")}</p>
         </div>
         <div className="panel-body prompt-skeleton-list">
           <div className="discussion-identity">
             <label>
-              <span>Comment name</span>
+              <span>{t("share.comment.name")}</span>
               <input
                 className="input"
                 maxLength={40}
@@ -834,12 +838,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                 onChange={(event) => setAuthorName(event.target.value)}
               />
             </label>
-            <p className="muted">각 프롬프트 지점에 질문, 해석, 대안 지시를 남길 수 있습니다.</p>
-            <p className="muted">댓글의 이메일, 전화번호, API key처럼 보이는 문자열은 저장 전 redaction됩니다.</p>
+            <p className="muted">{t("share.comment.description")}</p>
+            <p className="muted">{t("share.comment.privacyDescription")}</p>
             {commentNotice ? <p className="attachment-notice neutral">{commentNotice}</p> : null}
           </div>
           {userEvents.length === 0 ? (
-            <p className="muted">공개된 사용자 프롬프트가 없습니다.</p>
+            <p className="muted">{t("share.promptDetail.empty")}</p>
           ) : (
             userEvents.map((event, userIndex) => {
               const traceIndex = attempt.trace.findIndex((item) => item.id === event.id);
@@ -861,7 +865,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                     <div className="prompt-skeleton-heading">
                       <div>
                         <p className="eyebrow">Prompt {userIndex + 1}</p>
-                        <h3>{promptIntent(event, userIndex)}</h3>
+                        <h3>{promptIntent(event, userIndex, locale)}</h3>
                       </div>
                       {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
                         <span className="trace-warning breakpoint">
@@ -915,7 +919,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                   <strong>{comment.authorName}</strong>
                                   <span>
                                     {new Date(comment.createdAt).toLocaleString()}
-                                    {comment.updatedAt ? " · edited" : ""}
+                                    {comment.updatedAt ? ` · ${t("share.comment.edited")}` : ""}
                                   </span>
                                 </div>
                                 {editingCommentId === comment.id ? (
@@ -930,10 +934,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                     />
                                     <div className="actions">
                                       <button className="button quiet" type="button" onClick={() => setEditingCommentId(null)}>
-                                        취소
+                                        {t("share.action.cancel")}
                                       </button>
                                       <button className="button" type="button" onClick={() => saveEditedComment(comment)}>
-                                        저장
+                                        {t("share.action.save")}
                                       </button>
                                     </div>
                                   </div>
@@ -944,15 +948,15 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                   {!comment.deletedAt ? (
                                     <>
                                       <button type="button" onClick={() => startEditComment(comment)}>
-                                        Edit
+                                        {t("share.action.edit")}
                                       </button>
                                       <button type="button" onClick={() => deleteComment(comment)}>
-                                        Delete
+                                        {t("share.action.delete")}
                                       </button>
                                     </>
                                   ) : null}
                                   <button type="button" onClick={() => reportComment(comment)}>
-                                    Report{comment.reportCount ? ` ${comment.reportCount}` : ""}
+                                    {t("share.action.report")}{comment.reportCount ? ` ${comment.reportCount}` : ""}
                                   </button>
                                 </div>
                                 {replies.length > 0 ? (
@@ -963,7 +967,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                           <strong>{reply.authorName}</strong>
                                           <span>
                                             {new Date(reply.createdAt).toLocaleString()}
-                                            {reply.updatedAt ? " · edited" : ""}
+                                            {reply.updatedAt ? ` · ${t("share.comment.edited")}` : ""}
                                           </span>
                                         </div>
                                         {editingCommentId === reply.id ? (
@@ -978,10 +982,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                             />
                                             <div className="actions">
                                               <button className="button quiet" type="button" onClick={() => setEditingCommentId(null)}>
-                                                취소
+                                                {t("share.action.cancel")}
                                               </button>
                                               <button className="button" type="button" onClick={() => saveEditedComment(reply)}>
-                                                저장
+                                                {t("share.action.save")}
                                               </button>
                                             </div>
                                           </div>
@@ -992,15 +996,15 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                           {!reply.deletedAt ? (
                                             <>
                                               <button type="button" onClick={() => startEditComment(reply)}>
-                                                Edit
+                                                {t("share.action.edit")}
                                               </button>
                                               <button type="button" onClick={() => deleteComment(reply)}>
-                                                Delete
+                                                {t("share.action.delete")}
                                               </button>
                                             </>
                                           ) : null}
                                           <button type="button" onClick={() => reportComment(reply)}>
-                                            Report{reply.reportCount ? ` ${reply.reportCount}` : ""}
+                                            {t("share.action.report")}{reply.reportCount ? ` ${reply.reportCount}` : ""}
                                           </button>
                                         </div>
                                       </div>
@@ -1017,7 +1021,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                     <textarea
                                       className="textarea"
                                       maxLength={operationGuardrails.maxCommentBodyChars}
-                                      placeholder="이 지점에 대한 답글"
+                                      placeholder={t("share.comment.replyPlaceholder")}
                                       value={replyDrafts[comment.id] ?? ""}
                                       onChange={(changeEvent) =>
                                         setReplyDrafts((current) => ({ ...current, [comment.id]: changeEvent.target.value }))
@@ -1025,16 +1029,16 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                                     />
                                     <div className="actions">
                                       <button className="button quiet" type="button" onClick={() => setActiveReplyId(null)}>
-                                        취소
+                                        {t("share.action.cancel")}
                                       </button>
                                       <button className="button" type="submit">
-                                        <Send size={15} /> 답글
+                                        <Send size={15} /> {t("share.action.reply")}
                                       </button>
                                     </div>
                                   </form>
                                 ) : (
                                   <button className="comment-reply-button" type="button" onClick={() => setActiveReplyId(comment.id)}>
-                                    <CornerDownRight size={14} /> reply
+                                    <CornerDownRight size={14} /> {t("share.action.reply")}
                                   </button>
                                 )}
                               </div>
@@ -1046,7 +1050,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                         <textarea
                           className="textarea"
                           maxLength={operationGuardrails.maxCommentBodyChars}
-                          placeholder="이 프롬프트의 문제정의, 세분화, 검증 방식에 대해 남기기"
+                          placeholder={t("share.comment.placeholder")}
                           value={commentDrafts[event.id] ?? ""}
                           onChange={(changeEvent) =>
                             setCommentDrafts((current) => ({ ...current, [event.id]: changeEvent.target.value }))
@@ -1054,7 +1058,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                         />
                         <div className="actions">
                           <button className="button" type="submit">
-                            <Send size={15} /> Comment
+                            <Send size={15} /> {t("share.action.comment")}
                           </button>
                         </div>
                       </form>
@@ -1075,7 +1079,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         </div>
         <div className="panel-body bottleneck-grid">
           {attempt.scoreReport.bottlenecks.length === 0 ? (
-            <p className="muted">명확한 병목은 아직 감지되지 않았습니다.</p>
+            <p className="muted">{t("share.bottleneck.empty")}</p>
           ) : (
             attempt.scoreReport.bottlenecks.map((item) => (
               <article className={`bottleneck-card ${item.severity}`} key={`${item.label}-${item.traceEventId ?? "none"}`}>
@@ -1085,7 +1089,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                 </div>
                 <p className="muted">{item.explanation}</p>
                 <p>{item.replaySuggestion}</p>
-                {item.traceEventId ? <a href={`#trace-${item.traceEventId}`}>관련 prompt skeleton 보기</a> : null}
+                {item.traceEventId ? <a href={`#trace-${item.traceEventId}`}>{t("share.bottleneck.viewRelatedPrompt")}</a> : null}
               </article>
             ))
           )}
@@ -1098,7 +1102,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
             <h2>
               <GitBranch size={20} /> Counterfactual Judge
             </h2>
-            <p className="muted">이 branch가 parent attempt의 병목을 실제로 바꿨는지 비교한 결과입니다.</p>
+            <p className="muted">{t("share.counterfactual.description")}</p>
           </div>
           <div className="panel-body counterfactual-report">
             <div className={`verdict-pill ${attempt.counterfactualReport.verdict}`}>
@@ -1119,11 +1123,11 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
             <div className="branch-diff-grid">
               <div className="diff-card">
                 <strong>Prompt before</strong>
-                <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? "No parent prompt found."}</p>
+                <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? t("solve.branch.noParentPrompt")}</p>
               </div>
               <div className="diff-card">
                 <strong>Prompt after</strong>
-                <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found."}</p>
+                <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? t("solve.branch.noChildPrompt")}</p>
               </div>
             </div>
             <div className="signal-row">
@@ -1153,7 +1157,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
             <details id={`raw-${event.id}`} key={event.id}>
               <summary>
                 <span>
-                  {index + 1}. {roleLabel(event.role)}
+                  {index + 1}. {roleLabel(event.role, locale)}
                 </span>
                 <small>
                   {event.provider ?? "unknown"} {event.model ? `· ${event.model}` : ""}
@@ -1180,7 +1184,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-body">
           <p className="muted">
-            <Eye size={16} /> 공개 snapshot은 학습과 연구를 위한 자료입니다. certification 모드에서는 별도 유사도 검증이 필요합니다.
+            <Eye size={16} /> {t("share.footer.snapshotNotice")}
           </p>
         </div>
       </section>

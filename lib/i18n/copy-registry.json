@@ -4411,5 +4411,1500 @@
     },
     "sourceChecksum": "6358b2755e7137bb54580d01f4e57ba00cb6fa9a3cdec2002e2802d57376469f",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.loading.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개 풀이를 불러오는 중입니다.",
+      "en": "Loading shared attempt."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "369ecc8e4b0f3daed0a606b895104b121389866e4b4ce675b48c86fd4c4ddcbd",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.loading.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Supabase 공유 저장소와 현재 브라우저의 local snapshot을 확인하고 있습니다.",
+      "en": "Checking the Supabase share store and this browser's local snapshot."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "14d7169a99e7d690b9ab89f049eba8aa848ec0243a2de91189dda36476e6cf30",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.notFound.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개 풀이를 찾을 수 없습니다.",
+      "en": "Shared attempt not found."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4d220d4b54b779cec03fce4f4688ec9cbde02ac4ddef53bacafa352f0a706533",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.notFound.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유 저장이 아직 완료되지 않았거나, 이 URL의 공개 snapshot을 읽을 수 없습니다.",
+      "en": "Sharing may not have completed yet, or this public snapshot cannot be read."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3f4caef1b3b756c452e9d30471a6f13fd40824124518431406636ad7cac994f9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.notFound.backToProblems",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 목록으로",
+      "en": "Back to problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e346ce733a33dbadd3eeea27d47d3a3b5d5b377a3c477aaa96a37a3ca040c836",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.header.eyebrow",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Published Attempt",
+      "en": "Published Attempt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f0ec7d111988cccf6fbc1e66a03e0decda420186b4b723386cc8b2262d79a3e6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.header.lead",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 접근, 지시 흐름, 병목과 재시작 지점을 먼저 읽고 원문은 마지막에 확인합니다.",
+      "en": "Read the problem approach, instruction flow, bottlenecks, and restart points before checking the raw transcript."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bfdf77291ab2464bc64efba142c233607bbf370dfb1192efee71f59269638278",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.header.solveSameProblem",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "같은 문제 풀기",
+      "en": "Solve same problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fd5487b45eb47c62779ddffadbde2c3911e8461f98ba9dc259d3654f63845a87",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.overview.aria",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Published attempt overview",
+      "en": "Published attempt overview"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e9b7f33b328cc6bafed8181395988bcb62dd58da80fc766def31aa0165f85fda",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.overview.userPrompts",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "user prompts",
+      "en": "user prompts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e887802df5b9a2ae7a9dfa55ab88141c99862164ba244d3b34fbf553591e670b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.overview.modelTurns",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "model turns",
+      "en": "model turns"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8bb37143e202db69ef94dbef8b29feaec4058e1fd38139a6e9a7585566523d17",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.overview.materialsUsed",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "materials used",
+      "en": "materials used"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "95609d66bd02b506c7dd299e352fda181ef405dc43dc591d316987d23739c9d1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.overview.coachScore",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "coach score",
+      "en": "coach score"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0a7d0ac2f57abd131f42d0bd067ad9a597024a2568a1a0d0ba8572416c21218d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.aria",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "SKAI Artifact",
+      "en": "SKAI Artifact"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "078d74c56bb789d07203eb62161007c14c5c4042668194c8e82aa76851e2fa5e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.noTimeline",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 공유할 graph timeline이 없습니다.",
+      "en": "No graph timeline is available to share yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d8089d30ff281e6b660c51999e53b82b79e0ea01f728de829822b388d495e76b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.copySummary",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "요약 복사",
+      "en": "Copy summary"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "331049be234043f66b7e6fb8fe5f1c160db6be5bcd5cad09723a143f064f2789",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.saveSvg",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "SVG 저장",
+      "en": "Save SVG"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b0cf2ea7cc2c69bf09ceb85f78fa5194b131c48417c48fbf9eca0b0d8750eba0",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.clipboardUnavailable",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이 브라우저에서는 clipboard API를 사용할 수 없습니다.",
+      "en": "This browser does not support the clipboard API."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2c933c16723c314ededb7810c81d0063ab0e16bca4aebbdd0549da13b4535875",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.summaryCopied",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Artifact summary copied.",
+      "en": "Artifact summary copied."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "727b8455a21d43019023c028ab56b71803b2509beb8511dc32c6903a39efd6e8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.artifact.svgDownloaded",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Artifact SVG downloaded.",
+      "en": "Artifact SVG downloaded."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "77fa12c345140362796dc380a75db72724c31b794f42dcd75b8d769ed2cbfd4f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.universal.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Universal Reading Layer",
+      "en": "Universal Reading Layer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "98469520bf987c2f9f87a6b6b19f5b3617964dfe4333495f4455d3349ee38d6e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.universal.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph 용어를 몰라도 문제, 자료, 진행, 확인 흐름으로 읽을 수 있습니다.",
+      "en": "Read the attempt through problem, materials, process, and checking flow even without graph terminology."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6f2acd5730b2bfcd3841fff724a6d5057c31c94b583c6a2545062d9ae96a920b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.graphSkeleton.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph Skeleton",
+      "en": "Graph Skeleton"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cb0fc5363686fc5a7af32e8b942b714bbf972a0ba05d1518fea3b6b8ea46feb6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.graphSkeleton.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 접근 흐름을 graph pair, task status, annotation 기준으로 압축했습니다.",
+      "en": "The problem approach is compressed by graph pair, task status, and annotation."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "27b3c1a987d53d747095e81dd4f8b7f6da4c96719b89135bb15b9572dcbb87f9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.graphSkeleton.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response"
+    ],
+    "values": {
+      "ko": "아직 graph skeleton으로 만들 Prompt-Response pair가 없습니다.",
+      "en": "No Prompt-Response pairs are available for the graph skeleton yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "799b25829cfc06dc8012c469adef63e40154451186f0c519795739bf1ff98429",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.traceLink.promptSkeleton",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "prompt skeleton",
+      "en": "prompt skeleton"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "335a9b6c2d4be36c92bd126de5e0a9d7c9e5c9752f2a63c6e79f78450ed1c779",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.traceLink.responseRaw",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "response raw",
+      "en": "response raw"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "34836d493f93e9a79c2fbaa54f9fdfa0fe3d1c2772023e7baf099dfade5b583a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.traceLink.promptRaw",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "prompt raw",
+      "en": "prompt raw"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3d245f43958c69367201816028b0c456666803598112d676abb41691038cf302",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.transitionLog.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph Transition Log",
+      "en": "Graph Transition Log"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9c8f1579c75dc51f3069e62af71edffa892ecee43bf0f7e78fa30f25daa783fb",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.transitionLog.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace"
+    ],
+    "values": {
+      "ko": "Trace에서 파생된 graph state 전환을 알고리즘 흐름처럼 읽습니다.",
+      "en": "Read graph-state transitions derived from the Trace like an algorithmic flow."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9d0ac6c963eaeca9d6a0bdc2a93cb33d05a3edb36e1d82efb08c3a2b694c21ad",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.transitionLog.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 전환 로그가 없습니다.",
+      "en": "No transition log yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "568424def1a400f0017126a1cd987b689d014a80c65db0828cc9df2da058929a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response",
+      "Trace"
+    ],
+    "values": {
+      "ko": "Prompt nodes, response edges, response nodes, prompt edges, and task-status layer are derived from this Trace.",
+      "en": "Prompt nodes, response edges, response nodes, prompt edges, and task-status layer are derived from this Trace."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c13f55c5fe34f161ecf6ee1bb19aef9f7cf038a07097901a141e74d915eb8309",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.breakpointReplay",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Replay",
+      "Trace"
+    ],
+    "values": {
+      "ko": "Breakpoint Replay from parent Trace",
+      "en": "Breakpoint Replay from parent Trace"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0bb948140387b4b8725a3cca5abc6d6fa9c6f8f4b0162900e3b61c173a7977dc",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.dualEdges",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "dual edges",
+      "en": "dual edges"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "30c2d72f0ba42d7d84ddb4e1f6802947ba17311f1acc77b2a0fe146ba4d753a8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.statusLayer",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "status layer",
+      "en": "status layer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "250d265bad5570370f7d5493d4604e607b4d65a8ada0a83e6778c8cd8cadcd65",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response"
+    ],
+    "values": {
+      "ko": "아직 graph로 변환할 Prompt-Response pair가 없습니다.",
+      "en": "No Prompt-Response pairs are available for graph conversion yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c6b6c4c88bb66ee4f9e87c6b89970142b80d5be64937ed26b275b6b84ae1395b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.noResponse",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Response"
+    ],
+    "values": {
+      "ko": "No Response",
+      "en": "No Response"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4b5b061e67b386203f185bd031091183cc3e0fad4f6fa6ec5d684d4e3d953de6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.noResponseNode",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response"
+    ],
+    "values": {
+      "ko": "이 Prompt에는 아직 Response node가 없습니다.",
+      "en": "This Prompt does not have a Response node yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7fc609e280d4360be5eb34303db1db179e18aaf8bbfa2e7a71e53dd79c0ab25e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.outgoingPromptEdges",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "outgoing prompt edges",
+      "en": "outgoing prompt edges"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1803507d026a317b70af2aee0ad47891ee35945b286aec3e246e2dcf44242fea",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.dualGraph.incomingResponseEdges",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "incoming response edges",
+      "en": "incoming response edges"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48ca385481d3aefb36cd74dbd3b9c281056f4c3ac8cf2405500e9671de2386da",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.workflow.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Workflow Map",
+      "en": "Workflow Map"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0048f76149657a671f06d1f11f28af978830a9f81a2fbb73b5dba7beb980542c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.workflow.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개된 workflow가 없습니다.",
+      "en": "No public workflow is available."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cdff91a5fa753604be1862928edbfa69e75d564579b50a899f0ee5d7be5c39b8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptDetail.title",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Prompt Detail Anchors",
+      "en": "Prompt Detail Anchors"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "13af4d62bec8502cdd74199634415ad83cda76c11310c098156b2e2efc4feb14",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptDetail.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "댓글과 원문 확인이 필요한 Prompt 지점입니다.",
+      "en": "Prompt points where comments and raw-text inspection matter."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9b0635111e070ae5b93e4067d0b121608fefcaef460b35225b0c87267f0763ae",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptDetail.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "공개된 사용자 Prompt가 없습니다.",
+      "en": "No public user Prompts are available."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5b3b6fb09b6a864f281712e77535a8b1a406f202acb0a5b3618c30f555a043c6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.name",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment name",
+      "en": "Comment name"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "34d3546ca3cc5f4d654cb69a9dd03cc72b952b01cce176537bec0a35b0a360e4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "각 Prompt 지점에 질문, 해석, 대안 지시를 남길 수 있습니다.",
+      "en": "Leave questions, interpretations, and alternative instructions on each Prompt point."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ef3c6ded242d18d26c0c8645d0716eea24c11dfc1514a74646d6422be5312c9d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.privacyDescription",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "댓글의 이메일, 전화번호, API key처럼 보이는 문자열은 저장 전 redaction됩니다.",
+      "en": "Email, phone numbers, and API-key-like text in comments are redacted before saving."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d2061ff59b75e981690f2eb6ab36cc5ca44275407691af190ac24d081a771534",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.placeholder",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "이 Prompt의 문제정의, 세분화, 검증 방식에 대해 남기기",
+      "en": "Comment on this Prompt's problem definition, decomposition, or verification approach."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c61132b891593786dd560fac0881f1f65b88c19c9269535850e6e040d2630a75",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.replyPlaceholder",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이 지점에 대한 답글",
+      "en": "Reply to this point"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f759098c3d8972698f48a24fe3c297f13efa063a9eae7f9f2420b4aa2439fb68",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.blocked",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment was blocked.",
+      "en": "Comment was blocked."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "84511fbbdf2b8ea80c8b0d2b283d7473c02408b44364f5073e44cde2277461a6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.privacyGuardrail",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Privacy guardrail",
+      "en": "Privacy guardrail"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "29640fdf1423a374c96d14b721bb64d88042e9572451d44e2f89958094c00c7c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.saved",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment saved.",
+      "en": "Comment saved."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bc64206a91adf3a0c9e8000370b2bf98462f0f797c4ab4a909419b9511384747",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment is empty.",
+      "en": "Comment is empty."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5615e4ba15f884e8b11d382f5d35e8ccfb28c1a68b5540586c8c566dadff90a9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.updated",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment updated.",
+      "en": "Comment updated."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c626277fdd236e1a5de8303a27bf81b5d1e1fee189b91b2321371bdfa37dc19a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.updatedLocalOnly",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment updated locally. Remote update requires the original authenticated author.",
+      "en": "Comment updated locally. Remote update requires the original authenticated author."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "10c50a1d8a98b3e9836e047f31f128cb714fdf8748bdc684bdd37f9f36b26bdb",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.deletedBody",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment deleted.",
+      "en": "Comment deleted."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "108e79887f8620027f0491c01c7e5e8321183d6f46023f6e3cf07bde9350e251",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.deletedLocal",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment deleted locally.",
+      "en": "Comment deleted locally."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "10c361fb54903768cd3b4e6fc51bf2c60cc9fae0735d98e6d781e15c1882b63c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.deletedLocalOnly",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment deleted locally. Remote delete requires the original authenticated author.",
+      "en": "Comment deleted locally. Remote delete requires the original authenticated author."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4b1892dabd57abc8e8b0c726868cb89bf85e18763222243576ea252d4793c0de",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.reported",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment reported.",
+      "en": "Comment reported."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "846948bc54ce26c6f8839b5452b8a42c63371b13d154c0cf89939e5d14fcf875",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.comment.edited",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "edited",
+      "en": "edited"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e38577061c2d19a5854ff8ac7671c5815fd294c23bae2b4315fcd8bbe6066f46",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.cancel",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "취소",
+      "en": "Cancel"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4de4cde723235bef70e29d876227f4320c12834a01c7e5a5de30e6b61aebed1c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.save",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장",
+      "en": "Save"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8cd4429ce357f92e716c0c960f15d3e07411d2a1f2bc1c8afa1e19c9499b49f7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.edit",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Edit",
+      "en": "Edit"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "501e75710a118d021887dc3b289b5cf600865ee1251db5964da408d02ac54aac",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.delete",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Delete",
+      "en": "Delete"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0caca618aad8dd44c35c70de6b3c1fb05ada304cc023300966d1a7822c70d2e3",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.report",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Report",
+      "en": "Report"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3e432575aceb720a1589052fa20c261cd5e23cba5f337e6d47eb66761e7a7435",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.reply",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "답글",
+      "en": "Reply"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a22ac85aad19d723a483711b313700f3297e3e2581767a05df22d7a292f8a11f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.action.comment",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comment",
+      "en": "Comment"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a4ff040e8768a2dbb0b6b6514ecd9ca644f366093bf5032be8590cd7be44f550",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.bottleneck.empty",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "명확한 병목은 아직 감지되지 않았습니다.",
+      "en": "No clear bottleneck has been detected yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "de290b24d3890913e3b611ec4c7504ce0942ad0f7f6ebe5409df2dd0e2dc6e65",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.bottleneck.viewRelatedPrompt",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "관련 prompt skeleton 보기",
+      "en": "View related prompt skeleton"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2b78c5d6c6a12bf12d9125d209d2deb133d2b033206268267389c7227a79393a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.counterfactual.description",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "이 Branch가 parent attempt의 병목을 실제로 바꿨는지 비교한 결과입니다.",
+      "en": "Comparison result for whether this Branch actually changed the parent attempt bottleneck."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ed9d22f6fe902d7bbbbe5d19d624f96482dc69780e1cac24402991ef89b8c1f7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.footer.snapshotNotice",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개 snapshot은 학습과 연구를 위한 자료입니다. certification 모드에서는 별도 유사도 검증이 필요합니다.",
+      "en": "A public snapshot is for learning and research. Certification mode requires separate similarity verification."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "85a8035fdf627531ae19fc15b7875bc6fab3be2b8740157de5f9661802365646",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.role.userPrompt",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "사용자 Prompt",
+      "en": "User Prompt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "95ae9ba0515486148d06e621827444401ea5e82d65981395dc33af4353e85120",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.role.modelResponse",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Response"
+    ],
+    "values": {
+      "ko": "모델 Response",
+      "en": "Model Response"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "71708bb7f2352fdee05f1035dcc990c3226bc13d6e8eccf7b47175eb7f4a605f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.role.system",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "시스템",
+      "en": "System"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5c5f0ae4a7da5448da2c2f0dab162cf7881e230850c9cf5b0abe192454d8c893",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.initial",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초기 문제 설정",
+      "en": "Initial problem setup"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4973ac9716e1a422e3d06fffc63ce99477aefc565ee8cda3075139c381cbe212",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.revision",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "중간 산출물 보정",
+      "en": "Intermediate artifact correction"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8c86857d932be1234faaadb09d5dd461de72db123330bd0d7f6946ae10fdba43",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.verification",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검증 요청",
+      "en": "Verification request"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7dbf2989168664b6516368ff7577160453b0574862f965f6531a706aecc748a5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.decomposition",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "작업 분해",
+      "en": "Task decomposition"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0dae438f81290499b626201ba3a2b7e6ba3c8da8a28c622ec6b151eaf1ec936c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.material",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 기반 요청",
+      "en": "Material-grounded request"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc2248f33f8fbd87c2366b000be348745978296037f37e379af5a62cf8676bcf",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.artifact",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Artifact"
+    ],
+    "values": {
+      "ko": "Artifact 형식화",
+      "en": "Artifact formatting"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "092d899adc3f1625393fb58d1fe9bc13c31f10ace1a4f4f9ff8c1b80bdf9e507",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.promptIntent.followup",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "후속 지시",
+      "en": "Follow-up instruction"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f419251f889afae30885dc3bd5324182830dfba4ce70d37c94c7509eb4a90ab5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.problem_reframe",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 재정의",
+      "en": "Problem reframe"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "51a58008eef64c644d26209318bee66a7732314d53a1d7fc6e0e5d90a608768c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.clarifying_question",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "불확실성 확인",
+      "en": "Clarifying question"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6d5cbf18022cd10bf3dea8f44566b69dfdef01c1b20cefcc288a377823a53f50",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.material_selection",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 선택",
+      "en": "Material selection"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "30d34c025d89162cbf867aef196b990e96e67fc1e7890961b8cf74388a234d36",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.task_decomposition",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "작업 분해",
+      "en": "Task decomposition"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0dae438f81290499b626201ba3a2b7e6ba3c8da8a28c622ec6b151eaf1ec936c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.draft_generation",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초안 생성",
+      "en": "Draft generation"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "209db7f0e4b8929e22def8cd1be1ac745dd251b836b3f9c99223bdb71db3ac30",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.verification",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검증",
+      "en": "Verification"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "52749a8b5e8b967d1d259ca8d6fbf5dad015c415c731df4532ebfbc87943aa76",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.revision",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "수정",
+      "en": "Revision"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b84cf8e9fb28ee36810e5133bdd3f16df86a65a4af6383389f5b30144f948dfc",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.finalization",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "최종화",
+      "en": "Finalization"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f5ec474b4dad36d95745e5aaef2a1e4e01017984266aaac3b467466f8223b275",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "share.skeletonRole.other",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "진행",
+      "en": "Progress"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "289331c29204eefdabd0b028ead72056fa9444d3f70dc89096ea2386383a92cd",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
   }
 ]

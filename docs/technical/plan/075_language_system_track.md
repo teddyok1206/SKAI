@@ -330,6 +330,8 @@ Rules:
 
 ### 082. Public Share Localization
 
+Status: completed.
+
 Goal: make public share pages bilingual without changing the shared artifact.
 
 Important distinction:
@@ -348,6 +350,11 @@ Scope:
 - raw transcript labels;
 - old snapshot fallback;
 - comments UI.
+
+Result:
+
+- Public share page chrome, comment UI, artifact actions, graph skeleton labels, transition log labels, prompt detail anchors, bottleneck/replay helper copy, raw transcript role labels, and snapshot notices now use the copy registry.
+- Generated artifact content, score report prose, workflow prose, raw trace, and judge/coaching content remain source content.
 
 ### 083. Judge / Coaching Language Layer
 
