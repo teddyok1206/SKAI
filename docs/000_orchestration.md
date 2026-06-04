@@ -86,6 +86,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - judge/coaching 개발 체계는 `.skai fixture -> derived extension -> unified viewer overlay -> regression` 루프로 고정했다. `fixtures/skai/`의 golden artifacts, `npm run skai:validate`, `npm run judge:fixture`, `npm run judge:regression`이 core contract와 extension 구조를 빠르게 검증한다.
 - `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
+- bilingual language system은 별도 track으로 잡았다. `docs/technical/plan/075_language_system_track.md`는 단순 `ko.ts/en.ts` 이중 관리가 아니라, source locale, status, checksum, protected terms를 가진 copy registry 방식으로 운영하는 계획을 정의한다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
@@ -273,6 +274,15 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - malformed JSON, provider failure, judge disagreement를 기록한다.
 - coach review와 strict rubric mode를 분리할 준비를 한다.
 - 완료 조건: 최소 9개 sample attempt에서 judge 결과를 founder가 정성 검토한다. (runner 완료, founder/LLM review 후속)
+
+우선순위 2.5: bilingual language system
+
+- 번역 전 SKAI technical concept glossary와 protected terms를 고정한다. (계획 완료)
+- UI copy를 inventory하고 source-locale 기반 copy registry로 이전한다.
+- 한 언어에서 먼저 수정된 copy는 반대 언어를 자동으로 stale/missing 상태로 표시한다.
+- 한국어 모드에서도 `Orchestration`, `Trace`, `Artifact`, `3D Dual Graph` 같은 핵심 개념어는 필요 시 영어로 유지한다.
+- philosophy/brand copy는 직역하지 않고 ko/en 공식본을 별도로 승인한다.
+- 완료 조건: `verify:i18n`이 missing/stale/protected-term drift를 검출하고, 주요 route의 copy가 locale registry에서 렌더링된다.
 
 우선순위 3: playbook insertion and smoke operator UX
 

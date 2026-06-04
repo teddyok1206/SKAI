@@ -96,6 +96,16 @@ The first demo should prove as many of these as possible:
 - Include an optional final-answer field draft when it helps run end-to-end judge tests quickly.
 - When adding or materially editing a problem, update its playbook in the same task.
 
+## Language System Rules
+
+- Treat Korean/English support as a copy-management system, not as two manually synchronized text files.
+- Preserve SKAI technical concept terms unless the language glossary explicitly says otherwise. Examples: `SKAI`, `.skai`, `Orchestration`, `Prompt`, `Response`, `Status`, `Trace`, `Artifact`, `3D Dual Graph`, `Branch`, `Replay`, `Breakpoint`, `Judge`, `Coaching`, `Fixture`, `Extension`.
+- Philosophy and brand copy should be rewritten per language, not literally translated.
+- After the i18n registry foundation is implemented, do not add new user-facing UI copy directly in components without a copy registry entry.
+- When one locale changes first, mark the opposite locale as `stale` or `missing`; draft translations may be generated, but they are not automatically approved.
+- Run the planned `verify:i18n` check when language registry work begins.
+- Current language-system roadmap: `docs/technical/plan/075_language_system_track.md`.
+
 ## Evaluation Principles
 
 - Combine deterministic metrics with LLM judgment.
