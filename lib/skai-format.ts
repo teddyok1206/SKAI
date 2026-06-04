@@ -16,6 +16,7 @@ import type {
   SkaiFileManifest,
   SkaiFilePayload,
   SkaiFileProblemSnapshot,
+  TranslationStatus,
   TraceEvent,
 } from "@/lib/types";
 
@@ -138,6 +139,18 @@ function manifestLocale(input: PublishedAttempt): ReportLocale {
   return input.scoreReport.locale ?? input.scoreReport.sourceLocale ?? "ko";
 }
 
+function problemDisplayLocale(problem: Problem): ReportLocale | undefined {
+  return (problem as Problem & { displayLocale?: ReportLocale }).displayLocale ?? problem.locale;
+}
+
+function problemSourceLocale(problem: Problem): ReportLocale | undefined {
+  return (problem as Problem & { sourceLocale?: ReportLocale }).sourceLocale ?? problem.locale;
+}
+
+function problemTranslationStatus(problem: Problem): TranslationStatus | undefined {
+  return (problem as Problem & { translationStatus?: TranslationStatus }).translationStatus;
+}
+
 function includesAny(value: string, words: readonly string[]) {
   const normalized = value.toLowerCase();
   return words.some((word) => normalized.includes(word.toLowerCase()));
@@ -245,12 +258,17 @@ async function buildProblemSnapshot(problem?: Problem): Promise<SkaiFileProblemS
       mimeType: material.mimeType,
       href: material.href,
       extractedTextHash: await sha256Hex(material.extractedText),
+      sourceLocale: material.sourceLocale,
     })),
   );
 
   return {
     id: problem.id,
     title: problem.title,
+    locale: problemDisplayLocale(problem),
+    sourceLocale: problemSourceLocale(problem),
+    translationStatus: problemTranslationStatus(problem),
+    availableLocales: problem.availableLocales,
     category: problem.category,
     difficulty: problem.difficulty,
     goalProfile: problem.goalProfile,
@@ -336,6 +354,8 @@ export async function buildSkaiFileArtifact(input: {
     parentAttempt: input.parentAttempt,
   });
   const problemSnapshot = await buildProblemSnapshot(input.problem);
+  const locale = input.problem ? (problemDisplayLocale(input.problem) ?? manifestLocale(input.publishedAttempt)) : manifestLocale(input.publishedAttempt);
+  const availableLocales = input.problem?.availableLocales?.length ? input.problem.availableLocales : [locale];
   const payload: SkaiFilePayload = {
     problem: problemSnapshot,
     attempt: childAttempt,
@@ -360,8 +380,8 @@ export async function buildSkaiFileArtifact(input: {
     createdAt,
     exportedBy: "skai",
     schemaVersion: skaiFileSchemaVersion,
-    locale: manifestLocale(input.publishedAttempt),
-    availableLocales: [manifestLocale(input.publishedAttempt)],
+    locale,
+    availableLocales,
     sections: Object.entries(payload)
       .filter(([, value]) => value !== undefined)
       .map(([key]) => key),

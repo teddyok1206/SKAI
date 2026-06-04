@@ -3,6 +3,7 @@ import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { normalizeJudgeGraphAnnotations } from "@/lib/judge-graph-annotations";
+import { getLocalizedProblem } from "@/lib/problem-localization";
 import { getProvider } from "@/lib/providers";
 import type {
   AxisScore,
@@ -388,6 +389,7 @@ function getLlmJudgeConfigs(mode: JudgeMode): JudgeConfig[] {
 }
 
 function buildJudgeContext(input: JudgeInput) {
+  const problem = getLocalizedProblem(input.problem, input.locale);
   const trace = input.trace
     .map((event, index) => {
       const attachmentContext = buildAttachmentContext(event.attachments);
@@ -408,25 +410,28 @@ function buildJudgeContext(input: JudgeInput) {
   return [
     "SKAI Judge Context",
     "",
-    `Problem ID: ${input.problem.id}`,
-    `Title: ${input.problem.title}`,
-    `Goal profile: ${input.problem.goalProfile}`,
+    `Problem ID: ${problem.id}`,
+    `Title: ${problem.title}`,
+    `Problem display locale: ${problem.displayLocale}`,
+    `Problem source locale: ${problem.sourceLocale}`,
+    `Problem translation status: ${problem.translationStatus}`,
+    `Goal profile: ${problem.goalProfile}`,
     `Requested judge prose locale: ${input.locale === "ko" ? "Korean" : "English"}`,
     "",
     "Problem statement:",
-    input.problem.statement,
+    problem.statement,
     "",
     "User goal:",
-    input.problem.userGoal,
+    problem.userGoal,
     "",
     "Constraints:",
-    input.problem.constraints.map((item) => `- ${item}`).join("\n"),
+    problem.constraints.map((item) => `- ${item}`).join("\n"),
     "",
     "Deliverables:",
-    input.problem.deliverables.map((item) => `- ${item}`).join("\n"),
+    problem.deliverables.map((item) => `- ${item}`).join("\n"),
     "",
     "Rubric:",
-    input.problem.rubric.map((item) => `- ${item.axis} (${item.weight}): ${item.description}`).join("\n"),
+    problem.rubric.map((item) => `- ${item.axis} (${item.weight}): ${item.description}`).join("\n"),
     "",
     "Trace:",
     trace || "No trace events.",

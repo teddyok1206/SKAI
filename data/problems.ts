@@ -5,6 +5,38 @@ import type { Problem } from "@/lib/types";
 const seedProblems: Problem[] = [
   {
     id: "ambiguous-research-brief",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        title: "Turn a vague research request into an actionable research brief",
+        subtitle: "Design the goal, verification criteria, and artifact structure before asking AI to summarize.",
+        statement:
+          "A friend only says, 'Can you look into how generative AI is affecting education these days? It is for a presentation.' Do not jump straight into searching or summarizing. Use AI conversation to design the research goal, scope, artifact structure, and verification strategy, then produce a draft research brief that could support presentation prep.",
+        userGoal:
+          "Structure an ambiguous request and delegate staged tasks to AI to produce a reliable presentation research brief.",
+        constraints: [
+          "Redefine the problem before asking for a final answer.",
+          "Explicitly state at least one missing condition or working assumption.",
+          "The final artifact must include research questions, candidate core claims, source types to verify, and a presentation structure.",
+          "State the limits of the AI response or points that need additional verification.",
+        ],
+        starterContext: [
+          "The audience, presentation length, grade/major, and need for current sources are still unclear.",
+          "This problem evaluates problem definition and decomposition before factual accuracy.",
+        ],
+        deliverables: [
+          "Refined problem definition",
+          "List of subtasks delegated to AI",
+          "Draft research brief for a presentation",
+          "Verification plan",
+        ],
+        createdAt: "2026-06-05T00:00:00.000Z",
+      },
+    },
     title: "흐릿한 자료조사 요청을 실행 가능한 리서치 브리프로 바꾸기",
     subtitle: "AI가 헛소리하지 않도록 목표, 검증 기준, 산출물 구조를 먼저 설계한다.",
     category: "research",
@@ -38,6 +70,39 @@ const seedProblems: Problem[] = [
   },
   {
     id: "club-budget-workflow",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        title: "Turn club budget chaos into an AI-assisted workflow",
+        subtitle: "Design which work belongs to people, documents, and AI.",
+        statement:
+          "A club treasurer cannot reconcile the budget because receipt photos, bank transfer records, and Google Form signup data are mixed together. Design an AI-assisted workflow that can process the reimbursement and settlement work reliably, then create an operating procedure that the actual treasurer can follow.",
+        userGoal:
+          "Separate a messy real-world task into AI tasks, human review points, and data structures, then turn it into a reusable workflow.",
+        constraints: [
+          "Separate judgments AI should not make from points a human must review.",
+          "Include privacy and account-information handling precautions.",
+          "Create a repeatable checklist or template.",
+          "Include at least one failure scenario and response plan.",
+        ],
+        starterContext: [
+          "The input materials are not fully organized.",
+          "The treasurer is not a developer and must be able to follow the workflow without installing tools.",
+        ],
+        deliverables: [
+          "Work breakdown",
+          "AI task allocation plan",
+          "Human review points",
+          "Operating checklist",
+          "Failure scenario response plan",
+        ],
+        createdAt: "2026-06-05T00:00:00.000Z",
+      },
+    },
     title: "동아리 예산 혼란을 AI 업무흐름으로 정리하기",
     subtitle: "사람, 문서, AI가 나눠 맡을 일을 설계한다.",
     category: "strategy",
@@ -68,6 +133,7 @@ const seedProblems: Problem[] = [
     materials: [
       {
         id: "receipt-001",
+        sourceLocale: "ko",
         title: "영수증 사진: 문구점 소모품",
         description: "행사 준비용 네임펜, 테이프, A4 용지 구매 영수증. 이미지 자료를 보고 정산 항목을 추출해야 한다.",
         kind: "image",
@@ -79,6 +145,7 @@ const seedProblems: Problem[] = [
       },
       {
         id: "transfers-001",
+        sourceLocale: "ko",
         title: "계좌이체 내역: 5월 행사",
         description: "입금/지출 내역 스프레드시트. 영수증과 대조하고 누락/중복 가능성을 확인해야 한다.",
         kind: "spreadsheet",
@@ -90,6 +157,7 @@ const seedProblems: Problem[] = [
       },
       {
         id: "signup-001",
+        sourceLocale: "ko",
         title: "구글폼 신청 내역 CSV",
         description: "참가자 신청 기록. 계좌이체 입금자와 이름이 다를 수 있으므로 대조 기준이 필요하다.",
         kind: "csv",
@@ -106,6 +174,39 @@ const seedProblems: Problem[] = [
   },
   {
     id: "counterfactual-product-review",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        title: "Correct a plausible but weak product-review analysis",
+        subtitle: "Catch weak AI analysis and recover with stronger verification prompts.",
+        statement:
+          "You need AI to read 12 fictional app reviews and identify improvement priorities. However, the review set is small and may be biased. Design the analysis plan, limitations, verification questions, and final priorities so the AI does not jump to premature conclusions.",
+        userGoal:
+          "Constrain AI so it does not overgeneralize from small data, then build a verification-centered analysis.",
+        constraints: [
+          "State the limits of the data.",
+          "Create analysis criteria before classifying the reviews.",
+          "Review counterexamples or risks in the AI-generated priorities.",
+          "Divide the final answer into execution priorities and additional data to collect.",
+        ],
+        starterContext: [
+          "The review data is not guaranteed to be representative.",
+          "This problem strongly evaluates verification and adaptation.",
+        ],
+        deliverables: [
+          "Analysis criteria",
+          "Review classification strategy",
+          "Questions for verifying AI output",
+          "Priorities and supporting rationale",
+          "Additional data collection plan",
+        ],
+        createdAt: "2026-06-05T00:00:00.000Z",
+      },
+    },
     title: "그럴듯하지만 약한 제품 리뷰 분석 바로잡기",
     subtitle: "AI의 약한 분석을 잡아내고 더 강한 검증 프롬프트로 되돌린다.",
     category: "data_analysis",

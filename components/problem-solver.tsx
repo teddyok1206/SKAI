@@ -27,6 +27,7 @@ import { buildConversationGraph } from "@/lib/conversation-graph";
 import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
 import { getModelOption, getModelOptionByProviderModel, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
+import { getLocalizedProblem } from "@/lib/problem-localization";
 import { providerUiProfiles } from "@/lib/provider-ui";
 import { buildSkaiFileArtifact } from "@/lib/skai-format";
 import { getSolvingMode, solvingModes } from "@/lib/solving-modes";
@@ -75,6 +76,7 @@ function newAttempt(
   problem: Problem,
   modelOption: ModelOption,
   solvingModeId: SolvingModeId = "single_model",
+  title?: string,
 ): Attempt {
   const now = new Date().toISOString();
   return {
@@ -82,7 +84,7 @@ function newAttempt(
     problemId: problem.id,
     userId: "local-demo-user",
     status: "draft",
-    title: `${problem.title} 풀이`,
+    title: title ?? `${problem.title} 풀이`,
     provider: modelOption.provider,
     model: modelOption.model,
     solvingMode: solvingModeId,
@@ -126,6 +128,7 @@ function makeTraceEvent(input: {
 export function ProblemSolver({ problem }: { problem: Problem }) {
   const { locale } = useLanguagePreference();
   const t = (key: string) => getCopy(key, locale);
+  const localizedProblem = useMemo(() => getLocalizedProblem(problem, locale), [locale, problem]);
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
   const [modelOptionId, setModelOptionId] = useState<ModelOptionId | null>(null);
@@ -276,7 +279,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
-    const next = newAttempt(problem, selectedModelOption, selectedSolvingMode.id);
+    const attemptTitle = locale === "ko" ? `${localizedProblem.title} 풀이` : `${localizedProblem.title} attempt`;
+    const next = newAttempt(problem, selectedModelOption, selectedSolvingMode.id, attemptTitle);
     setProvider(selectedModelOption.provider);
     setModel(selectedModelOption.model);
     setAttempt(next);
@@ -597,7 +601,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       ...published,
       skaiFile: await buildSkaiFileArtifact({
         publishedAttempt: published,
-        problem,
+        problem: localizedProblem,
         parentAttempt,
         childGraph: conversationGraph,
         parentGraph: parentConversationGraph ?? undefined,
@@ -749,8 +753,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         <section className="panel pre-attempt-panel provider-shell" data-provider={provider ?? "unselected"}>
           <div className="panel-header">
             <p className="eyebrow">{t("solve.preAttempt.eyebrow")}</p>
-            <h2>{problem.title}</h2>
-            <p className="muted">{problem.subtitle}</p>
+            <h2>{localizedProblem.title}</h2>
+            <p className="muted">{localizedProblem.subtitle}</p>
           </div>
           <div className="panel-body pre-attempt-body">
             <div>
@@ -819,10 +823,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           </div>
           <div className="panel-body">
             <h3>{t("solve.problem.statement")}</h3>
-            <p className="muted">{problem.statement}</p>
+            <p className="muted">{localizedProblem.statement}</p>
             <h3>{t("solve.problem.constraints")}</h3>
             <ul className="constraint-list">
-              {problem.constraints.map((item) => (
+              {localizedProblem.constraints.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -885,15 +889,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       <aside className="panel">
         <div className="panel-header">
           <p className="eyebrow">{problem.category}</p>
-          <h2>{problem.title}</h2>
-          <p className="muted">{problem.subtitle}</p>
+          <h2>{localizedProblem.title}</h2>
+          <p className="muted">{localizedProblem.subtitle}</p>
         </div>
         <div className="panel-body">
           <h3>{t("solve.problem.statement")}</h3>
-          <p className="muted">{problem.statement}</p>
+          <p className="muted">{localizedProblem.statement}</p>
           <h3>{t("solve.problem.constraints")}</h3>
           <ul className="constraint-list">
-            {problem.constraints.map((item) => (
+            {localizedProblem.constraints.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
@@ -901,7 +905,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         <div className="panel-body">
           <h3>Deliverables</h3>
           <ul className="constraint-list">
-            {problem.deliverables.map((item) => (
+            {localizedProblem.deliverables.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>

@@ -7,6 +7,7 @@ import type { GeneratedProblemClassification } from "@/data/generated-problem-ba
 import { useLanguagePreference } from "@/components/language-toggle";
 import { getCopy } from "@/lib/i18n";
 import { useGeneratedProblemEditorialMap } from "@/lib/use-generated-problem-editorial";
+import { getLocalizedProblem } from "@/lib/problem-localization";
 import type { Problem, ProblemCategory, MaterialKind } from "@/lib/types";
 
 const categoryCopyKeys: Record<ProblemCategory, string> = {
@@ -72,19 +73,21 @@ function curationMatches(problem: Problem, classification: GeneratedProblemClass
   return problem.goalProfile === "accuracy_first" || problem.difficulty === "advanced" || classification?.primarySkill === "verification";
 }
 
-function buildSearchText(problem: Problem, classification: GeneratedProblemClassification | undefined) {
+function buildSearchText(problem: Problem, classification: GeneratedProblemClassification | undefined, locale: "ko" | "en") {
+  const localizedProblem = getLocalizedProblem(problem, locale);
+
   return [
     problem.id,
-    problem.title,
-    problem.subtitle,
+    localizedProblem.title,
+    localizedProblem.subtitle,
     problem.category,
     problem.difficulty,
     problem.goalProfile,
-    problem.statement,
-    problem.userGoal,
-    ...problem.constraints,
-    ...problem.starterContext,
-    ...problem.deliverables,
+    localizedProblem.statement,
+    localizedProblem.userGoal,
+    ...localizedProblem.constraints,
+    ...localizedProblem.starterContext,
+    ...localizedProblem.deliverables,
     ...problem.materials.flatMap((material) => [
       material.title,
       material.description,
@@ -106,14 +109,14 @@ function buildSearchText(problem: Problem, classification: GeneratedProblemClass
     .toLowerCase();
 }
 
-function matchesQuery(problem: Problem, classification: GeneratedProblemClassification | undefined, query: string) {
+function matchesQuery(problem: Problem, classification: GeneratedProblemClassification | undefined, query: string, locale: "ko" | "en") {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) {
     return true;
   }
 
   const terms = normalizedQuery.split(/\s+/).filter(Boolean);
-  const haystack = buildSearchText(problem, classification);
+  const haystack = buildSearchText(problem, classification, locale);
   return terms.every((term) => haystack.includes(term));
 }
 
@@ -183,7 +186,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
         const classification = classifications[problem.id];
         const materialKinds = problemMaterialKinds(problem);
 
-        if (!matchesQuery(problem, classification, query)) {
+        if (!matchesQuery(problem, classification, query, locale)) {
           return false;
         }
 
@@ -205,7 +208,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
 
         return curationMatches(problem, classification, curation);
       }),
-    [category, classifications, curation, difficulty, materialKind, query, visibleProblems],
+    [category, classifications, curation, difficulty, locale, materialKind, query, visibleProblems],
   );
 
   const topDomains = useMemo(() => {
@@ -340,37 +343,41 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
         </div>
       ) : (
         <section className="grid problem-grid" aria-label={getCopy("problemBrowser.aria.list", locale)}>
-          {filteredProblems.map((problem) => (
-            <article className="card problem-card" key={problem.id}>
-              <div>
-                <div className="tag-row">
-                  <span className="tag">
-                    <Layers3 size={13} /> {categoryLabels[problem.category]}
-                  </span>
-                  <span className="tag">
-                    <Clock size={13} />{" "}
-                    {locale === "ko"
-                      ? `${problem.estimatedMinutes}${getCopy("problemBrowser.time.minutesShort", locale)}`
-                      : `${problem.estimatedMinutes} ${getCopy("problemBrowser.time.minutesShort", locale)}`}
-                  </span>
-                  <span className="tag">
-                    <BarChart3 size={13} /> {difficultyLabels[problem.difficulty]}
-                  </span>
-                  <span className="tag">
-                    <FileText size={13} /> {materialCountLabel(problem, locale)}
-                  </span>
+          {filteredProblems.map((problem) => {
+            const localizedProblem = getLocalizedProblem(problem, locale);
+
+            return (
+              <article className="card problem-card" key={problem.id}>
+                <div>
+                  <div className="tag-row">
+                    <span className="tag">
+                      <Layers3 size={13} /> {categoryLabels[problem.category]}
+                    </span>
+                    <span className="tag">
+                      <Clock size={13} />{" "}
+                      {locale === "ko"
+                        ? `${problem.estimatedMinutes}${getCopy("problemBrowser.time.minutesShort", locale)}`
+                        : `${problem.estimatedMinutes} ${getCopy("problemBrowser.time.minutesShort", locale)}`}
+                    </span>
+                    <span className="tag">
+                      <BarChart3 size={13} /> {difficultyLabels[problem.difficulty]}
+                    </span>
+                    <span className="tag">
+                      <FileText size={13} /> {materialCountLabel(problem, locale)}
+                    </span>
+                  </div>
+                  <h2>{localizedProblem.title}</h2>
+                  <p className="muted">{localizedProblem.subtitle}</p>
+                  <div className="problem-card-meta">
+                    <span>{localizedProblem.constraints[0] ?? localizedProblem.userGoal}</span>
+                  </div>
                 </div>
-                <h2>{problem.title}</h2>
-                <p className="muted">{problem.subtitle}</p>
-                <div className="problem-card-meta">
-                  <span>{problem.constraints[0] ?? problem.userGoal}</span>
-                </div>
-              </div>
-              <Link className="button" href={`/problems/${problem.id}`}>
-                {getCopy("problemBrowser.action.solve", locale)} <ArrowRight size={16} />
-              </Link>
-            </article>
-          ))}
+                <Link className="button" href={`/problems/${problem.id}`}>
+                  {getCopy("problemBrowser.action.solve", locale)} <ArrowRight size={16} />
+                </Link>
+              </article>
+            );
+          })}
         </section>
       )}
     </section>

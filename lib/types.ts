@@ -40,6 +40,16 @@ export type SolvingModeId = "single_model" | "material_grounded" | "verification
 export type ReportLocale = "ko" | "en";
 export type TranslationStatus = "source" | "translated" | "draft" | "stale";
 
+export interface DerivedMaterialText {
+  locale: ReportLocale;
+  sourceLocale: ReportLocale;
+  translationStatus: TranslationStatus;
+  title?: string;
+  description?: string;
+  extractedText?: string;
+  createdAt?: string;
+}
+
 export interface ProblemMaterial {
   id: string;
   title: string;
@@ -49,6 +59,8 @@ export interface ProblemMaterial {
   mimeType: string;
   href?: string;
   extractedText: string;
+  sourceLocale?: ReportLocale;
+  derivedText?: DerivedMaterialText[];
 }
 
 export interface AttemptAttachment {
@@ -70,6 +82,20 @@ export interface RubricItem {
   weight: number;
 }
 
+export interface LocalizedProblemContent {
+  locale: ReportLocale;
+  sourceLocale: ReportLocale;
+  translationStatus: TranslationStatus;
+  title?: string;
+  subtitle?: string;
+  statement?: string;
+  userGoal?: string;
+  constraints?: string[];
+  starterContext?: string[];
+  deliverables?: string[];
+  createdAt?: string;
+}
+
 export interface Problem {
   id: string;
   title: string;
@@ -87,6 +113,9 @@ export interface Problem {
   allowedProviders: ProviderId[];
   rubric: RubricItem[];
   createdAt: string;
+  locale?: ReportLocale;
+  availableLocales?: ReportLocale[];
+  localized?: Partial<Record<ReportLocale, LocalizedProblemContent>>;
 }
 
 export interface TraceEvent {
@@ -696,6 +725,10 @@ export interface SkaiFileManifest {
 export interface SkaiFileProblemSnapshot {
   id: string;
   title: string;
+  locale?: ReportLocale;
+  sourceLocale?: ReportLocale;
+  translationStatus?: TranslationStatus;
+  availableLocales?: ReportLocale[];
   category: ProblemCategory;
   difficulty: Problem["difficulty"];
   goalProfile: ProblemGoalProfile;
@@ -710,6 +743,7 @@ export interface SkaiFileProblemSnapshot {
     mimeType: string;
     extractedTextHash: string;
     href?: string;
+    sourceLocale?: ReportLocale;
   }>;
 }
 

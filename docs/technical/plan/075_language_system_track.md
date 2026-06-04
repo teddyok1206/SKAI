@@ -389,6 +389,8 @@ Result:
 
 ### 084. Problem Content Localization
 
+Status: completed.
+
 Goal: localize problem statements separately from UI.
 
 Potential structure:
@@ -405,6 +407,16 @@ Rules:
 - original materials may remain in source language;
 - translated material text is a derived material, not the original;
 - playbooks need locale-aware prompt variants.
+
+Result:
+
+- `Problem` now supports source locale, available locales, and optional locale-specific derived content.
+- `ProblemMaterial` can carry source locale and future derived material text metadata without overwriting original extracted text.
+- `lib/problem-localization.ts` provides a fallback-safe localized problem view.
+- The 3 seed problems have English problem content views.
+- Problem browser search/cards, solve setup/sidebar, judge context, and `.skai` problem snapshots use the localized problem view where appropriate.
+- General chat still preserves cold-start behavior: problem text is not injected as hidden provider context.
+- Generated batch translation and playbook locale variants remain deferred.
 
 ### 085. `.skai` Locale Metadata
 
