@@ -202,9 +202,22 @@ For SKAI-native artifacts, `conversationId` is the attempt id. For future ChatGP
 Recommended demo path:
 
 - keep `.skai` as inspectable JSON for now;
-- add a web viewer/import page that accepts drag-and-drop `.skai`;
+- use the single web viewer/import surface at `/skai/viewer`;
 - render manifest, integrity status, trace, and 3D Dual Graph;
+- reuse that same viewer in public share pages for `.skai` save/share/PDF;
 - later consider a GitHub preview plugin, VS Code extension, or native file association.
+
+## Unified Viewer Principle
+
+SKAI should not create separate viewers for share, import, and PDF. The canonical viewer is `SkaiFileViewer`:
+
+- public share embeds it when a `PublishedAttempt.skaiFile` exists;
+- `/skai/viewer` uses it for drag-and-drop file opening;
+- `.skai` save/download is handled by the viewer;
+- link sharing is handled by the viewer;
+- PDF generation uses the same viewer through browser print.
+
+This prevents `.skai` from splintering into multiple UI dialects.
 
 ## Future Analysis Extension
 

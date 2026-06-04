@@ -4103,6 +4103,108 @@ summary {
   margin-bottom: 0;
 }
 
+.skai-file-viewer {
+  margin-top: 0;
+}
+
+.skai-file-viewer-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+}
+
+.skai-viewer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.skai-file-import {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  margin: 0 16px 16px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent-soft) 44%, var(--surface));
+  padding: 14px;
+}
+
+.skai-file-import.active {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.skai-file-viewer-body {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.skai-file-manifest-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.skai-file-manifest-grid > div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 12px;
+}
+
+.skai-file-manifest-grid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.skai-file-manifest-grid strong {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.skai-file-manifest-grid small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skai-integrity-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.integrity-ok {
+  color: var(--success);
+}
+
+.integrity-warn {
+  color: var(--red);
+}
+
+.skai-file-trace .panel-header.compact {
+  padding: 0 0 10px;
+}
+
+.skai-file-empty {
+  margin: 16px;
+}
+
 @media (max-width: 900px) {
   .grid,
   .solve-layout,
@@ -4254,6 +4356,19 @@ summary {
   .discussion-identity {
     grid-template-columns: 1fr;
   }
+
+  .skai-file-viewer-header,
+  .skai-file-import {
+    grid-template-columns: 1fr;
+  }
+
+  .skai-viewer-actions {
+    justify-content: flex-start;
+  }
+
+  .skai-file-manifest-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
@@ -4266,5 +4381,46 @@ summary {
 
   .share-stat {
     min-height: auto;
+  }
+
+  .skai-file-manifest-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body:has(.skai-file-viewer) {
+    background: #fff;
+  }
+
+  body:has(.skai-file-viewer) * {
+    visibility: hidden;
+  }
+
+  body:has(.skai-file-viewer) .skai-file-viewer,
+  body:has(.skai-file-viewer) .skai-file-viewer * {
+    visibility: visible;
+  }
+
+  body:has(.skai-file-viewer) .skai-file-viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .skai-viewer-actions,
+  .skai-file-import,
+  .graph-overlay-controls,
+  .graph-detail-panel {
+    display: none !important;
+  }
+
+  .skai-file-viewer-body,
+  .conversation-graph-view,
+  .raw-transcript {
+    break-inside: avoid;
   }
 }

@@ -46,12 +46,12 @@ import {
   reportPromptCommentInSupabase,
   updatePromptCommentInSupabase,
 } from "@/lib/supabase-persistence";
-import { buildSkaiFileArtifact, serializeSkaiFileArtifact, skaiFileMimeType, skaiFileName } from "@/lib/skai-format";
 import type { GraphSkeletonStep, GraphSkeletonStepRole, PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
 import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
+import { SkaiFileViewer } from "@/components/skai-file-viewer";
 
 const signalDefinitions = [
   { label: "목표", keywords: ["목표", "성공", "원하는", "해야", "해결"] },
@@ -182,7 +182,6 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
   const [commentNotice, setCommentNotice] = useState("");
   const [artifactNotice, setArtifactNotice] = useState("");
-  const [isBuildingSkaiFile, setIsBuildingSkaiFile] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -485,33 +484,6 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     setArtifactNotice("Artifact SVG downloaded.");
   }
 
-  async function downloadSkaiFile() {
-    setIsBuildingSkaiFile(true);
-    setArtifactNotice("");
-
-    try {
-      const artifact =
-        skaiFile ??
-        (await buildSkaiFileArtifact({
-          publishedAttempt,
-          problem,
-          childGraph: conversationGraph,
-        }));
-      const blob = new Blob([serializeSkaiFileArtifact(artifact)], { type: `${skaiFileMimeType};charset=utf-8` });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = skaiFileName(publishedAttempt.title);
-      anchor.click();
-      URL.revokeObjectURL(url);
-      setArtifactNotice(`.skai downloaded · ${artifact.integrity.artifactHash.slice(0, 12)}`);
-    } catch (error) {
-      setArtifactNotice(error instanceof Error ? error.message : ".skai 파일을 만들지 못했습니다.");
-    } finally {
-      setIsBuildingSkaiFile(false);
-    }
-  }
-
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
@@ -595,9 +567,6 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           <button className="button" type="button" onClick={() => void copyArtifactSummary()}>
             <ClipboardCopy size={16} /> 요약 복사
           </button>
-          <button className="button primary" disabled={isBuildingSkaiFile} type="button" onClick={() => void downloadSkaiFile()}>
-            <Download size={16} /> {isBuildingSkaiFile ? "Building .skai" : ".skai 저장"}
-          </button>
           <button className="button" type="button" onClick={downloadArtifactSvg}>
             <Download size={16} /> SVG 저장
           </button>
@@ -609,6 +578,18 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           {artifactNotice ? <p className="attachment-notice neutral">{artifactNotice}</p> : null}
         </div>
       </section>
+
+      {skaiFile ? (
+        <div style={{ marginTop: 16 }}>
+          <SkaiFileViewer artifact={skaiFile} key={skaiFile.integrity.artifactHash} title="Published .skai" />
+        </div>
+      ) : (
+        <section className="panel" style={{ marginTop: 16 }}>
+          <div className="panel-body">
+            <p className="muted">이 공유 snapshot은 `.skai` 도입 이전에 생성되었습니다. `.skai` 저장/PDF viewer를 사용하려면 attempt를 다시 publish해야 합니다.</p>
+          </div>
+        </section>
+      )}
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">
