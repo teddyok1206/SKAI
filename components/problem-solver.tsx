@@ -19,7 +19,7 @@ import {
   Trophy,
   X,
 } from "lucide-react";
-import { getProblemPlaybook, type ProblemPlaybookTurn } from "@/data/problem-playbooks";
+import { getLocalizedProblemPlaybook, type ProblemPlaybookTurn } from "@/data/problem-playbooks";
 import { attachmentFromFile, attachmentFromMaterial } from "@/lib/attachment-context";
 import { buildBranchTree } from "@/lib/branch-tree";
 import { createBreakpointReplayAttempt, sourceTraceEventIdForNextBranchEvent } from "@/lib/branching";
@@ -178,7 +178,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const activeMaterial = problem.materials.find((material) => material.id === activeMaterialId);
   const parentAttempt = attempt?.branch ? getAttempt(attempt.branch.parentAttemptId) : undefined;
   const activeSolvingMode = attempt?.solvingMode ? getSolvingMode(attempt.solvingMode) : selectedSolvingMode;
-  const playbook = useMemo(() => getProblemPlaybook(problem.id), [problem.id]);
+  const playbook = useMemo(() => getLocalizedProblemPlaybook(problem.id, locale), [locale, problem.id]);
   const conversationGraph = useMemo(
     () =>
       attempt

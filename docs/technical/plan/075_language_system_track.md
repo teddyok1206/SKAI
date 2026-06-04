@@ -417,6 +417,7 @@ Result:
 - Problem browser search/cards, solve setup/sidebar, judge context, and `.skai` problem snapshots use the localized problem view where appropriate.
 - General chat still preserves cold-start behavior: problem text is not injected as hidden provider context.
 - Generated batch translation and playbook locale variants remain deferred.
+- Follow-up 087 added English locale variants for the 3 seed problem playbooks. Generated batch playbooks still fall back to source locale.
 
 ### 085. `.skai` Locale Metadata
 
@@ -478,6 +479,7 @@ Result:
 - `scripts/i18n_source_check.mjs` verifies static `getCopy`/`t` keys, dynamic key templates, registry key usage, official hero copy, and selected source hardcoded JSX text.
 - `scripts/i18n_usage_allowlist.json` explicitly reserves currently unused-but-intentional keys.
 - `scripts/i18n_source_baseline.json` freezes the current raw JSX/attribute text baseline. Future work should reduce this baseline; new raw text that increases it fails the check.
+- Follow-up 088 moved Admin page header copy and the `.skai` viewer page title path away from raw JSX, reducing the hardcoded source baseline from 149 to 145 entries.
 
 Later:
 

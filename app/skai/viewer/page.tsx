@@ -5,7 +5,7 @@ export default function SkaiViewerPage() {
   return (
     <main className="container ui-mode-surface" data-ui-mode="engine">
       <SkaiViewerPageHeader />
-      <SkaiFileViewer allowImport title="SKAI File Viewer" />
+      <SkaiFileViewer allowImport />
     </main>
   );
 }

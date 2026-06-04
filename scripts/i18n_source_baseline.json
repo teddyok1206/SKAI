@@ -1,31 +1,7 @@
 {
-  "generatedAt": "2026-06-04T20:21:59.631Z",
+  "generatedAt": "2026-06-04T20:33:37.808Z",
   "note": "Current raw JSX text/attribute baseline. New raw user-facing text should go through lib/i18n/copy-registry.json instead of increasing this baseline.",
   "hardcodedText": [
-    {
-      "file": "app/admin/page.tsx",
-      "attribute": "text",
-      "text": "Admin MVP",
-      "count": 1
-    },
-    {
-      "file": "app/admin/page.tsx",
-      "attribute": "text",
-      "text": "SKAI 문제는 현실의 애매함, 자료, 제약, 산출물, 검증 기준을 함께 담아야 한다.",
-      "count": 1
-    },
-    {
-      "file": "app/admin/page.tsx",
-      "attribute": "text",
-      "text": "문제를 만들고 바로 풀어본다.",
-      "count": 1
-    },
-    {
-      "file": "app/skai/viewer/page.tsx",
-      "attribute": "title",
-      "text": "SKAI File Viewer",
-      "count": 1
-    },
     {
       "file": "components/admin-authoring-client.tsx",
       "attribute": "placeholder",

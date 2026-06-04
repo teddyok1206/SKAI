@@ -1,4 +1,4 @@
-import type { Problem } from "@/lib/types";
+import type { Problem, ReportLocale, TranslationStatus } from "@/lib/types";
 import { generatedProblemBatch001Playbooks } from "@/data/generated-problem-batch-001";
 
 export interface ProblemPlaybookTurn {
@@ -9,19 +9,127 @@ export interface ProblemPlaybookTurn {
   attachmentMaterialIds?: string[];
 }
 
+export interface LocalizedProblemPlaybookTurn {
+  id: string;
+  label?: string;
+  title?: string;
+  prompt?: string;
+  attachmentMaterialIds?: string[];
+}
+
+export interface LocalizedProblemPlaybook {
+  locale: ReportLocale;
+  sourceLocale: ReportLocale;
+  translationStatus: TranslationStatus;
+  recommendedMode?: string;
+  recommendedModel?: string;
+  turns?: LocalizedProblemPlaybookTurn[];
+  finalAnswerDraft?: string;
+}
+
 export interface ProblemPlaybook {
   problemId: Problem["id"];
   recommendedMode: string;
   recommendedModel: string;
   turns: ProblemPlaybookTurn[];
   finalAnswerDraft?: string;
+  locale?: ReportLocale;
+  availableLocales?: ReportLocale[];
+  localized?: Partial<Record<ReportLocale, LocalizedProblemPlaybook>>;
 }
 
 const seedProblemPlaybooks: ProblemPlaybook[] = [
   {
     problemId: "ambiguous-research-brief",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
     recommendedMode: "Single Model or Verification Drill",
     recommendedModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        recommendedMode: "Single Model or Verification Drill",
+        recommendedModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
+        turns: [
+          {
+            id: "turn-1",
+            label: "Turn 1",
+            title: "Clarify conditions and compare candidate topics",
+            prompt: `I will describe the situation first.
+
+A friend only said, "Can you look into how generative AI is affecting education these days? It is for a presentation." I do not want to jump straight into searching or summarizing. Before making a research brief for the presentation, I want to define the problem well.
+
+First, recommend specific education subfields that would work well for this presentation. Do not choose only one immediately. Answer in this order.
+
+1. Point out the conditions that are still unclear in this request.
+2. Suggest 5 candidate subfields that could become presentation topics.
+3. Compare each candidate by "presentation interest", "research availability", "controversy", "connection to AI-era skills", and "verification difficulty".
+4. Recommend the best 1-2 candidates based only on the current information, and explain which changed conditions would change your recommendation.
+
+Use a table plus short commentary.`,
+          },
+          {
+            id: "turn-2",
+            label: "Turn 2",
+            title: "Rewrite the problem definition",
+            prompt: `Good. Assume the audience is a general group of university students or working adults, and the presentation is about 7 minutes long. I want a practical message about "how people should use AI" rather than a deep education-theory lecture.
+
+Choose the most suitable direction from the candidates above and rewrite it as a researchable problem definition.
+
+Include all of the following.
+
+- Final presentation topic sentence
+- Why this topic is strong
+- Parts that are still too broad or vague
+- 3 research questions
+- Premature claims to avoid in the presentation
+- Types of sources I should look for to verify this topic`,
+          },
+          {
+            id: "turn-3",
+            label: "Turn 3",
+            title: "Design the workflow",
+            prompt: `Now design an AI workflow for turning this topic into a presentation research brief.
+
+I want to separate what I must judge myself from what I can assign to AI. Use the structure below.
+
+1. Conditions I must confirm first
+2. Subtasks to assign to AI
+3. Input, output, and verification criteria for each task
+4. Example revision prompts if an intermediate result is weak
+5. Final brief structure
+
+Important: include a verification plan because AI may produce plausible but unsupported claims.`,
+          },
+          {
+            id: "turn-4",
+            label: "Turn 4",
+            title: "Draft the brief",
+            prompt: `Good. Based on everything so far, create a draft research brief I can use for presentation prep.
+
+Use this format.
+
+## Refined Problem Definition
+## Research Questions
+## Candidate Core Claims
+## Presentation Structure
+## Subtasks to Assign to AI
+## Source Types to Verify
+## Remaining Assumptions and Limits
+## What I Should Do Next
+
+Clearly separate confirmed facts from assumptions that still need verification.`,
+          },
+        ],
+        finalAnswerDraft: `In this attempt, I did not directly summarize the broad request "how generative AI affects education." Instead, I narrowed the topic using the audience, presentation length, and need for a practical message. I first identified missing conditions, compared candidate subfields, then reconstructed the chosen direction as a researchable problem definition and research questions.
+
+I assigned AI the tasks of comparing candidate topics, rewriting the problem definition, designing subtasks, and drafting the brief. I kept the user's role focused on presentation purpose, audience fit, final claim selection, and verification criteria.
+
+The final artifact consists of a refined problem definition, research questions, candidate core claims, presentation structure, source types to verify, and remaining assumptions/limits. By separating confirmed facts from assumptions that need verification, the workflow reduces the risk of AI hallucination.`,
+      },
+    },
     turns: [
       {
         id: "turn-1",
@@ -101,8 +209,99 @@ AI에게는 후보 비교, 문제정의 재작성, 하위 task 설계, 브리프
   },
   {
     problemId: "club-budget-workflow",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
     recommendedMode: "Material Grounded",
     recommendedModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        recommendedMode: "Material Grounded",
+        recommendedModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
+        turns: [
+          {
+            id: "turn-1",
+            label: "Turn 1",
+            title: "Material-grounded work breakdown",
+            prompt: `I will describe the situation. A club treasurer needs to settle the budget for a May event, but receipt photos, bank transfer records, and Google Form signup records are mixed together. I want to use AI to create a settlement workflow that the treasurer can repeatedly follow.
+
+After checking the 3 attached materials, do not immediately create the final settlement table. First structure the work.
+
+Use this format.
+
+1. Facts that can be confirmed from each attached material
+2. Information that is still uncertain or needs human confirmation
+3. Subtasks for the settlement work
+4. Work AI can handle vs. work a human must review directly
+5. A useful data structure to create at this stage
+
+Warning: mark handling precautions separately for sensitive items such as personal information or account information.`,
+            attachmentMaterialIds: ["receipt-001", "transfers-001", "signup-001"],
+          },
+          {
+            id: "turn-2",
+            label: "Turn 2",
+            title: "Operating workflow",
+            prompt: `Good. Now design a settlement workflow that the actual treasurer can follow.
+
+Conditions:
+
+- The treasurer is not a developer.
+- It must be possible to follow using only documents and AI conversation, without installing tools.
+- There must be matching criteria across receipts, bank transfers, and signup records.
+- Handle failure scenarios such as missing records, duplicate records, mismatched names, and expenses without receipts.
+
+Use this format.
+
+## Overall Workflow
+## Input Materials by Step
+## AI Tasks by Step
+## Human Review Points by Step
+## Failure Scenarios and Responses
+## Repeatable Operating Checklist`,
+          },
+          {
+            id: "turn-3",
+            label: "Turn 3",
+            title: "Operating templates",
+            prompt: `I want to turn this workflow into an actual operating document.
+
+Create these artifacts.
+
+1. A checklist the settlement manager can copy for each event
+2. A standard prompt template to paste into AI
+3. A table template for cross-checking materials
+4. Risk items a human must check before final approval
+
+The table template must include at least date, material source, transaction/applicant name, amount, evidence status, matching status, and human review memo.`,
+          },
+          {
+            id: "turn-4",
+            label: "Turn 4",
+            title: "Final submission answer",
+            prompt: `Based on everything so far, organize the final submission answer.
+
+Must include:
+
+- Work breakdown
+- AI task allocation plan
+- Human review points
+- Operating checklist
+- Failure scenario response plan
+- Separation between facts confirmed from the attached materials and assumptions that still need confirmation
+
+Write it concisely enough to hand to the actual club treasurer, but make it executable.`,
+          },
+        ],
+        finalAnswerDraft: `In this attempt, I treated the receipt photo, bank transfer records, and Google Form signup records as separate source materials, then separated confirmed facts from uncertain information. I assigned AI the work of summarizing materials, designing matching criteria, drafting checklists, and identifying failure scenarios. I left buyer confirmation, approval of expenses without receipts, privacy handling, and final payment/refund decisions to humans.
+
+The settlement workflow is organized as material collection, standardized field preparation, receipt-transfer-signup cross-checking, exception marking, human review, and final report creation. For repeat operation, it uses a table template with date, material source, transaction/applicant name, amount, evidence status, matching status, and human review memo.
+
+Failure scenarios include missing receipts, mismatched payer names, signup without payment, possible duplicate expenses, and contract verification needs. Each scenario has a human review path. The final artifact is not AI automation alone, but a stable operating procedure that combines AI assistance with human approval points.`,
+      },
+    },
     turns: [
       {
         id: "turn-1",
@@ -186,8 +385,119 @@ AI에게는 후보 비교, 문제정의 재작성, 하위 task 설계, 브리프
   },
   {
     problemId: "counterfactual-product-review",
+    locale: "ko",
+    availableLocales: ["ko", "en"],
     recommendedMode: "Verification Drill",
     recommendedModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
+    localized: {
+      en: {
+        locale: "en",
+        sourceLocale: "ko",
+        translationStatus: "translated",
+        recommendedMode: "Verification Drill",
+        recommendedModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
+        turns: [
+          {
+            id: "turn-1",
+            label: "Turn 1",
+            title: "Set limits before analysis",
+            prompt: `I will describe the situation. Below are 12 fictional app reviews. I need to identify improvement priorities from this data, but the review count is small and may be biased. I want to set an analysis plan first so AI does not jump to conclusions.
+
+Review data:
+
+1. "Signup was easy, but I did not know what to do on the first screen."
+2. "Notifications came too often, so I turned them off."
+3. "Search results are sometimes irrelevant."
+4. "The friend invite feature is nice, but hard to find."
+5. "I tried to pay, but an error occurred, so I gave up."
+6. "The design is clean, but the text is small."
+7. "After the update, the app crashed twice."
+8. "Customer support replied quickly, which was good."
+9. "The free features are fairly useful."
+10. "Finding saved items again is cumbersome."
+11. "There is not enough guidance for first-time users."
+12. "I cannot tell whether the price is expensive or cheap. I need comparison."
+
+Do not produce final improvement priorities yet. First organize:
+
+1. What this data can tell us
+2. What this data cannot tell us
+3. Claims that would be risky to generalize too quickly
+4. Analysis criteria for classifying the reviews
+5. The sequence of subtasks to assign to AI afterward`,
+          },
+          {
+            id: "turn-2",
+            label: "Turn 2",
+            title: "Classify reviews",
+            prompt: `Good. Now classify the 12 reviews using the analysis criteria you created.
+
+Follow these constraints.
+
+- Keep in mind that the number of reviews is small.
+- Even if something appears frequent, do not conclude that it is a problem for all users.
+- Separate feature improvement, UX improvement, stability issues, price/value perception, and support experience.
+- For each category, show the supporting review numbers.
+
+Use a table.`,
+          },
+          {
+            id: "turn-3",
+            label: "Turn 3",
+            title: "Counterexamples and risks",
+            prompt: `Before choosing improvement priorities from the classification result, review counterexamples and risks first.
+
+Use this format.
+
+## Why the priorities could be wrong
+## Possible data bias
+## Additional data to collect
+## Small improvements that can be done now
+## Larger improvements that need more verification
+
+Explain especially how to treat severe-looking items such as payment errors or crashes differently from repeated items such as onboarding/navigation issues.`,
+          },
+          {
+            id: "turn-4",
+            label: "Turn 4",
+            title: "Separate priority types",
+            prompt: `Now propose final improvement priorities.
+
+Do not end with a single ranked list. Divide the result like this.
+
+1. Risk issues to verify immediately
+2. Short-term UX improvement candidates
+3. Hypotheses that require more data
+4. Items that should not be judged from this data alone
+
+For each item, include supporting review numbers, confidence level, needed additional verification, and the next AI task.`,
+          },
+          {
+            id: "turn-5",
+            label: "Turn 5",
+            title: "Product-team report",
+            prompt: `Finally, turn this analysis into a draft report that can be sent to the product team.
+
+Include:
+
+- Data limitations
+- Analysis criteria
+- Review classification strategy
+- Priorities and rationale
+- Counterexamples and risks
+- Additional data collection plan
+- Questions the product team should decide in the next meeting
+
+Use a readable mix of tables and bullets.`,
+          },
+        ],
+        finalAnswerDraft: `In this attempt, I treated the 12 app reviews as a small and biased dataset and did not immediately produce improvement priorities. I first separated what the data can and cannot tell us, then classified reviews by feature improvement, UX improvement, stability, price/value perception, and support experience.
+
+I assigned AI the tasks of designing analysis criteria, classifying reviews, identifying counterexamples and risks, and drafting priorities. I kept the user's role focused on controlling data limitations and final product judgment. Payment errors and crashes are low-frequency but high-risk issues that should be verified immediately, while onboarding and navigation problems repeat across multiple reviews and can become short-term UX improvement candidates.
+
+The final priorities are separated into immediate risk issues, short-term UX improvements, hypotheses requiring more data, and items that should be withheld from judgment. Additional data needed includes full user logs, error rates, drop-off points, search failure rate, pricing-page behavior, and interviews with new users.`,
+      },
+    },
     turns: [
       {
         id: "turn-1",
@@ -295,4 +605,45 @@ export const problemPlaybooks: ProblemPlaybook[] = [...seedProblemPlaybooks, ...
 
 export function getProblemPlaybook(problemId: string) {
   return problemPlaybooks.find((playbook) => playbook.problemId === problemId);
+}
+
+export function getLocalizedProblemPlaybook(problemId: string, locale: ReportLocale) {
+  const playbook = getProblemPlaybook(problemId);
+
+  if (!playbook) {
+    return undefined;
+  }
+
+  const sourceLocale = playbook.locale ?? "ko";
+  const localized = locale === sourceLocale ? undefined : playbook.localized?.[locale];
+
+  if (!localized) {
+    return playbook;
+  }
+
+  const localizedTurns = new Map((localized.turns ?? []).map((turn) => [turn.id, turn]));
+
+  return {
+    ...playbook,
+    recommendedMode: localized.recommendedMode ?? playbook.recommendedMode,
+    recommendedModel: localized.recommendedModel ?? playbook.recommendedModel,
+    turns: playbook.turns.map((turn) => {
+      const localizedTurn = localizedTurns.get(turn.id);
+
+      if (!localizedTurn) {
+        return turn;
+      }
+
+      return {
+        ...turn,
+        label: localizedTurn.label ?? turn.label,
+        title: localizedTurn.title ?? turn.title,
+        prompt: localizedTurn.prompt ?? turn.prompt,
+        attachmentMaterialIds: localizedTurn.attachmentMaterialIds ?? turn.attachmentMaterialIds,
+      };
+    }),
+    finalAnswerDraft: localized.finalAnswerDraft ?? playbook.finalAnswerDraft,
+    locale: localized.locale,
+    availableLocales: playbook.availableLocales,
+  } satisfies ProblemPlaybook;
 }

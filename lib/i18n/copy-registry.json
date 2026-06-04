@@ -6018,5 +6018,55 @@
     },
     "sourceChecksum": "11068c860a79197f64e5c1f7e23eb95e107970793b05efe83e36ef78d55c5194",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "admin.header.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Admin MVP",
+      "en": "Admin MVP"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4a30b83bd7056327bc6ff0274906ab4e973d6bf5f351e2566d3c690316454579",
+    "updatedAt": "2026-06-04T20:33:12.406Z"
+  },
+  {
+    "key": "admin.header.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제를 만들고 바로 풀어본다.",
+      "en": "Create a problem and solve it immediately."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "afa76f66ad52d3ac74e68fe265150cf0f8b1855c6b5ac3efc0afb6dd88fa79d1",
+    "updatedAt": "2026-06-04T20:33:12.406Z"
+  },
+  {
+    "key": "admin.header.lead",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "SKAI 문제는 현실의 애매함, 자료, 제약, 산출물, 검증 기준을 함께 담아야 한다.",
+      "en": "A SKAI problem must hold real-world ambiguity, materials, constraints, artifacts, and verification criteria together."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "74993e743d85e15934f53daf94016844e9b8775770cad7980da4feaaf3a83e9e",
+    "updatedAt": "2026-06-04T20:33:12.406Z"
   }
 ]
