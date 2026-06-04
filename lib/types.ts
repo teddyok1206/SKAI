@@ -37,6 +37,9 @@ export type AttemptBranchMode = "breakpoint_replay";
 
 export type SolvingModeId = "single_model" | "material_grounded" | "verification_drill";
 
+export type ReportLocale = "ko" | "en";
+export type TranslationStatus = "source" | "translated" | "draft" | "stale";
+
 export interface ProblemMaterial {
   id: string;
   title: string;
@@ -370,6 +373,9 @@ export interface ScoreReport {
   judgeMode?: JudgeMode;
   judgeRuns?: JudgeRunSummary[];
   judgeDisagreement?: string[];
+  locale?: ReportLocale;
+  sourceLocale?: ReportLocale;
+  translationStatus?: TranslationStatus;
   createdAt: string;
 }
 
@@ -681,6 +687,8 @@ export interface SkaiFileManifest {
   createdAt: string;
   exportedBy: "skai";
   schemaVersion: SkaiFileSchemaVersion;
+  locale?: ReportLocale;
+  availableLocales?: ReportLocale[];
   sections: string[];
   privacy: SkaiFilePrivacyPolicy;
 }
@@ -773,6 +781,9 @@ export interface SkaiExtensionBase {
   extensionVersion: string;
   artifactHash: string;
   inputGraphHash: string;
+  locale?: ReportLocale;
+  sourceLocale?: ReportLocale;
+  translationStatus?: TranslationStatus;
   createdAt: string;
   generator: {
     kind: SkaiExtensionGeneratorKind;

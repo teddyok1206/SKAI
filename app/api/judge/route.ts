@@ -38,6 +38,7 @@ const judgeSchema = z.object({
   problemId: z.string().min(1).max(120),
   trace: z.array(traceEventSchema).max(operationGuardrails.maxTraceEventsPerJudge),
   finalAnswer: z.string().max(operationGuardrails.maxFinalAnswerChars).default(""),
+  locale: z.enum(["ko", "en"]).default("ko"),
 });
 
 export async function POST(request: Request) {
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
     problem,
     trace: parsed.data.trace,
     finalAnswer: parsed.data.finalAnswer,
+    locale: parsed.data.locale,
   });
 
   return NextResponse.json(report);

@@ -537,6 +537,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           problemId: problem.id,
           trace: attempt.trace,
           finalAnswer,
+          locale,
         }),
       });
 

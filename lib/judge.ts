@@ -11,6 +11,7 @@ import type {
   JudgeRunSummary,
   Problem,
   ProviderId,
+  ReportLocale,
   ScoreReport,
   TraceEvent,
   WorkflowStep,
@@ -43,14 +44,25 @@ const graphAnnotationKindValues = [
   "cost_efficiency",
 ] as const;
 
-const axisLabels: Record<AxisScore["axis"], string> = {
-  problem_definition: "문제정의",
-  decomposition: "세분화",
-  instruction_clarity: "지시명확성",
-  adaptation: "적응력",
-  verification: "검증력",
-  efficiency: "효율성",
-  final_quality: "최종품질",
+const axisLabels: Record<ReportLocale, Record<AxisScore["axis"], string>> = {
+  ko: {
+    problem_definition: "문제정의",
+    decomposition: "세분화",
+    instruction_clarity: "지시명확성",
+    adaptation: "적응력",
+    verification: "검증력",
+    efficiency: "효율성",
+    final_quality: "최종품질",
+  },
+  en: {
+    problem_definition: "Problem Definition",
+    decomposition: "Decomposition",
+    instruction_clarity: "Instruction Clarity",
+    adaptation: "Adaptation",
+    verification: "Verification",
+    efficiency: "Efficiency",
+    final_quality: "Final Quality",
+  },
 };
 
 const llmJudgeSchema = z.object({
@@ -109,6 +121,7 @@ interface JudgeInput {
   problem: Problem;
   trace: TraceEvent[];
   finalAnswer: string;
+  locale: ReportLocale;
 }
 
 interface JudgeConfig {
@@ -141,7 +154,7 @@ function weightedTotal(problem: Problem, axisScores: AxisScore[]) {
   return Math.round(weighted);
 }
 
-function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: string, turnCount: number): AxisScore {
+function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: string, turnCount: number, locale: ReportLocale): AxisScore {
   const combined = `${traceText}\n${finalAnswer}`;
   const keywordSets: Record<AxisScore["axis"], string[]> = {
     problem_definition: ["목표", "문제", "제약", "성공", "기준", "가정", "불확실"],
@@ -157,19 +170,24 @@ function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: stri
   const turnBonus = axis === "efficiency" ? Math.max(0, 12 - turnCount) : Math.min(10, turnCount * 2);
   const finalBonus = finalAnswer.length > 200 ? 10 : finalAnswer.length > 80 ? 5 : 0;
   const score = clampScore(48 + matches * 7 + turnBonus + finalBonus);
+  const label = axisLabels[locale][axis];
 
   return {
     axis,
-    label: axisLabels[axis],
+    label,
     score,
     rationale:
       matches > 3
-        ? `${axisLabels[axis]} 관련 신호가 충분히 드러났습니다. 다음 단계는 근거와 우선순위를 더 압축하는 것입니다.`
-        : `${axisLabels[axis]} 관련 실행 증거가 아직 약합니다. 모델에게 결과를 맡기기 전에 기준, 역할, 검증 책임을 더 선명하게 설계해보세요.`,
+        ? locale === "ko"
+          ? `${label} 관련 신호가 충분히 드러났습니다. 다음 단계는 근거와 우선순위를 더 압축하는 것입니다.`
+          : `${label} signals are visible enough. Next, compress evidence and priorities more clearly.`
+        : locale === "ko"
+          ? `${label} 관련 실행 증거가 아직 약합니다. 모델에게 결과를 맡기기 전에 기준, 역할, 검증 책임을 더 선명하게 설계해보세요.`
+          : `${label} evidence is still weak. Clarify criteria, roles, and verification responsibility before handing the result to the model.`,
   };
 }
 
-function findBottlenecks(trace: TraceEvent[]): Bottleneck[] {
+function findBottlenecks(trace: TraceEvent[], locale: ReportLocale): Bottleneck[] {
   const userEvents = trace.filter((event) => event.role === "user");
   const bottlenecks: Bottleneck[] = [];
 
@@ -177,50 +195,73 @@ function findBottlenecks(trace: TraceEvent[]): Bottleneck[] {
   if (broadEvent) {
     bottlenecks.push({
       traceEventId: broadEvent.id,
-      label: "너무 넓은 지시",
+      label: locale === "ko" ? "너무 넓은 지시" : "Overly Broad Instruction",
       severity: "medium",
-      explanation: "짧고 추상적인 요청은 목표, 범위, 출력 형식의 설계를 모델의 추측에 넘깁니다.",
-      replaySuggestion: "이 지점부터 목표, 제약, 원하는 산출물 형식을 한 번에 명시해 다시 진행해보세요.",
+      explanation:
+        locale === "ko"
+          ? "짧고 추상적인 요청은 목표, 범위, 출력 형식의 설계를 모델의 추측에 넘깁니다."
+          : "A short abstract request leaves the goal, scope, and output format to model guesswork.",
+      replaySuggestion:
+        locale === "ko"
+          ? "이 지점부터 목표, 제약, 원하는 산출물 형식을 한 번에 명시해 다시 진행해보세요."
+          : "Replay from this point with the goal, constraints, and desired artifact format stated together.",
     });
   }
 
   const noVerification = !userEvents.some((event) => countMatches(event.content, ["검증", "확인", "출처", "오류", "한계"]) > 0);
   if (noVerification) {
     bottlenecks.push({
-      label: "검증 프롬프트 부재",
+      label: locale === "ko" ? "검증 프롬프트 부재" : "Missing Verification Prompt",
       severity: "high",
-      explanation: "검증 단계가 없으면 AI의 그럴듯한 산출물을 사용자가 다시 판단하지 않고 통과시키게 됩니다.",
-      replaySuggestion: "최종 답 직전부터 `이 답의 약점과 검증할 지점을 찾아줘`라고 요청해보세요.",
+      explanation:
+        locale === "ko"
+          ? "검증 단계가 없으면 AI의 그럴듯한 산출물을 사용자가 다시 판단하지 않고 통과시키게 됩니다."
+          : "Without a verification step, plausible AI output can pass without human judgment.",
+      replaySuggestion:
+        locale === "ko"
+          ? "최종 답 직전부터 `이 답의 약점과 검증할 지점을 찾아줘`라고 요청해보세요."
+          : "Before finalizing, ask the model to identify weaknesses and verification points.",
     });
   }
 
   return bottlenecks.slice(0, 3);
 }
 
-function buildWorkflow(trace: TraceEvent[]): WorkflowStep[] {
+function buildWorkflow(trace: TraceEvent[], locale: ReportLocale): WorkflowStep[] {
   const userEvents = trace.filter((event) => event.role === "user");
   const assistantEvents = trace.filter((event) => event.role === "assistant");
 
   return [
     {
-      title: "문제 접근",
+      title: locale === "ko" ? "문제 접근" : "Problem Approach",
       summary:
         userEvents.length > 0
-          ? "사용자가 문제를 읽고 AI에게 첫 접근 방향을 요청했습니다."
-          : "아직 사용자의 문제 접근 프롬프트가 없습니다.",
+          ? locale === "ko"
+            ? "사용자가 문제를 읽고 AI에게 첫 접근 방향을 요청했습니다."
+            : "The user read the problem and asked the AI for an initial approach."
+          : locale === "ko"
+            ? "아직 사용자의 문제 접근 프롬프트가 없습니다."
+            : "There is no user prompt for approaching the problem yet.",
       relatedTraceEventIds: userEvents[0] ? [userEvents[0].id] : [],
     },
     {
-      title: "AI 응답 활용",
+      title: locale === "ko" ? "AI 응답 활용" : "AI Response Use",
       summary:
         assistantEvents.length > 0
-          ? "AI의 중간 산출물을 바탕으로 다음 지시를 이어갈 수 있는 상태입니다."
-          : "아직 AI 응답이 없습니다.",
+          ? locale === "ko"
+            ? "AI의 중간 산출물을 바탕으로 다음 지시를 이어갈 수 있는 상태입니다."
+            : "The user can continue from the AI's intermediate artifact."
+          : locale === "ko"
+            ? "아직 AI 응답이 없습니다."
+            : "There is no AI response yet.",
       relatedTraceEventIds: assistantEvents[0] ? [assistantEvents[0].id] : [],
     },
     {
-      title: "최종 정리",
-      summary: "최종 산출물과 검증 계획을 분리해 제출하는 것이 이 문제의 핵심입니다.",
+      title: locale === "ko" ? "최종 정리" : "Final Organization",
+      summary:
+        locale === "ko"
+          ? "최종 산출물과 검증 계획을 분리해 제출하는 것이 이 문제의 핵심입니다."
+          : "The key is to separate the final artifact from the verification plan.",
       relatedTraceEventIds: trace.slice(-2).map((event) => event.id),
     },
   ];
@@ -231,8 +272,8 @@ function buildHeuristicReport(input: JudgeInput): ScoreReport {
   const traceText = input.trace
     .map((event) => `${event.role}: ${event.content}\n${buildAttachmentContext(event.attachments)}`)
     .join("\n");
-  const axisScores = defaultRubric.map((item) => axisScore(item.axis, traceText, input.finalAnswer, userTurnCount));
-  const bottlenecks = findBottlenecks(input.trace);
+  const axisScores = defaultRubric.map((item) => axisScore(item.axis, traceText, input.finalAnswer, userTurnCount, input.locale));
+  const bottlenecks = findBottlenecks(input.trace, input.locale);
   const strengths = axisScores
     .filter((score) => score.score >= 76)
     .slice(0, 3)
@@ -249,22 +290,38 @@ function buildHeuristicReport(input: JudgeInput): ScoreReport {
     totalScore: weightedTotal(input.problem, axisScores),
     axisScores,
     coachSummary:
-      "이번 시도는 AI에게 정답을 맡긴 기록이 아니라, 사용자가 문제 구조와 검증 책임을 어떻게 설계했는지에 대한 기록입니다. 점수보다 아래 mirror와 축별 피드백을 보고 다음 시도에서 한 지점을 바꾸는 것이 중요합니다.",
-    strengths: strengths.length > 0 ? strengths : ["문제 해결 과정을 trace로 남겼기 때문에 개선 가능한 지점이 명확해졌습니다."],
+      input.locale === "ko"
+        ? "이번 시도는 AI에게 정답을 맡긴 기록이 아니라, 사용자가 문제 구조와 검증 책임을 어떻게 설계했는지에 대한 기록입니다. 점수보다 아래 mirror와 축별 피드백을 보고 다음 시도에서 한 지점을 바꾸는 것이 중요합니다."
+        : "This attempt is not a record of handing the answer to AI. It is a record of how the user designed problem structure and verification responsibility. Use the mirror and axis feedback to change one point in the next attempt.",
+    strengths:
+      strengths.length > 0
+        ? strengths
+        : [
+            input.locale === "ko"
+              ? "문제 해결 과정을 trace로 남겼기 때문에 개선 가능한 지점이 명확해졌습니다."
+              : "Because the problem-solving process was preserved as a trace, improvement points are visible.",
+          ],
     improvements:
       improvements.length > 0
         ? improvements
-        : ["다음 시도에서는 병목 프롬프트 하나를 골라 같은 지점부터 다른 방식으로 재출발해보세요."],
+        : [
+            input.locale === "ko"
+              ? "다음 시도에서는 병목 프롬프트 하나를 골라 같은 지점부터 다른 방식으로 재출발해보세요."
+              : "In the next attempt, choose one bottleneck prompt and restart from that point in a different way.",
+          ],
     bottlenecks,
-    workflow: buildWorkflow(input.trace),
+    workflow: buildWorkflow(input.trace, input.locale),
     nextPracticeTargets: [
-      "첫 프롬프트에서 성공 기준과 출력 형식을 더 선명하게 쓰기",
-      "중간 산출물 뒤에 검증 프롬프트를 한 번 추가하기",
-      "최종 답과 검증 계획을 분리해서 제출하기",
+      input.locale === "ko" ? "첫 프롬프트에서 성공 기준과 출력 형식을 더 선명하게 쓰기" : "State success criteria and output format more clearly in the first prompt.",
+      input.locale === "ko" ? "중간 산출물 뒤에 검증 프롬프트를 한 번 추가하기" : "Add one verification prompt after the intermediate artifact.",
+      input.locale === "ko" ? "최종 답과 검증 계획을 분리해서 제출하기" : "Submit the final answer and verification plan separately.",
     ],
     judgeProvider: "mock",
     judgeModel: "heuristic-coach-v0",
     judgeMode: "heuristic",
+    locale: input.locale,
+    sourceLocale: input.locale,
+    translationStatus: "source",
     createdAt: new Date().toISOString(),
   };
 }
@@ -354,6 +411,7 @@ function buildJudgeContext(input: JudgeInput) {
     `Problem ID: ${input.problem.id}`,
     `Title: ${input.problem.title}`,
     `Goal profile: ${input.problem.goalProfile}`,
+    `Requested judge prose locale: ${input.locale === "ko" ? "Korean" : "English"}`,
     "",
     "Problem statement:",
     input.problem.statement,
@@ -396,9 +454,13 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
 
     return {
       axis: item.axis,
-      label: item.label,
+      label: axisLabels[input.locale][item.axis],
       score: clampScore(found?.score ?? 50),
-      rationale: found?.rationale ?? `${item.label} 축에 대한 judge 근거가 누락되었습니다.`,
+      rationale:
+        found?.rationale ??
+        (input.locale === "ko"
+          ? `${axisLabels[input.locale][item.axis]} 축에 대한 judge 근거가 누락되었습니다.`
+          : `Judge rationale for ${axisLabels[input.locale][item.axis]} is missing.`),
     };
   });
 
@@ -412,11 +474,14 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
     strengths: raw.strengths.slice(0, 4),
     improvements: raw.improvements.slice(0, 4),
     bottlenecks: raw.bottlenecks.slice(0, 4),
-    workflow: raw.workflow.length > 0 ? raw.workflow.slice(0, 6) : buildWorkflow(input.trace),
+    workflow: raw.workflow.length > 0 ? raw.workflow.slice(0, 6) : buildWorkflow(input.trace, input.locale),
     nextPracticeTargets: raw.nextPracticeTargets.slice(0, 4),
     judgeProvider: config.provider,
     judgeModel: config.model,
     judgeMode: "llm",
+    locale: input.locale,
+    sourceLocale: input.locale,
+    translationStatus: "source",
     createdAt: new Date().toISOString(),
   };
 
@@ -498,6 +563,7 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<Judg
         "For graphAnnotations, target trace event ids from the supplied trace. Do not invent trace ids.",
         "Use pair targets for prompt-response orchestration states unless a specific prompt or response node is the issue.",
         "Do not reward fake precision. Explain bottlenecks concretely.",
+        `Write every human-facing field in ${input.locale === "ko" ? "Korean" : "English"}. Keep SKAI technical tokens such as Prompt, Response, Trace, Branch, Replay, Judge, and Coaching when useful.`,
         "Return only valid JSON. Do not include markdown fences.",
       ].join(" "),
       contextMessage: buildJudgeContext(input),
@@ -557,7 +623,7 @@ function uniqueStrings(values: string[], limit: number) {
   return Array.from(new Set(values.filter(Boolean))).slice(0, limit);
 }
 
-function detectDisagreement(reports: ScoreReport[]) {
+function detectDisagreement(reports: ScoreReport[], locale: ReportLocale) {
   const notes: string[] = [];
 
   if (reports.length < 2) {
@@ -566,7 +632,11 @@ function detectDisagreement(reports: ScoreReport[]) {
 
   const totals = reports.map((report) => report.totalScore);
   if (Math.max(...totals) - Math.min(...totals) >= 12) {
-    notes.push(`총점 차이가 ${Math.max(...totals) - Math.min(...totals)}점입니다. judge calibration이 필요합니다.`);
+      notes.push(
+        locale === "ko"
+          ? `총점 차이가 ${Math.max(...totals) - Math.min(...totals)}점입니다. judge calibration이 필요합니다.`
+          : `Total scores differ by ${Math.max(...totals) - Math.min(...totals)} points. Judge calibration is needed.`,
+      );
   }
 
   for (const axis of scoreAxisValues) {
@@ -575,7 +645,11 @@ function detectDisagreement(reports: ScoreReport[]) {
       .filter((score): score is number => typeof score === "number");
 
     if (scores.length >= 2 && Math.max(...scores) - Math.min(...scores) >= 15) {
-      notes.push(`${axisLabels[axis]} 축에서 judge 간 점수 차이가 큽니다.`);
+      notes.push(
+        locale === "ko"
+          ? `${axisLabels[locale][axis]} 축에서 judge 간 점수 차이가 큽니다.`
+          : `Judge scores differ significantly on ${axisLabels[locale][axis]}.`,
+      );
     }
   }
 
@@ -593,11 +667,13 @@ function aggregateReports(input: JudgeInput, reports: ScoreReport[]): ScoreRepor
 
     return {
       axis: rubric.axis,
-      label: rubric.label,
+      label: axisLabels[input.locale][rubric.axis],
       score: clampScore(average),
       rationale: primaryScore
         ? `${primaryScore.rationale} (ensemble average: ${Math.round(average)})`
-        : "앙상블 judge 평균으로 산출한 점수입니다.",
+        : input.locale === "ko"
+          ? "앙상블 judge 평균으로 산출한 점수입니다."
+          : "Score calculated from the ensemble judge average.",
     };
   });
 
@@ -617,6 +693,9 @@ function aggregateReports(input: JudgeInput, reports: ScoreReport[]): ScoreRepor
     judgeProvider: primary.judgeProvider,
     judgeModel: `ensemble(${reports.map((report) => report.judgeModel).join(",")})`,
     judgeMode: "ensemble",
+    locale: input.locale,
+    sourceLocale: input.locale,
+    translationStatus: "source",
     createdAt: new Date().toISOString(),
   };
 }
@@ -658,14 +737,16 @@ export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
     return withGraphAnnotations(
       input,
       withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", allRuns, [
-        "LLM judge가 실패해 heuristic judge 결과를 사용했습니다.",
+        input.locale === "ko"
+          ? "LLM judge가 실패해 heuristic judge 결과를 사용했습니다."
+          : "LLM judge failed, so the heuristic judge result was used.",
       ]),
     );
   }
 
   const report =
     mode === "ensemble" ? aggregateReports(input, successfulReports) : successfulLlmReports[0];
-  const disagreement = detectDisagreement(successfulReports);
+  const disagreement = detectDisagreement(successfulReports, input.locale);
 
   return withGraphAnnotations(input, withJudgeRuns(report, mode, allRuns, disagreement));
 }

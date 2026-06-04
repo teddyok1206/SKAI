@@ -358,6 +358,8 @@ Result:
 
 ### 083. Judge / Coaching Language Layer
 
+Status: completed.
+
 Goal: make learning feedback locale-aware.
 
 Rules:
@@ -377,6 +379,13 @@ Potential extension metadata:
   "translationStatus": "approved"
 }
 ```
+
+Result:
+
+- Judge requests carry selected locale.
+- Score reports and optional judge/coaching extensions support locale metadata.
+- Heuristic judge and LLM judge prompt are locale-aware.
+- Score report chrome and Intelligence Mirror summaries are bilingual.
 
 ### 084. Problem Content Localization
 
@@ -399,6 +408,8 @@ Rules:
 
 ### 085. `.skai` Locale Metadata
 
+Status: completed.
+
 Goal: let exported/shared files declare language context.
 
 Potential manifest fields:
@@ -416,6 +427,12 @@ Rules:
 - trace raw text stays original;
 - viewer labels are selected by viewer locale;
 - generated coaching extensions may be locale-specific.
+
+Result:
+
+- `.skai` manifest supports optional `locale` and `availableLocales`.
+- Exported `.skai` files derive manifest locale from score report locale metadata.
+- Unified viewer displays locale metadata.
 
 Result:
 

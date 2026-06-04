@@ -5906,5 +5906,117 @@
     },
     "sourceChecksum": "289331c29204eefdabd0b028ead72056fa9444d3f70dc89096ea2386383a92cd",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.aria",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Score report",
+      "en": "Score report"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e6ef1da2b461132f6ef5f13f63979f42746d9b943e184bdeaa195480ac580184",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.title",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "구조가 드러났습니다.",
+      "en": "The structure is visible."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f1db92e3aa15942d265153f85d3559b65056a96db843d115a741e8dfc79e06a2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.locale",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Report locale:",
+      "en": "Report locale:"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b32f982937ee9bb8b7c835fe474260e926621dacd185e7981afc26c2d7a0066e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.symbolicScore",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "상징 점수. 실제 개선은 축별 피드백에서 본다.",
+      "en": "Symbolic score. Real improvement comes from axis-level feedback."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f7a7e44d3ad5d33b92259d28a090215d1ea051bcdaf84e13d4e3d400694c9b7b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.strengths",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "강점",
+      "en": "Strengths"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "05f540294a96333022f7c83396c67dabdebd530327e0bf02cdc6044020654946",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "scoreReport.improvements",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개선 포인트",
+      "en": "Improvements"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "994d5ee935f77326aba2b43e8bb54e414f2c65f7bc60370f72bd4f52b5b233df",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.locale",
+    "domain": "skai_viewer",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Locale",
+      "en": "Locale"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "11068c860a79197f64e5c1f7e23eb95e107970793b05efe83e36ef78d55c5194",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
   }
 ]

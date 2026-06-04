@@ -1,17 +1,22 @@
 "use client";
 
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { buildIntelligenceMirror } from "@/lib/skai-artifact";
 import type { ScoreReport } from "@/lib/types";
 
 export function ScoreReportCard({ report, showBottlenecks = true }: { report: ScoreReport; showBottlenecks?: boolean }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const mirror = buildIntelligenceMirror(report);
 
   return (
-    <section className="panel" aria-label="Score report">
+    <section className="panel" aria-label={t("scoreReport.aria")}>
       <div className="panel-header">
         <p className="eyebrow">Intelligence Mirror</p>
-        <h2>구조가 드러났습니다.</h2>
+        <h2>{t("scoreReport.title")}</h2>
         <p className="muted">{report.coachSummary}</p>
+        {report.locale ? <p className="muted">{t("scoreReport.locale")} {report.locale}</p> : null}
       </div>
       <div className="panel-body mirror-grid">
         {mirror.map((item) => (
@@ -26,7 +31,7 @@ export function ScoreReportCard({ report, showBottlenecks = true }: { report: Sc
         <div>
           <div className="score-circle">{report.totalScore}</div>
           <p className="muted" style={{ marginTop: 10 }}>
-            상징 점수. 실제 개선은 축별 피드백에서 본다.
+            {t("scoreReport.symbolicScore")}
           </p>
         </div>
         <div className="axis-list">
@@ -42,7 +47,7 @@ export function ScoreReportCard({ report, showBottlenecks = true }: { report: Sc
         </div>
       </div>
       <div className="panel-body">
-        <h3>강점</h3>
+        <h3>{t("scoreReport.strengths")}</h3>
         <ul className="compact-list">
           {report.strengths.map((item) => (
             <li key={item}>{item}</li>
@@ -50,7 +55,7 @@ export function ScoreReportCard({ report, showBottlenecks = true }: { report: Sc
         </ul>
       </div>
       <div className="panel-body">
-        <h3>개선 포인트</h3>
+        <h3>{t("scoreReport.improvements")}</h3>
         <ul className="compact-list">
           {report.improvements.map((item) => (
             <li key={item}>{item}</li>
@@ -62,7 +67,7 @@ export function ScoreReportCard({ report, showBottlenecks = true }: { report: Sc
           <h3>Bottleneck</h3>
           <div className="workflow">
             {report.bottlenecks.length === 0 ? (
-              <p className="muted">명확한 병목은 아직 감지되지 않았습니다.</p>
+              <p className="muted">{t("share.bottleneck.empty")}</p>
             ) : (
               report.bottlenecks.map((item) => (
                 <div className="workflow-step" key={`${item.label}-${item.traceEventId ?? "none"}`}>

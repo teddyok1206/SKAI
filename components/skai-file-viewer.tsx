@@ -296,6 +296,11 @@ export function SkaiFileViewer({
               <strong>{graphStats?.pairs ?? 0} {t("skaiViewer.graph.pairs")}</strong>
               <small>{graphStats?.prompts ?? 0}P / {graphStats?.responses ?? 0}R / {graphStats?.edges ?? 0}E</small>
             </div>
+            <div>
+              <span>{t("skaiViewer.locale")}</span>
+              <strong>{currentArtifact.manifest.locale ?? "unknown"}</strong>
+              <small>{currentArtifact.manifest.availableLocales?.join(", ") ?? "unknown"}</small>
+            </div>
           </div>
 
           {activeVerification ? (

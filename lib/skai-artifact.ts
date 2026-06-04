@@ -118,6 +118,7 @@ function xmlEscape(value: string) {
 }
 
 export function buildIntelligenceMirror(report: ScoreReport): IntelligenceMirrorSection[] {
+  const locale = report.locale ?? "ko";
   const intentScore = averageScore([axisScore(report, "problem_definition"), axisScore(report, "decomposition")]);
   const controlScore = averageScore([
     axisScore(report, "instruction_clarity"),
@@ -132,25 +133,37 @@ export function buildIntelligenceMirror(report: ScoreReport): IntelligenceMirror
       id: "intent",
       label: "Intent",
       score: intentScore,
-      summary: "무엇을 해결할지 정하고, 문제를 모델이 다룰 수 있는 구조로 바꾼 정도입니다.",
+      summary:
+        locale === "ko"
+          ? "무엇을 해결할지 정하고, 문제를 모델이 다룰 수 있는 구조로 바꾼 정도입니다."
+          : "How clearly the user chose what to solve and reshaped the problem into a model-usable structure.",
     },
     {
       id: "control",
       label: "Control",
       score: controlScore,
-      summary: "모델에게 일을 넘긴 뒤에도 방향, 조건, 비용, 중간 산출물을 붙잡은 정도입니다.",
+      summary:
+        locale === "ko"
+          ? "모델에게 일을 넘긴 뒤에도 방향, 조건, 비용, 중간 산출물을 붙잡은 정도입니다."
+          : "How well the user kept control of direction, conditions, cost, and intermediate artifacts after involving the model.",
     },
     {
       id: "verification",
       label: "Verification",
       score: verificationScore,
-      summary: "AI의 그럴듯한 답을 그대로 받지 않고 근거, 한계, 오류 가능성을 점검한 정도입니다.",
+      summary:
+        locale === "ko"
+          ? "AI의 그럴듯한 답을 그대로 받지 않고 근거, 한계, 오류 가능성을 점검한 정도입니다."
+          : "How well the user checked evidence, limits, and possible errors instead of accepting plausible AI output.",
     },
     {
       id: "artifact",
       label: "Artifact",
       score: artifactScore,
-      summary: "의도와 자료가 최종 산출물로 얼마나 명료하게 수렴했는지 보여줍니다.",
+      summary:
+        locale === "ko"
+          ? "의도와 자료가 최종 산출물로 얼마나 명료하게 수렴했는지 보여줍니다."
+          : "How clearly intent and materials converged into the final artifact.",
     },
   ];
 }

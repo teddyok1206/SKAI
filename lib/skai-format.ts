@@ -8,6 +8,7 @@ import type {
   ConversationTaskStatus,
   Problem,
   PublishedAttempt,
+  ReportLocale,
   SkaiFileArtifact,
   SkaiFileAttemptSnapshot,
   SkaiFileBranchSnapshot,
@@ -131,6 +132,10 @@ function primaryModelSource(trace: TraceEvent[]) {
     primaryProvider: sourceEvent?.provider,
     primaryModel: sourceEvent?.model,
   };
+}
+
+function manifestLocale(input: PublishedAttempt): ReportLocale {
+  return input.scoreReport.locale ?? input.scoreReport.sourceLocale ?? "ko";
 }
 
 function includesAny(value: string, words: readonly string[]) {
@@ -355,6 +360,8 @@ export async function buildSkaiFileArtifact(input: {
     createdAt,
     exportedBy: "skai",
     schemaVersion: skaiFileSchemaVersion,
+    locale: manifestLocale(input.publishedAttempt),
+    availableLocales: [manifestLocale(input.publishedAttempt)],
     sections: Object.entries(payload)
       .filter(([, value]) => value !== undefined)
       .map(([key]) => key),
