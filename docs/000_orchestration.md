@@ -87,8 +87,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
 - bilingual language system은 별도 track으로 잡았다. `docs/technical/plan/075_language_system_track.md`는 단순 `ko.ts/en.ts` 이중 관리가 아니라, source locale, status, checksum, protected terms를 가진 copy registry 방식으로 운영하는 계획을 정의한다.
-- language system 076-079가 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI 중심의 83개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
-- i18n registry는 한 locale이 먼저 수정되면 반대 locale을 `stale` 또는 `missing`으로 표시하는 운영을 전제로 한다. `LanguageToggle`과 localStorage 기반 explicit locale preference hook은 topbar에 붙었고, home hero/topbar/problem browser/auth notice는 registry에서 렌더링된다. 문제 본문, solve flow, graph/viewer/share/judge copy는 후속 slice다.
+- language system 076-080이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI와 solve flow 중심의 182개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
+- i18n registry는 한 locale이 먼저 수정되면 반대 locale을 `stale` 또는 `missing`으로 표시하는 운영을 전제로 한다. `LanguageToggle`과 localStorage 기반 explicit locale preference hook은 topbar에 붙었고, home hero/topbar/problem browser/auth notice/solve flow는 registry에서 렌더링된다. 문제 본문, graph/viewer/share/judge copy는 후속 slice다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
@@ -284,8 +284,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 한 언어에서 먼저 수정된 copy는 반대 언어를 자동으로 stale/missing 상태로 표시한다. (tooling 완료)
 - 한국어 모드에서도 `Orchestration`, `Trace`, `Artifact`, `3D Dual Graph` 같은 핵심 개념어는 필요 시 영어로 유지한다.
 - philosophy/brand copy는 직역하지 않고 ko/en 공식본을 별도로 승인한다.
-- 다음 구현: solve flow setup/model selection/composer/material panel/share notices를 registry 기반으로 렌더링한다.
-- 완료 조건: `verify:i18n`이 missing/stale/protected-term drift를 검출하고, 주요 route의 copy가 locale registry에서 렌더링된다. (first-impression route 완료, solve/viewer/share/judge 후속)
+- 다음 구현: 3D Dual Graph와 `.skai` viewer copy를 registry 기반으로 렌더링한다.
+- 완료 조건: `verify:i18n`이 missing/stale/protected-term drift를 검출하고, 주요 route의 copy가 locale registry에서 렌더링된다. (first-impression/solve route 완료, viewer/share/judge 후속)
 
 우선순위 3: playbook insertion and smoke operator UX
 

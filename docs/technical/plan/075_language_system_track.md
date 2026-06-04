@@ -284,6 +284,8 @@ Result:
 
 ### 080. Solve Flow Localization
 
+Status: completed.
+
 Goal: localize the user-facing solving loop.
 
 Scope:
@@ -299,6 +301,11 @@ Rules:
 
 - provider/model names are never translated;
 - `Prompt`, `Response`, `Trace`, `Artifact` can stay as tokens with Korean explanation.
+
+Result:
+
+- `ProblemSolver` and `LocalProblemSolver` now use registry copy for setup, mode/model selection, material controls, composer, playbook strip, final answer, publish/share, Branch Diff, and notices.
+- Problem payload and raw trace content stay source-language content; only the UI shell is locale-aware.
 
 ### 081. Graph And `.skai` Viewer Localization
 

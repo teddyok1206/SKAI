@@ -47,8 +47,10 @@ import { ConversationGraphView } from "@/components/conversation-graph-view";
 import { BranchTreeExplorer } from "@/components/branch-tree-explorer";
 import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
+import { useLanguagePreference } from "@/components/language-toggle";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
+import { getCopy } from "@/lib/i18n";
 
 const materialDragDataType = "application/x-skai-material-id";
 type SkaiActivity = "ready" | "primed" | "busy" | "structured";
@@ -122,6 +124,8 @@ function makeTraceEvent(input: {
 }
 
 export function ProblemSolver({ problem }: { problem: Problem }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [solvingModeId, setSolvingModeId] = useState<SolvingModeId>("single_model");
   const [modelOptionId, setModelOptionId] = useState<ModelOptionId | null>(null);
@@ -230,7 +234,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       }
 
       if (next.length >= operationGuardrails.maxAttachmentsPerMessage) {
-        setAttachmentNotice(`첨부는 한 번에 최대 ${operationGuardrails.maxAttachmentsPerMessage}개까지 가능합니다.`);
+        setAttachmentNotice(`${t("solve.notice.attachmentLimitPrefix")} ${operationGuardrails.maxAttachmentsPerMessage}${t("solve.notice.attachmentLimitSuffix")}`);
         break;
       }
 
@@ -268,7 +272,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
   function startAttempt() {
     if (!selectedModelOption) {
-      setAttachmentNotice("풀이를 시작하려면 사용할 모델을 먼저 선택해야 합니다.");
+      setAttachmentNotice(t("solve.notice.modelRequired"));
       return;
     }
 
@@ -359,7 +363,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
   async function copyTraceEventContent(event: TraceEvent) {
     if (!navigator.clipboard) {
-      setAttachmentNotice("이 브라우저에서는 clipboard API를 사용할 수 없습니다.");
+      setAttachmentNotice(t("solve.notice.clipboardUnavailable"));
       return;
     }
 
@@ -370,7 +374,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         setCopiedTraceEventId((current) => (current === event.id ? "" : current));
       }, 1600);
     } catch {
-      setAttachmentNotice("답변을 복사하지 못했습니다. 브라우저 권한을 확인해 주세요.");
+      setAttachmentNotice(t("solve.notice.copyFailed"));
     }
   }
 
@@ -386,7 +390,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       const next = await Promise.all(incomingFiles.map((file) => attachmentFromFile(file)));
       setSelectedAttachments((current) => mergeAttachments(current, next));
     } catch (error) {
-      setAttachmentNotice(error instanceof Error ? error.message : "파일을 첨부하지 못했습니다.");
+      setAttachmentNotice(error instanceof Error ? error.message : t("solve.notice.fileAttachFailed"));
     }
   }
 
@@ -426,7 +430,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     }
 
     if (attempt.trace.filter((event) => event.role === "user").length >= budgetGuardrails.maxTurnsPerAttempt) {
-      setInput("turn 제한에 도달했습니다. 제출하거나 새 attempt를 시작하세요.");
+      setInput(t("solve.notice.turnLimitReached"));
       return;
     }
 
@@ -502,7 +506,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         attemptId: attempt.id,
         problemId: problem.id,
         role: "assistant",
-        content: `모델 호출에 실패했습니다.\n\n${error instanceof Error ? error.message : "Unknown error"}`,
+        content: `${t("solve.notice.modelCallFailed")}\n\n${error instanceof Error ? error.message : "Unknown error"}`,
         provider: "mock",
         model: "error",
         branchId: attempt.branch?.id,
@@ -617,9 +621,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       setShareUrl(nextShareUrl);
 
       if (attemptSync.synced && publishedSync.synced) {
-        setShareNotice("공유가 원격 저장까지 완료되었습니다.");
+        setShareNotice(t("solve.notice.shareRemoteComplete"));
       } else {
-        setShareNotice("이 브라우저에서는 공유 보기가 가능합니다. 원격 공유 저장은 로그인/네트워크 상태를 확인해 주세요.");
+        setShareNotice(t("solve.notice.shareLocalOnly"));
       }
     } finally {
       setIsPublishing(false);
@@ -682,7 +686,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     const saved = getAttempt(attemptId);
 
     if (!saved) {
-      setAttachmentNotice("선택한 attempt를 local storage에서 찾을 수 없습니다.");
+      setAttachmentNotice(t("solve.notice.attemptNotFound"));
       return;
     }
 
@@ -704,7 +708,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     const parent = getAttempt(attempt.branch.parentAttemptId);
 
     if (!parent) {
-      setAttachmentNotice("Parent attempt를 찾을 수 없어 counterfactual judge를 실행할 수 없습니다.");
+      setAttachmentNotice(t("solve.notice.parentAttemptNotFound"));
       return;
     }
 
@@ -732,7 +736,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         updatedAt: new Date().toISOString(),
       });
     } catch (error) {
-      setAttachmentNotice(error instanceof Error ? error.message : "Counterfactual judge failed.");
+      setAttachmentNotice(error instanceof Error ? error.message : t("solve.notice.counterfactualFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -743,16 +747,14 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       <div className="pre-attempt-layout">
         <section className="panel pre-attempt-panel provider-shell" data-provider={provider ?? "unselected"}>
           <div className="panel-header">
-            <p className="eyebrow">풀이 설정</p>
+            <p className="eyebrow">{t("solve.preAttempt.eyebrow")}</p>
             <h2>{problem.title}</h2>
             <p className="muted">{problem.subtitle}</p>
           </div>
           <div className="panel-body pre-attempt-body">
             <div>
-              <h3>풀이 모드 선택</h3>
-              <p className="muted">
-                모드는 이 attempt의 연습 목적입니다. 어떤 모델을 고르든 동일한 모드로 풀 수 있어야 합니다.
-              </p>
+              <h3>{t("solve.modeSelection.title")}</h3>
+              <p className="muted">{t("solve.modeSelection.description")}</p>
             </div>
             <div className="environment-grid">
               {solvingModes.map((mode) => (
@@ -764,17 +766,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   type="button"
                 >
                   <span>{mode.label}</span>
-                  <strong>{mode.surfaceLabel}</strong>
-                  <small>{mode.description}</small>
-                  <em>{mode.evaluationLens}</em>
+                  <strong>{t(`solve.mode.${mode.id}.surfaceLabel`)}</strong>
+                  <small>{t(`solve.mode.${mode.id}.description`)}</small>
+                  <em>{t(`solve.mode.${mode.id}.evaluationLens`)}</em>
                 </button>
               ))}
             </div>
             <div>
-              <h3>모델 선택</h3>
-              <p className="muted">
-                모델은 실행 엔진입니다. 자료 활용형 모드도 Gemini에 묶이지 않고, 일반 대화형 모드도 OpenAI에 묶이지 않습니다.
-              </p>
+              <h3>{t("solve.modelSelection.title")}</h3>
+              <p className="muted">{t("solve.modelSelection.description")}</p>
             </div>
             <div className="environment-grid">
               {availableModelOptions.map((option) => (
@@ -788,24 +788,24 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 >
                   <span>{option.label}</span>
                   <strong>{providerUiProfiles[option.provider].label}</strong>
-                  <small>{option.description}</small>
-                  <em>{option.capabilityNote} · {option.model}</em>
+                  <small>{t(`solve.model.${option.id}.description`)}</small>
+                  <em>{t(`solve.model.${option.id}.capabilityNote`)} · {option.model}</em>
                 </button>
               ))}
             </div>
             <div className="pre-attempt-selected">
               <div>
                 <strong>
-                  {selectedSolvingMode.shortLabel} · {selectedModelOption ? selectedModelOption.shortLabel : "모델 선택 필요"}
+                  {t(`solve.mode.${selectedSolvingMode.id}.shortLabel`)} · {selectedModelOption ? selectedModelOption.shortLabel : t("solve.modelSelection.requiredShort")}
                 </strong>
                 <p className="muted">
                   {selectedModelOption
-                    ? `선택한 모드는 평가 렌즈이고, 선택한 모델은 실행 엔진입니다. 이 attempt에서는 ${providerUiProfiles[selectedModelOption.provider].label} · ${selectedModelOption.model}로 고정됩니다.`
-                    : "모델은 프로그래밍 언어처럼 명시적으로 고르는 실행 엔진입니다. 하나를 선택해야 풀이를 시작할 수 있습니다."}
+                    ? `${t("solve.modelSelection.lockedPrefix")} ${providerUiProfiles[selectedModelOption.provider].label} · ${selectedModelOption.model}${t("solve.modelSelection.lockedSuffix")}`
+                    : t("solve.modelSelection.requiredDescription")}
                 </p>
               </div>
               <button className="button primary" disabled={!selectedModelOption} onClick={startAttempt} type="button">
-                <Play size={16} /> 풀이 시작
+                <Play size={16} /> {t("solve.action.start")}
               </button>
             </div>
           </div>
@@ -814,12 +814,12 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         <aside className="panel">
           <div className="panel-header">
             <p className="eyebrow">{problem.category}</p>
-            <h2>문제 확인</h2>
+            <h2>{t("solve.problemPreview.title")}</h2>
           </div>
           <div className="panel-body">
-            <h3>문제</h3>
+            <h3>{t("solve.problem.statement")}</h3>
             <p className="muted">{problem.statement}</p>
-            <h3>제약</h3>
+            <h3>{t("solve.problem.constraints")}</h3>
             <ul className="constraint-list">
               {problem.constraints.map((item) => (
                 <li key={item}>{item}</li>
@@ -827,9 +827,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             </ul>
           </div>
           <div className="panel-body">
-            <h3>자료</h3>
+            <h3>{t("solve.materials.title")}</h3>
             {problem.materials.length === 0 ? (
-              <p className="muted">제공 자료가 없습니다.</p>
+              <p className="muted">{t("solve.materials.empty")}</p>
             ) : (
               <div className="material-list">
                 {problem.materials.map((material) => (
@@ -843,7 +843,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                       <strong>{material.title}</strong>
                       <small>{material.fileName}</small>
                     </span>
-                    <span className="material-state">보기</span>
+                    <span className="material-state">{t("solve.materials.view")}</span>
                   </button>
                 ))}
               </div>
@@ -862,7 +862,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   <pre className="material-text">{activeMaterial.extractedText}</pre>
                 ) : (
                   <details>
-                    <summary>추출 텍스트 보기</summary>
+                    <summary>{t("solve.materials.extractedText")}</summary>
                     <pre className="material-text">{activeMaterial.extractedText}</pre>
                   </details>
                 )}
@@ -888,9 +888,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           <p className="muted">{problem.subtitle}</p>
         </div>
         <div className="panel-body">
-          <h3>문제</h3>
+          <h3>{t("solve.problem.statement")}</h3>
           <p className="muted">{problem.statement}</p>
-          <h3>제약</h3>
+          <h3>{t("solve.problem.constraints")}</h3>
           <ul className="constraint-list">
             {problem.constraints.map((item) => (
               <li key={item}>{item}</li>
@@ -909,30 +909,30 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           <h3>Budget</h3>
           <div className="budget-grid">
             <div>
-              <span>Attempt estimate</span>
+              <span>{t("solve.budget.attemptEstimate")}</span>
               <strong>{formatUsd(totalEstimatedCostUsd)}</strong>
-              <small>{formatKrw(totalEstimatedCostKrw)} rough</small>
+              <small>{formatKrw(totalEstimatedCostKrw)} {t("solve.budget.rough")}</small>
             </div>
             <div>
               <span>Tokens</span>
               <strong>{totalTokens}</strong>
-              <small>{unknownCostEvents > 0 ? `${unknownCostEvents} unknown-cost events` : "priced when usage exists"}</small>
+              <small>{unknownCostEvents > 0 ? `${unknownCostEvents} ${t("solve.budget.unknownCostEvents")}` : t("solve.budget.pricedWhenUsageExists")}</small>
             </div>
             <div>
-              <span>Event cap</span>
+              <span>{t("solve.budget.eventCap")}</span>
               <strong>{formatKrw(budgetGuardrails.eventCapKrw)}</strong>
-              <small>founder guardrail</small>
+              <small>{t("solve.budget.founderGuardrail")}</small>
             </div>
             <div>
-              <span>Monthly cap</span>
+              <span>{t("solve.budget.monthlyCap")}</span>
               <strong>{formatKrw(budgetGuardrails.monthlyCapKrw)}</strong>
-              <small>founder guardrail</small>
+              <small>{t("solve.budget.founderGuardrail")}</small>
             </div>
           </div>
         </div>
         {problem.materials.length > 0 ? (
           <div className="panel-body">
-            <h3>자료</h3>
+            <h3>{t("solve.materials.title")}</h3>
             <div className="material-list">
               {problem.materials.map((material) => {
                 const isSelected = selectedAttachments.some((item) => item.materialId === material.id);
@@ -950,7 +950,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                       <strong>{material.title}</strong>
                       <small>{material.fileName}</small>
                     </span>
-                    <span className={isSelected ? "material-state selected" : "material-state"}>{isSelected ? "사용 중" : "보기"}</span>
+                    <span className={isSelected ? "material-state selected" : "material-state"}>
+                      {isSelected ? t("solve.materials.inUse") : t("solve.materials.view")}
+                    </span>
                   </button>
                 );
               })}
@@ -964,7 +966,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   </div>
                   <button className="button" onClick={() => toggleMaterialAttachment(activeMaterial.id)} type="button">
                     <Paperclip size={15} />{" "}
-                    {selectedAttachments.some((item) => item.materialId === activeMaterial.id) ? "해제" : "사용"}
+                    {selectedAttachments.some((item) => item.materialId === activeMaterial.id) ? t("solve.materials.detach") : t("solve.materials.use")}
                   </button>
                 </div>
                 {activeMaterial.kind === "image" && activeMaterial.href ? (
@@ -975,13 +977,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                   <pre className="material-text">{activeMaterial.extractedText}</pre>
                 ) : (
                   <details>
-                    <summary>추출 텍스트 보기</summary>
+                    <summary>{t("solve.materials.extractedText")}</summary>
                     <pre className="material-text">{activeMaterial.extractedText}</pre>
                   </details>
                 )}
                 {activeMaterial.href ? (
                   <a className="button" href={activeMaterial.href} download>
-                    원본 다운로드
+                    {t("solve.materials.downloadOriginal")}
                   </a>
                 ) : null}
               </div>
@@ -996,7 +998,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         <div className="panel-body">
           <h3>Local Leaderboard</h3>
           {leaderboard.length === 0 ? (
-            <p className="muted">아직 이 문제의 채점 기록이 없습니다.</p>
+            <p className="muted">{t("solve.leaderboard.empty")}</p>
           ) : (
             <ol className="constraint-list">
               {leaderboard.map((item) => (
@@ -1015,7 +1017,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
       <section className="panel chat-panel provider-shell" data-provider={provider}>
         <div className="toolbar">
-          <div className="workspace-tabs" role="tablist" aria-label="Attempt workspace">
+          <div className="workspace-tabs" role="tablist" aria-label={t("solve.workspace.aria")}>
             <button
               aria-selected={workspaceTab === "chat"}
               className={workspaceTab === "chat" ? "active" : ""}
@@ -1034,9 +1036,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             >
               <Network size={16} /> Graph
             </button>
-            <span className="muted">{attempt.trace.length} events · ~{totalTokens} tokens</span>
+            <span className="muted">{attempt.trace.length} {t("solve.workspace.events")} · ~{totalTokens} tokens</span>
             <span className="muted">
-              {formatUsd(totalEstimatedCostUsd)} est{unknownCostEvents > 0 ? ` · ${unknownCostEvents} unknown` : ""}
+              {formatUsd(totalEstimatedCostUsd)} {t("solve.workspace.estimateShort")}
+              {unknownCostEvents > 0 ? ` · ${unknownCostEvents} ${t("solve.workspace.unknownShort")}` : ""}
             </span>
           </div>
           <div className="segmented locked-environment">
@@ -1050,7 +1053,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <div className="segmented branch-segment">
               <GitBranch size={16} />
               <strong>Breakpoint</strong>
-              <span className="environment-meta">trace {attempt.branch.parentTraceIndex + 1}</span>
+              <span className="environment-meta">Trace {attempt.branch.parentTraceIndex + 1}</span>
             </div>
           ) : null}
         </div>
@@ -1061,9 +1064,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               <div className="empty">
                 <div>
                   <p>
-                    첫 프롬프트에서 정답을 바로 요구하기보다 목표, 제약, 산출물, 검증 기준을 먼저 잡아보세요.
+                    {t("solve.chat.empty.primary")}
                   </p>
-                  <p className="muted">Mock provider는 API key 없이 동작합니다.</p>
+                  <p className="muted">{t("solve.chat.empty.secondary")}</p>
                 </div>
               </div>
             ) : (
@@ -1091,14 +1094,14 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                       <button
                         className="button quiet message-copy-button"
                         onClick={() => void copyTraceEventContent(event)}
-                        title="이 AI 답변 전체 복사"
+                        title={t("solve.chat.copyAnswerTitle")}
                         type="button"
                       >
                         {copiedTraceEventId === event.id ? <Check size={15} /> : <Copy size={15} />}
-                        {copiedTraceEventId === event.id ? "Copied" : "Copy answer"}
+                        {copiedTraceEventId === event.id ? t("solve.action.copied") : t("solve.action.copyAnswer")}
                       </button>
                     ) : null}
-                    <button className="button" onClick={() => branchFrom(index)} title="이 지점에서 replay branch 생성">
+                    <button className="button" onClick={() => branchFrom(index)} title={t("solve.branch.createFromHereTitle")}>
                       <GitBranch size={15} /> Branch
                     </button>
                   </div>
@@ -1116,16 +1119,16 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
         <div className="composer">
           {playbook ? (
-            <div className="playbook-strip" aria-label="Problem prompt playbook">
+            <div className="playbook-strip" aria-label={t("solve.playbook.aria")}>
               <div className="playbook-strip-header">
                 <div className="playbook-title">
                   <BookOpen size={16} />
                   <strong>Playbook</strong>
-                  <span className="muted">{playbook.turns.length} turns</span>
+                  <span className="muted">{playbook.turns.length} {t("solve.playbook.turns")}</span>
                 </div>
                 {playbook.finalAnswerDraft ? (
                   <button className="button quiet" onClick={insertFinalAnswerDraft} type="button">
-                    Final draft
+                    {t("solve.playbook.finalDraft")}
                   </button>
                 ) : null}
               </div>
@@ -1136,7 +1139,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                     <strong>{turn.title}</strong>
                     {turn.attachmentMaterialIds?.length ? (
                       <small>
-                        <Paperclip size={12} /> {turn.attachmentMaterialIds.length} 자료
+                        <Paperclip size={12} /> {turn.attachmentMaterialIds.length}{t("solve.playbook.materialSuffix")}
                       </small>
                     ) : null}
                   </button>
@@ -1159,10 +1162,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             onDrop={handleAttachmentDrop}
           >
             <button className="button" type="button" onClick={() => fileInputRef.current?.click()}>
-              <FilePlus2 size={16} /> 파일 추가
+              <FilePlus2 size={16} /> {t("solve.attachment.addFile")}
             </button>
             <span className="muted">
-              자료 카드를 끌어오거나 파일을 드래그해 다음 프롬프트에 첨부합니다. 최대 {operationGuardrails.maxAttachmentsPerMessage}개 · 파일당{" "}
+              {t("solve.attachment.dropzonePrefix")} {operationGuardrails.maxAttachmentsPerMessage}{t("solve.attachment.dropzoneMiddle")}{" "}
               {Math.round(operationGuardrails.maxUploadBytes / 1_000_000)}MB
             </span>
             <input
@@ -1185,7 +1188,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 <span className="attachment-chip" key={attachment.id}>
                   <Paperclip size={14} />
                   {attachment.name}
-                  <button aria-label={`${attachment.name} 제거`} onClick={() => removeAttachment(attachment.id)} type="button">
+                  <button aria-label={`${attachment.name} ${t("solve.attachment.remove")}`} onClick={() => removeAttachment(attachment.id)} type="button">
                     <X size={13} />
                   </button>
                 </span>
@@ -1194,7 +1197,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           ) : null}
           <textarea
             className="textarea"
-            placeholder="AI에게 보낼 다음 지시를 작성하세요."
+            placeholder={t("solve.composer.placeholder")}
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onDragEnter={blockPromptTextDrop}
@@ -1208,13 +1211,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           />
           <div className="actions">
             <button className="button" onClick={loadLastAttempt}>
-              <RotateCcw size={16} /> Reload
+              <RotateCcw size={16} /> {t("solve.action.reload")}
             </button>
             <button className="button" onClick={restart}>
-              <Play size={16} /> New
+              <Play size={16} /> {t("solve.action.new")}
             </button>
             <button className="button primary" disabled={isLoading || !input.trim()} onClick={() => void sendMessage()}>
-              <Send size={16} /> Send
+              <Send size={16} /> {t("solve.action.send")}
             </button>
           </div>
         </div>
@@ -1223,14 +1226,14 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       <section className="panel" style={{ gridColumn: "1 / -1" }}>
         <div className="panel-header">
           <h2>Final Answer</h2>
-          <p className="muted">최종 산출물, 검증 계획, 남은 가정을 분리해서 제출하세요.</p>
+          <p className="muted">{t("solve.finalAnswer.description")}</p>
         </div>
         <div className="panel-body">
           <textarea
             className="textarea"
             value={finalAnswer}
             onChange={(event) => setFinalAnswer(event.target.value)}
-            placeholder="최종 답안을 작성하세요."
+            placeholder={t("solve.finalAnswer.placeholder")}
           />
           <div className="actions" style={{ marginTop: 10 }}>
             <button className="button primary" disabled={isLoading || attempt.trace.length === 0} onClick={() => void submitAttempt()}>
@@ -1245,11 +1248,11 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           <ScoreReportCard report={attempt.scoreReport} />
           <div className="actions" style={{ marginTop: 12 }}>
             <button className="button primary" disabled={isPublishing} onClick={() => void publishAttempt()}>
-              <Share2 size={16} /> {isPublishing ? "Publishing" : "Publish"}
+              <Share2 size={16} /> {isPublishing ? t("solve.publish.publishing") : t("solve.publish.publish")}
             </button>
             {shareUrl ? (
               <a className="button" href={shareUrl}>
-                공유 보기
+                {t("solve.publish.viewShare")}
               </a>
             ) : null}
           </div>
@@ -1263,26 +1266,26 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
             <h2>
               <GitBranch size={20} /> Branch Diff
             </h2>
-            <p className="muted">parent attempt와 이 replay branch를 비교해 병목이 실제로 개선됐는지 봅니다.</p>
+            <p className="muted">{t("solve.branch.description")}</p>
           </div>
           <div className="panel-body">
             {parentAttempt ? (
               <div className="branch-diff-grid">
                 <div className="diff-stat">
                   <strong>Parent</strong>
-                  <span>{parentAttempt.trace.length} events · {parentAttempt.scoreReport?.totalScore ?? "unjudged"} score</span>
+                  <span>{parentAttempt.trace.length} {t("solve.workspace.events")} · {parentAttempt.scoreReport?.totalScore ?? t("solve.branch.unjudged")} score</span>
                 </div>
                 <div className="diff-stat">
                   <strong>Child</strong>
-                  <span>{attempt.trace.length} events · {attempt.scoreReport?.totalScore ?? "unjudged"} score</span>
+                  <span>{attempt.trace.length} {t("solve.workspace.events")} · {attempt.scoreReport?.totalScore ?? t("solve.branch.unjudged")} score</span>
                 </div>
                 <div className="diff-stat">
                   <strong>Breakpoint</strong>
-                  <span>trace {attempt.branch.parentTraceIndex + 1}</span>
+                  <span>Trace {attempt.branch.parentTraceIndex + 1}</span>
                 </div>
               </div>
             ) : (
-              <p className="muted">Parent attempt를 local storage에서 찾을 수 없습니다.</p>
+              <p className="muted">{t("solve.branch.parentMissing")}</p>
             )}
             <div className="actions" style={{ marginTop: 12 }}>
               <button className="button primary" disabled={isLoading || !parentAttempt} onClick={() => void runCounterfactualJudge()}>
@@ -1310,11 +1313,11 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
               <div className="branch-diff-grid">
                 <div className="diff-card">
                   <strong>Prompt before</strong>
-                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? "No parent prompt found."}</p>
+                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.before ?? t("solve.branch.noParentPrompt")}</p>
                 </div>
                 <div className="diff-card">
                   <strong>Prompt after</strong>
-                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? "No child prompt found yet."}</p>
+                  <p>{attempt.counterfactualReport.branchDiff.promptChange?.after ?? t("solve.branch.noChildPrompt")}</p>
                 </div>
               </div>
               {parentConversationGraph && conversationGraph ? (

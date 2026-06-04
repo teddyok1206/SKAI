@@ -1368,5 +1368,1607 @@
     },
     "sourceChecksum": "36624a646f7598ad5358f48133ec40586c8ed2ebb20ca2a1fb6b078777de835f",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.preAttempt.eyebrow",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀이 설정",
+      "en": "Attempt setup"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a8acf7d5ef9d7a60a4a4ff700004cf7b4025449435ddd63854f76912b9ccd9c4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modeSelection.title",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀이 모드 선택",
+      "en": "Choose solving mode"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f9441c3752b1470bc3853d554a495bb836900e997e8faf43435a848b4e1b4aeb",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modeSelection.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모드는 이 attempt의 연습 목적입니다. 어떤 모델을 고르든 동일한 모드로 풀 수 있어야 합니다.",
+      "en": "The mode is the practice purpose for this attempt. It must stay independent from the model you choose."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "97ef87d44e016a8811ad65133bb1133de380e533ea00dde60bd7a760513e8ae9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.title",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델 선택",
+      "en": "Choose model"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ab405fc75e552d5ee7a7d9ce22c925453724b6d64164235192bc0970d9e3a31a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델은 실행 엔진입니다. 자료 활용형 모드도 Gemini에 묶이지 않고, 일반 대화형 모드도 OpenAI에 묶이지 않습니다.",
+      "en": "The model is the execution engine. Material-grounded modes are not tied to Gemini, and general chat modes are not tied to OpenAI."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b4b16cdb815905b681b0cc5b6e50e5132ebfe82fbff1ea388d170838a83b307f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.requiredShort",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델 선택 필요",
+      "en": "Choose a model"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e1a0de3598116a1119b706b9cefc5068e50c3e6cc09572a228770e9a4d4761d6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.requiredDescription",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델은 프로그래밍 언어처럼 명시적으로 고르는 실행 엔진입니다. 하나를 선택해야 풀이를 시작할 수 있습니다.",
+      "en": "A model is an explicit execution engine, like choosing a programming language. Choose one to start solving."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2bd5d9827c9e8defc913499b49cc932b2362a91b13519355dbc54ef1f6b05b86",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.lockedPrefix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "선택한 모드는 평가 렌즈이고, 선택한 모델은 실행 엔진입니다. 이 attempt에서는",
+      "en": "The selected mode is the evaluation lens, and the selected model is the execution engine. This attempt is locked to"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b27ae39b4abdfb7069a9fe90cb362674da1d887e0ef6b1fc2ea7fc07af325f96",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.modelSelection.lockedSuffix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로 고정됩니다.",
+      "en": "."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "611a345a03567d5e12e2b860b271af54af24a06257e2f23690d92c962412055d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.start",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀이 시작",
+      "en": "Start attempt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8a070f97e62923ffd380e757b2dbc25ed0adc4af926ff4ceae4aad33b950248f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.problemPreview.title",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 확인",
+      "en": "Review problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2ed1fb743e383b735fb5bda9203be5b5009814195ddeab36776ceea373c76cc0",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.problem.statement",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제",
+      "en": "Problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0a2cd352a0fb37ef2aaa5db5beeee0189eaf8d1382f0b005633db5d6f49bb865",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.problem.constraints",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "제약",
+      "en": "Constraints"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c129e9bfc9103cd448de45c4e21a2f4c4a6adc0f42a05e19b280f61e512084b1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.title",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료",
+      "en": "Materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7a7d5218bca7a6ef5af77bbdac856bda3a67d9d8e604ec80e9902dae1da58790",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.empty",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "제공 자료가 없습니다.",
+      "en": "No official materials are provided."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fcf703aa420c571976f5f0e089d1e87fd199c7a76192cfd126e917b835ed6b0d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.view",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "보기",
+      "en": "View"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6e799f42b859e5327cc5a85ef5e608d85e7c7b795c9e08f9e72a5eebe196ae90",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.inUse",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "사용 중",
+      "en": "In use"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c7954be9115975351442c3a38bc25129803caf21ae28bbdb8efb2d426ad547a5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.use",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "사용",
+      "en": "Use"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "44f1a0da6648bd5af6d82b97bd028cec2ff35e953f38353aacb71e29196cde31",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.detach",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "해제",
+      "en": "Detach"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "670ccda80688f313c326a6a424189df8b3a6c6a4578bc77510329003596ef00d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.extractedText",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "추출 텍스트 보기",
+      "en": "View extracted text"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ae14213a565fc40c3d35f1d9390192a251f80962dc406f38bf8543df3646fddf",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.materials.downloadOriginal",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "원본 다운로드",
+      "en": "Download original"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "af268a4ffb256e970e088abe538edaaf15d1d77cf465373d0171898dd75d762d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.attemptEstimate",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Attempt estimate",
+      "en": "Attempt estimate"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0b134da0df43d8a96574ca50591cd3dd485c36370873b2c1df9c754795c38fd9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.rough",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "rough",
+      "en": "rough"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7ae04deb816ee2d8001f3c0b3be57570bc43875eafca7f0468c2cb18158b54c2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.unknownCostEvents",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "unknown-cost events",
+      "en": "unknown-cost events"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8f1ed327f7a5756e9e173fd7907aaa3a8dffcfde3fe4594cbc1359b3e48bb65e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.pricedWhenUsageExists",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "usage가 있으면 가격이 추정됩니다",
+      "en": "priced when usage exists"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "be7b2f57acadb47dea2e06915e523a2eaf4fdabbe9629ea53707b6dac3a5d04e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.eventCap",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Event cap",
+      "en": "Event cap"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e2ff935eea8a06069260a08e6157db6fe8f6e794ca8ec052b8361e957af0f766",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.monthlyCap",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Monthly cap",
+      "en": "Monthly cap"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4473539969e583fe8bc6aaf2d622623eb55452ffb601dc06a149d94cb4585a05",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.budget.founderGuardrail",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "founder guardrail",
+      "en": "founder guardrail"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "de7dc807414d6b59d4182459038008f4a4f4b0d2b0c12b66e8683a9a259c1a5f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.leaderboard.empty",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 이 문제의 채점 기록이 없습니다.",
+      "en": "No judged attempts for this problem yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9c46825231e58b0bffac9591b1e87c0e7258ad3773598fc845ddf6f3d5099bb2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.workspace.aria",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Attempt workspace",
+      "en": "Attempt workspace"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7c3cb767335c4e9651188eca9525f6dae6f3862cf1fd4f4fba63dd2aff92a963",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.workspace.events",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "events",
+      "en": "events"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f6ef4cf0f3ddb56803baed2f80ef884ed13d4afc4dbd9ef6a27734d330f3bdf6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.workspace.estimateShort",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "est",
+      "en": "est"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "def7c912b6837464cc391cc7b9df5d4c01503e59711bedbd5db5405b5a08e596",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.workspace.unknownShort",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "unknown",
+      "en": "unknown"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "20f1843bb30703c8ca8a8c17256ff251a14d9d037a1bf3862936e384b302ac66",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.chat.empty.primary",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첫 프롬프트에서 정답을 바로 요구하기보다 목표, 제약, 산출물, 검증 기준을 먼저 잡아보세요.",
+      "en": "In the first prompt, try framing the goal, constraints, artifact, and verification criteria before asking for a final answer."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6160831dbdfe51c6f100e0e73e8044c8f034e3368a2b57917a421a0cce3fef6a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.chat.empty.secondary",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Mock provider는 API key 없이 동작합니다.",
+      "en": "The Mock provider works without an API key."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "281f31cea9904ba77b1c7bb25cd8f6118cda2bad635accc7d67538f3d9ee1c80",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.chat.copyAnswerTitle",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이 AI 답변 전체 복사",
+      "en": "Copy this full AI response"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f727d102219e063a7bd8a83dbdfd23f11bca61d6dcaf47ae09fa4525da96e853",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.copied",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Copied",
+      "en": "Copied"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cbb5f27e868cf275c35461eec048a1d4cb23ede0b79d57cdad69c1f64bf62572",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.copyAnswer",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Copy answer",
+      "en": "Copy answer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1d2a732e5d2d6f265885eba30d376c7bf0070c534863722958f980a31ac8a81a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.createFromHereTitle",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Replay",
+      "Branch"
+    ],
+    "values": {
+      "ko": "이 지점에서 Replay Branch 생성",
+      "en": "Create a Replay Branch from this point"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ed247a0dbb29bc5e143235c8f164de20cce6cce556d4d341e673ba9f932f7f82",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.playbook.aria",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Problem prompt playbook",
+      "en": "Problem prompt playbook"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "64f43446e2286fd21b3cd62649a29b07edec2ffb4437afc1ee659c9556cb36af",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.playbook.turns",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "turns",
+      "en": "turns"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9c6097b15ed599c7c5bc6a08e996573dc11d4dcaa56ec1817d1533d5b7159b71",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.playbook.finalDraft",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Final draft",
+      "en": "Final draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f3fc98c4c81cac63fc8682caed326e3f45cc9c71e7803ba32464707619a7c090",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.playbook.materialSuffix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개 자료",
+      "en": "materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fc3ce2bd75f72c4a339add8cf31c5ebbbb0677ea21bde62e30b7a9711b6cdde7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.attachment.addFile",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일 추가",
+      "en": "Add file"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e193702cb44bda322053e26fe03a0a68a56db6e7666ccdb342c8e83884353d52",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.attachment.dropzonePrefix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "자료 카드를 끌어오거나 파일을 드래그해 다음 Prompt에 첨부합니다. 최대",
+      "en": "Drag a material card or file here to attach it to the next Prompt. Up to"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "491a0686c089a2246ffe841dcb439566f8b834bc3095f30d292f4ab4fd76647d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.attachment.dropzoneMiddle",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개 · 파일당",
+      "en": "items · per file"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3407a84db024ec8283e2fad4a0e01109b9b98b17d6bf53beae8a294e94ec41c0",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.attachment.remove",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "제거",
+      "en": "remove"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d2ad451e741dcbe7856dd6b2979de1c3ae6a4c3e9698a689609ff1d7ef1a2c5e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.composer.placeholder",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "AI에게 보낼 다음 지시를 작성하세요.",
+      "en": "Write the next instruction to send to the AI."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c8eeaec3846955a5dc5134fa0a5399272fdea0022784d9df65cce7e15f3d3529",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.reload",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Reload",
+      "en": "Reload"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1053cde535b435cf02a0d8023b0e23ced1ebef63bf21bc959e7190783c6240af",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.new",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "New",
+      "en": "New"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "58a944402cb3a16478417eb65b740b8937a935ed2948c6ed0e4664bc0a367ccf",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.action.send",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Send",
+      "en": "Send"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d1e6ee5fa287ad775f0dca8ddd4832ba875b4410d9d1a3436be19352dc05fbfe",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.finalAnswer.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "최종 산출물, 검증 계획, 남은 가정을 분리해서 제출하세요.",
+      "en": "Submit the final artifact, verification plan, and remaining assumptions as separate parts."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "98559219b6b7236396c393b9c77a9369f82a4d1a5ff4c495d14b14020c3e6d53",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.finalAnswer.placeholder",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "최종 답안을 작성하세요.",
+      "en": "Write the final answer."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "98f0ce3718c2ccdc2068efa3aada3b76296c3e98fdb16b772cb2468de7459a75",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.publish.publishing",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Publishing",
+      "en": "Publishing"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a3a1ce56ac07d4451345fbead70782e175317f7f6c34bab02c872905a89bcf9c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.publish.publish",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Publish",
+      "en": "Publish"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "661938c10b177b28f7efac18e5b0b04665ec47dcaafc260e04dad1446229ce63",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.publish.viewShare",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유 보기",
+      "en": "View share"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dbfdf4a14dd1bd6cc32150355528faaae296cf154bbe3030c434885590e3a16c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Replay",
+      "Branch"
+    ],
+    "values": {
+      "ko": "parent attempt와 이 Replay Branch를 비교해 병목이 실제로 개선됐는지 봅니다.",
+      "en": "Compare the parent attempt with this Replay Branch to see whether the bottleneck actually improved."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9a389061d0613aa2b4ab7a460b4970d5cba7d52a44e2781995f24e9393262917",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.unjudged",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "unjudged",
+      "en": "unjudged"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "75dad1f6ce6e386103f603f64cf3ce786d16fd1707a7565f5aa08d4967cfa89e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.parentMissing",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Parent attempt를 local storage에서 찾을 수 없습니다.",
+      "en": "The parent attempt was not found in local storage."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3efe9d8bb9a3203e8bcffbc47772253875dc9290b3c12776270e827090576ae5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.noParentPrompt",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "No parent prompt found.",
+      "en": "No parent prompt found."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "302eb13f9c3f5fdf013c0ba7f89cd4713681e9128b74220925e8c32006e2f9d5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.branch.noChildPrompt",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "No child prompt found yet.",
+      "en": "No child prompt found yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cbfbfc3825a9c8f84b31e95ebf5e15870c22ef610edab225404ab7ea4a4f3c6c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.attachmentLimitPrefix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첨부는 한 번에 최대",
+      "en": "You can attach up to"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "363cd5f20002316f5b5be23cc4025fb4e4a552231c75a44ce13e31cbd84a5a8d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.attachmentLimitSuffix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개까지 가능합니다.",
+      "en": "items at a time."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6b91c477ac0370022ce290e3fe3b6cd105797f9605a260a8af7e83f211ef8413",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.modelRequired",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀이를 시작하려면 사용할 모델을 먼저 선택해야 합니다.",
+      "en": "Choose a model before starting the attempt."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "77a5f962aea4a8ba748304ca1bc922db8025d548ccfba29ae49156c6261dd840",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.clipboardUnavailable",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이 브라우저에서는 clipboard API를 사용할 수 없습니다.",
+      "en": "This browser does not support the clipboard API."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2c933c16723c314ededb7810c81d0063ab0e16bca4aebbdd0549da13b4535875",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.copyFailed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "답변을 복사하지 못했습니다. 브라우저 권한을 확인해 주세요.",
+      "en": "Could not copy the response. Check browser permissions."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "edb15a942a5814a94a5c9869bbef135f66daeabe9b6bc55e9421d8d55650461c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.fileAttachFailed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일을 첨부하지 못했습니다.",
+      "en": "Could not attach the file."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ebc998e463a2b5439199475a602f6d4ccb07205be5846b53f612ec9a7d3a268d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.turnLimitReached",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "turn 제한에 도달했습니다. 제출하거나 새 attempt를 시작하세요.",
+      "en": "The turn limit has been reached. Submit or start a new attempt."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "de17a950578167590f2e1ca0fd97435684a0128f02e10370097a15abb60bb9d8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.modelCallFailed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델 호출에 실패했습니다.",
+      "en": "Model call failed."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "116633d8ef0b66d84173c867e02aefc337d800cb329ef7048a2653ecae11c12f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.shareRemoteComplete",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유가 원격 저장까지 완료되었습니다.",
+      "en": "Share was saved remotely."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b47531fe64ada636192da20587fd184ed36a6e1d8bb45448e5e3a288170df783",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.shareLocalOnly",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이 브라우저에서는 공유 보기가 가능합니다. 원격 공유 저장은 로그인/네트워크 상태를 확인해 주세요.",
+      "en": "Share view is available in this browser. Check sign-in and network state for remote sharing."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4974b03b2189fbb5fdca64ddfa40df4e5d991f88a128c4f0aa5b3ec0a4822d59",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.attemptNotFound",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "선택한 attempt를 local storage에서 찾을 수 없습니다.",
+      "en": "The selected attempt was not found in local storage."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "910b893b20a7848281685eab0cbf5659fcc81c7438dbc0e246256fbb81b60e1c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.parentAttemptNotFound",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Judge"
+    ],
+    "values": {
+      "ko": "Parent attempt를 찾을 수 없어 counterfactual judge를 실행할 수 없습니다.",
+      "en": "Cannot run the counterfactual judge because the parent attempt was not found."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "80bd8c48b9575aa74b2b9f67b55ca563fba706046fee48bf7fd8c3fdbd919e76",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.notice.counterfactualFailed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Judge"
+    ],
+    "values": {
+      "ko": "Counterfactual judge failed.",
+      "en": "Counterfactual judge failed."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "562ae9c9cc3d6efbd85cd9de94c2105a5d0f584fd5d386243d0be8bbbe3638d4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.localDraft.notFoundTitle",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 초안을 찾을 수 없습니다.",
+      "en": "Problem draft not found."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "153f8e9d048646da4aa95920cdf0c4a66f882f4b2738e29e45091ba570ddabd4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.localDraft.notFoundDescription",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "localStorage에 저장된 문제만 이 경로에서 열 수 있습니다. 다른 브라우저나 기기에서는 export/import가 필요합니다.",
+      "en": "Only problems saved in localStorage can be opened from this route. Other browsers or devices require export/import."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "849e6b9a8759cc5687b8e4b459849a98fad9efefaac1b89468e37bda7566dea7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.localDraft.goAdmin",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Admin으로 이동",
+      "en": "Go to Admin"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9df204b92aac2a5d68d4beb2aaffbe01c0eadfa4ade51b2343199dfdabc3ecd1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.single_model.shortLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "단일 모델",
+      "en": "Single Model"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "84f4a448ce57fc56543b16c780993c95ec928c79c64925293e56c81465ec27e9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.single_model.surfaceLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "기본 대화 풀이",
+      "en": "Basic chat attempt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8507a64751ea7919e9668b9ec7f7baac9989886b7c5de2d36cae95bfb0c5e0ac",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.single_model.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "한 모델과의 cold-start 대화만으로 문제를 구조화하고 해결합니다.",
+      "en": "Structure and solve the problem through a cold-start conversation with one model."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b92bcab6c154de841c623280fc8c88b3c27c5592e9de3c2ec34a32009aa1e766",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.single_model.evaluationLens",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 정의, 세분화, 지시 명료도, 최종 산출물을 균형 있게 봅니다.",
+      "en": "Reviews problem definition, decomposition, instruction clarity, and final artifact in balance."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1cbdfec8b6bf4543b8ab0c2f4b97e17bd13e20b95e5c3a11dfddadc7e60432b1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.material_grounded.shortLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 활용",
+      "en": "Material Grounded"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d151c97feb9ce4077fa89df749d9ef8310958f0beac62d4b8f1ee0795c42ecd8",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.material_grounded.surfaceLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 기반 풀이",
+      "en": "Material-grounded attempt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a653b014414f04c1e15edc5869572d6a9066fa73e0925200faf3fcc57b3aa094",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.material_grounded.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료를 언제 보고, 무엇을 첨부하고, 어떤 근거로 쓰는지에 집중합니다.",
+      "en": "Focuses on when you inspect materials, what you attach, and how you ground claims."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d0c61a7c24e00db1d9d05506c3483aa6657dce3a2a915fdc428b496a7dc37015",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.material_grounded.evaluationLens",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일 근거, 가정 분리, 자료 선택 타이밍, 사람 검토 지점을 더 주의 깊게 봅니다.",
+      "en": "Looks closely at file evidence, assumption separation, material timing, and human review points."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "025cbbb2a9b5ec8604d8e6461a8693b138e7a1ab47c1c1f728d5aeba2a5f77df",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.verification_drill.shortLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검증 중심",
+      "en": "Verification Drill"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8fcccde12438e38a226008905f8b89fb7332fd3f2de920a8a4f161e33d9fb88a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.verification_drill.surfaceLabel",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검증 중심 풀이",
+      "en": "Verification-first attempt"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0584cdb9141adbed552b4182cd9ad851732d626e805a478f5e21e0c0234400ab",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.verification_drill.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "AI 응답의 한계, 반례, 확인 질문, 출처 검증 전략을 중심으로 풉니다.",
+      "en": "Centers the attempt on model limits, counterexamples, clarification questions, and source verification strategy."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "df2e0d956b49b6e0d27f18ef57d8ce313c5e6467319acdeff75401b22b3cd199",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.mode.verification_drill.evaluationLens",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "성급한 결론 방지, 검증 질문, 불확실성 관리, 수정 Prompt를 더 주의 깊게 봅니다.",
+      "en": "Looks closely at premature conclusions, verification questions, uncertainty handling, and corrective Prompts."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "50acf60580d242194272427745254c8293490c201d66ece52c4ab2421b0e8f02",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.skai-mock.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace",
+      "Branch",
+      "Judge"
+    ],
+    "values": {
+      "ko": "API key 없이 Trace, Branch, Judge 흐름을 확인하는 데모 모델입니다.",
+      "en": "Demo model for checking Trace, Branch, and Judge flow without an API key."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a6b255f5df995b58b7aa82fa3b16cd89214c2406d9e299bba2538911af8b689d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.skai-mock.capabilityNote",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "비용 없음 · 실제 LLM 품질 평가용 아님",
+      "en": "No cost · not for real LLM quality evaluation"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "548ff1419adf466a7cd22afc9b2bfded7f1da03264512d2bbcf57d91f44ebaa6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.gemini-flash-lite.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저비용 live smoke에 적합한 Gemini 계열 모델입니다.",
+      "en": "Gemini-family model suited for low-cost live smoke tests."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0baad0dbb4f3f88589e699315dea2b115408fb6806fee9032370222a6f846960",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.gemini-flash-lite.capabilityNote",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저비용 · 이미지 입력 지원 가능",
+      "en": "Low cost · image input may be supported"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f624a63f28a8015f8b58b0ca069a38859f7560e1eeec199dd4004e295c123ece",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.groq-llama.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "반복 실험과 빠른 응답 확인에 적합한 Groq hosted 모델입니다.",
+      "en": "Groq-hosted model suited for repeated experiments and fast response checks."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9b807802be13f3c11a4edf6e0799c01daa7fd5958161eeff3377f2b1329cdbec",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.groq-llama.capabilityNote",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "빠른 응답 · 텍스트 중심",
+      "en": "Fast responses · text-centered"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "08ea2fe5ebbf33b7c8f84adae63f2a9ced0818c94877d4d1d4ffcc006e2a8678",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.xai-grok-fast.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Grok 계열 API smoke와 비교 실험을 위한 모델 옵션입니다.",
+      "en": "Model option for Grok-family API smoke and comparison tests."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "36a7efd1807f717f45493255d0befca28883940214195b2faabfe32b2db5d4be",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.xai-grok-fast.capabilityNote",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저가 후보 · provider key 필요",
+      "en": "Low-cost candidate · provider key required"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2aaf96235ad55e5199b8d5808a939eec627fad3bbc2085fe7548359314c13e11",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.openai-gpt-4-1-nano.description",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "OpenAI 계열의 초저가 live smoke baseline 모델입니다.",
+      "en": "Ultra-low-cost OpenAI-family live smoke baseline model."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "871ea96a15a327f1768a9206a8406d196e7b723b72bfacf41fcfdd73f36edd40",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "solve.model.openai-gpt-4-1-nano.capabilityNote",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초저가 · 텍스트/이미지 입력 지원",
+      "en": "Ultra-low cost · text/image input support"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4232fddd78252974c68a472e3edcbf841288de6a4dc49bf02768c24d63b81a6a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
   }
 ]
