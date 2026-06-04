@@ -81,7 +81,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
 - 공유 화면에는 점수표가 아니라 사용자의 directed orchestration timeline을 보여주는 SKAI Artifact 카드와 SVG export가 있다.
-- `.skai` file format v1은 `application/vnd.skai+json` 단일 JSON artifact로 구현됐다. 공개 share는 `.skai`를 다운로드할 수 있고, 새 publish snapshot은 child graph, optional parent graph, skeleton, overlay, report, section hash를 `PublishedAttempt.skaiFile`에 저장한다.
+- `.skai` file format v1은 `application/vnd.skai+json` 단일 JSON artifact로 구현됐다. 공개 share는 `.skai`를 다운로드할 수 있고, 새 publish snapshot은 child graph, optional parent graph, structural branch snapshot, section hash를 `PublishedAttempt.skaiFile`에 저장한다. Score report, skeleton, overlay, counterfactual judge는 core가 아니라 future analysis extension 후보로 분리한다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
@@ -252,7 +252,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 우선순위 1.7: shared branch graph snapshot persistence
 
 - 공개 share 화면에서도 parent/child 3D Dual Graph comparison을 local parent attempt 없이 재현할 수 있어야 한다. (신규 `.skai` publish는 완료)
-- publish 시점에 parent/child `ConversationGraph`, skeleton, overlay, branch comparison payload를 `.skai` schema version과 함께 저장한다. (완료)
+- publish 시점에 parent/child `ConversationGraph`의 structural subset과 branch payload를 `.skai` schema version과 함께 저장한다. (완료)
 - `GraphStateTransition` fallback은 유지하되, 공개 branch replay의 primary comparison은 parent/child graph surface가 되어야 한다. (신규 `.skai` snapshot은 완료)
 - 완료 조건: `/share/[attemptId]`에 직접 진입해도 parent/child full graph comparison, breakpoint focus, overlay signal이 동일하게 재현된다. (신규 publish 기준 완료, 구 snapshot은 fallback)
 - 후속: `.skai` import UI, old snapshot migration, signed artifact, binary material bundle은 별도 slice로 남긴다.

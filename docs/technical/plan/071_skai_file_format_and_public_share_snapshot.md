@@ -29,7 +29,7 @@ The file should be readable and debuggable today, but extensible enough for futu
 
 ## Scope
 
-Included in v1:
+Included in core v1:
 
 - `.skai` extension using JSON canonical payload;
 - explicit schema version and MIME type;
@@ -37,13 +37,20 @@ Included in v1:
 - artifact-level SHA-256 hash;
 - child attempt graph snapshot;
 - optional parent graph snapshot for branch replay share;
-- optional branch comparison snapshot;
-- score report, graph skeleton, universal summary, overlay index, and visual artifact summary;
+- optional structural branch snapshot;
 - public share page download button;
 - publish-time generation so remote share snapshots can carry graph comparison state.
 
 Excluded from v1:
 
+- LLM judge-dependent fields;
+- score report;
+- graph overlay index;
+- graph skeleton;
+- universal summary;
+- visual artifact summary;
+- counterfactual judge report;
+- graph state transition analysis;
 - zipped bundle with binary materials;
 - cryptographic signing;
 - import UI;
@@ -98,10 +105,18 @@ The payload should have stable sections:
 - `problem`;
 - `attempt`;
 - `graph`;
-- `report`;
-- `branchComparison`.
+- `branch`.
 
 Each section gets a SHA-256 hash. The final artifact hash is computed over the canonical artifact without the final `integrity` block plus section hashes.
+
+Judge-dependent analysis should later be attached as optional extension payload, not as core backbone:
+
+```text
+extensions.analysis.scoreReport
+extensions.analysis.overlay
+extensions.analysis.skeleton
+extensions.analysis.counterfactualJudge
+```
 
 ## Public Share Strategy
 
@@ -114,11 +129,13 @@ At publish time:
 5. Store it inside `PublishedAttempt.skaiFile`.
 6. Sync the published snapshot to Supabase.
 
+Important: `.skai` graph snapshots must be structural. The builder should accept the graph produced by the app, then project only the allowed structural subset. It should strip annotations and judge-dependent status signals instead of creating an independent graph-building path.
+
 At share render time:
 
 1. Load `PublishedAttempt` from local/Supabase.
-2. Prefer `PublishedAttempt.skaiFile.payload.graph.child` as the graph source.
-3. If `parent` graph and `parentTrace` exist in `.skai`, show parent/child `GraphComparisonView`.
+2. Use current `PublishedAttempt.scoreReport` for the rich share UI because the app still has that analysis outside `.skai`.
+3. If `parent` graph and `parentTrace` exist in `.skai`, show structural parent/child `GraphComparisonView`.
 4. Fall back to rebuilding from trace and `GraphStateTransitionView` for old snapshots.
 
 ## Implementation Steps
@@ -170,19 +187,24 @@ Manual smoke:
   - attachment binary stripping;
   - public trace sanitization;
   - child/parent graph snapshot construction;
-  - overlay/skeleton/report payload construction;
   - verification helper.
 - Publish flow now generates `PublishedAttempt.skaiFile` before local/Supabase sync.
 - `/api/published/sync` now preserves `skaiFile` instead of stripping it.
 - Added `/api/published/[attemptId]/skai` for remote `.skai` download.
 - Share page now:
-  - prefers stored `.skai` child graph snapshot;
   - uses stored `.skai` parent graph snapshot for branch comparison when available;
   - falls back to rebuilt graph / `GraphStateTransitionView` for old snapshots;
   - downloads `.skai` from the browser;
   - shows schema version and artifact hash prefix.
 - Added `docs/technical/015_skai_file_format.md`.
 - Updated `docs/000_orchestration.md`.
+
+## Simplification Pass Result
+
+- Removed score report, visual artifact, universal summary, skeleton, overlay index, graph transition, and counterfactual report from the `.skai` core payload.
+- Reframed those fields as future optional analysis extensions.
+- Changed `.skai` graph handling to parse the app-provided graph into a structural subset, stripping annotations and judge-dependent status signals.
+- Kept share page's rich UI free to use `PublishedAttempt.scoreReport`, while `.skai` remains the lightweight portable backbone.
 
 ## Verification Result
 

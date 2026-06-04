@@ -563,6 +563,10 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
+    if (!conversationGraph) {
+      return;
+    }
+
     setIsPublishing(true);
     setShareNotice("");
 
@@ -590,7 +594,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         publishedAttempt: published,
         problem,
         parentAttempt,
-        childGraph: conversationGraph ?? undefined,
+        childGraph: conversationGraph,
+        parentGraph: parentConversationGraph ?? undefined,
       }),
     };
     const publishedAttemptState: Attempt = {

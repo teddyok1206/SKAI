@@ -1,27 +1,22 @@
-import { buildGraphOverlayIndex } from "@/lib/graph-overlay";
-import { buildGraphSkeleton } from "@/lib/graph-skeleton";
-import {
-  buildSkaiArtifact,
-  buildUniversalAttemptSummary,
-  type SkaiArtifact,
-  type UniversalAttemptStep,
-} from "@/lib/skai-artifact";
 import type {
   Attempt,
   AttemptAttachment,
   ConversationGraph,
+  ConversationGraphIndex,
+  ConversationGraphNode,
+  ConversationGraphPair,
+  ConversationTaskStatus,
   Problem,
   PublishedAttempt,
   SkaiFileArtifact,
-  SkaiFileBranchComparisonSnapshot,
+  SkaiFileAttemptSnapshot,
+  SkaiFileBranchSnapshot,
   SkaiFileIntegrity,
   SkaiFileManifest,
   SkaiFilePayload,
   SkaiFileProblemSnapshot,
-  SkaiFilePublishedAttemptSnapshot,
   TraceEvent,
 } from "@/lib/types";
-import { buildConversationGraph } from "@/lib/conversation-graph";
 
 export const skaiFileSchemaVersion = "skai.file.v1" as const;
 export const skaiFileMimeType = "application/vnd.skai+json" as const;
@@ -87,17 +82,6 @@ function sanitizeFileName(value: string, fallback = "skai-artifact") {
   return normalized || fallback;
 }
 
-function compactVisualArtifact(artifact: SkaiArtifact) {
-  return {
-    id: artifact.id,
-    title: artifact.title,
-    headline: artifact.headline,
-    score: artifact.score,
-    signature: artifact.signature,
-    metrics: artifact.metrics,
-  };
-}
-
 function sanitizeAttachment(attachment: AttemptAttachment): AttemptAttachment {
   const rest = { ...attachment };
   delete rest.dataUrl;
@@ -119,35 +103,115 @@ function sanitizeTrace(trace: TraceEvent[]) {
   return trace.map(sanitizeTraceEvent);
 }
 
-function sanitizePublishedAttempt(attempt: PublishedAttempt): SkaiFilePublishedAttemptSnapshot {
-  const rest = { ...attempt };
-  delete rest.skaiFile;
-
+function sanitizePublishedAttempt(attempt: PublishedAttempt): SkaiFileAttemptSnapshot {
   return {
-    ...rest,
-    trace: sanitizeTrace(rest.trace),
+    id: attempt.id,
+    attemptId: attempt.attemptId,
+    problemId: attempt.problemId,
+    title: attempt.title,
+    trace: sanitizeTrace(attempt.trace),
+    branch: attempt.branch,
+    solvingMode: attempt.solvingMode,
+    createdAt: attempt.createdAt,
   };
 }
 
-function publishedAttemptFromParent(parent: Attempt): SkaiFilePublishedAttemptSnapshot {
-  const scoreReport = parent.scoreReport;
+function parentAttemptTrace(parent: Attempt) {
+  return {
+    trace: sanitizeTrace(parent.trace),
+  };
+}
 
-  if (!scoreReport) {
-    throw new Error("Cannot include parent attempt in .skai without a score report.");
+function includesAny(value: string, words: readonly string[]) {
+  const normalized = value.toLowerCase();
+  return words.some((word) => normalized.includes(word.toLowerCase()));
+}
+
+function structuralStatusForPair(pair: ConversationGraphPair, traceById: Map<string, TraceEvent>) {
+  const prompt = traceById.get(pair.promptTraceEventId);
+  const response = pair.responseTraceEventId ? traceById.get(pair.responseTraceEventId) : undefined;
+  const reasons: string[] = [];
+
+  if (prompt && includesAny(prompt.content, ["검증", "확인", "근거", "출처", "오류", "한계", "반례"])) {
+    reasons.push("verification prompt signal");
+    return { status: "verification" as const, reasons };
+  }
+
+  if ((prompt?.attachments?.length ?? 0) > 0) {
+    reasons.push("material attached to prompt");
+    return { status: "material_used" as const, reasons };
+  }
+
+  if (response) {
+    reasons.push("model response received");
+    return { status: "responded" as const, reasons };
+  }
+
+  reasons.push("waiting for model response");
+  return { status: "pending" as const, reasons };
+}
+
+function sanitizeStatusNode(
+  node: ConversationGraphNode,
+  statusByPairId: Map<string, { status: ConversationTaskStatus; reasons: string[] }>,
+): ConversationGraphNode {
+  if (node.kind !== "task_status" || !node.pairId) {
+    return node;
+  }
+
+  const structuralStatus = statusByPairId.get(node.pairId);
+
+  if (!structuralStatus) {
+    return node;
   }
 
   return {
-    id: `parent-snapshot:${parent.id}`,
-    attemptId: parent.id,
-    problemId: parent.problemId,
-    title: parent.title,
-    workflow: scoreReport.workflow,
-    trace: sanitizeTrace(parent.trace),
-    scoreReport,
-    branch: parent.branch,
-    counterfactualReport: parent.counterfactualReport,
-    solvingMode: parent.solvingMode,
-    createdAt: parent.publishedAt ?? parent.updatedAt ?? parent.createdAt,
+    ...node,
+    label: structuralStatus.status,
+    summary: structuralStatus.reasons.join("; "),
+  };
+}
+
+function stripAnnotationIndexes(index: ConversationGraphIndex): ConversationGraphIndex {
+  return {
+    ...index,
+    annotationIdsByTargetId: {},
+    annotationIdsByTraceEventId: {},
+    annotationIdsByKind: {},
+  };
+}
+
+function structuralGraphFromReceivedGraph(graph: ConversationGraph, trace: TraceEvent[]): ConversationGraph {
+  const traceById = new Map(trace.map((event) => [event.id, event]));
+  const statusByPairId = new Map(
+    graph.pairs.map((pair) => {
+      const structuralStatus = structuralStatusForPair(pair, traceById);
+      return [pair.id, structuralStatus] as const;
+    }),
+  );
+
+  return {
+    attemptId: graph.attemptId,
+    promptNodes: graph.promptNodes.map((node) => sanitizeStatusNode(node, statusByPairId)),
+    responseNodes: graph.responseNodes.map((node) => sanitizeStatusNode(node, statusByPairId)),
+    statusNodes: graph.statusNodes.map((node) => sanitizeStatusNode(node, statusByPairId)),
+    promptEdges: graph.promptEdges,
+    responseEdges: graph.responseEdges,
+    statusEdges: graph.statusEdges,
+    pairs: graph.pairs.map((pair) => {
+      const structuralStatus = statusByPairId.get(pair.id);
+
+      return structuralStatus
+        ? {
+            ...pair,
+            status: structuralStatus.status,
+            statusReasons: pair.isBreakpoint ? [...structuralStatus.reasons, "breakpoint replay anchor"] : structuralStatus.reasons,
+          }
+        : pair;
+    }),
+    annotations: [],
+    index: stripAnnotationIndexes(graph.index),
+    branch: graph.branch,
   };
 }
 
@@ -185,6 +249,10 @@ async function hashSections(sections: Record<string, unknown>) {
   const sectionHashes: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(sections)) {
+    if (value === undefined) {
+      continue;
+    }
+
     sectionHashes[key] = await sha256Hex(stableStringify(value));
   }
 
@@ -203,29 +271,28 @@ async function buildIntegrity(input: Omit<SkaiFileArtifact, "integrity">, sectio
   };
 }
 
-function buildBranchComparisonSnapshot(input: {
+function buildBranchSnapshot(input: {
   publishedAttempt: PublishedAttempt;
-  childAttemptSnapshot: SkaiFilePublishedAttemptSnapshot;
+  childAttemptSnapshot: SkaiFileAttemptSnapshot;
   parentAttempt?: Attempt;
-}): SkaiFileBranchComparisonSnapshot | undefined {
+}): SkaiFileBranchSnapshot | undefined {
   const { publishedAttempt, childAttemptSnapshot, parentAttempt } = input;
-  const parentAttemptId = publishedAttempt.branch?.parentAttemptId;
+  const branch = publishedAttempt.branch;
 
-  if (!publishedAttempt.counterfactualReport || !parentAttemptId) {
+  if (!branch) {
     return undefined;
   }
 
-  const parentTrace = parentAttempt ? sanitizeTrace(parentAttempt.trace) : [];
+  const parentTrace = parentAttempt ? parentAttemptTrace(parentAttempt).trace : [];
 
   return {
-    parentAttemptId,
+    parentAttemptId: branch.parentAttemptId,
     childAttemptId: publishedAttempt.attemptId,
-    breakpointTraceEventId: publishedAttempt.counterfactualReport.branchDiff.breakpointTraceEventId,
-    breakpointPairId: publishedAttempt.counterfactualReport.branchDiff.parentPairId,
+    breakpointTraceEventId: branch.parentTraceEventId,
+    breakpointTraceIndex: branch.parentTraceIndex,
+    breakpointPairId: branch.parentPairId,
     parentTrace,
     childTrace: childAttemptSnapshot.trace,
-    graphTransition: publishedAttempt.counterfactualReport.branchDiff.graphTransition,
-    counterfactualReport: publishedAttempt.counterfactualReport,
   };
 }
 
@@ -237,35 +304,16 @@ export async function buildSkaiFileArtifact(input: {
   publishedAttempt: PublishedAttempt;
   problem?: Problem;
   parentAttempt?: Attempt;
-  childGraph?: ConversationGraph;
+  childGraph: ConversationGraph;
+  parentGraph?: ConversationGraph;
 }): Promise<SkaiFileArtifact> {
   const createdAt = new Date().toISOString();
   const childAttempt = sanitizePublishedAttempt(input.publishedAttempt);
-  const parentAttemptSnapshot = input.parentAttempt?.scoreReport ? publishedAttemptFromParent(input.parentAttempt) : undefined;
-  const childGraph =
-    input.childGraph ??
-    buildConversationGraph(childAttempt.trace, childAttempt.scoreReport, childAttempt.branch, {
-      problemMaterialCount: input.problem?.materials.length ?? 0,
-    });
-  const childSkeleton = buildGraphSkeleton(childGraph, childAttempt.trace);
-  const visualArtifact = buildSkaiArtifact({
-    attempt: childAttempt,
-    graph: childGraph,
-    skeleton: childSkeleton,
-  });
-  const universalSummary = buildUniversalAttemptSummary({
-    attempt: childAttempt,
-    graph: childGraph,
-    skeleton: childSkeleton,
-  });
+  const parentTrace = input.parentAttempt ? sanitizeTrace(input.parentAttempt.trace) : [];
+  const childGraph = structuralGraphFromReceivedGraph(input.childGraph, childAttempt.trace);
   const parentGraph =
-    parentAttemptSnapshot && input.parentAttempt
-      ? buildConversationGraph(parentAttemptSnapshot.trace, parentAttemptSnapshot.scoreReport, parentAttemptSnapshot.branch, {
-          problemMaterialCount: input.problem?.materials.length ?? 0,
-        })
-      : undefined;
-  const parentSkeleton = parentGraph && parentAttemptSnapshot ? buildGraphSkeleton(parentGraph, parentAttemptSnapshot.trace) : undefined;
-  const branchComparison = buildBranchComparisonSnapshot({
+    input.parentGraph && parentTrace.length > 0 ? structuralGraphFromReceivedGraph(input.parentGraph, parentTrace) : undefined;
+  const branch = buildBranchSnapshot({
     publishedAttempt: input.publishedAttempt,
     childAttemptSnapshot: childAttempt,
     parentAttempt: input.parentAttempt,
@@ -277,17 +325,8 @@ export async function buildSkaiFileArtifact(input: {
     graph: {
       child: childGraph,
       parent: parentGraph,
-      childSkeleton,
-      parentSkeleton,
-      childOverlay: buildGraphOverlayIndex(childGraph),
-      parentOverlay: parentGraph ? buildGraphOverlayIndex(parentGraph) : undefined,
     },
-    report: {
-      scoreReport: childAttempt.scoreReport,
-      visualArtifact: compactVisualArtifact(visualArtifact),
-      universalSummary: universalSummary satisfies UniversalAttemptStep[],
-    },
-    branchComparison,
+    branch,
   };
   const manifest: SkaiFileManifest = {
     artifactId: `skai:${childAttempt.attemptId}:${createdAt}`,
@@ -322,8 +361,7 @@ export async function buildSkaiFileArtifact(input: {
     problem: payload.problem,
     attempt: payload.attempt,
     graph: payload.graph,
-    report: payload.report,
-    branchComparison: payload.branchComparison,
+    branch: payload.branch,
   });
 
   return {
@@ -346,8 +384,7 @@ export async function verifySkaiFileArtifact(artifact: SkaiFileArtifact) {
     problem: artifact.payload.problem,
     attempt: artifact.payload.attempt,
     graph: artifact.payload.graph,
-    report: artifact.payload.report,
-    branchComparison: artifact.payload.branchComparison,
+    branch: artifact.payload.branch,
   });
   const expectedArtifactHash = await sha256Hex(stableStringify({ ...artifactWithoutIntegrity, sectionHashes: expectedSectionHashes }));
   const sectionChecks = Object.fromEntries(

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { problems } from "@/data/problems";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
-import { buildSkaiFileArtifact, serializeSkaiFileArtifact, skaiFileMimeType, skaiFileName } from "@/lib/skai-format";
+import { serializeSkaiFileArtifact, skaiFileMimeType, skaiFileName } from "@/lib/skai-format";
 import type { PublishedAttempt } from "@/lib/types";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
@@ -27,8 +26,12 @@ export async function GET(_request: Request, { params }: { params: Promise<{ att
   }
 
   const publishedAttempt = data.snapshot as PublishedAttempt;
-  const problem = problems.find((item) => item.id === publishedAttempt.problemId);
-  const artifact = publishedAttempt.skaiFile ?? (await buildSkaiFileArtifact({ publishedAttempt, problem }));
+  const artifact = publishedAttempt.skaiFile;
+
+  if (!artifact) {
+    return NextResponse.json({ error: ".skai snapshot is not available for this published attempt. Republish the attempt." }, { status: 404 });
+  }
+
   const body = serializeSkaiFileArtifact(artifact);
 
   return new NextResponse(body, {

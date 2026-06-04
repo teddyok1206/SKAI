@@ -288,9 +288,9 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch, {
       problemMaterialCount: problem?.materials.length ?? 0,
     });
-  const graphSkeleton = skaiFile?.payload.graph.childSkeleton ?? buildGraphSkeleton(conversationGraph, publishedAttempt.trace);
+  const graphSkeleton = buildGraphSkeleton(conversationGraph, publishedAttempt.trace);
   const parentGraphSnapshot = skaiFile?.payload.graph.parent;
-  const parentTraceSnapshot = skaiFile?.payload.branchComparison?.parentTrace ?? [];
+  const parentTraceSnapshot = skaiFile?.payload.branch?.parentTrace ?? [];
   const graphNodeById = new Map(
     [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
   );

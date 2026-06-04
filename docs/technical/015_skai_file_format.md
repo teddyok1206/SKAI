@@ -18,13 +18,11 @@ It is a graph artifact:
 problem + materials
 -> prompt/response trace
 -> 3D Dual Graph
--> graph skeleton + overlay
--> judge report + Intelligence Mirror
--> optional branch comparison
+-> optional structural branch snapshot
 -> integrity hash
 ```
 
-The transcript is included only as one section of a larger orchestration artifact. The primary reading layer should remain graph/report first, raw text second.
+The transcript is included only as one section of a larger orchestration artifact. The primary backbone is trace + graph. Judge reports, skeletons, overlays, and visual summaries are analysis extensions, not core `.skai` payload.
 
 ## Extension
 
@@ -73,7 +71,7 @@ The manifest explains what this artifact is and how it was produced.
   "createdAt": "2026-06-04T00:00:00.000Z",
   "exportedBy": "skai",
   "schemaVersion": "skai.file.v1",
-  "sections": ["problem", "attempt", "graph", "report", "branchComparison"],
+  "sections": ["problem", "attempt", "graph", "branch"],
   "privacy": {
     "rawTrace": "included",
     "contextDebug": "stripped",
@@ -93,48 +91,44 @@ Binary material payloads are not embedded in v1. The extracted text hash is stor
 
 ### `attempt`
 
-The published attempt snapshot without recursive `skaiFile`.
+The public attempt identity and sanitized trace.
 
 Rules:
 
 - `contextDebug` is stripped.
 - attachment `dataUrl` is stripped.
 - public trace text remains included.
-- score report remains attached because this is a judged public artifact.
+- score report is not part of `.skai v1` core.
 
 ### `graph`
 
 The structural backbone:
 
 - `child`: child/current `ConversationGraph`;
-- `parent`: optional parent `ConversationGraph` for branch replay;
-- `childSkeleton`;
-- `parentSkeleton`;
-- `childOverlay`;
-- `parentOverlay`.
+- `parent`: optional parent `ConversationGraph` for branch replay.
 
-This is the key share fix: public branch share can render parent/child graph comparison without local parent attempt state.
+Graph snapshots are projected from the app-provided `ConversationGraph`, but `.skai` core strips analysis fields:
 
-### `report`
+- `annotations` is empty;
+- annotation indexes are empty;
+- judge-dependent `bottleneck` status is lowered to trace-derived structural status;
+- prompt/response/status nodes, edges, pairs, structural index, and branch metadata remain.
 
-Analysis attached to the graph:
+This is the key share fix: public branch share can render parent/child graph comparison without local parent attempt state while keeping `.skai` lightweight.
 
-- score report;
-- compact visual artifact summary;
-- universal summary.
+### `branch`
 
-### `branchComparison`
-
-Optional replay comparison:
+Optional structural branch snapshot:
 
 - parent attempt id;
 - child attempt id;
 - breakpoint trace event id;
+- breakpoint trace index;
 - breakpoint pair id;
 - parent trace;
 - child trace;
-- graph transition;
-- counterfactual report.
+
+Counterfactual judge reports and graph transition analysis are not core fields.
 
 ## Integrity
 
@@ -149,8 +143,7 @@ v1 uses SHA-256 with stable JSON canonicalization.
     "problem": "...",
     "attempt": "...",
     "graph": "...",
-    "report": "...",
-    "branchComparison": "..."
+    "branch": "..."
   },
   "artifactHash": "..."
 }
@@ -174,6 +167,27 @@ When a public share page opens:
 3. If parent graph exists in `.skai`, show parent/child graph comparison.
 4. If parent graph is unavailable, fall back to graph transition summary.
 5. Allow `.skai` download from the share page.
+
+The share page may still use `PublishedAttempt.scoreReport` for rich in-app analysis. That does not make score report part of `.skai` core.
+
+## Future Analysis Extension
+
+LLM judge-dependent or derived reading layers should be grouped later under an optional extension, for example:
+
+```json
+{
+  "extensions": {
+    "analysis": {
+      "scoreReport": {},
+      "skeleton": [],
+      "overlay": {},
+      "counterfactualJudge": {}
+    }
+  }
+}
+```
+
+This keeps `.skai` usable as a lightweight graph backbone even when no judge has run.
 
 ## Future Directions
 

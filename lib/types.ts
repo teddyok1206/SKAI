@@ -696,52 +696,37 @@ export interface SkaiFileProblemSnapshot {
   }>;
 }
 
-export type SkaiFilePublishedAttemptSnapshot = Omit<PublishedAttempt, "skaiFile">;
-
-export interface SkaiFileReportSnapshot {
-  scoreReport: ScoreReport;
-  visualArtifact: {
-    id: string;
-    title: string;
-    headline: string;
-    score: number;
-    signature: string;
-    metrics: Record<string, number>;
-  };
-  universalSummary: Array<{
-    id: string;
-    label: string;
-    value: string;
-    detail: string;
-  }>;
+export interface SkaiFileAttemptSnapshot {
+  id: string;
+  attemptId: string;
+  problemId: string;
+  title: string;
+  trace: TraceEvent[];
+  branch?: AttemptBranch;
+  solvingMode?: SolvingModeId;
+  createdAt: string;
 }
 
 export interface SkaiFileGraphSnapshot {
   child: ConversationGraph;
   parent?: ConversationGraph;
-  childSkeleton: GraphSkeletonStep[];
-  parentSkeleton?: GraphSkeletonStep[];
-  childOverlay: GraphOverlayIndex;
-  parentOverlay?: GraphOverlayIndex;
 }
 
-export interface SkaiFileBranchComparisonSnapshot {
+export interface SkaiFileBranchSnapshot {
   parentAttemptId: string;
   childAttemptId: string;
   breakpointTraceEventId: string;
+  breakpointTraceIndex: number;
   breakpointPairId?: string;
   parentTrace: TraceEvent[];
   childTrace: TraceEvent[];
-  graphTransition?: GraphStateTransition;
-  counterfactualReport?: CounterfactualJudgeReport;
 }
 
 export interface SkaiFilePayload {
   problem?: SkaiFileProblemSnapshot;
-  attempt: SkaiFilePublishedAttemptSnapshot;
+  attempt: SkaiFileAttemptSnapshot;
   graph: SkaiFileGraphSnapshot;
-  report: SkaiFileReportSnapshot;
-  branchComparison?: SkaiFileBranchComparisonSnapshot;
+  branch?: SkaiFileBranchSnapshot;
 }
 
 export interface SkaiFileIntegrity {
@@ -759,6 +744,7 @@ export interface SkaiFileArtifact {
   createdAt: string;
   manifest: SkaiFileManifest;
   payload: SkaiFilePayload;
+  extensions?: Record<string, unknown>;
   integrity: SkaiFileIntegrity;
 }
 
