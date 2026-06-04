@@ -4201,6 +4201,117 @@ summary {
   padding: 0 0 10px;
 }
 
+.skai-extension-registry {
+  display: grid;
+  gap: 12px;
+}
+
+.skai-extension-panel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.skai-extension-panel .panel-header.compact {
+  padding: 0;
+}
+
+.skai-extension-panel h3 {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.skai-extension-grid,
+.skai-extension-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.skai-extension-grid > div,
+.skai-extension-axis {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--evidence-bg);
+  padding: 10px;
+}
+
+.skai-extension-grid span,
+.skai-extension-axis span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.skai-extension-grid strong,
+.skai-extension-axis strong {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skai-extension-list {
+  display: grid;
+  gap: 8px;
+}
+
+.skai-extension-finding {
+  display: grid;
+  gap: 6px;
+  border-left: 3px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--evidence-bg);
+  padding: 10px 12px;
+}
+
+.skai-extension-finding.severity-positive {
+  border-left-color: var(--success);
+}
+
+.skai-extension-finding.severity-watch,
+.skai-extension-finding.severity-critical {
+  border-left-color: var(--red);
+}
+
+.skai-extension-finding div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.skai-extension-finding small {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.skai-extension-finding p {
+  margin: 0;
+}
+
+.skai-extension-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skai-extension-unknown {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+
 .skai-file-empty {
   margin: 16px;
 }
@@ -4368,6 +4479,11 @@ summary {
 
   .skai-file-manifest-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skai-extension-grid,
+  .skai-extension-axis-grid {
+    grid-template-columns: 1fr;
   }
 }
 

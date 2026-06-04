@@ -219,19 +219,47 @@ SKAI should not create separate viewers for share, import, and PDF. The canonica
 
 This prevents `.skai` from splintering into multiple UI dialects.
 
+## Analysis Extensions
+
+Judge and coaching outputs are optional derived layers. They must not rewrite `.skai` core.
+
+Current extension keys:
+
+```text
+extensions["skai.judge.v1"]
+extensions["skai.coach.v1"]
+```
+
+Required design rules:
+
+- every extension references the core graph through stable ids such as `pairId`, `nodeId`, `edgeId`, `traceEventId`, or `attemptId`;
+- every extension records `inputGraphHash`;
+- generated prose is secondary to graph id references, rubric axis, severity, confidence, and next action fields;
+- the unified viewer renders extensions through `SkaiExtensionRegistry`;
+- deterministic fixture extensions are development baselines, not final LLM judge quality.
+
+The current development loop is:
+
+```text
+npm run skai:fixtures
+npm run skai:validate
+npm run judge:fixture
+npm run judge:regression
+```
+
+Golden fixtures live in `fixtures/skai/`.
+
 ## Future Analysis Extension
 
-LLM judge-dependent or derived reading layers should be grouped later under an optional extension, for example:
+LLM judge-dependent or derived reading layers can grow under optional extensions, for example:
 
 ```json
 {
   "extensions": {
-    "analysis": {
-      "scoreReport": {},
-      "skeleton": [],
-      "overlay": {},
-      "counterfactualJudge": {}
-    }
+    "skai.judge.v1": {},
+    "skai.coach.v1": {},
+    "skai.overlay.v1": {},
+    "skai.counterfactual.v1": {}
   }
 }
 ```

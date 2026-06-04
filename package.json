@@ -14,6 +14,10 @@
     "serve:local": "next start -H 127.0.0.1 -p 3000",
     "serve:lan": "next start -H 0.0.0.0 -p 3000",
     "calibrate:judge": "node scripts/judge_calibration_smoke.mjs",
+    "skai:fixtures": "node scripts/generate_skai_fixtures.mjs",
+    "skai:validate": "node scripts/skai_validate.mjs fixtures/skai",
+    "judge:fixture": "node scripts/judge_fixture.mjs --write",
+    "judge:regression": "node scripts/judge_fixture.mjs --regression",
     "smoke:live": "node scripts/live_provider_smoke.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."

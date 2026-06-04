@@ -5,6 +5,7 @@ import { CheckCircle2, Download, FileJson, Printer, Share2, ShieldCheck, ShieldX
 import { ConversationGraphView } from "@/components/conversation-graph-view";
 import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { MarkdownContent } from "@/components/markdown-content";
+import { SkaiExtensionRegistry } from "@/components/skai-extension-registry";
 import {
   serializeSkaiFileArtifact,
   skaiFileMimeType,
@@ -304,6 +305,8 @@ export function SkaiFileViewer({
           ) : (
             <ConversationGraphView graph={graph} trace={trace} title="3D Dual Graph" />
           )}
+
+          <SkaiExtensionRegistry artifact={currentArtifact} />
 
           <section className="skai-file-trace" aria-label="SKAI file trace evidence">
             <div className="panel-header compact">

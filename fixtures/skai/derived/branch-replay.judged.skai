@@ -1,0 +1,1083 @@
+{
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "extension": ".skai",
+  "extensions": {
+    "skai.coach.v1": {
+      "artifactHash": "c3203828766e1dbaef7826e33bef71c021168e003c15607788ac28c50fe6fcdb",
+      "coachingVersion": "coach.fixture.001",
+      "comments": [
+        {
+          "body": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "coach-1-finding-strong-decomposition",
+          "nextAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-branch-replay",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-branch-replay-u1",
+              "fixture-branch-replay-a1",
+              "fixture-branch-replay-u2",
+              "fixture-branch-replay-a2",
+              "fixture-branch-replay-u3",
+              "fixture-branch-replay-a3"
+            ]
+          },
+          "title": "구조적 task 분배",
+          "tone": "mirror"
+        },
+        {
+          "body": "같은 지점에서 다시 시작해 이전 흐름의 병목을 검증 중심으로 바꾼 흔적이 있습니다.",
+          "id": "coach-2-finding-branch-recovery",
+          "nextAction": "parent/child diff에서 어떤 조건 추가가 결과를 바꿨는지 coach layer로 설명하세요.",
+          "target": {
+            "targetId": "fixture-branch-replay",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-branch-replay-u1",
+              "fixture-branch-replay-a1",
+              "fixture-branch-replay-u2",
+              "fixture-branch-replay-a2",
+              "fixture-branch-replay-u3",
+              "fixture-branch-replay-a3"
+            ]
+          },
+          "title": "Breakpoint recovery",
+          "tone": "mirror"
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "coach-fixture-baseline.001",
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-coach.001"
+      },
+      "inputGraphHash": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "nextPracticeTargets": [],
+      "schemaVersion": "skai.coach.v1",
+      "summary": "이 fixture는 사용자가 AI에게 답을 맡기기보다 문제 구조를 좁혀 간 좋은 기준 사례입니다."
+    },
+    "skai.judge.v1": {
+      "artifactHash": "c3203828766e1dbaef7826e33bef71c021168e003c15607788ac28c50fe6fcdb",
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "label": "문제정의",
+          "rationale": "첫 요청 이후 문제 조건을 재정의할 여지가 드러났습니다.",
+          "score": 78
+        },
+        {
+          "axis": "decomposition",
+          "label": "세분화",
+          "rationale": "task, 역할, 단계 분리가 trace에 나타납니다.",
+          "score": 84
+        },
+        {
+          "axis": "instruction_clarity",
+          "label": "지시명확성",
+          "rationale": "산출물 형식과 최종 정리 요구가 드러납니다.",
+          "score": 76
+        },
+        {
+          "axis": "adaptation",
+          "label": "적응력",
+          "rationale": "중간 흐름을 재조정한 신호가 있습니다.",
+          "score": 82
+        },
+        {
+          "axis": "verification",
+          "label": "검증력",
+          "rationale": "근거와 한계를 확인하려는 검증 프롬프트가 있습니다.",
+          "score": 88
+        },
+        {
+          "axis": "efficiency",
+          "label": "효율성",
+          "rationale": "fixture baseline은 비용/시간 수치 대신 turn 수와 구조 밀도를 기준으로 봅니다.",
+          "score": 78
+        },
+        {
+          "axis": "final_quality",
+          "label": "최종품질",
+          "rationale": "최종 산출물로 수렴하는 요청이 있습니다.",
+          "score": 80
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "judge-fixture-baseline.001",
+      "findings": [
+        {
+          "axis": "decomposition",
+          "confidence": 0.84,
+          "explanation": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "finding-strong-decomposition",
+          "severity": "positive",
+          "suggestedAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-branch-replay",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-branch-replay-u1",
+              "fixture-branch-replay-a1",
+              "fixture-branch-replay-u2",
+              "fixture-branch-replay-a2",
+              "fixture-branch-replay-u3",
+              "fixture-branch-replay-a3"
+            ]
+          },
+          "title": "구조적 task 분배"
+        },
+        {
+          "axis": "adaptation",
+          "confidence": 0.82,
+          "explanation": "같은 지점에서 다시 시작해 이전 흐름의 병목을 검증 중심으로 바꾼 흔적이 있습니다.",
+          "id": "finding-branch-recovery",
+          "severity": "positive",
+          "suggestedAction": "parent/child diff에서 어떤 조건 추가가 결과를 바꿨는지 coach layer로 설명하세요.",
+          "target": {
+            "targetId": "fixture-branch-replay",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-branch-replay-u1",
+              "fixture-branch-replay-a1",
+              "fixture-branch-replay-u2",
+              "fixture-branch-replay-a2",
+              "fixture-branch-replay-u3",
+              "fixture-branch-replay-a3"
+            ]
+          },
+          "title": "Breakpoint recovery"
+        }
+      ],
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-heuristic.001"
+      },
+      "inputGraphHash": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "needsHumanReview": false,
+      "rubricVersion": "rubric.fixture.001",
+      "schemaVersion": "skai.judge.v1",
+      "totalScore": 81
+    }
+  },
+  "format": "SKAI",
+  "integrity": {
+    "algorithm": "sha256",
+    "artifactHash": "eefc0d49c0ca3fa6ba4e7955ab2801c1435825ab557c3809d351c965f3a975ba",
+    "canonicalization": "stable-json-v1",
+    "sectionHashes": {
+      "attempt": "93553faabd71260dfb362b4d76008258570b0d1e810aa22f5d9c771b2aefe43d",
+      "branch": "70f8f3c2942e4e5c6a2212c277eee453cc31126894e9978774dd625b5a67c2e3",
+      "graph": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "manifest": "2eefaf50ef0b7ab25164efcb83519243927db7c33cc4d9280ed5c10b4a75a14a",
+      "problem": "ddce7332d94ed97c6b8cec63643c833e09fc19d174a4f6e223b23dc0abc729a1"
+    }
+  },
+  "manifest": {
+    "artifactId": "skai:fixture-branch-replay:2026-06-04T00:00:00.000Z",
+    "attemptId": "fixture-branch-replay",
+    "createdAt": "2026-06-04T00:00:00.000Z",
+    "exportedBy": "skai",
+    "parentAttemptId": "fixture-branch-parent",
+    "privacy": {
+      "attachmentBinary": "omitted",
+      "attachmentText": "included_when_public",
+      "contextDebug": "stripped",
+      "rawTrace": "included"
+    },
+    "problemId": "counterfactual-product-review",
+    "schemaVersion": "skai.file.v1",
+    "sections": [
+      "problem",
+      "attempt",
+      "graph",
+      "branch"
+    ],
+    "source": {
+      "conversationId": "fixture-branch-replay",
+      "exportedFrom": "skai-web",
+      "platform": "skai",
+      "primaryModel": "fixture-model",
+      "primaryProvider": "mock"
+    },
+    "title": "Fixture: Branch Replay"
+  },
+  "mimeType": "application/vnd.skai+json",
+  "payload": {
+    "attempt": {
+      "attemptId": "fixture-branch-replay",
+      "branch": {
+        "createdAt": "2026-06-04T00:00:00.000Z",
+        "id": "fixture-branch-001",
+        "label": "우선순위 요청을 검증 중심으로 재시작",
+        "mode": "breakpoint_replay",
+        "parentAttemptId": "fixture-branch-parent",
+        "parentTraceEventId": "fixture-branch-parent-u2",
+        "parentTraceIndex": 2
+      },
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "id": "fixture-branch-replay",
+      "problemId": "counterfactual-product-review",
+      "solvingMode": "single_model",
+      "title": "Fixture: Branch Replay",
+      "trace": [
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-branch-replay-u1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user",
+          "sourceTraceEventId": "fixture-branch-parent-u1"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-branch-replay-a1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant",
+          "sourceTraceEventId": "fixture-branch-parent-a1"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "여기서 다시 시작하자. 우선순위를 내기 전에 리뷰 근거, 불확실성, 확인해야 할 데이터를 분리해줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-branch-replay-u2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user",
+          "sourceTraceEventId": "fixture-branch-parent-u2"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "리뷰 근거, 불확실성, 확인 필요 데이터를 분리하고 우선순위 판단 기준을 제시합니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-branch-replay-a2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "그 기준으로 최종 우선순위를 만들고 왜 이전 답보다 나은지 설명해줘.",
+          "createdAt": "2026-06-04T00:04:00.000Z",
+          "id": "fixture-branch-replay-u3",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "근거와 불확실성을 반영한 우선순위와 branch 개선 이유를 설명합니다.",
+          "createdAt": "2026-06-04T00:05:00.000Z",
+          "id": "fixture-branch-replay-a3",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "branch": {
+      "breakpointTraceEventId": "fixture-branch-parent-u2",
+      "breakpointTraceIndex": 2,
+      "childAttemptId": "fixture-branch-replay",
+      "childTrace": [
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-branch-replay-u1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user",
+          "sourceTraceEventId": "fixture-branch-parent-u1"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-branch-replay-a1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant",
+          "sourceTraceEventId": "fixture-branch-parent-a1"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "여기서 다시 시작하자. 우선순위를 내기 전에 리뷰 근거, 불확실성, 확인해야 할 데이터를 분리해줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-branch-replay-u2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user",
+          "sourceTraceEventId": "fixture-branch-parent-u2"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "리뷰 근거, 불확실성, 확인 필요 데이터를 분리하고 우선순위 판단 기준을 제시합니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-branch-replay-a2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "그 기준으로 최종 우선순위를 만들고 왜 이전 답보다 나은지 설명해줘.",
+          "createdAt": "2026-06-04T00:04:00.000Z",
+          "id": "fixture-branch-replay-u3",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-branch-replay",
+          "branchId": "fixture-branch-001",
+          "content": "근거와 불확실성을 반영한 우선순위와 branch 개선 이유를 설명합니다.",
+          "createdAt": "2026-06-04T00:05:00.000Z",
+          "id": "fixture-branch-replay-a3",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ],
+      "parentAttemptId": "fixture-branch-parent",
+      "parentTrace": [
+        {
+          "attemptId": "fixture-branch-parent",
+          "content": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-branch-parent-u1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-branch-parent",
+          "content": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-branch-parent-a1",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-branch-parent",
+          "content": "그냥 최종 우선순위 3개로 정리해줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-branch-parent-u2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-branch-parent",
+          "content": "1. 성능 개선 2. 가격 정책 3. UI 개선입니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-branch-parent-a2",
+          "model": "fixture-model",
+          "problemId": "counterfactual-product-review",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "graph": {
+      "child": {
+        "annotations": [],
+        "attemptId": "fixture-branch-replay",
+        "branch": {
+          "breakpointTraceEventId": "fixture-branch-parent-u2",
+          "clonedTraceEventIds": {
+            "fixture-branch-replay-a1": "fixture-branch-parent-a1",
+            "fixture-branch-replay-u1": "fixture-branch-parent-u1",
+            "fixture-branch-replay-u2": "fixture-branch-parent-u2"
+          },
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-branch-001",
+          "label": "우선순위 요청을 검증 중심으로 재시작",
+          "mode": "breakpoint_replay",
+          "parentAttemptId": "fixture-branch-parent",
+          "parentTraceEventId": "fixture-branch-parent-u2",
+          "parentTraceIndex": 2
+        },
+        "index": {
+          "adjacency": {
+            "prompt:fixture-branch-replay-u1": [
+              "prompt:fixture-branch-replay-u2"
+            ],
+            "prompt:fixture-branch-replay-u2": [
+              "prompt:fixture-branch-replay-u3"
+            ],
+            "prompt:fixture-branch-replay-u3": [
+              "prompt-terminal:fixture-branch-replay"
+            ],
+            "response-origin:fixture-branch-replay": [
+              "response:fixture-branch-replay-a1"
+            ],
+            "response:fixture-branch-replay-a1": [
+              "response:fixture-branch-replay-a2"
+            ],
+            "response:fixture-branch-replay-a2": [
+              "response:fixture-branch-replay-a3"
+            ],
+            "status:pair:fixture-branch-replay-u1:fixture-branch-replay-a1": [
+              "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2"
+            ],
+            "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2": [
+              "status:pair:fixture-branch-replay-u3:fixture-branch-replay-a3"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-branch-replay": {
+              "incoming": [
+                "prompt-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-branch-replay-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:llm-response"
+              ]
+            },
+            "prompt:fixture-branch-replay-u2": {
+              "incoming": [
+                "prompt-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:llm-response"
+              ]
+            },
+            "prompt:fixture-branch-replay-u3": {
+              "incoming": [
+                "prompt-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:llm-response"
+              ]
+            },
+            "response-origin:fixture-branch-replay": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:user-prompt"
+              ]
+            },
+            "response:fixture-branch-replay-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:user-prompt"
+              ]
+            },
+            "response:fixture-branch-replay-a2": {
+              "incoming": [
+                "response-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:user-prompt"
+              ]
+            },
+            "response:fixture-branch-replay-a3": {
+              "incoming": [
+                "response-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-branch-replay-u1:fixture-branch-replay-a1": {
+              "incoming": [],
+              "outgoing": [
+                "status-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:status-progression"
+              ]
+            },
+            "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2": {
+              "incoming": [
+                "status-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:status-progression"
+              ],
+              "outgoing": [
+                "status-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:status-progression"
+              ]
+            },
+            "status:pair:fixture-branch-replay-u3:fixture-branch-replay-a3": {
+              "incoming": [
+                "status-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:status-progression"
+              ],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-branch-replay-u1": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "fixture-branch-replay-u2": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "fixture-branch-replay-u3": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-branch-replay-a1": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "fixture-branch-replay-a2": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "fixture-branch-replay-a3": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-branch-replay-u1": "prompt:fixture-branch-replay-u1",
+            "fixture-branch-replay-u2": "prompt:fixture-branch-replay-u2",
+            "fixture-branch-replay-u3": "prompt:fixture-branch-replay-u3"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-branch-replay-a1": "response:fixture-branch-replay-a1",
+            "fixture-branch-replay-a2": "response:fixture-branch-replay-a2",
+            "fixture-branch-replay-a3": "response:fixture-branch-replay-a3"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-branch-replay-u1",
+            "promptTraceEventId": "fixture-branch-replay-u1",
+            "responseNodeId": "response:fixture-branch-replay-a1",
+            "responseTraceEventId": "fixture-branch-replay-a1",
+            "sequence": 0,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "isBreakpoint": true,
+            "promptNodeId": "prompt:fixture-branch-replay-u2",
+            "promptTraceEventId": "fixture-branch-replay-u2",
+            "responseNodeId": "response:fixture-branch-replay-a2",
+            "responseTraceEventId": "fixture-branch-replay-a2",
+            "sequence": 1,
+            "status": "verification",
+            "statusNodeId": "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "statusReasons": [
+              "verification prompt signal",
+              "breakpoint replay anchor"
+            ]
+          },
+          {
+            "id": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-branch-replay-u3",
+            "promptTraceEventId": "fixture-branch-replay-u3",
+            "responseNodeId": "response:fixture-branch-replay-a3",
+            "responseTraceEventId": "fixture-branch-replay-a3",
+            "sequence": 2,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "statusReasons": [
+              "model response received"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-branch-replay-a1",
+            "id": "prompt-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:llm-response",
+            "label": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+            "pairId": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-branch-replay-u1",
+            "targetNodeId": "prompt:fixture-branch-replay-u2",
+            "traceEventId": "fixture-branch-replay-a1"
+          },
+          {
+            "dualNodeId": "response:fixture-branch-replay-a2",
+            "id": "prompt-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:llm-response",
+            "label": "리뷰 근거, 불확실성, 확인 필요 데이터를 분리하고 우선순위 판단 기준을 제시합니다.",
+            "pairId": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "projection": "prompt_graph",
+            "sequence": 1,
+            "sourceNodeId": "prompt:fixture-branch-replay-u2",
+            "targetNodeId": "prompt:fixture-branch-replay-u3",
+            "traceEventId": "fixture-branch-replay-a2"
+          },
+          {
+            "dualNodeId": "response:fixture-branch-replay-a3",
+            "id": "prompt-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:llm-response",
+            "label": "근거와 불확실성을 반영한 우선순위와 branch 개선 이유를 설명합니다.",
+            "pairId": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "projection": "prompt_graph",
+            "sequence": 2,
+            "sourceNodeId": "prompt:fixture-branch-replay-u3",
+            "targetNodeId": "prompt-terminal:fixture-branch-replay",
+            "traceEventId": "fixture-branch-replay-a3"
+          }
+        ],
+        "promptNodes": [
+          {
+            "branchId": "fixture-branch-001",
+            "id": "prompt:fixture-branch-replay-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "sourceTraceEventId": "fixture-branch-parent-u1",
+            "summary": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+            "traceEventId": "fixture-branch-replay-u1"
+          },
+          {
+            "branchId": "fixture-branch-001",
+            "id": "prompt:fixture-branch-replay-u2",
+            "kind": "prompt",
+            "label": "Prompt 2",
+            "sequence": 1,
+            "sourceTraceEventId": "fixture-branch-parent-u2",
+            "summary": "여기서 다시 시작하자. 우선순위를 내기 전에 리뷰 근거, 불확실성, 확인해야 할 데이터를 분리해줘.",
+            "traceEventId": "fixture-branch-replay-u2"
+          },
+          {
+            "branchId": "fixture-branch-001",
+            "id": "prompt:fixture-branch-replay-u3",
+            "kind": "prompt",
+            "label": "Prompt 3",
+            "sequence": 2,
+            "summary": "그 기준으로 최종 우선순위를 만들고 왜 이전 답보다 나은지 설명해줘.",
+            "traceEventId": "fixture-branch-replay-u3"
+          },
+          {
+            "id": "prompt-terminal:fixture-branch-replay",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 3,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-branch-replay-u1",
+            "id": "response-edge:pair:fixture-branch-replay-u1:fixture-branch-replay-a1:user-prompt",
+            "label": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+            "pairId": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-branch-replay",
+            "targetNodeId": "response:fixture-branch-replay-a1",
+            "traceEventId": "fixture-branch-replay-u1"
+          },
+          {
+            "dualNodeId": "prompt:fixture-branch-replay-u2",
+            "id": "response-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:user-prompt",
+            "label": "여기서 다시 시작하자. 우선순위를 내기 전에 리뷰 근거, 불확실성, 확인해야 할 데이터를 분리해줘.",
+            "pairId": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "projection": "response_graph",
+            "sequence": 1,
+            "sourceNodeId": "response:fixture-branch-replay-a1",
+            "targetNodeId": "response:fixture-branch-replay-a2",
+            "traceEventId": "fixture-branch-replay-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-branch-replay-u3",
+            "id": "response-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:user-prompt",
+            "label": "그 기준으로 최종 우선순위를 만들고 왜 이전 답보다 나은지 설명해줘.",
+            "pairId": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "projection": "response_graph",
+            "sequence": 2,
+            "sourceNodeId": "response:fixture-branch-replay-a2",
+            "targetNodeId": "response:fixture-branch-replay-a3",
+            "traceEventId": "fixture-branch-replay-u3"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-branch-replay",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "branchId": "fixture-branch-001",
+            "id": "response:fixture-branch-replay-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "sourceTraceEventId": "fixture-branch-parent-a1",
+            "summary": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+            "traceEventId": "fixture-branch-replay-a1"
+          },
+          {
+            "branchId": "fixture-branch-001",
+            "id": "response:fixture-branch-replay-a2",
+            "kind": "response",
+            "label": "Response 2",
+            "sequence": 1,
+            "summary": "리뷰 근거, 불확실성, 확인 필요 데이터를 분리하고 우선순위 판단 기준을 제시합니다.",
+            "traceEventId": "fixture-branch-replay-a2"
+          },
+          {
+            "branchId": "fixture-branch-001",
+            "id": "response:fixture-branch-replay-a3",
+            "kind": "response",
+            "label": "Response 3",
+            "sequence": 2,
+            "summary": "근거와 불확실성을 반영한 우선순위와 branch 개선 이유를 설명합니다.",
+            "traceEventId": "fixture-branch-replay-a3"
+          }
+        ],
+        "statusEdges": [
+          {
+            "dualNodeId": "prompt:fixture-branch-replay-u2",
+            "id": "status-edge:pair:fixture-branch-replay-u2:fixture-branch-replay-a2:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "projection": "status_layer",
+            "sequence": 1,
+            "sourceNodeId": "status:pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "targetNodeId": "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "traceEventId": "fixture-branch-replay-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-branch-replay-u3",
+            "id": "status-edge:pair:fixture-branch-replay-u3:fixture-branch-replay-a3:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "projection": "status_layer",
+            "sequence": 2,
+            "sourceNodeId": "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "targetNodeId": "status:pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "traceEventId": "fixture-branch-replay-u3"
+          }
+        ],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-branch-replay-u1:fixture-branch-replay-a1",
+            "sequence": 0,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "kind": "task_status",
+            "label": "verification",
+            "pairId": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+            "sequence": 1,
+            "summary": "verification prompt signal; breakpoint replay anchor"
+          },
+          {
+            "id": "status:pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-branch-replay-u3:fixture-branch-replay-a3",
+            "sequence": 2,
+            "summary": "model response received"
+          }
+        ]
+      },
+      "parent": {
+        "annotations": [],
+        "attemptId": "fixture-branch-parent",
+        "index": {
+          "adjacency": {
+            "prompt:fixture-branch-parent-u1": [
+              "prompt:fixture-branch-parent-u2"
+            ],
+            "prompt:fixture-branch-parent-u2": [
+              "prompt-terminal:fixture-branch-parent"
+            ],
+            "response-origin:fixture-branch-parent": [
+              "response:fixture-branch-parent-a1"
+            ],
+            "response:fixture-branch-parent-a1": [
+              "response:fixture-branch-parent-a2"
+            ],
+            "status:pair:fixture-branch-parent-u1:fixture-branch-parent-a1": [
+              "status:pair:fixture-branch-parent-u2:fixture-branch-parent-a2"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-branch-parent": {
+              "incoming": [
+                "prompt-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-branch-parent-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:llm-response"
+              ]
+            },
+            "prompt:fixture-branch-parent-u2": {
+              "incoming": [
+                "prompt-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:llm-response"
+              ]
+            },
+            "response-origin:fixture-branch-parent": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:user-prompt"
+              ]
+            },
+            "response:fixture-branch-parent-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:user-prompt"
+              ]
+            },
+            "response:fixture-branch-parent-a2": {
+              "incoming": [
+                "response-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-branch-parent-u1:fixture-branch-parent-a1": {
+              "incoming": [],
+              "outgoing": [
+                "status-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:status-progression"
+              ]
+            },
+            "status:pair:fixture-branch-parent-u2:fixture-branch-parent-a2": {
+              "incoming": [
+                "status-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:status-progression"
+              ],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-branch-parent-u1": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "fixture-branch-parent-u2": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-branch-parent-a1": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "fixture-branch-parent-a2": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-branch-parent-u1": "prompt:fixture-branch-parent-u1",
+            "fixture-branch-parent-u2": "prompt:fixture-branch-parent-u2"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-branch-parent-a1": "response:fixture-branch-parent-a1",
+            "fixture-branch-parent-a2": "response:fixture-branch-parent-a2"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-branch-parent-u1",
+            "promptTraceEventId": "fixture-branch-parent-u1",
+            "responseNodeId": "response:fixture-branch-parent-a1",
+            "responseTraceEventId": "fixture-branch-parent-a1",
+            "sequence": 0,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-branch-parent-u2",
+            "promptTraceEventId": "fixture-branch-parent-u2",
+            "responseNodeId": "response:fixture-branch-parent-a2",
+            "responseTraceEventId": "fixture-branch-parent-a2",
+            "sequence": 1,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "statusReasons": [
+              "model response received"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-branch-parent-a1",
+            "id": "prompt-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:llm-response",
+            "label": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+            "pairId": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-branch-parent-u1",
+            "targetNodeId": "prompt:fixture-branch-parent-u2",
+            "traceEventId": "fixture-branch-parent-a1"
+          },
+          {
+            "dualNodeId": "response:fixture-branch-parent-a2",
+            "id": "prompt-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:llm-response",
+            "label": "1. 성능 개선 2. 가격 정책 3. UI 개선입니다.",
+            "pairId": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "projection": "prompt_graph",
+            "sequence": 1,
+            "sourceNodeId": "prompt:fixture-branch-parent-u2",
+            "targetNodeId": "prompt-terminal:fixture-branch-parent",
+            "traceEventId": "fixture-branch-parent-a2"
+          }
+        ],
+        "promptNodes": [
+          {
+            "id": "prompt:fixture-branch-parent-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "summary": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+            "traceEventId": "fixture-branch-parent-u1"
+          },
+          {
+            "id": "prompt:fixture-branch-parent-u2",
+            "kind": "prompt",
+            "label": "Prompt 2",
+            "sequence": 1,
+            "summary": "그냥 최종 우선순위 3개로 정리해줘.",
+            "traceEventId": "fixture-branch-parent-u2"
+          },
+          {
+            "id": "prompt-terminal:fixture-branch-parent",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 2,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-branch-parent-u1",
+            "id": "response-edge:pair:fixture-branch-parent-u1:fixture-branch-parent-a1:user-prompt",
+            "label": "앱 리뷰를 보고 개선 우선순위를 뽑아줘.",
+            "pairId": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-branch-parent",
+            "targetNodeId": "response:fixture-branch-parent-a1",
+            "traceEventId": "fixture-branch-parent-u1"
+          },
+          {
+            "dualNodeId": "prompt:fixture-branch-parent-u2",
+            "id": "response-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:user-prompt",
+            "label": "그냥 최종 우선순위 3개로 정리해줘.",
+            "pairId": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "projection": "response_graph",
+            "sequence": 1,
+            "sourceNodeId": "response:fixture-branch-parent-a1",
+            "targetNodeId": "response:fixture-branch-parent-a2",
+            "traceEventId": "fixture-branch-parent-u2"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-branch-parent",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "id": "response:fixture-branch-parent-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "summary": "리뷰를 요약하면 성능, 가격, UI 개선이 중요해 보입니다.",
+            "traceEventId": "fixture-branch-parent-a1"
+          },
+          {
+            "id": "response:fixture-branch-parent-a2",
+            "kind": "response",
+            "label": "Response 2",
+            "sequence": 1,
+            "summary": "1. 성능 개선 2. 가격 정책 3. UI 개선입니다.",
+            "traceEventId": "fixture-branch-parent-a2"
+          }
+        ],
+        "statusEdges": [
+          {
+            "dualNodeId": "prompt:fixture-branch-parent-u2",
+            "id": "status-edge:pair:fixture-branch-parent-u2:fixture-branch-parent-a2:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "projection": "status_layer",
+            "sequence": 1,
+            "sourceNodeId": "status:pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "targetNodeId": "status:pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "traceEventId": "fixture-branch-parent-u2"
+          }
+        ],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-branch-parent-u1:fixture-branch-parent-a1",
+            "sequence": 0,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-branch-parent-u2:fixture-branch-parent-a2",
+            "sequence": 1,
+            "summary": "model response received"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "category": "strategy",
+      "constraints": [
+        "불명확한 목표를 먼저 구조화할 것",
+        "최종 산출물과 검증 기준을 분리할 것"
+      ],
+      "deliverables": [
+        "문제정의",
+        "task 분배",
+        "검증 계획",
+        "최종 산출물"
+      ],
+      "difficulty": "standard",
+      "estimatedMinutes": 15,
+      "goalProfile": "learning_oriented",
+      "id": "counterfactual-product-review",
+      "materials": [],
+      "title": "리뷰 분석 branch replay"
+    }
+  },
+  "schemaVersion": "skai.file.v1"
+}

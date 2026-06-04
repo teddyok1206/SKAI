@@ -1,0 +1,753 @@
+{
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "extension": ".skai",
+  "extensions": {
+    "skai.coach.v1": {
+      "artifactHash": "d99967d93a78bf9f38ab195bbade09bb8ea0e2dc6e8e4774fd1a57714df72947",
+      "coachingVersion": "coach.fixture.001",
+      "comments": [
+        {
+          "body": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "coach-1-finding-strong-decomposition",
+          "nextAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-good-decomposition",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-good-decomposition-u1",
+              "fixture-good-decomposition-a1",
+              "fixture-good-decomposition-u2",
+              "fixture-good-decomposition-a2",
+              "fixture-good-decomposition-u3",
+              "fixture-good-decomposition-a3",
+              "fixture-good-decomposition-u4",
+              "fixture-good-decomposition-a4"
+            ]
+          },
+          "title": "구조적 task 분배",
+          "tone": "mirror"
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "coach-fixture-baseline.001",
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-coach.001"
+      },
+      "inputGraphHash": "c62cb9663b636a7adbc531bc336bdfa5f84677e8af483dfb72b6f969bea93aa2",
+      "nextPracticeTargets": [],
+      "schemaVersion": "skai.coach.v1",
+      "summary": "이 fixture는 사용자가 AI에게 답을 맡기기보다 문제 구조를 좁혀 간 좋은 기준 사례입니다."
+    },
+    "skai.judge.v1": {
+      "artifactHash": "d99967d93a78bf9f38ab195bbade09bb8ea0e2dc6e8e4774fd1a57714df72947",
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "label": "문제정의",
+          "rationale": "첫 요청 이후 문제 조건을 재정의할 여지가 드러났습니다.",
+          "score": 78
+        },
+        {
+          "axis": "decomposition",
+          "label": "세분화",
+          "rationale": "task, 역할, 단계 분리가 trace에 나타납니다.",
+          "score": 84
+        },
+        {
+          "axis": "instruction_clarity",
+          "label": "지시명확성",
+          "rationale": "산출물 형식과 최종 정리 요구가 드러납니다.",
+          "score": 76
+        },
+        {
+          "axis": "adaptation",
+          "label": "적응력",
+          "rationale": "새 정보나 중간 결과에 대한 반응이 제한적입니다.",
+          "score": 54
+        },
+        {
+          "axis": "verification",
+          "label": "검증력",
+          "rationale": "근거와 한계를 확인하려는 검증 프롬프트가 있습니다.",
+          "score": 88
+        },
+        {
+          "axis": "efficiency",
+          "label": "효율성",
+          "rationale": "fixture baseline은 비용/시간 수치 대신 turn 수와 구조 밀도를 기준으로 봅니다.",
+          "score": 78
+        },
+        {
+          "axis": "final_quality",
+          "label": "최종품질",
+          "rationale": "최종 산출물로 수렴하는 요청이 있습니다.",
+          "score": 80
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "judge-fixture-baseline.001",
+      "findings": [
+        {
+          "axis": "decomposition",
+          "confidence": 0.84,
+          "explanation": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "finding-strong-decomposition",
+          "severity": "positive",
+          "suggestedAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-good-decomposition",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-good-decomposition-u1",
+              "fixture-good-decomposition-a1",
+              "fixture-good-decomposition-u2",
+              "fixture-good-decomposition-a2",
+              "fixture-good-decomposition-u3",
+              "fixture-good-decomposition-a3",
+              "fixture-good-decomposition-u4",
+              "fixture-good-decomposition-a4"
+            ]
+          },
+          "title": "구조적 task 분배"
+        }
+      ],
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-heuristic.001"
+      },
+      "inputGraphHash": "c62cb9663b636a7adbc531bc336bdfa5f84677e8af483dfb72b6f969bea93aa2",
+      "needsHumanReview": false,
+      "rubricVersion": "rubric.fixture.001",
+      "schemaVersion": "skai.judge.v1",
+      "totalScore": 77
+    }
+  },
+  "format": "SKAI",
+  "integrity": {
+    "algorithm": "sha256",
+    "artifactHash": "eccb8a6381b9f2674eaf94915d47c5883c13920ff0a297deca4d3e64812203c2",
+    "canonicalization": "stable-json-v1",
+    "sectionHashes": {
+      "attempt": "cc7552cdb662c1ee85b63cefef6af32bf54e9b0ef03243447c57ae85efaf1c39",
+      "graph": "c62cb9663b636a7adbc531bc336bdfa5f84677e8af483dfb72b6f969bea93aa2",
+      "manifest": "95a741c33c03eff42468f3e65b7593e58e127ab918c542e1d5c30017f058201e",
+      "problem": "97506b3e633345242bee863d374afaacf852801598e0a02eb62501bd4394e13f"
+    }
+  },
+  "manifest": {
+    "artifactId": "skai:fixture-good-decomposition:2026-06-04T00:00:00.000Z",
+    "attemptId": "fixture-good-decomposition",
+    "createdAt": "2026-06-04T00:00:00.000Z",
+    "exportedBy": "skai",
+    "privacy": {
+      "attachmentBinary": "omitted",
+      "attachmentText": "included_when_public",
+      "contextDebug": "stripped",
+      "rawTrace": "included"
+    },
+    "problemId": "ambiguous-research-brief",
+    "schemaVersion": "skai.file.v1",
+    "sections": [
+      "problem",
+      "attempt",
+      "graph"
+    ],
+    "source": {
+      "conversationId": "fixture-good-decomposition",
+      "exportedFrom": "skai-web",
+      "platform": "skai",
+      "primaryModel": "fixture-model",
+      "primaryProvider": "mock"
+    },
+    "title": "Fixture: Strong Decomposition"
+  },
+  "mimeType": "application/vnd.skai+json",
+  "payload": {
+    "attempt": {
+      "attemptId": "fixture-good-decomposition",
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "id": "fixture-good-decomposition",
+      "problemId": "ambiguous-research-brief",
+      "solvingMode": "single_model",
+      "title": "Fixture: Strong Decomposition",
+      "trace": [
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "생성형 AI가 교육에 미치는 영향을 발표해야 한다. 바로 답하지 말고 목표, 청중, 시간, 검증 기준의 불확실성을 먼저 분해해줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-good-decomposition-u1",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "목표, 청중, 발표 시간, 검증 기준이 불명확합니다. 후보 주제와 판단 기준을 분리하겠습니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-good-decomposition-a1",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "청중은 대학생/직장인 일반, 발표는 7분으로 가정한다. 후보 5개를 흥미도, 조사 가능성, 논쟁성, AI 역량 연결성으로 비교해줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-good-decomposition-u2",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "AI 튜터, 평가 자동화, 디지털 격차, 교사 업무 자동화, 표절 탐지를 비교할 수 있습니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-good-decomposition-a2",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "가장 적합한 주제를 하나 고르고 AI에게 맡길 task와 내가 판단할 task를 분리해줘.",
+          "createdAt": "2026-06-04T00:04:00.000Z",
+          "id": "fixture-good-decomposition-u3",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "AI 튜터와 자기주도학습을 추천합니다. AI는 후보 근거 수집과 반론 탐색을 맡고 사용자는 메시지와 출처 신뢰도를 판단합니다.",
+          "createdAt": "2026-06-04T00:05:00.000Z",
+          "id": "fixture-good-decomposition-a3",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "최종 브리프를 만들되 확정 사실, 검증 필요 가정, 출처 확인 계획, 한계를 분리해줘.",
+          "createdAt": "2026-06-04T00:06:00.000Z",
+          "id": "fixture-good-decomposition-u4",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-good-decomposition",
+          "content": "문제정의, 조사 질문, 핵심 주장 후보, 검증 계획, 한계가 분리된 발표 브리프를 제시합니다.",
+          "createdAt": "2026-06-04T00:07:00.000Z",
+          "id": "fixture-good-decomposition-a4",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "graph": {
+      "child": {
+        "annotations": [],
+        "attemptId": "fixture-good-decomposition",
+        "index": {
+          "adjacency": {
+            "prompt:fixture-good-decomposition-u1": [
+              "prompt:fixture-good-decomposition-u2"
+            ],
+            "prompt:fixture-good-decomposition-u2": [
+              "prompt:fixture-good-decomposition-u3"
+            ],
+            "prompt:fixture-good-decomposition-u3": [
+              "prompt:fixture-good-decomposition-u4"
+            ],
+            "prompt:fixture-good-decomposition-u4": [
+              "prompt-terminal:fixture-good-decomposition"
+            ],
+            "response-origin:fixture-good-decomposition": [
+              "response:fixture-good-decomposition-a1"
+            ],
+            "response:fixture-good-decomposition-a1": [
+              "response:fixture-good-decomposition-a2"
+            ],
+            "response:fixture-good-decomposition-a2": [
+              "response:fixture-good-decomposition-a3"
+            ],
+            "response:fixture-good-decomposition-a3": [
+              "response:fixture-good-decomposition-a4"
+            ],
+            "status:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1": [
+              "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2"
+            ],
+            "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2": [
+              "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3"
+            ],
+            "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3": [
+              "status:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-good-decomposition": {
+              "incoming": [
+                "prompt-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-good-decomposition-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:llm-response"
+              ]
+            },
+            "prompt:fixture-good-decomposition-u2": {
+              "incoming": [
+                "prompt-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:llm-response"
+              ]
+            },
+            "prompt:fixture-good-decomposition-u3": {
+              "incoming": [
+                "prompt-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:llm-response"
+              ]
+            },
+            "prompt:fixture-good-decomposition-u4": {
+              "incoming": [
+                "prompt-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:llm-response"
+              ]
+            },
+            "response-origin:fixture-good-decomposition": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:user-prompt"
+              ]
+            },
+            "response:fixture-good-decomposition-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:user-prompt"
+              ]
+            },
+            "response:fixture-good-decomposition-a2": {
+              "incoming": [
+                "response-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:user-prompt"
+              ]
+            },
+            "response:fixture-good-decomposition-a3": {
+              "incoming": [
+                "response-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:user-prompt"
+              ]
+            },
+            "response:fixture-good-decomposition-a4": {
+              "incoming": [
+                "response-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1": {
+              "incoming": [],
+              "outgoing": [
+                "status-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:status-progression"
+              ]
+            },
+            "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2": {
+              "incoming": [
+                "status-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:status-progression"
+              ],
+              "outgoing": [
+                "status-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:status-progression"
+              ]
+            },
+            "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3": {
+              "incoming": [
+                "status-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:status-progression"
+              ],
+              "outgoing": [
+                "status-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:status-progression"
+              ]
+            },
+            "status:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4": {
+              "incoming": [
+                "status-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:status-progression"
+              ],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-good-decomposition-u1": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "fixture-good-decomposition-u2": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "fixture-good-decomposition-u3": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "fixture-good-decomposition-u4": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-good-decomposition-a1": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "fixture-good-decomposition-a2": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "fixture-good-decomposition-a3": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "fixture-good-decomposition-a4": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-good-decomposition-u1": "prompt:fixture-good-decomposition-u1",
+            "fixture-good-decomposition-u2": "prompt:fixture-good-decomposition-u2",
+            "fixture-good-decomposition-u3": "prompt:fixture-good-decomposition-u3",
+            "fixture-good-decomposition-u4": "prompt:fixture-good-decomposition-u4"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-good-decomposition-a1": "response:fixture-good-decomposition-a1",
+            "fixture-good-decomposition-a2": "response:fixture-good-decomposition-a2",
+            "fixture-good-decomposition-a3": "response:fixture-good-decomposition-a3",
+            "fixture-good-decomposition-a4": "response:fixture-good-decomposition-a4"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-good-decomposition-u1",
+            "promptTraceEventId": "fixture-good-decomposition-u1",
+            "responseNodeId": "response:fixture-good-decomposition-a1",
+            "responseTraceEventId": "fixture-good-decomposition-a1",
+            "sequence": 0,
+            "status": "verification",
+            "statusNodeId": "status:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "statusReasons": [
+              "verification prompt signal"
+            ]
+          },
+          {
+            "id": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-good-decomposition-u2",
+            "promptTraceEventId": "fixture-good-decomposition-u2",
+            "responseNodeId": "response:fixture-good-decomposition-a2",
+            "responseTraceEventId": "fixture-good-decomposition-a2",
+            "sequence": 1,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-good-decomposition-u3",
+            "promptTraceEventId": "fixture-good-decomposition-u3",
+            "responseNodeId": "response:fixture-good-decomposition-a3",
+            "responseTraceEventId": "fixture-good-decomposition-a3",
+            "sequence": 2,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-good-decomposition-u4",
+            "promptTraceEventId": "fixture-good-decomposition-u4",
+            "responseNodeId": "response:fixture-good-decomposition-a4",
+            "responseTraceEventId": "fixture-good-decomposition-a4",
+            "sequence": 3,
+            "status": "verification",
+            "statusNodeId": "status:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "statusReasons": [
+              "verification prompt signal"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-good-decomposition-a1",
+            "id": "prompt-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:llm-response",
+            "label": "목표, 청중, 발표 시간, 검증 기준이 불명확합니다. 후보 주제와 판단 기준을 분리하겠습니다.",
+            "pairId": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-good-decomposition-u1",
+            "targetNodeId": "prompt:fixture-good-decomposition-u2",
+            "traceEventId": "fixture-good-decomposition-a1"
+          },
+          {
+            "dualNodeId": "response:fixture-good-decomposition-a2",
+            "id": "prompt-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:llm-response",
+            "label": "AI 튜터, 평가 자동화, 디지털 격차, 교사 업무 자동화, 표절 탐지를 비교할 수 있습니다.",
+            "pairId": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "projection": "prompt_graph",
+            "sequence": 1,
+            "sourceNodeId": "prompt:fixture-good-decomposition-u2",
+            "targetNodeId": "prompt:fixture-good-decomposition-u3",
+            "traceEventId": "fixture-good-decomposition-a2"
+          },
+          {
+            "dualNodeId": "response:fixture-good-decomposition-a3",
+            "id": "prompt-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:llm-response",
+            "label": "AI 튜터와 자기주도학습을 추천합니다. AI는 후보 근거 수집과 반론 탐색을 맡고 사용자는 메시지와 출처 신뢰도를 판단합니다.",
+            "pairId": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "projection": "prompt_graph",
+            "sequence": 2,
+            "sourceNodeId": "prompt:fixture-good-decomposition-u3",
+            "targetNodeId": "prompt:fixture-good-decomposition-u4",
+            "traceEventId": "fixture-good-decomposition-a3"
+          },
+          {
+            "dualNodeId": "response:fixture-good-decomposition-a4",
+            "id": "prompt-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:llm-response",
+            "label": "문제정의, 조사 질문, 핵심 주장 후보, 검증 계획, 한계가 분리된 발표 브리프를 제시합니다.",
+            "pairId": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "projection": "prompt_graph",
+            "sequence": 3,
+            "sourceNodeId": "prompt:fixture-good-decomposition-u4",
+            "targetNodeId": "prompt-terminal:fixture-good-decomposition",
+            "traceEventId": "fixture-good-decomposition-a4"
+          }
+        ],
+        "promptNodes": [
+          {
+            "id": "prompt:fixture-good-decomposition-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "summary": "생성형 AI가 교육에 미치는 영향을 발표해야 한다. 바로 답하지 말고 목표, 청중, 시간, 검증 기준의 불확실성을 먼저 분해해줘.",
+            "traceEventId": "fixture-good-decomposition-u1"
+          },
+          {
+            "id": "prompt:fixture-good-decomposition-u2",
+            "kind": "prompt",
+            "label": "Prompt 2",
+            "sequence": 1,
+            "summary": "청중은 대학생/직장인 일반, 발표는 7분으로 가정한다. 후보 5개를 흥미도, 조사 가능성, 논쟁성, AI 역량 연결성으로 비교해줘.",
+            "traceEventId": "fixture-good-decomposition-u2"
+          },
+          {
+            "id": "prompt:fixture-good-decomposition-u3",
+            "kind": "prompt",
+            "label": "Prompt 3",
+            "sequence": 2,
+            "summary": "가장 적합한 주제를 하나 고르고 AI에게 맡길 task와 내가 판단할 task를 분리해줘.",
+            "traceEventId": "fixture-good-decomposition-u3"
+          },
+          {
+            "id": "prompt:fixture-good-decomposition-u4",
+            "kind": "prompt",
+            "label": "Prompt 4",
+            "sequence": 3,
+            "summary": "최종 브리프를 만들되 확정 사실, 검증 필요 가정, 출처 확인 계획, 한계를 분리해줘.",
+            "traceEventId": "fixture-good-decomposition-u4"
+          },
+          {
+            "id": "prompt-terminal:fixture-good-decomposition",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 4,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u1",
+            "id": "response-edge:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1:user-prompt",
+            "label": "생성형 AI가 교육에 미치는 영향을 발표해야 한다. 바로 답하지 말고 목표, 청중, 시간, 검증 기준의 불확실성을 먼저 분해해줘.",
+            "pairId": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-good-decomposition",
+            "targetNodeId": "response:fixture-good-decomposition-a1",
+            "traceEventId": "fixture-good-decomposition-u1"
+          },
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u2",
+            "id": "response-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:user-prompt",
+            "label": "청중은 대학생/직장인 일반, 발표는 7분으로 가정한다. 후보 5개를 흥미도, 조사 가능성, 논쟁성, AI 역량 연결성으로 비교해줘.",
+            "pairId": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "projection": "response_graph",
+            "sequence": 1,
+            "sourceNodeId": "response:fixture-good-decomposition-a1",
+            "targetNodeId": "response:fixture-good-decomposition-a2",
+            "traceEventId": "fixture-good-decomposition-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u3",
+            "id": "response-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:user-prompt",
+            "label": "가장 적합한 주제를 하나 고르고 AI에게 맡길 task와 내가 판단할 task를 분리해줘.",
+            "pairId": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "projection": "response_graph",
+            "sequence": 2,
+            "sourceNodeId": "response:fixture-good-decomposition-a2",
+            "targetNodeId": "response:fixture-good-decomposition-a3",
+            "traceEventId": "fixture-good-decomposition-u3"
+          },
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u4",
+            "id": "response-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:user-prompt",
+            "label": "최종 브리프를 만들되 확정 사실, 검증 필요 가정, 출처 확인 계획, 한계를 분리해줘.",
+            "pairId": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "projection": "response_graph",
+            "sequence": 3,
+            "sourceNodeId": "response:fixture-good-decomposition-a3",
+            "targetNodeId": "response:fixture-good-decomposition-a4",
+            "traceEventId": "fixture-good-decomposition-u4"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-good-decomposition",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "id": "response:fixture-good-decomposition-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "summary": "목표, 청중, 발표 시간, 검증 기준이 불명확합니다. 후보 주제와 판단 기준을 분리하겠습니다.",
+            "traceEventId": "fixture-good-decomposition-a1"
+          },
+          {
+            "id": "response:fixture-good-decomposition-a2",
+            "kind": "response",
+            "label": "Response 2",
+            "sequence": 1,
+            "summary": "AI 튜터, 평가 자동화, 디지털 격차, 교사 업무 자동화, 표절 탐지를 비교할 수 있습니다.",
+            "traceEventId": "fixture-good-decomposition-a2"
+          },
+          {
+            "id": "response:fixture-good-decomposition-a3",
+            "kind": "response",
+            "label": "Response 3",
+            "sequence": 2,
+            "summary": "AI 튜터와 자기주도학습을 추천합니다. AI는 후보 근거 수집과 반론 탐색을 맡고 사용자는 메시지와 출처 신뢰도를 판단합니다.",
+            "traceEventId": "fixture-good-decomposition-a3"
+          },
+          {
+            "id": "response:fixture-good-decomposition-a4",
+            "kind": "response",
+            "label": "Response 4",
+            "sequence": 3,
+            "summary": "문제정의, 조사 질문, 핵심 주장 후보, 검증 계획, 한계가 분리된 발표 브리프를 제시합니다.",
+            "traceEventId": "fixture-good-decomposition-a4"
+          }
+        ],
+        "statusEdges": [
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u2",
+            "id": "status-edge:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "projection": "status_layer",
+            "sequence": 1,
+            "sourceNodeId": "status:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "targetNodeId": "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "traceEventId": "fixture-good-decomposition-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u3",
+            "id": "status-edge:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "projection": "status_layer",
+            "sequence": 2,
+            "sourceNodeId": "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "targetNodeId": "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "traceEventId": "fixture-good-decomposition-u3"
+          },
+          {
+            "dualNodeId": "prompt:fixture-good-decomposition-u4",
+            "id": "status-edge:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "projection": "status_layer",
+            "sequence": 3,
+            "sourceNodeId": "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "targetNodeId": "status:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "traceEventId": "fixture-good-decomposition-u4"
+          }
+        ],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "kind": "task_status",
+            "label": "verification",
+            "pairId": "pair:fixture-good-decomposition-u1:fixture-good-decomposition-a1",
+            "sequence": 0,
+            "summary": "verification prompt signal"
+          },
+          {
+            "id": "status:pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-good-decomposition-u2:fixture-good-decomposition-a2",
+            "sequence": 1,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-good-decomposition-u3:fixture-good-decomposition-a3",
+            "sequence": 2,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "kind": "task_status",
+            "label": "verification",
+            "pairId": "pair:fixture-good-decomposition-u4:fixture-good-decomposition-a4",
+            "sequence": 3,
+            "summary": "verification prompt signal"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "category": "research",
+      "constraints": [
+        "불명확한 목표를 먼저 구조화할 것",
+        "최종 산출물과 검증 기준을 분리할 것"
+      ],
+      "deliverables": [
+        "문제정의",
+        "task 분배",
+        "검증 계획",
+        "최종 산출물"
+      ],
+      "difficulty": "standard",
+      "estimatedMinutes": 15,
+      "goalProfile": "learning_oriented",
+      "id": "ambiguous-research-brief",
+      "materials": [],
+      "title": "교육 발표 주제 선정"
+    }
+  },
+  "schemaVersion": "skai.file.v1"
+}

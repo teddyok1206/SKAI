@@ -70,6 +70,22 @@ The first demo should prove as many of these as possible:
 - When a user selects or uploads files during solving, include a normalized representation of those files in the model request where feasible.
 - Every score should be tied to a rubric version and judge version.
 
+## `.skai` Contract And Judge Development
+
+- Treat `.skai` as a stable internal API contract, not just a downloadable file.
+- `.skai` core is the immutable backbone: problem snapshot, attempt trace, 3D dual graph, branch snapshot, source provenance, and integrity.
+- Do not put LLM judge/coaching fields into `.skai` core. Judge reports, coaching comments, graph overlays, bottleneck readings, and future model analysis belong in optional versioned extensions.
+- Core code must not import or depend on judge/coaching modules. Derived modules may read core; views may render core plus extensions.
+- Judge/coaching extensions must reference stable ids from the core graph such as `nodeId`, `edgeId`, `pairId`, `traceEventId`, or `attemptId`. Avoid array-index or rendered-text references.
+- Every judge/coaching extension should record the input graph hash, rubric version, judge prompt version, model/provider when applicable, creation time, and whether the result needs human review.
+- The canonical development loop for judge/coaching is:
+  `.skai fixture -> derived extension -> unified viewer overlay -> regression check -> deploy`.
+- Use `fixtures/skai/` golden artifacts for judge/coaching development. Promote real attempts into fixtures when they reveal a reusable learning pattern.
+- Fixture categories should include at least: strong decomposition, one-shot failure, material ignored, branch/replay, and strong verification.
+- Add or update fixture checks when judge/coaching behavior changes materially.
+- The unified `.skai` viewer is the only canonical file reading surface. Do not create separate share/import/PDF viewers; add extension renderers through the viewer registry.
+- LLM judge outputs are inherently variable. Regression tests should verify structure, graph id references, rubric axes, severity/action fields, and extension validity before checking prose quality.
+
 ## Problem Authoring Rules
 
 - Every problem in `data/problems.ts` must have a matching paste-ready playbook in `docs/problem_playbooks/`.

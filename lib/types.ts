@@ -757,6 +757,68 @@ export interface SkaiFileArtifact {
   integrity: SkaiFileIntegrity;
 }
 
+export type SkaiExtensionSchemaVersion = "skai.judge.v1" | "skai.coach.v1";
+export type SkaiExtensionTargetKind = ConversationGraphAnnotationTargetKind | "trace_event" | "attempt";
+export type SkaiExtensionGeneratorKind = "deterministic_fixture" | "heuristic" | "llm" | "human";
+
+export interface SkaiExtensionTarget {
+  targetKind: SkaiExtensionTargetKind;
+  targetId: string;
+  pairId?: string;
+  traceEventIds?: string[];
+}
+
+export interface SkaiExtensionBase {
+  schemaVersion: SkaiExtensionSchemaVersion;
+  extensionVersion: string;
+  artifactHash: string;
+  inputGraphHash: string;
+  createdAt: string;
+  generator: {
+    kind: SkaiExtensionGeneratorKind;
+    provider?: ProviderId;
+    model?: string;
+    promptVersion?: string;
+  };
+}
+
+export interface SkaiJudgeFinding {
+  id: string;
+  target: SkaiExtensionTarget;
+  axis?: ScoreAxis;
+  severity: ConversationGraphAnnotationSeverity;
+  confidence: number;
+  title: string;
+  explanation: string;
+  suggestedAction?: string;
+}
+
+export interface SkaiJudgeExtensionV1 extends SkaiExtensionBase {
+  schemaVersion: "skai.judge.v1";
+  rubricVersion: string;
+  totalScore?: number;
+  axisScores: AxisScore[];
+  findings: SkaiJudgeFinding[];
+  needsHumanReview: boolean;
+}
+
+export interface SkaiCoachComment {
+  id: string;
+  target: SkaiExtensionTarget;
+  tone: "mirror" | "correction" | "practice";
+  title: string;
+  body: string;
+  nextAction?: string;
+}
+
+export interface SkaiCoachExtensionV1 extends SkaiExtensionBase {
+  schemaVersion: "skai.coach.v1";
+  coachingVersion: string;
+  summary: string;
+  comments: SkaiCoachComment[];
+  nextPracticeTargets: string[];
+}
+
 export interface LeaderboardEntry {
   attemptId: string;
   problemId: string;

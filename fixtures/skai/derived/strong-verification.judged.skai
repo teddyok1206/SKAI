@@ -1,0 +1,642 @@
+{
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "extension": ".skai",
+  "extensions": {
+    "skai.coach.v1": {
+      "artifactHash": "8b5c731cc397b61888d1f1fdfeac12f798157d5d48d84cd6f40971e1830c2887",
+      "coachingVersion": "coach.fixture.001",
+      "comments": [
+        {
+          "body": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "coach-1-finding-strong-decomposition",
+          "nextAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-strong-verification",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-strong-verification-u1",
+              "fixture-strong-verification-a1",
+              "fixture-strong-verification-u2",
+              "fixture-strong-verification-a2",
+              "fixture-strong-verification-u3",
+              "fixture-strong-verification-a3"
+            ]
+          },
+          "title": "구조적 task 분배",
+          "tone": "mirror"
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "coach-fixture-baseline.001",
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-coach.001"
+      },
+      "inputGraphHash": "b8e0600e98a95537522e32fcad2d6ba516309125f61e782288a325bd454fb83e",
+      "nextPracticeTargets": [],
+      "schemaVersion": "skai.coach.v1",
+      "summary": "이 fixture는 사용자가 AI에게 답을 맡기기보다 문제 구조를 좁혀 간 좋은 기준 사례입니다."
+    },
+    "skai.judge.v1": {
+      "artifactHash": "8b5c731cc397b61888d1f1fdfeac12f798157d5d48d84cd6f40971e1830c2887",
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "label": "문제정의",
+          "rationale": "첫 요청 이후 문제 조건을 재정의할 여지가 드러났습니다.",
+          "score": 78
+        },
+        {
+          "axis": "decomposition",
+          "label": "세분화",
+          "rationale": "task, 역할, 단계 분리가 trace에 나타납니다.",
+          "score": 84
+        },
+        {
+          "axis": "instruction_clarity",
+          "label": "지시명확성",
+          "rationale": "산출물 형식과 최종 정리 요구가 드러납니다.",
+          "score": 76
+        },
+        {
+          "axis": "adaptation",
+          "label": "적응력",
+          "rationale": "중간 흐름을 재조정한 신호가 있습니다.",
+          "score": 82
+        },
+        {
+          "axis": "verification",
+          "label": "검증력",
+          "rationale": "근거와 한계를 확인하려는 검증 프롬프트가 있습니다.",
+          "score": 88
+        },
+        {
+          "axis": "efficiency",
+          "label": "효율성",
+          "rationale": "fixture baseline은 비용/시간 수치 대신 turn 수와 구조 밀도를 기준으로 봅니다.",
+          "score": 78
+        },
+        {
+          "axis": "final_quality",
+          "label": "최종품질",
+          "rationale": "최종 산출물로 수렴하는 요청이 있습니다.",
+          "score": 80
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "judge-fixture-baseline.001",
+      "findings": [
+        {
+          "axis": "decomposition",
+          "confidence": 0.84,
+          "explanation": "사용자가 목표, 기준, task, 검증을 분리하면서 모델의 역할을 좁혀 갔습니다.",
+          "id": "finding-strong-decomposition",
+          "severity": "positive",
+          "suggestedAction": "다음 fixture에서는 이 구조를 더 짧은 turn 수로 유지할 수 있는지 확인하세요.",
+          "target": {
+            "targetId": "fixture-strong-verification",
+            "targetKind": "attempt",
+            "traceEventIds": [
+              "fixture-strong-verification-u1",
+              "fixture-strong-verification-a1",
+              "fixture-strong-verification-u2",
+              "fixture-strong-verification-a2",
+              "fixture-strong-verification-u3",
+              "fixture-strong-verification-a3"
+            ]
+          },
+          "title": "구조적 task 분배"
+        }
+      ],
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-heuristic.001"
+      },
+      "inputGraphHash": "b8e0600e98a95537522e32fcad2d6ba516309125f61e782288a325bd454fb83e",
+      "needsHumanReview": false,
+      "rubricVersion": "rubric.fixture.001",
+      "schemaVersion": "skai.judge.v1",
+      "totalScore": 81
+    }
+  },
+  "format": "SKAI",
+  "integrity": {
+    "algorithm": "sha256",
+    "artifactHash": "d710ba65db13e64b94219697da35a38642801fe35fa7a1423fefd17807952b46",
+    "canonicalization": "stable-json-v1",
+    "sectionHashes": {
+      "attempt": "8bf4786d31afa064ea2f730a50fdb35dd87a6fb470d12d72294919aa3e70cd28",
+      "graph": "b8e0600e98a95537522e32fcad2d6ba516309125f61e782288a325bd454fb83e",
+      "manifest": "bf5354334959bd0163f926910b8b33ab92f299dbe6daca6e44f89a26c927f96d",
+      "problem": "f3f8738d8be6bc7e8230eee5b298287fba34e005298360d491326cfc379257df"
+    }
+  },
+  "manifest": {
+    "artifactId": "skai:fixture-strong-verification:2026-06-04T00:00:00.000Z",
+    "attemptId": "fixture-strong-verification",
+    "createdAt": "2026-06-04T00:00:00.000Z",
+    "exportedBy": "skai",
+    "privacy": {
+      "attachmentBinary": "omitted",
+      "attachmentText": "included_when_public",
+      "contextDebug": "stripped",
+      "rawTrace": "included"
+    },
+    "problemId": "club-budget-workflow",
+    "schemaVersion": "skai.file.v1",
+    "sections": [
+      "problem",
+      "attempt",
+      "graph"
+    ],
+    "source": {
+      "conversationId": "fixture-strong-verification",
+      "exportedFrom": "skai-web",
+      "platform": "skai",
+      "primaryModel": "fixture-model",
+      "primaryProvider": "mock"
+    },
+    "title": "Fixture: Strong Verification"
+  },
+  "mimeType": "application/vnd.skai+json",
+  "payload": {
+    "attempt": {
+      "attemptId": "fixture-strong-verification",
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "id": "fixture-strong-verification",
+      "problemId": "club-budget-workflow",
+      "solvingMode": "single_model",
+      "title": "Fixture: Strong Verification",
+      "trace": [
+        {
+          "attachments": [
+            {
+              "createdAt": "2026-06-04T00:00:00.000Z",
+              "id": "receipt-summary",
+              "materialId": "receipt-summary",
+              "mimeType": "text/csv",
+              "name": "club-budget.csv",
+              "size": 59,
+              "source": "problem_material",
+              "textContent": "신청자: 김민지, 이도윤, 박서연, 최현우 / 입금 누락: 최현우 / 영수증 누락: 피자 주문 78000원"
+            }
+          ],
+          "attemptId": "fixture-strong-verification",
+          "content": "첨부 자료를 기준으로 정산 workflow를 설계해줘. AI task와 사람이 검증할 task를 분리해.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-strong-verification-u1",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-strong-verification",
+          "content": "자료에서 신청자, 입금 누락, 영수증 누락을 추출하고 AI task와 사람 검증 task를 나누겠습니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-strong-verification-a1",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-strong-verification",
+          "content": "최현우 입금 누락과 피자 영수증 누락을 예외 시나리오로 표시하고 대응책을 넣어줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-strong-verification-u2",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-strong-verification",
+          "content": "두 예외를 분리하고 담당자 확인, 추가 증빙 요청, 최종 승인 보류 기준을 제시합니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-strong-verification-a2",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-strong-verification",
+          "content": "이 workflow의 오류 가능성과 검증해야 할 근거를 다시 확인해줘.",
+          "createdAt": "2026-06-04T00:04:00.000Z",
+          "id": "fixture-strong-verification-u3",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-strong-verification",
+          "content": "입금자명 불일치, 영수증 누락, 개인정보 노출, 자료 최신성 문제가 검증 대상입니다.",
+          "createdAt": "2026-06-04T00:05:00.000Z",
+          "id": "fixture-strong-verification-a3",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "graph": {
+      "child": {
+        "annotations": [],
+        "attemptId": "fixture-strong-verification",
+        "index": {
+          "adjacency": {
+            "prompt:fixture-strong-verification-u1": [
+              "prompt:fixture-strong-verification-u2"
+            ],
+            "prompt:fixture-strong-verification-u2": [
+              "prompt:fixture-strong-verification-u3"
+            ],
+            "prompt:fixture-strong-verification-u3": [
+              "prompt-terminal:fixture-strong-verification"
+            ],
+            "response-origin:fixture-strong-verification": [
+              "response:fixture-strong-verification-a1"
+            ],
+            "response:fixture-strong-verification-a1": [
+              "response:fixture-strong-verification-a2"
+            ],
+            "response:fixture-strong-verification-a2": [
+              "response:fixture-strong-verification-a3"
+            ],
+            "status:pair:fixture-strong-verification-u1:fixture-strong-verification-a1": [
+              "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2"
+            ],
+            "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2": [
+              "status:pair:fixture-strong-verification-u3:fixture-strong-verification-a3"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-strong-verification": {
+              "incoming": [
+                "prompt-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-strong-verification-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:llm-response"
+              ]
+            },
+            "prompt:fixture-strong-verification-u2": {
+              "incoming": [
+                "prompt-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:llm-response"
+              ]
+            },
+            "prompt:fixture-strong-verification-u3": {
+              "incoming": [
+                "prompt-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:llm-response"
+              ]
+            },
+            "response-origin:fixture-strong-verification": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:user-prompt"
+              ]
+            },
+            "response:fixture-strong-verification-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:user-prompt"
+              ]
+            },
+            "response:fixture-strong-verification-a2": {
+              "incoming": [
+                "response-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:user-prompt"
+              ]
+            },
+            "response:fixture-strong-verification-a3": {
+              "incoming": [
+                "response-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-strong-verification-u1:fixture-strong-verification-a1": {
+              "incoming": [],
+              "outgoing": [
+                "status-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:status-progression"
+              ]
+            },
+            "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2": {
+              "incoming": [
+                "status-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:status-progression"
+              ],
+              "outgoing": [
+                "status-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:status-progression"
+              ]
+            },
+            "status:pair:fixture-strong-verification-u3:fixture-strong-verification-a3": {
+              "incoming": [
+                "status-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:status-progression"
+              ],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-strong-verification-u1": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "fixture-strong-verification-u2": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "fixture-strong-verification-u3": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-strong-verification-a1": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "fixture-strong-verification-a2": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "fixture-strong-verification-a3": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-strong-verification-u1": "prompt:fixture-strong-verification-u1",
+            "fixture-strong-verification-u2": "prompt:fixture-strong-verification-u2",
+            "fixture-strong-verification-u3": "prompt:fixture-strong-verification-u3"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-strong-verification-a1": "response:fixture-strong-verification-a1",
+            "fixture-strong-verification-a2": "response:fixture-strong-verification-a2",
+            "fixture-strong-verification-a3": "response:fixture-strong-verification-a3"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-strong-verification-u1",
+            "promptTraceEventId": "fixture-strong-verification-u1",
+            "responseNodeId": "response:fixture-strong-verification-a1",
+            "responseTraceEventId": "fixture-strong-verification-a1",
+            "sequence": 0,
+            "status": "verification",
+            "statusNodeId": "status:pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "statusReasons": [
+              "verification prompt signal"
+            ]
+          },
+          {
+            "id": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-strong-verification-u2",
+            "promptTraceEventId": "fixture-strong-verification-u2",
+            "responseNodeId": "response:fixture-strong-verification-a2",
+            "responseTraceEventId": "fixture-strong-verification-a2",
+            "sequence": 1,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-strong-verification-u3",
+            "promptTraceEventId": "fixture-strong-verification-u3",
+            "responseNodeId": "response:fixture-strong-verification-a3",
+            "responseTraceEventId": "fixture-strong-verification-a3",
+            "sequence": 2,
+            "status": "verification",
+            "statusNodeId": "status:pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "statusReasons": [
+              "verification prompt signal"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-strong-verification-a1",
+            "id": "prompt-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:llm-response",
+            "label": "자료에서 신청자, 입금 누락, 영수증 누락을 추출하고 AI task와 사람 검증 task를 나누겠습니다.",
+            "pairId": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-strong-verification-u1",
+            "targetNodeId": "prompt:fixture-strong-verification-u2",
+            "traceEventId": "fixture-strong-verification-a1"
+          },
+          {
+            "dualNodeId": "response:fixture-strong-verification-a2",
+            "id": "prompt-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:llm-response",
+            "label": "두 예외를 분리하고 담당자 확인, 추가 증빙 요청, 최종 승인 보류 기준을 제시합니다.",
+            "pairId": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "projection": "prompt_graph",
+            "sequence": 1,
+            "sourceNodeId": "prompt:fixture-strong-verification-u2",
+            "targetNodeId": "prompt:fixture-strong-verification-u3",
+            "traceEventId": "fixture-strong-verification-a2"
+          },
+          {
+            "dualNodeId": "response:fixture-strong-verification-a3",
+            "id": "prompt-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:llm-response",
+            "label": "입금자명 불일치, 영수증 누락, 개인정보 노출, 자료 최신성 문제가 검증 대상입니다.",
+            "pairId": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "projection": "prompt_graph",
+            "sequence": 2,
+            "sourceNodeId": "prompt:fixture-strong-verification-u3",
+            "targetNodeId": "prompt-terminal:fixture-strong-verification",
+            "traceEventId": "fixture-strong-verification-a3"
+          }
+        ],
+        "promptNodes": [
+          {
+            "id": "prompt:fixture-strong-verification-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "summary": "첨부 자료를 기준으로 정산 workflow를 설계해줘. AI task와 사람이 검증할 task를 분리해.",
+            "traceEventId": "fixture-strong-verification-u1"
+          },
+          {
+            "id": "prompt:fixture-strong-verification-u2",
+            "kind": "prompt",
+            "label": "Prompt 2",
+            "sequence": 1,
+            "summary": "최현우 입금 누락과 피자 영수증 누락을 예외 시나리오로 표시하고 대응책을 넣어줘.",
+            "traceEventId": "fixture-strong-verification-u2"
+          },
+          {
+            "id": "prompt:fixture-strong-verification-u3",
+            "kind": "prompt",
+            "label": "Prompt 3",
+            "sequence": 2,
+            "summary": "이 workflow의 오류 가능성과 검증해야 할 근거를 다시 확인해줘.",
+            "traceEventId": "fixture-strong-verification-u3"
+          },
+          {
+            "id": "prompt-terminal:fixture-strong-verification",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 3,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-strong-verification-u1",
+            "id": "response-edge:pair:fixture-strong-verification-u1:fixture-strong-verification-a1:user-prompt",
+            "label": "첨부 자료를 기준으로 정산 workflow를 설계해줘. AI task와 사람이 검증할 task를 분리해.",
+            "pairId": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-strong-verification",
+            "targetNodeId": "response:fixture-strong-verification-a1",
+            "traceEventId": "fixture-strong-verification-u1"
+          },
+          {
+            "dualNodeId": "prompt:fixture-strong-verification-u2",
+            "id": "response-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:user-prompt",
+            "label": "최현우 입금 누락과 피자 영수증 누락을 예외 시나리오로 표시하고 대응책을 넣어줘.",
+            "pairId": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "projection": "response_graph",
+            "sequence": 1,
+            "sourceNodeId": "response:fixture-strong-verification-a1",
+            "targetNodeId": "response:fixture-strong-verification-a2",
+            "traceEventId": "fixture-strong-verification-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-strong-verification-u3",
+            "id": "response-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:user-prompt",
+            "label": "이 workflow의 오류 가능성과 검증해야 할 근거를 다시 확인해줘.",
+            "pairId": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "projection": "response_graph",
+            "sequence": 2,
+            "sourceNodeId": "response:fixture-strong-verification-a2",
+            "targetNodeId": "response:fixture-strong-verification-a3",
+            "traceEventId": "fixture-strong-verification-u3"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-strong-verification",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "id": "response:fixture-strong-verification-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "summary": "자료에서 신청자, 입금 누락, 영수증 누락을 추출하고 AI task와 사람 검증 task를 나누겠습니다.",
+            "traceEventId": "fixture-strong-verification-a1"
+          },
+          {
+            "id": "response:fixture-strong-verification-a2",
+            "kind": "response",
+            "label": "Response 2",
+            "sequence": 1,
+            "summary": "두 예외를 분리하고 담당자 확인, 추가 증빙 요청, 최종 승인 보류 기준을 제시합니다.",
+            "traceEventId": "fixture-strong-verification-a2"
+          },
+          {
+            "id": "response:fixture-strong-verification-a3",
+            "kind": "response",
+            "label": "Response 3",
+            "sequence": 2,
+            "summary": "입금자명 불일치, 영수증 누락, 개인정보 노출, 자료 최신성 문제가 검증 대상입니다.",
+            "traceEventId": "fixture-strong-verification-a3"
+          }
+        ],
+        "statusEdges": [
+          {
+            "dualNodeId": "prompt:fixture-strong-verification-u2",
+            "id": "status-edge:pair:fixture-strong-verification-u2:fixture-strong-verification-a2:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "projection": "status_layer",
+            "sequence": 1,
+            "sourceNodeId": "status:pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "targetNodeId": "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "traceEventId": "fixture-strong-verification-u2"
+          },
+          {
+            "dualNodeId": "prompt:fixture-strong-verification-u3",
+            "id": "status-edge:pair:fixture-strong-verification-u3:fixture-strong-verification-a3:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "projection": "status_layer",
+            "sequence": 2,
+            "sourceNodeId": "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "targetNodeId": "status:pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "traceEventId": "fixture-strong-verification-u3"
+          }
+        ],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "kind": "task_status",
+            "label": "verification",
+            "pairId": "pair:fixture-strong-verification-u1:fixture-strong-verification-a1",
+            "sequence": 0,
+            "summary": "verification prompt signal"
+          },
+          {
+            "id": "status:pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-strong-verification-u2:fixture-strong-verification-a2",
+            "sequence": 1,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "kind": "task_status",
+            "label": "verification",
+            "pairId": "pair:fixture-strong-verification-u3:fixture-strong-verification-a3",
+            "sequence": 2,
+            "summary": "verification prompt signal"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "category": "workplace",
+      "constraints": [
+        "불명확한 목표를 먼저 구조화할 것",
+        "최종 산출물과 검증 기준을 분리할 것"
+      ],
+      "deliverables": [
+        "문제정의",
+        "task 분배",
+        "검증 계획",
+        "최종 산출물"
+      ],
+      "difficulty": "standard",
+      "estimatedMinutes": 15,
+      "goalProfile": "learning_oriented",
+      "id": "club-budget-workflow",
+      "materials": [
+        {
+          "extractedTextHash": "f3037408e0992ec51f9bba78ec72d281f45994bc3d4b2df9279fcce04063b923",
+          "fileName": "club-budget.csv",
+          "id": "receipt-summary",
+          "kind": "spreadsheet",
+          "mimeType": "text/csv",
+          "title": "정산 자료 묶음"
+        }
+      ],
+      "title": "동아리 정산 workflow"
+    }
+  },
+  "schemaVersion": "skai.file.v1"
+}

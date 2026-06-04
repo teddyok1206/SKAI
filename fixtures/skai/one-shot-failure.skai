@@ -1,0 +1,246 @@
+{
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "extension": ".skai",
+  "format": "SKAI",
+  "integrity": {
+    "algorithm": "sha256",
+    "artifactHash": "75e83e52775cbdeda290955958db13b79b43cc0ba21b681378b173ceafb8101e",
+    "canonicalization": "stable-json-v1",
+    "sectionHashes": {
+      "attempt": "c4cb226f9b40c9300ef379c1efa67856f2405727589b5a4760c85a0e759577a1",
+      "graph": "79263ca2f661c4553756e97fd08e0b09c4f4dc5d7f8850a80358087079b245b2",
+      "manifest": "d22889a12efc95f3c8797e21daadce710620b2efef4f82749aba970022b7d74a",
+      "problem": "97506b3e633345242bee863d374afaacf852801598e0a02eb62501bd4394e13f"
+    }
+  },
+  "manifest": {
+    "artifactId": "skai:fixture-one-shot-failure:2026-06-04T00:00:00.000Z",
+    "attemptId": "fixture-one-shot-failure",
+    "createdAt": "2026-06-04T00:00:00.000Z",
+    "exportedBy": "skai",
+    "privacy": {
+      "attachmentBinary": "omitted",
+      "attachmentText": "included_when_public",
+      "contextDebug": "stripped",
+      "rawTrace": "included"
+    },
+    "problemId": "ambiguous-research-brief",
+    "schemaVersion": "skai.file.v1",
+    "sections": [
+      "problem",
+      "attempt",
+      "graph"
+    ],
+    "source": {
+      "conversationId": "fixture-one-shot-failure",
+      "exportedFrom": "skai-web",
+      "platform": "skai",
+      "primaryModel": "fixture-model",
+      "primaryProvider": "mock"
+    },
+    "title": "Fixture: One Shot Failure"
+  },
+  "mimeType": "application/vnd.skai+json",
+  "payload": {
+    "attempt": {
+      "attemptId": "fixture-one-shot-failure",
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "id": "fixture-one-shot-failure",
+      "problemId": "ambiguous-research-brief",
+      "solvingMode": "single_model",
+      "title": "Fixture: One Shot Failure",
+      "trace": [
+        {
+          "attemptId": "fixture-one-shot-failure",
+          "content": "생성형 AI가 교육에 미치는 영향 발표 자료 만들어줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-one-shot-failure-u1",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-one-shot-failure",
+          "content": "생성형 AI는 교육에 장점과 단점이 있습니다. 장점은 개인화 학습이고 단점은 표절과 의존성입니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-one-shot-failure-a1",
+          "model": "fixture-model",
+          "problemId": "ambiguous-research-brief",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "graph": {
+      "child": {
+        "annotations": [],
+        "attemptId": "fixture-one-shot-failure",
+        "index": {
+          "adjacency": {
+            "prompt:fixture-one-shot-failure-u1": [
+              "prompt-terminal:fixture-one-shot-failure"
+            ],
+            "response-origin:fixture-one-shot-failure": [
+              "response:fixture-one-shot-failure-a1"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-one-shot-failure": {
+              "incoming": [
+                "prompt-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-one-shot-failure-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:llm-response"
+              ]
+            },
+            "response-origin:fixture-one-shot-failure": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:user-prompt"
+              ]
+            },
+            "response:fixture-one-shot-failure-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1": {
+              "incoming": [],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-one-shot-failure-u1": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-one-shot-failure-a1": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-one-shot-failure-u1": "prompt:fixture-one-shot-failure-u1"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-one-shot-failure-a1": "response:fixture-one-shot-failure-a1"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-one-shot-failure-u1",
+            "promptTraceEventId": "fixture-one-shot-failure-u1",
+            "responseNodeId": "response:fixture-one-shot-failure-a1",
+            "responseTraceEventId": "fixture-one-shot-failure-a1",
+            "sequence": 0,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "statusReasons": [
+              "model response received"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-one-shot-failure-a1",
+            "id": "prompt-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:llm-response",
+            "label": "생성형 AI는 교육에 장점과 단점이 있습니다. 장점은 개인화 학습이고 단점은 표절과 의존성입니다.",
+            "pairId": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-one-shot-failure-u1",
+            "targetNodeId": "prompt-terminal:fixture-one-shot-failure",
+            "traceEventId": "fixture-one-shot-failure-a1"
+          }
+        ],
+        "promptNodes": [
+          {
+            "id": "prompt:fixture-one-shot-failure-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "summary": "생성형 AI가 교육에 미치는 영향 발표 자료 만들어줘.",
+            "traceEventId": "fixture-one-shot-failure-u1"
+          },
+          {
+            "id": "prompt-terminal:fixture-one-shot-failure",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 1,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-one-shot-failure-u1",
+            "id": "response-edge:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1:user-prompt",
+            "label": "생성형 AI가 교육에 미치는 영향 발표 자료 만들어줘.",
+            "pairId": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-one-shot-failure",
+            "targetNodeId": "response:fixture-one-shot-failure-a1",
+            "traceEventId": "fixture-one-shot-failure-u1"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-one-shot-failure",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "id": "response:fixture-one-shot-failure-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "summary": "생성형 AI는 교육에 장점과 단점이 있습니다. 장점은 개인화 학습이고 단점은 표절과 의존성입니다.",
+            "traceEventId": "fixture-one-shot-failure-a1"
+          }
+        ],
+        "statusEdges": [],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-one-shot-failure-u1:fixture-one-shot-failure-a1",
+            "sequence": 0,
+            "summary": "model response received"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "category": "research",
+      "constraints": [
+        "불명확한 목표를 먼저 구조화할 것",
+        "최종 산출물과 검증 기준을 분리할 것"
+      ],
+      "deliverables": [
+        "문제정의",
+        "task 분배",
+        "검증 계획",
+        "최종 산출물"
+      ],
+      "difficulty": "standard",
+      "estimatedMinutes": 15,
+      "goalProfile": "learning_oriented",
+      "id": "ambiguous-research-brief",
+      "materials": [],
+      "title": "교육 발표 주제 선정"
+    }
+  },
+  "schemaVersion": "skai.file.v1"
+}

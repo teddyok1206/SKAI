@@ -1,0 +1,533 @@
+{
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "extension": ".skai",
+  "extensions": {
+    "skai.coach.v1": {
+      "artifactHash": "ff55bb41e92422764194b5c0e441e86213b0c7497a776f4d303a8525f1f4ad7c",
+      "coachingVersion": "coach.fixture.001",
+      "comments": [
+        {
+          "body": "문제에 자료가 있지만 trace에서 첨부 또는 자료 근거를 활용한 흔적이 없습니다.",
+          "id": "coach-1-finding-material-ignored",
+          "nextAction": "자료를 먼저 첨부하고 AI task의 입력으로 명시한 뒤 결과를 비교하세요.",
+          "target": {
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetKind": "pair",
+            "traceEventIds": [
+              "fixture-material-ignored-u1",
+              "fixture-material-ignored-a1"
+            ]
+          },
+          "title": "공식 자료 미사용",
+          "tone": "correction"
+        },
+        {
+          "body": "AI 응답을 받은 뒤 근거, 오류 가능성, 한계를 다시 확인하는 turn이 없습니다.",
+          "id": "coach-2-finding-no-verification",
+          "nextAction": "최종 산출물 직전에 `이 답의 약점과 검증할 근거를 찾아줘`를 추가하세요.",
+          "target": {
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetKind": "pair",
+            "traceEventIds": [
+              "fixture-material-ignored-u1",
+              "fixture-material-ignored-a1"
+            ]
+          },
+          "title": "검증 단계 부재",
+          "tone": "correction"
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "coach-fixture-baseline.001",
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-coach.001"
+      },
+      "inputGraphHash": "2fc04bcd3c03b8547104120c3bfb91ac21323af1d98f21b1081464f70674d781",
+      "nextPracticeTargets": [
+        "공식 자료 미사용",
+        "검증 단계 부재"
+      ],
+      "schemaVersion": "skai.coach.v1",
+      "summary": "이 fixture는 다음 개발 단계에서 coach가 사용자의 orchestration 병목을 어떻게 설명해야 하는지 보여주는 기준 사례입니다."
+    },
+    "skai.judge.v1": {
+      "artifactHash": "ff55bb41e92422764194b5c0e441e86213b0c7497a776f4d303a8525f1f4ad7c",
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "label": "문제정의",
+          "rationale": "첫 요청 이후 문제 조건을 재정의할 여지가 드러났습니다.",
+          "score": 78
+        },
+        {
+          "axis": "decomposition",
+          "label": "세분화",
+          "rationale": "task, 역할, 단계 분리가 trace에 나타납니다.",
+          "score": 84
+        },
+        {
+          "axis": "instruction_clarity",
+          "label": "지시명확성",
+          "rationale": "출력 형식과 성공 기준이 충분히 고정되지 않았습니다.",
+          "score": 58
+        },
+        {
+          "axis": "adaptation",
+          "label": "적응력",
+          "rationale": "새 정보나 중간 결과에 대한 반응이 제한적입니다.",
+          "score": 54
+        },
+        {
+          "axis": "verification",
+          "label": "검증력",
+          "rationale": "검증 책임이 명시적으로 회수되지 않았습니다.",
+          "score": 44
+        },
+        {
+          "axis": "efficiency",
+          "label": "효율성",
+          "rationale": "fixture baseline은 비용/시간 수치 대신 turn 수와 구조 밀도를 기준으로 봅니다.",
+          "score": 78
+        },
+        {
+          "axis": "final_quality",
+          "label": "최종품질",
+          "rationale": "최종 산출물의 품질 기준이 약합니다.",
+          "score": 58
+        }
+      ],
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "extensionVersion": "judge-fixture-baseline.001",
+      "findings": [
+        {
+          "axis": "verification",
+          "confidence": 0.88,
+          "explanation": "문제에 자료가 있지만 trace에서 첨부 또는 자료 근거를 활용한 흔적이 없습니다.",
+          "id": "finding-material-ignored",
+          "severity": "watch",
+          "suggestedAction": "자료를 먼저 첨부하고 AI task의 입력으로 명시한 뒤 결과를 비교하세요.",
+          "target": {
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetKind": "pair",
+            "traceEventIds": [
+              "fixture-material-ignored-u1",
+              "fixture-material-ignored-a1"
+            ]
+          },
+          "title": "공식 자료 미사용"
+        },
+        {
+          "axis": "verification",
+          "confidence": 0.86,
+          "explanation": "AI 응답을 받은 뒤 근거, 오류 가능성, 한계를 다시 확인하는 turn이 없습니다.",
+          "id": "finding-no-verification",
+          "severity": "watch",
+          "suggestedAction": "최종 산출물 직전에 `이 답의 약점과 검증할 근거를 찾아줘`를 추가하세요.",
+          "target": {
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetKind": "pair",
+            "traceEventIds": [
+              "fixture-material-ignored-u1",
+              "fixture-material-ignored-a1"
+            ]
+          },
+          "title": "검증 단계 부재"
+        }
+      ],
+      "generator": {
+        "kind": "deterministic_fixture",
+        "promptVersion": "fixture-heuristic.001"
+      },
+      "inputGraphHash": "2fc04bcd3c03b8547104120c3bfb91ac21323af1d98f21b1081464f70674d781",
+      "needsHumanReview": false,
+      "rubricVersion": "rubric.fixture.001",
+      "schemaVersion": "skai.judge.v1",
+      "totalScore": 65
+    }
+  },
+  "format": "SKAI",
+  "integrity": {
+    "algorithm": "sha256",
+    "artifactHash": "1b65951a40f61882e33641fe3b0c234883d827dabb37e9ee42b8c42b605db0b8",
+    "canonicalization": "stable-json-v1",
+    "sectionHashes": {
+      "attempt": "ce123260e5780539e0168e59668d93694fc64a2a967d025f112e52938e6d0e29",
+      "graph": "2fc04bcd3c03b8547104120c3bfb91ac21323af1d98f21b1081464f70674d781",
+      "manifest": "fe3f3e438c7e1a1f85ea96b3ec29b63d1e443d34735d3ccbdc2077df7768c903",
+      "problem": "f3f8738d8be6bc7e8230eee5b298287fba34e005298360d491326cfc379257df"
+    }
+  },
+  "manifest": {
+    "artifactId": "skai:fixture-material-ignored:2026-06-04T00:00:00.000Z",
+    "attemptId": "fixture-material-ignored",
+    "createdAt": "2026-06-04T00:00:00.000Z",
+    "exportedBy": "skai",
+    "privacy": {
+      "attachmentBinary": "omitted",
+      "attachmentText": "included_when_public",
+      "contextDebug": "stripped",
+      "rawTrace": "included"
+    },
+    "problemId": "club-budget-workflow",
+    "schemaVersion": "skai.file.v1",
+    "sections": [
+      "problem",
+      "attempt",
+      "graph"
+    ],
+    "source": {
+      "conversationId": "fixture-material-ignored",
+      "exportedFrom": "skai-web",
+      "platform": "skai",
+      "primaryModel": "fixture-model",
+      "primaryProvider": "mock"
+    },
+    "title": "Fixture: Material Ignored"
+  },
+  "mimeType": "application/vnd.skai+json",
+  "payload": {
+    "attempt": {
+      "attemptId": "fixture-material-ignored",
+      "createdAt": "2026-06-04T00:00:00.000Z",
+      "id": "fixture-material-ignored",
+      "problemId": "club-budget-workflow",
+      "solvingMode": "single_model",
+      "title": "Fixture: Material Ignored",
+      "trace": [
+        {
+          "attemptId": "fixture-material-ignored",
+          "content": "동아리 정산 workflow 만들어줘.",
+          "createdAt": "2026-06-04T00:00:00.000Z",
+          "id": "fixture-material-ignored-u1",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-material-ignored",
+          "content": "영수증을 모으고 계좌 내역을 엑셀로 정리한 뒤 검토하면 됩니다.",
+          "createdAt": "2026-06-04T00:01:00.000Z",
+          "id": "fixture-material-ignored-a1",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "assistant"
+        },
+        {
+          "attemptId": "fixture-material-ignored",
+          "content": "체크리스트로 바꿔줘.",
+          "createdAt": "2026-06-04T00:02:00.000Z",
+          "id": "fixture-material-ignored-u2",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "user"
+        },
+        {
+          "attemptId": "fixture-material-ignored",
+          "content": "자료 수집, 항목 정리, 검토, 보고 순서로 체크리스트를 만들 수 있습니다.",
+          "createdAt": "2026-06-04T00:03:00.000Z",
+          "id": "fixture-material-ignored-a2",
+          "model": "fixture-model",
+          "problemId": "club-budget-workflow",
+          "provider": "mock",
+          "role": "assistant"
+        }
+      ]
+    },
+    "graph": {
+      "child": {
+        "annotations": [],
+        "attemptId": "fixture-material-ignored",
+        "index": {
+          "adjacency": {
+            "prompt:fixture-material-ignored-u1": [
+              "prompt:fixture-material-ignored-u2"
+            ],
+            "prompt:fixture-material-ignored-u2": [
+              "prompt-terminal:fixture-material-ignored"
+            ],
+            "response-origin:fixture-material-ignored": [
+              "response:fixture-material-ignored-a1"
+            ],
+            "response:fixture-material-ignored-a1": [
+              "response:fixture-material-ignored-a2"
+            ],
+            "status:pair:fixture-material-ignored-u1:fixture-material-ignored-a1": [
+              "status:pair:fixture-material-ignored-u2:fixture-material-ignored-a2"
+            ]
+          },
+          "annotationIdsByKind": {},
+          "annotationIdsByTargetId": {},
+          "annotationIdsByTraceEventId": {},
+          "incidence": {
+            "prompt-terminal:fixture-material-ignored": {
+              "incoming": [
+                "prompt-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:llm-response"
+              ],
+              "outgoing": []
+            },
+            "prompt:fixture-material-ignored-u1": {
+              "incoming": [],
+              "outgoing": [
+                "prompt-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:llm-response"
+              ]
+            },
+            "prompt:fixture-material-ignored-u2": {
+              "incoming": [
+                "prompt-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:llm-response"
+              ],
+              "outgoing": [
+                "prompt-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:llm-response"
+              ]
+            },
+            "response-origin:fixture-material-ignored": {
+              "incoming": [],
+              "outgoing": [
+                "response-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:user-prompt"
+              ]
+            },
+            "response:fixture-material-ignored-a1": {
+              "incoming": [
+                "response-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:user-prompt"
+              ],
+              "outgoing": [
+                "response-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:user-prompt"
+              ]
+            },
+            "response:fixture-material-ignored-a2": {
+              "incoming": [
+                "response-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:user-prompt"
+              ],
+              "outgoing": []
+            },
+            "status:pair:fixture-material-ignored-u1:fixture-material-ignored-a1": {
+              "incoming": [],
+              "outgoing": [
+                "status-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:status-progression"
+              ]
+            },
+            "status:pair:fixture-material-ignored-u2:fixture-material-ignored-a2": {
+              "incoming": [
+                "status-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:status-progression"
+              ],
+              "outgoing": []
+            }
+          },
+          "pairByPromptTraceEventId": {
+            "fixture-material-ignored-u1": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "fixture-material-ignored-u2": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2"
+          },
+          "pairByResponseTraceEventId": {
+            "fixture-material-ignored-a1": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "fixture-material-ignored-a2": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2"
+          },
+          "promptNodeByTraceEventId": {
+            "fixture-material-ignored-u1": "prompt:fixture-material-ignored-u1",
+            "fixture-material-ignored-u2": "prompt:fixture-material-ignored-u2"
+          },
+          "responseNodeByTraceEventId": {
+            "fixture-material-ignored-a1": "response:fixture-material-ignored-a1",
+            "fixture-material-ignored-a2": "response:fixture-material-ignored-a2"
+          }
+        },
+        "pairs": [
+          {
+            "id": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-material-ignored-u1",
+            "promptTraceEventId": "fixture-material-ignored-u1",
+            "responseNodeId": "response:fixture-material-ignored-a1",
+            "responseTraceEventId": "fixture-material-ignored-a1",
+            "sequence": 0,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "statusReasons": [
+              "model response received"
+            ]
+          },
+          {
+            "id": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "isBreakpoint": false,
+            "promptNodeId": "prompt:fixture-material-ignored-u2",
+            "promptTraceEventId": "fixture-material-ignored-u2",
+            "responseNodeId": "response:fixture-material-ignored-a2",
+            "responseTraceEventId": "fixture-material-ignored-a2",
+            "sequence": 1,
+            "status": "responded",
+            "statusNodeId": "status:pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "statusReasons": [
+              "model response received"
+            ]
+          }
+        ],
+        "promptEdges": [
+          {
+            "dualNodeId": "response:fixture-material-ignored-a1",
+            "id": "prompt-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:llm-response",
+            "label": "영수증을 모으고 계좌 내역을 엑셀로 정리한 뒤 검토하면 됩니다.",
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "projection": "prompt_graph",
+            "sequence": 0,
+            "sourceNodeId": "prompt:fixture-material-ignored-u1",
+            "targetNodeId": "prompt:fixture-material-ignored-u2",
+            "traceEventId": "fixture-material-ignored-a1"
+          },
+          {
+            "dualNodeId": "response:fixture-material-ignored-a2",
+            "id": "prompt-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:llm-response",
+            "label": "자료 수집, 항목 정리, 검토, 보고 순서로 체크리스트를 만들 수 있습니다.",
+            "pairId": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "projection": "prompt_graph",
+            "sequence": 1,
+            "sourceNodeId": "prompt:fixture-material-ignored-u2",
+            "targetNodeId": "prompt-terminal:fixture-material-ignored",
+            "traceEventId": "fixture-material-ignored-a2"
+          }
+        ],
+        "promptNodes": [
+          {
+            "id": "prompt:fixture-material-ignored-u1",
+            "kind": "prompt",
+            "label": "Prompt 1",
+            "sequence": 0,
+            "summary": "동아리 정산 workflow 만들어줘.",
+            "traceEventId": "fixture-material-ignored-u1"
+          },
+          {
+            "id": "prompt:fixture-material-ignored-u2",
+            "kind": "prompt",
+            "label": "Prompt 2",
+            "sequence": 1,
+            "summary": "체크리스트로 바꿔줘.",
+            "traceEventId": "fixture-material-ignored-u2"
+          },
+          {
+            "id": "prompt-terminal:fixture-material-ignored",
+            "kind": "prompt",
+            "label": "Prompt terminal",
+            "sequence": 2,
+            "summary": "No later user prompt in this branch.",
+            "synthetic": true
+          }
+        ],
+        "responseEdges": [
+          {
+            "dualNodeId": "prompt:fixture-material-ignored-u1",
+            "id": "response-edge:pair:fixture-material-ignored-u1:fixture-material-ignored-a1:user-prompt",
+            "label": "동아리 정산 workflow 만들어줘.",
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "projection": "response_graph",
+            "sequence": 0,
+            "sourceNodeId": "response-origin:fixture-material-ignored",
+            "targetNodeId": "response:fixture-material-ignored-a1",
+            "traceEventId": "fixture-material-ignored-u1"
+          },
+          {
+            "dualNodeId": "prompt:fixture-material-ignored-u2",
+            "id": "response-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:user-prompt",
+            "label": "체크리스트로 바꿔줘.",
+            "pairId": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "projection": "response_graph",
+            "sequence": 1,
+            "sourceNodeId": "response:fixture-material-ignored-a1",
+            "targetNodeId": "response:fixture-material-ignored-a2",
+            "traceEventId": "fixture-material-ignored-u2"
+          }
+        ],
+        "responseNodes": [
+          {
+            "id": "response-origin:fixture-material-ignored",
+            "kind": "response",
+            "label": "Response origin",
+            "sequence": -1,
+            "summary": "Conversation state before the first model response.",
+            "synthetic": true
+          },
+          {
+            "id": "response:fixture-material-ignored-a1",
+            "kind": "response",
+            "label": "Response 1",
+            "sequence": 0,
+            "summary": "영수증을 모으고 계좌 내역을 엑셀로 정리한 뒤 검토하면 됩니다.",
+            "traceEventId": "fixture-material-ignored-a1"
+          },
+          {
+            "id": "response:fixture-material-ignored-a2",
+            "kind": "response",
+            "label": "Response 2",
+            "sequence": 1,
+            "summary": "자료 수집, 항목 정리, 검토, 보고 순서로 체크리스트를 만들 수 있습니다.",
+            "traceEventId": "fixture-material-ignored-a2"
+          }
+        ],
+        "statusEdges": [
+          {
+            "dualNodeId": "prompt:fixture-material-ignored-u2",
+            "id": "status-edge:pair:fixture-material-ignored-u2:fixture-material-ignored-a2:status-progression",
+            "label": "status progression",
+            "pairId": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "projection": "status_layer",
+            "sequence": 1,
+            "sourceNodeId": "status:pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "targetNodeId": "status:pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "traceEventId": "fixture-material-ignored-u2"
+          }
+        ],
+        "statusNodes": [
+          {
+            "id": "status:pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-material-ignored-u1:fixture-material-ignored-a1",
+            "sequence": 0,
+            "summary": "model response received"
+          },
+          {
+            "id": "status:pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "kind": "task_status",
+            "label": "responded",
+            "pairId": "pair:fixture-material-ignored-u2:fixture-material-ignored-a2",
+            "sequence": 1,
+            "summary": "model response received"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "category": "workplace",
+      "constraints": [
+        "불명확한 목표를 먼저 구조화할 것",
+        "최종 산출물과 검증 기준을 분리할 것"
+      ],
+      "deliverables": [
+        "문제정의",
+        "task 분배",
+        "검증 계획",
+        "최종 산출물"
+      ],
+      "difficulty": "standard",
+      "estimatedMinutes": 15,
+      "goalProfile": "learning_oriented",
+      "id": "club-budget-workflow",
+      "materials": [
+        {
+          "extractedTextHash": "f3037408e0992ec51f9bba78ec72d281f45994bc3d4b2df9279fcce04063b923",
+          "fileName": "club-budget.csv",
+          "id": "receipt-summary",
+          "kind": "spreadsheet",
+          "mimeType": "text/csv",
+          "title": "정산 자료 묶음"
+        }
+      ],
+      "title": "동아리 정산 workflow"
+    }
+  },
+  "schemaVersion": "skai.file.v1"
+}
