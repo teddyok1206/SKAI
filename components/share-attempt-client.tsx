@@ -580,13 +580,15 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
       </section>
 
       {skaiFile ? (
-        <div style={{ marginTop: 16 }}>
-          <SkaiFileViewer artifact={skaiFile} key={skaiFile.integrity.artifactHash} title="Published .skai" />
+        <div className="share-skai-viewer">
+          <SkaiFileViewer artifact={skaiFile} key={skaiFile.integrity.artifactHash} title="Published .skai" variant="embedded" />
         </div>
       ) : (
-        <section className="panel" style={{ marginTop: 16 }}>
+        <section className="panel share-skai-viewer">
           <div className="panel-body">
-            <p className="muted">이 공유 snapshot은 `.skai` 도입 이전에 생성되었습니다. `.skai` 저장/PDF viewer를 사용하려면 attempt를 다시 publish해야 합니다.</p>
+            <p className="muted">
+              이 공유본은 `.skai` snapshot이 없는 이전 publish입니다. 파일 저장, graph viewer, PDF 출력이 필요하면 같은 attempt를 다시 publish하세요.
+            </p>
           </div>
         </section>
       )}

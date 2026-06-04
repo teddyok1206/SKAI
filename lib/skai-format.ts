@@ -317,6 +317,7 @@ export async function buildSkaiFileArtifact(input: {
   parentAttempt?: Attempt;
   childGraph: ConversationGraph;
   parentGraph?: ConversationGraph;
+  extensions?: Record<string, unknown>;
 }): Promise<SkaiFileArtifact> {
   const createdAt = new Date().toISOString();
   const childAttempt = sanitizePublishedAttempt(input.publishedAttempt);
@@ -379,6 +380,38 @@ export async function buildSkaiFileArtifact(input: {
     attempt: payload.attempt,
     graph: payload.graph,
     branch: payload.branch,
+  });
+
+  const coreArtifact = {
+    ...artifactWithoutIntegrity,
+    integrity,
+  };
+
+  if (input.extensions && Object.keys(input.extensions).length > 0) {
+    return attachSkaiFileExtensions(coreArtifact, input.extensions);
+  }
+
+  return coreArtifact;
+}
+
+export async function attachSkaiFileExtensions(
+  artifact: SkaiFileArtifact,
+  extensions: Record<string, unknown>,
+): Promise<SkaiFileArtifact> {
+  const artifactWithoutIntegrity: Omit<SkaiFileArtifact, "integrity"> & Partial<Pick<SkaiFileArtifact, "integrity">> = {
+    ...artifact,
+    extensions: {
+      ...(artifact.extensions ?? {}),
+      ...extensions,
+    },
+  };
+  delete artifactWithoutIntegrity.integrity;
+  const integrity = await buildIntegrity(artifactWithoutIntegrity, {
+    manifest: artifactWithoutIntegrity.manifest,
+    problem: artifactWithoutIntegrity.payload.problem,
+    attempt: artifactWithoutIntegrity.payload.attempt,
+    graph: artifactWithoutIntegrity.payload.graph,
+    branch: artifactWithoutIntegrity.payload.branch,
   });
 
   return {

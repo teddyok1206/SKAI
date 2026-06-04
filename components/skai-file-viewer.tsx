@@ -58,11 +58,13 @@ export function SkaiFileViewer({
   allowImport = false,
   shareUrl,
   title = ".skai Viewer",
+  variant = "standalone",
 }: {
   artifact?: SkaiFileArtifact;
   allowImport?: boolean;
   shareUrl?: string;
   title?: string;
+  variant?: "standalone" | "embedded";
 }) {
   const [currentArtifact, setCurrentArtifact] = useState<SkaiFileArtifact | undefined>(artifact);
   const [notice, setNotice] = useState("");
@@ -207,14 +209,18 @@ export function SkaiFileViewer({
   }
 
   return (
-    <section className="panel skai-file-viewer" aria-label="SKAI file viewer">
+    <section className={`panel skai-file-viewer ${variant === "embedded" ? "embedded" : ""}`} aria-label="SKAI file viewer">
       <div className="panel-header skai-file-viewer-header">
         <div>
           <p className="eyebrow">{title}</p>
           <h2>{currentArtifact?.manifest.title ?? "Open a .skai artifact"}</h2>
-          <p className="muted">
-            Trace와 3D Dual Graph를 기준으로 저장, 공유, PDF 출력을 한 표면에서 처리합니다.
-          </p>
+          {variant === "standalone" ? (
+            <p className="muted">
+              Trace와 3D Dual Graph를 기준으로 저장, 공유, PDF 출력을 한 표면에서 처리합니다.
+            </p>
+          ) : (
+            <p className="muted">이 공유본의 portable graph artifact입니다.</p>
+          )}
         </div>
         <div className="skai-viewer-actions">
           <button className="button" disabled={!currentArtifact} onClick={saveSkaiFile} type="button">

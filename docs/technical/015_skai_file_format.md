@@ -243,11 +243,22 @@ The current development loop is:
 ```text
 npm run skai:fixtures
 npm run skai:validate
+npm run skai:viewer-smoke
 npm run judge:fixture
 npm run judge:regression
+npm run verify:skai
 ```
 
 Golden fixtures live in `fixtures/skai/`.
+
+Runtime export helpers expose an optional extension hook:
+
+```text
+buildSkaiFileArtifact({ ..., extensions })
+attachSkaiFileExtensions(artifact, extensions)
+```
+
+Use this hook only after deriving extensions from an existing core artifact. The extension should record the core `artifactHash` and `inputGraphHash`; attaching the extension recalculates the final artifact integrity while leaving core section hashes inspectable.
 
 ## Future Analysis Extension
 

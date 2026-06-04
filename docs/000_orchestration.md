@@ -84,6 +84,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `.skai` file format v1은 `application/vnd.skai+json` 단일 JSON artifact로 구현됐다. 공개 share는 `.skai`를 다운로드할 수 있고, 새 publish snapshot은 child graph, optional parent graph, structural branch snapshot, section hash를 `PublishedAttempt.skaiFile`에 저장한다. Score report, skeleton, overlay, counterfactual judge는 core가 아니라 future analysis extension 후보로 분리한다.
 - 통합 `.skai` viewer는 `components/skai-file-viewer.tsx` 하나로 구현됐다. 공개 share는 같은 viewer를 embed하고, `/skai/viewer`는 같은 viewer로 drag-and-drop import를 처리하며, `.skai` 저장/공유/PDF 출력도 이 viewer surface에서만 수행한다.
 - judge/coaching 개발 체계는 `.skai fixture -> derived extension -> unified viewer overlay -> regression` 루프로 고정했다. `fixtures/skai/`의 golden artifacts, `npm run skai:validate`, `npm run judge:fixture`, `npm run judge:regression`이 core contract와 extension 구조를 빠르게 검증한다.
+- `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
@@ -266,6 +267,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `.skai` fixture 기반 judge/coaching 개발 루프를 만든다. (완료)
 - `skai.judge.v1` / `skai.coach.v1` deterministic baseline extension을 fixture에서 생성한다. (완료)
 - unified `.skai` viewer는 extension registry를 통해 judge/coaching layer를 렌더링할 수 있다. (완료)
+- `.skai` export helper에는 optional extension hook이 있고, `verify:skai` 통합 검증 명령이 있다. (완료)
 - `SKAI_JUDGE_MODE=llm` 또는 `ensemble`으로 실제 judge provider를 켠다.
 - heuristic report와 LLM judge report를 비교한다. (heuristic baseline 완료, LLM 비교 후속)
 - malformed JSON, provider failure, judge disagreement를 기록한다.

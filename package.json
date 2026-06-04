@@ -16,8 +16,10 @@
     "calibrate:judge": "node scripts/judge_calibration_smoke.mjs",
     "skai:fixtures": "node scripts/generate_skai_fixtures.mjs",
     "skai:validate": "node scripts/skai_validate.mjs fixtures/skai",
+    "skai:viewer-smoke": "node scripts/skai_viewer_fixture_smoke.mjs",
     "judge:fixture": "node scripts/judge_fixture.mjs --write",
     "judge:regression": "node scripts/judge_fixture.mjs --regression",
+    "verify:skai": "npm run skai:validate && npm run skai:viewer-smoke && npm run judge:regression && npm run typecheck && npm run lint",
     "smoke:live": "node scripts/live_provider_smoke.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."

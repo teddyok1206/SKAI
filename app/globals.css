@@ -4107,6 +4107,22 @@ summary {
   margin-top: 0;
 }
 
+.skai-file-viewer.embedded {
+  border-color: color-mix(in srgb, var(--accent) 18%, var(--line));
+}
+
+.skai-file-viewer.embedded .skai-file-viewer-header {
+  padding-block: 14px;
+}
+
+.skai-file-viewer.embedded .skai-file-viewer-header h2 {
+  font-size: 20px;
+}
+
+.share-skai-viewer {
+  margin-top: 16px;
+}
+
 .skai-file-viewer-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
