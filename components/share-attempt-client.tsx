@@ -46,7 +46,9 @@ import {
   reportPromptCommentInSupabase,
   updatePromptCommentInSupabase,
 } from "@/lib/supabase-persistence";
+import { buildSkaiFileArtifact, serializeSkaiFileArtifact, skaiFileMimeType, skaiFileName } from "@/lib/skai-format";
 import type { GraphSkeletonStep, GraphSkeletonStepRole, PromptComment, PublishedAttempt, TraceEvent } from "@/lib/types";
+import { GraphComparisonView } from "@/components/graph-comparison-view";
 import { GraphStateTransitionView } from "@/components/graph-state-transition-view";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
@@ -180,6 +182,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
   const [commentNotice, setCommentNotice] = useState("");
   const [artifactNotice, setArtifactNotice] = useState("");
+  const [isBuildingSkaiFile, setIsBuildingSkaiFile] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -279,10 +282,15 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
   const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
   const problem = problems.find((item) => item.id === publishedAttempt.problemId);
-  const conversationGraph = buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch, {
-    problemMaterialCount: problem?.materials.length ?? 0,
-  });
-  const graphSkeleton = buildGraphSkeleton(conversationGraph, publishedAttempt.trace);
+  const skaiFile = publishedAttempt.skaiFile;
+  const conversationGraph =
+    skaiFile?.payload.graph.child ??
+    buildConversationGraph(publishedAttempt.trace, publishedAttempt.scoreReport, publishedAttempt.branch, {
+      problemMaterialCount: problem?.materials.length ?? 0,
+    });
+  const graphSkeleton = skaiFile?.payload.graph.childSkeleton ?? buildGraphSkeleton(conversationGraph, publishedAttempt.trace);
+  const parentGraphSnapshot = skaiFile?.payload.graph.parent;
+  const parentTraceSnapshot = skaiFile?.payload.branchComparison?.parentTrace ?? [];
   const graphNodeById = new Map(
     [...conversationGraph.promptNodes, ...conversationGraph.responseNodes, ...conversationGraph.statusNodes].map((node) => [node.id, node]),
   );
@@ -477,6 +485,33 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
     setArtifactNotice("Artifact SVG downloaded.");
   }
 
+  async function downloadSkaiFile() {
+    setIsBuildingSkaiFile(true);
+    setArtifactNotice("");
+
+    try {
+      const artifact =
+        skaiFile ??
+        (await buildSkaiFileArtifact({
+          publishedAttempt,
+          problem,
+          childGraph: conversationGraph,
+        }));
+      const blob = new Blob([serializeSkaiFileArtifact(artifact)], { type: `${skaiFileMimeType};charset=utf-8` });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = skaiFileName(publishedAttempt.title);
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setArtifactNotice(`.skai downloaded · ${artifact.integrity.artifactHash.slice(0, 12)}`);
+    } catch (error) {
+      setArtifactNotice(error instanceof Error ? error.message : ".skai 파일을 만들지 못했습니다.");
+    } finally {
+      setIsBuildingSkaiFile(false);
+    }
+  }
+
   return (
     <main className="container ui-mode-surface" data-ui-mode="human">
       <section className="page-header">
@@ -560,9 +595,17 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           <button className="button" type="button" onClick={() => void copyArtifactSummary()}>
             <ClipboardCopy size={16} /> 요약 복사
           </button>
+          <button className="button primary" disabled={isBuildingSkaiFile} type="button" onClick={() => void downloadSkaiFile()}>
+            <Download size={16} /> {isBuildingSkaiFile ? "Building .skai" : ".skai 저장"}
+          </button>
           <button className="button" type="button" onClick={downloadArtifactSvg}>
             <Download size={16} /> SVG 저장
           </button>
+          {skaiFile ? (
+            <p className="attachment-notice neutral">
+              {skaiFile.schemaVersion} · {skaiFile.integrity.artifactHash.slice(0, 16)}
+            </p>
+          ) : null}
           {artifactNotice ? <p className="attachment-notice neutral">{artifactNotice}</p> : null}
         </div>
       </section>
@@ -1079,7 +1122,17 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               {attempt.counterfactualReport.verdict} · {attempt.counterfactualReport.confidence}% confidence
             </div>
             <p>{attempt.counterfactualReport.summary}</p>
-            <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
+            {parentGraphSnapshot && parentTraceSnapshot.length > 0 ? (
+              <GraphComparisonView
+                childGraph={conversationGraph}
+                childTrace={publishedAttempt.trace}
+                parentGraph={parentGraphSnapshot}
+                parentTrace={parentTraceSnapshot}
+                transition={attempt.counterfactualReport.branchDiff.graphTransition}
+              />
+            ) : (
+              <GraphStateTransitionView transition={attempt.counterfactualReport.branchDiff.graphTransition} />
+            )}
             <div className="branch-diff-grid">
               <div className="diff-card">
                 <strong>Prompt before</strong>

@@ -384,6 +384,7 @@ export interface PublishedAttempt {
   branch?: AttemptBranch;
   counterfactualReport?: CounterfactualJudgeReport;
   solvingMode?: SolvingModeId;
+  skaiFile?: SkaiFileArtifact;
   createdAt: string;
 }
 
@@ -649,6 +650,116 @@ export interface GraphSkeletonStep {
   promptTraceEventId: string;
   responseTraceEventId?: string;
   isBreakpoint?: boolean;
+}
+
+export type SkaiFileSchemaVersion = "skai.file.v1";
+export type SkaiFileFormat = "SKAI";
+export type SkaiFileExtension = ".skai";
+
+export interface SkaiFilePrivacyPolicy {
+  rawTrace: "included";
+  contextDebug: "stripped";
+  attachmentBinary: "omitted";
+  attachmentText: "included_when_public";
+}
+
+export interface SkaiFileManifest {
+  artifactId: string;
+  title: string;
+  problemId: string;
+  attemptId: string;
+  parentAttemptId?: string;
+  createdAt: string;
+  exportedBy: "skai";
+  schemaVersion: SkaiFileSchemaVersion;
+  sections: string[];
+  privacy: SkaiFilePrivacyPolicy;
+}
+
+export interface SkaiFileProblemSnapshot {
+  id: string;
+  title: string;
+  category: ProblemCategory;
+  difficulty: Problem["difficulty"];
+  goalProfile: ProblemGoalProfile;
+  estimatedMinutes: number;
+  constraints: string[];
+  deliverables: string[];
+  materials: Array<{
+    id: string;
+    title: string;
+    kind: MaterialKind;
+    fileName: string;
+    mimeType: string;
+    extractedTextHash: string;
+    href?: string;
+  }>;
+}
+
+export type SkaiFilePublishedAttemptSnapshot = Omit<PublishedAttempt, "skaiFile">;
+
+export interface SkaiFileReportSnapshot {
+  scoreReport: ScoreReport;
+  visualArtifact: {
+    id: string;
+    title: string;
+    headline: string;
+    score: number;
+    signature: string;
+    metrics: Record<string, number>;
+  };
+  universalSummary: Array<{
+    id: string;
+    label: string;
+    value: string;
+    detail: string;
+  }>;
+}
+
+export interface SkaiFileGraphSnapshot {
+  child: ConversationGraph;
+  parent?: ConversationGraph;
+  childSkeleton: GraphSkeletonStep[];
+  parentSkeleton?: GraphSkeletonStep[];
+  childOverlay: GraphOverlayIndex;
+  parentOverlay?: GraphOverlayIndex;
+}
+
+export interface SkaiFileBranchComparisonSnapshot {
+  parentAttemptId: string;
+  childAttemptId: string;
+  breakpointTraceEventId: string;
+  breakpointPairId?: string;
+  parentTrace: TraceEvent[];
+  childTrace: TraceEvent[];
+  graphTransition?: GraphStateTransition;
+  counterfactualReport?: CounterfactualJudgeReport;
+}
+
+export interface SkaiFilePayload {
+  problem?: SkaiFileProblemSnapshot;
+  attempt: SkaiFilePublishedAttemptSnapshot;
+  graph: SkaiFileGraphSnapshot;
+  report: SkaiFileReportSnapshot;
+  branchComparison?: SkaiFileBranchComparisonSnapshot;
+}
+
+export interface SkaiFileIntegrity {
+  algorithm: "sha256";
+  canonicalization: "stable-json-v1";
+  sectionHashes: Record<string, string>;
+  artifactHash: string;
+}
+
+export interface SkaiFileArtifact {
+  format: SkaiFileFormat;
+  schemaVersion: SkaiFileSchemaVersion;
+  mimeType: "application/vnd.skai+json";
+  extension: SkaiFileExtension;
+  createdAt: string;
+  manifest: SkaiFileManifest;
+  payload: SkaiFilePayload;
+  integrity: SkaiFileIntegrity;
 }
 
 export interface LeaderboardEntry {

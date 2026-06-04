@@ -28,6 +28,7 @@ import { budgetGuardrails, operationGuardrails } from "@/lib/constants";
 import { getAttempt, getAttempts, saveAttempt, savePublishedAttempt } from "@/lib/local-store";
 import { getModelOption, getModelOptionByProviderModel, modelOptions, type ModelOption, type ModelOptionId } from "@/lib/model-options";
 import { providerUiProfiles } from "@/lib/provider-ui";
+import { buildSkaiFileArtifact } from "@/lib/skai-format";
 import { getSolvingMode, solvingModes } from "@/lib/solving-modes";
 import { syncAttemptToSupabase, syncPublishedAttemptToSupabase } from "@/lib/supabase-persistence";
 import type {
@@ -36,6 +37,7 @@ import type {
   CounterfactualJudgeReport,
   ModelRun,
   Problem,
+  PublishedAttempt,
   ProviderId,
   ScoreReport,
   SolvingModeId,
@@ -569,7 +571,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       delete publicEvent.contextDebug;
       return publicEvent;
     });
-    const published = {
+    let published: PublishedAttempt = {
       id: crypto.randomUUID(),
       attemptId: attempt.id,
       problemId: problem.id,
@@ -581,6 +583,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       counterfactualReport: attempt.counterfactualReport,
       solvingMode: attempt.solvingMode,
       createdAt: new Date().toISOString(),
+    };
+    published = {
+      ...published,
+      skaiFile: await buildSkaiFileArtifact({
+        publishedAttempt: published,
+        problem,
+        parentAttempt,
+        childGraph: conversationGraph ?? undefined,
+      }),
     };
     const publishedAttemptState: Attempt = {
       ...attempt,

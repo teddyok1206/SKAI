@@ -15,6 +15,7 @@ const publishedSchema = z.object({
     branch: z.unknown().optional(),
     counterfactualReport: z.unknown().optional(),
     solvingMode: z.enum(["single_model", "material_grounded", "verification_drill"]).optional(),
+    skaiFile: z.unknown().optional(),
     createdAt: z.string(),
   }),
 });
