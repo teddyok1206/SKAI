@@ -3,9 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, LogOut } from "lucide-react";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { createSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase";
 
 export function AuthStatus() {
+  const { locale } = useLanguagePreference();
   const [email, setEmail] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"sign-in" | "sign-out" | null>(null);
@@ -29,7 +32,7 @@ export function AuthStatus() {
       })
       .catch(() => {
         if (mounted) {
-          setAuthError("세션 확인 실패");
+          setAuthError(getCopy("auth.sessionCheckFailed", locale));
         }
       });
 
@@ -45,7 +48,7 @@ export function AuthStatus() {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [router, supabase]);
+  }, [locale, router, supabase]);
 
   if (!isConfigured || !supabase) {
     return (
@@ -53,12 +56,12 @@ export function AuthStatus() {
         <button
           className="button"
           onClick={() => router.push("/?auth=not_configured")}
-          title="Supabase URL과 anon key를 .env.local에 넣으면 Google 로그인이 활성화됩니다."
+          title={getCopy("auth.notConfiguredTitle", locale)}
           type="button"
         >
-          <LogIn size={16} /> Google 로그인
+          <LogIn size={16} /> {getCopy("auth.googleSignIn", locale)}
         </button>
-        <span className="tag">Local demo</span>
+        <span className="tag">{getCopy("auth.localDemo", locale)}</span>
       </>
     );
   }
@@ -81,7 +84,7 @@ export function AuthStatus() {
     });
 
     if (error) {
-      setAuthError("로그인 실패");
+      setAuthError(getCopy("auth.signInFailed", locale));
       setPendingAction(null);
     }
   };
@@ -92,7 +95,7 @@ export function AuthStatus() {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      setAuthError("로그아웃 실패");
+      setAuthError(getCopy("auth.signOutFailed", locale));
       setPendingAction(null);
       return;
     }
@@ -108,23 +111,23 @@ export function AuthStatus() {
         className="button"
         disabled={pendingAction !== null}
         onClick={() => void signOut()}
-        title={authError ?? `Signed in as ${email}`}
+        title={authError ?? `${getCopy("auth.signedInAsPrefix", locale)} ${email}`}
         type="button"
       >
-        <LogOut size={16} /> {pendingAction === "sign-out" ? "Signing out" : email}
+        <LogOut size={16} /> {pendingAction === "sign-out" ? getCopy("auth.signingOut", locale) : email}
       </button>
     );
   }
 
   return (
     <button
-      className="button"
-      disabled={pendingAction !== null}
-      onClick={() => void signInWithGoogle()}
-      title={authError ?? "Sign in with Google"}
-      type="button"
-    >
-      <LogIn size={16} /> {pendingAction === "sign-in" ? "Redirecting" : "Google 로그인"}
-    </button>
+    className="button"
+    disabled={pendingAction !== null}
+    onClick={() => void signInWithGoogle()}
+    title={authError ?? getCopy("auth.googleSignIn", locale)}
+    type="button"
+  >
+    <LogIn size={16} /> {pendingAction === "sign-in" ? getCopy("auth.redirecting", locale) : getCopy("auth.googleSignIn", locale)}
+  </button>
   );
 }

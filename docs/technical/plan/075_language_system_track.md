@@ -251,6 +251,8 @@ Behavior:
 
 ### 079. Topbar / Home / Problem Browser Localization
 
+Status: completed.
+
 Goal: localize the first impression layer.
 
 Scope:
@@ -260,6 +262,7 @@ Scope:
 - problem browser;
 - problem metadata labels;
 - model/mode selection copy.
+- topbar auth/theme/accessibility labels.
 
 Priority official copy:
 
@@ -272,6 +275,12 @@ en:
 The fire has been given.
 Now bring your own fuel.
 ```
+
+Result:
+
+- `TopbarNav`, `HomeHero`, `AuthNotice`, `AuthStatus`, `ThemeSelector`, and `ProblemBrowser` now consume the copy registry for first-impression UI.
+- `LanguageToggle` is mounted in the topbar and stores explicit locale preference in `localStorage`.
+- Problem content localization remains intentionally deferred to slice 084.
 
 ### 080. Solve Flow Localization
 

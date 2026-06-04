@@ -99,6 +99,22 @@
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
+    "key": "nav.aria.primary",
+    "domain": "navigation",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "주요 내비게이션",
+      "en": "Primary navigation"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "212063fb3639bcfb70a29f9546e8519ed9ee8daf9286c77c8d5c28f48626014e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
     "key": "auth.googleSignIn",
     "domain": "auth",
     "sourceLocale": "ko",
@@ -130,6 +146,194 @@
       "en": "approved"
     },
     "sourceChecksum": "8a625a4a12bb47c08a0af3a398e21828a308c3cc00028198154fa969868d1ed4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.sessionCheckFailed",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "세션 확인 실패",
+      "en": "Session check failed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7e4a8f2d4930046e8fb239d14b563f53387148cb27b03e07ee82cf8868950f4d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.notConfiguredTitle",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Supabase",
+      "Google"
+    ],
+    "values": {
+      "ko": "Supabase URL과 anon key를 .env.local에 넣으면 Google 로그인이 활성화됩니다.",
+      "en": "Add the Supabase URL and anon key to .env.local to enable Google sign-in."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5215446d0a22158f45e4334a6fc78cf4c4b88f21d498fe3e4597e8c27db93eb3",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.signInFailed",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그인 실패",
+      "en": "Sign-in failed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d8b7dc36e5cad47f7c8f3bcb49df2ec18f05c08974eee0008450b7c6b4db133e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.signOutFailed",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그아웃 실패",
+      "en": "Sign-out failed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "16b848a7bfa4e32361c30e1e00eb04e624867b397ad2ad530e10c0668eb30149",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.signedInAsPrefix",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그인 계정:",
+      "en": "Signed in as"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "109af8837af0220914d09cf8bff42717443ee07f6298030ec6762e07b52eb546",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.signingOut",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그아웃 중",
+      "en": "Signing out"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c356b56cbcd2500fd8bf0805aaea74a4f25a9d2bd1ccdbc05a80597fd184aa70",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.redirecting",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이동 중",
+      "en": "Redirecting"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e628a055b0a6bffbbaeb91e2d43b7d960dd25e01952a93ec8f63716e9ac96f8b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.notice.missingCode",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Google"
+    ],
+    "values": {
+      "ko": "로그인 callback에 인증 코드가 없습니다. Google 로그인을 다시 시도해 주세요.",
+      "en": "The login callback did not include an authorization code. Try Google sign-in again."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7739172a594f9be163654954e32322caa74ded9f911f7e1bf1a9b0056a5058db",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.notice.notConfigured",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Supabase",
+      "Google"
+    ],
+    "values": {
+      "ko": "Supabase 환경 변수가 없어 Google 로그인을 사용할 수 없습니다.",
+      "en": "Google sign-in is unavailable because Supabase environment variables are missing."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7d03af85509570088d0a67ade751d444dfdcd05d8e572534f0bf439c2ccd120d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.notice.errorPrefix",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Google"
+    ],
+    "values": {
+      "ko": "Google 로그인 실패",
+      "en": "Google sign-in failed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9907899b274f22b26c68e753223cccac013dff7df085e174ce7bb7c53ddf6138",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "auth.notice.errorFallback",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Google"
+    ],
+    "values": {
+      "ko": "Google 로그인에 실패했습니다.",
+      "en": "Google sign-in failed."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3345c0361c9ba135a34eaad12f62cca1f1bed39ddf7a5bbe6dfdd1b2ed282011",
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
@@ -294,6 +498,534 @@
       "en": "approved"
     },
     "sourceChecksum": "887ae6c2c796b2275606f0f091a0515792aae0b86200da3067d528b7f0a812c7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.workplace",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "업무",
+      "en": "Workplace"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "04554785b69899575b33a498b5f7b9195e357febf5d0227e8de402f20b448f74",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.research",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료조사",
+      "en": "Research"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b3e41f33f3193367acc501a912b69f87a44e8167496eacf2f0a64e89137594ef",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.creative",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "창작",
+      "en": "Creative"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "785cd54237df90a604e883e7ae373dfafe4b736d1b16963d66b727c71744a8bc",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.dataAnalysis",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "데이터",
+      "en": "Data"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8b9e6b3abec2150d32cdaa82dd15bfcc4be40ab023aeb5f5cd1fb75a031127b4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.coding",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "코딩",
+      "en": "Coding"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f1469da70e93af8e4367522f4109f51ac6a8deb013899f50a3088095a0ef37c9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.category.strategy",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "전략",
+      "en": "Strategy"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a376ba9f5b057f999d980670c916eba6b6854066482e70b9ccdf35c651102e57",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.difficulty.intro",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "입문",
+      "en": "Intro"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a51b67a3166817cc9edaec01cb6d8d1f6d30a4f7d3c09775bc17a60a0261900a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.difficulty.standard",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "표준",
+      "en": "Standard"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "02dcb39f7c27801c80d36da91de4ccc0b0599d0bcb17ba56bb27d592fb2d7936",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.difficulty.advanced",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "심화",
+      "en": "Advanced"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "23b60016ca253bfb87890fdf2f879e262f05451c4138a099efe627d504356253",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.any",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "전체 자료",
+      "en": "All materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0ac42fc558f8f837eef1ca3091023b9befb4d7f61f795574b2286d55a8bc1e83",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.none",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 없음",
+      "en": "No materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9c42a5f2dd08819fed078ac828f43457b04c4e53bae8f7c6f4948a2012250f59",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.image",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이미지",
+      "en": "Image"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "efbb2dd930661679df856aeec4936330393fb1d4120d31a13d0a2a473baec05a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.spreadsheet",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "스프레드시트",
+      "en": "Spreadsheet"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4681a6c224bf60fde561be63d38700e9785ad6ccf6347c9383cf448ec3810392",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.csv",
+    "domain": "problem_browser",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "CSV",
+      "en": "CSV"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "607d7a358fe368dda6f07fd1105dc5177e0d2d3cc0a26a99bb1ce543cb21f984",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.text",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "텍스트",
+      "en": "Text"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "24f643631292275f7e2fe7dcd82d6360b1eeb4cccc9db6945073dcdd50876730",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.pdf",
+    "domain": "problem_browser",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "PDF",
+      "en": "PDF"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc6782253e2d76269f799b265e36c80cfd194c8a0e8467ff87754f0b8752d3da",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.other",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "기타",
+      "en": "Other"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "133382d8a518df30786f16338fa30f4b08c8cb6e6e594ea7b793078a7adbb073",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.material.countSuffix",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개 자료",
+      "en": "materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fc3ce2bd75f72c4a339add8cf31c5ebbbb0677ea21bde62e30b7a9711b6cdde7",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.time.minutesShort",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "분",
+      "en": "min"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48caf5194a2cec589b089fe0dfdb827076c3d67ed9eb04a7b6e27699e6240c97",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.aria.browser",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 탐색기",
+      "en": "Problem browser"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "13ac9f8003be8df636145ae28c91a0e43d63dae48b2feb319d6f319d5705d85a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.aria.search",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 검색",
+      "en": "Search problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b76ef6df93bddd8db5a54369e4bfd0d35cde46a567695474e6161077804af93c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.aria.curation",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "추천 경로",
+      "en": "Recommended paths"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c6e59b57fe6781563ea07a4f9e6121a2631ad588dcd602eae8fa812d9ee9e74b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.aria.list",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 목록",
+      "en": "Problem list"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "82da852148e7b89068e7670fe8185f1e09f40872e534dcf1be17741077d9f315",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.category",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "분야",
+      "en": "Category"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "06595a09ea08427bd99dcd44b67346659613aa6de67eb768f3e17e59bcb7fae4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.difficulty",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "난이도",
+      "en": "Difficulty"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "799e740caeecd3a6d777a2b4ca0614776ae9594197ccfc077039e29766d1b773",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.material",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료",
+      "en": "Materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7a7d5218bca7a6ef5af77bbdac856bda3a67d9d8e604ec80e9902dae1da58790",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.allCategories",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "전체 분야",
+      "en": "All categories"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f46a6d204a9a71e0ac0668db864acbf2c45f334904d7ff2f875dfbf811f672ed",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.filter.allDifficulties",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "전체 난이도",
+      "en": "All difficulties"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f14dbc0a8cf7fedc759fa9942ea306cb37c35855cdfa268a64b7c50fa69cf5c9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.summary.noResults",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "결과 없음",
+      "en": "No results"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a0e7ed4026bed5458fbedf627c11671cf993645d39cdde2cba8402997c5017c2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.summary.hiddenGenerated",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "개 생성 문제 검토 대기",
+      "en": "generated problems pending review"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3d45974dd54c89993dbd9883801b5272f64eefabdd4e2ca5f96a3741b1188d2a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.action.reset",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초기화",
+      "en": "Reset"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "563b0c5493d01eb885ee57ce83bea1889f86a4af6bdb71fefea2c7f28906086b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.action.solve",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀기",
+      "en": "Solve"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b7d27b0f67b2d31eb2d349dc7e2d74a643b353d74d35f580b4babea3071aa7ba",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "problemBrowser.empty.description",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검색어나 필터를 줄이면 다시 볼 수 있습니다.",
+      "en": "Reduce the search terms or filters to see problems again."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "15ce1e16aa4727ef36906b6719995bc0bbad7acde4c30141b2384d3c9d583943",
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
@@ -587,6 +1319,54 @@
       "en": "approved"
     },
     "sourceChecksum": "ed234b4faa5cff6861b2e56795dfaf08f41ca73c1cf4034d919f19a60e2e60ad",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "language.toggle.aria",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "언어",
+      "en": "Language"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e4c4be8c52c956bd8fea32b3a4e11f8563afc88f0ef9292f39e1cb7a4aef41cc",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "theme.label",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "테마",
+      "en": "Theme"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6cbeea46fe2b564f7eba0e6aacedb87c2961ad80f968a9a64617a79e26e1782c",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "theme.designConcept",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "디자인 컨셉",
+      "en": "Design concept"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "36624a646f7598ad5358f48133ec40586c8ed2ebb20ca2a1fb6b078777de835f",
     "updatedAt": "2026-06-05T00:00:00.000Z"
   }
 ]

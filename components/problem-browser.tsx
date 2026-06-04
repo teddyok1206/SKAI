@@ -4,43 +4,45 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Clock, FileText, Layers3, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import type { GeneratedProblemClassification } from "@/data/generated-problem-batch-001";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { useGeneratedProblemEditorialMap } from "@/lib/use-generated-problem-editorial";
 import type { Problem, ProblemCategory, MaterialKind } from "@/lib/types";
 
-const categoryLabels: Record<ProblemCategory, string> = {
-  workplace: "업무",
-  research: "자료조사",
-  creative: "창작",
-  data_analysis: "데이터",
-  coding: "코딩",
-  strategy: "전략",
+const categoryCopyKeys: Record<ProblemCategory, string> = {
+  workplace: "problemBrowser.category.workplace",
+  research: "problemBrowser.category.research",
+  creative: "problemBrowser.category.creative",
+  data_analysis: "problemBrowser.category.dataAnalysis",
+  coding: "problemBrowser.category.coding",
+  strategy: "problemBrowser.category.strategy",
 };
 
-const difficultyLabels: Record<Problem["difficulty"], string> = {
-  intro: "입문",
-  standard: "표준",
-  advanced: "심화",
+const difficultyCopyKeys: Record<Problem["difficulty"], string> = {
+  intro: "problemBrowser.difficulty.intro",
+  standard: "problemBrowser.difficulty.standard",
+  advanced: "problemBrowser.difficulty.advanced",
 };
 
-const materialLabels: Record<MaterialKind | "none" | "any", string> = {
-  any: "전체 자료",
-  none: "자료 없음",
-  image: "이미지",
-  spreadsheet: "스프레드시트",
-  csv: "CSV",
-  text: "텍스트",
-  pdf: "PDF",
-  other: "기타",
+const materialCopyKeys: Record<MaterialKind | "none" | "any", string> = {
+  any: "problemBrowser.material.any",
+  none: "problemBrowser.material.none",
+  image: "problemBrowser.material.image",
+  spreadsheet: "problemBrowser.material.spreadsheet",
+  csv: "problemBrowser.material.csv",
+  text: "problemBrowser.material.text",
+  pdf: "problemBrowser.material.pdf",
+  other: "problemBrowser.material.other",
 };
 
-const curationLabels = {
-  all: "Smoke 후보",
-  first_run: "처음 체감",
-  material_control: "자료 다루기",
-  verification_replay: "검증/되돌리기",
+const curationCopyKeys = {
+  all: "problemBrowser.curation.all",
+  first_run: "problemBrowser.curation.firstRun",
+  material_control: "problemBrowser.curation.materialControl",
+  verification_replay: "problemBrowser.curation.verificationReplay",
 } as const;
 
-type CurationId = keyof typeof curationLabels;
+type CurationId = keyof typeof curationCopyKeys;
 
 type FilterValue<T extends string> = "all" | T;
 
@@ -115,20 +117,51 @@ function matchesQuery(problem: Problem, classification: GeneratedProblemClassifi
   return terms.every((term) => haystack.includes(term));
 }
 
-function materialCountLabel(problem: Problem) {
+function materialCountLabel(problem: Problem, locale: "ko" | "en") {
   if (problem.materials.length === 0) {
-    return "자료 없음";
+    return getCopy("problemBrowser.material.none", locale);
   }
 
-  return `${problem.materials.length}개 자료`;
+  const suffix = getCopy("problemBrowser.material.countSuffix", locale);
+  return locale === "ko" ? `${problem.materials.length}${suffix}` : `${problem.materials.length} ${suffix}`;
 }
 
 export function ProblemBrowser({ problems, classifications = {}, generatedProblemIds = [] }: ProblemBrowserProps) {
+  const { locale } = useLanguagePreference();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<FilterValue<ProblemCategory>>("all");
   const [difficulty, setDifficulty] = useState<FilterValue<Problem["difficulty"]>>("all");
   const [materialKind, setMaterialKind] = useState<MaterialKind | "none" | "any">("any");
   const [curation, setCuration] = useState<CurationId>("all");
+  const categoryLabels = useMemo(
+    () =>
+      Object.fromEntries(
+        (Object.keys(categoryCopyKeys) as ProblemCategory[]).map((item) => [item, getCopy(categoryCopyKeys[item], locale)]),
+      ) as Record<ProblemCategory, string>,
+    [locale],
+  );
+  const difficultyLabels = useMemo(
+    () =>
+      Object.fromEntries(
+        (Object.keys(difficultyCopyKeys) as Problem["difficulty"][]).map((item) => [item, getCopy(difficultyCopyKeys[item], locale)]),
+      ) as Record<Problem["difficulty"], string>,
+    [locale],
+  );
+  const materialLabels = useMemo(
+    () =>
+      Object.fromEntries(
+        (Object.keys(materialCopyKeys) as Array<MaterialKind | "none" | "any">).map((item) => [item, getCopy(materialCopyKeys[item], locale)]),
+      ) as Record<MaterialKind | "none" | "any", string>,
+    [locale],
+  );
+  const curationLabels = useMemo(
+    () =>
+      Object.fromEntries((Object.keys(curationCopyKeys) as CurationId[]).map((item) => [item, getCopy(curationCopyKeys[item], locale)])) as Record<
+        CurationId,
+        string
+      >,
+    [locale],
+  );
   const editorialMap = useGeneratedProblemEditorialMap();
   const generatedProblemIdSet = useMemo(() => new Set(generatedProblemIds), [generatedProblemIds]);
   const visibleProblems = useMemo(
@@ -186,7 +219,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
       .sort((a, b) => b[1] - a[1])
       .slice(0, 4)
       .map(([domain, count]) => `${domain} ${count}`);
-  }, [classifications, filteredProblems]);
+  }, [categoryLabels, classifications, filteredProblems]);
 
   const hasActiveFilter = query.trim() || category !== "all" || difficulty !== "all" || materialKind !== "any" || curation !== "all";
 
@@ -199,11 +232,11 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
   }
 
   return (
-    <section className="problem-browser" id="problems" aria-label="Problem browser">
+    <section className="problem-browser" id="problems" aria-label={getCopy("problemBrowser.aria.browser", locale)}>
       <div className="section-heading problem-browser-heading">
         <div>
-          <p className="eyebrow">Problems</p>
-          <h2>오늘 풀 수 있는 문제</h2>
+          <p className="eyebrow">{getCopy("problemBrowser.eyebrow", locale)}</p>
+          <h2>{getCopy("problemBrowser.title", locale)}</h2>
         </div>
         <div className="problem-browser-count">
           <strong>{filteredProblems.length}</strong>
@@ -215,15 +248,15 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
         <label className="problem-search">
           <Search size={17} />
           <input
-            aria-label="문제 검색"
-            placeholder="문제나 자료 검색"
+            aria-label={getCopy("problemBrowser.aria.search", locale)}
+            placeholder={getCopy("problemBrowser.search.placeholder", locale)}
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
 
-        <div className="curation-strip" aria-label="추천 경로">
+        <div className="curation-strip" aria-label={getCopy("problemBrowser.aria.curation", locale)}>
           {(Object.keys(curationLabels) as CurationId[]).map((item) => (
             <button
               className={`curation-chip ${curation === item ? "active" : ""}`}
@@ -238,13 +271,13 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
 
         <details className="advanced-problem-filters">
           <summary>
-            <SlidersHorizontal size={14} /> 세부 필터
+            <SlidersHorizontal size={14} /> {getCopy("problemBrowser.filter.details", locale)}
           </summary>
           <div className="problem-filter-grid">
             <label>
-              <span>분야</span>
+              <span>{getCopy("problemBrowser.filter.category", locale)}</span>
               <select className="select" value={category} onChange={(event) => setCategory(event.target.value as FilterValue<ProblemCategory>)}>
-                <option value="all">전체 분야</option>
+                <option value="all">{getCopy("problemBrowser.filter.allCategories", locale)}</option>
                 {(Object.keys(categoryLabels) as ProblemCategory[]).map((item) => (
                   <option key={item} value={item}>
                     {categoryLabels[item]}
@@ -254,13 +287,13 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
             </label>
 
             <label>
-              <span>난이도</span>
+              <span>{getCopy("problemBrowser.filter.difficulty", locale)}</span>
               <select
                 className="select"
                 value={difficulty}
                 onChange={(event) => setDifficulty(event.target.value as FilterValue<Problem["difficulty"]>)}
               >
-                <option value="all">전체 난이도</option>
+                <option value="all">{getCopy("problemBrowser.filter.allDifficulties", locale)}</option>
                 {(Object.keys(difficultyLabels) as Problem["difficulty"][]).map((item) => (
                   <option key={item} value={item}>
                     {difficultyLabels[item]}
@@ -270,7 +303,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
             </label>
 
             <label>
-              <span>자료</span>
+              <span>{getCopy("problemBrowser.filter.material", locale)}</span>
               <select className="select" value={materialKind} onChange={(event) => setMaterialKind(event.target.value as MaterialKind | "none" | "any")}>
                 {(Object.keys(materialLabels) as Array<MaterialKind | "none" | "any">).map((item) => (
                   <option key={item} value={item}>
@@ -284,12 +317,14 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
 
         <div className="problem-browser-summary">
           <span>
-            <SlidersHorizontal size={14} /> {topDomains.length > 0 ? topDomains.join(" · ") : "결과 없음"}
-            {hiddenGeneratedCount > 0 ? ` · ${hiddenGeneratedCount}개 생성 문제 검토 대기` : ""}
+            <SlidersHorizontal size={14} /> {topDomains.length > 0 ? topDomains.join(" · ") : getCopy("problemBrowser.summary.noResults", locale)}
+            {hiddenGeneratedCount > 0
+              ? ` · ${locale === "ko" ? `${hiddenGeneratedCount}${getCopy("problemBrowser.summary.hiddenGenerated", locale)}` : `${hiddenGeneratedCount} ${getCopy("problemBrowser.summary.hiddenGenerated", locale)}`}`
+              : ""}
           </span>
           {hasActiveFilter ? (
             <button className="button quiet" onClick={resetFilters} type="button">
-              <RotateCcw size={14} /> 초기화
+              <RotateCcw size={14} /> {getCopy("problemBrowser.action.reset", locale)}
             </button>
           ) : null}
         </div>
@@ -297,14 +332,14 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
 
       {filteredProblems.length === 0 ? (
         <div className="empty-state">
-          <h3>조건에 맞는 문제가 없습니다.</h3>
-          <p className="muted">검색어나 필터를 줄이면 다시 볼 수 있습니다.</p>
+          <h3>{getCopy("problemBrowser.empty.title", locale)}</h3>
+          <p className="muted">{getCopy("problemBrowser.empty.description", locale)}</p>
           <button className="button" onClick={resetFilters} type="button">
-            <RotateCcw size={15} /> 전체 보기
+            <RotateCcw size={15} /> {getCopy("problemBrowser.empty.reset", locale)}
           </button>
         </div>
       ) : (
-        <section className="grid problem-grid" aria-label="Problem list">
+        <section className="grid problem-grid" aria-label={getCopy("problemBrowser.aria.list", locale)}>
           {filteredProblems.map((problem) => (
             <article className="card problem-card" key={problem.id}>
               <div>
@@ -313,13 +348,16 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
                     <Layers3 size={13} /> {categoryLabels[problem.category]}
                   </span>
                   <span className="tag">
-                    <Clock size={13} /> {problem.estimatedMinutes}분
+                    <Clock size={13} />{" "}
+                    {locale === "ko"
+                      ? `${problem.estimatedMinutes}${getCopy("problemBrowser.time.minutesShort", locale)}`
+                      : `${problem.estimatedMinutes} ${getCopy("problemBrowser.time.minutesShort", locale)}`}
                   </span>
                   <span className="tag">
                     <BarChart3 size={13} /> {difficultyLabels[problem.difficulty]}
                   </span>
                   <span className="tag">
-                    <FileText size={13} /> {materialCountLabel(problem)}
+                    <FileText size={13} /> {materialCountLabel(problem, locale)}
                   </span>
                 </div>
                 <h2>{problem.title}</h2>
@@ -329,7 +367,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
                 </div>
               </div>
               <Link className="button" href={`/problems/${problem.id}`}>
-                풀기 <ArrowRight size={16} />
+                {getCopy("problemBrowser.action.solve", locale)} <ArrowRight size={16} />
               </Link>
             </article>
           ))}

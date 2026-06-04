@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { getCopy, localeStorageKey, normalizeLocale, supportedLocales, type Locale } from "@/lib/i18n";
 
 type LanguageChangeEvent = CustomEvent<{ locale: Locale }>;
@@ -13,35 +13,38 @@ function readStoredLocale(): Locale {
   return normalizeLocale(window.localStorage.getItem(localeStorageKey));
 }
 
-export function useLanguagePreference() {
-  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
+function subscribeToLocale(callback: () => void) {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === localeStorageKey) {
+      callback();
+    }
+  }
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener("skai:locale-change", callback);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener("skai:locale-change", callback);
+  };
+}
+
+export function useLanguagePreference(): { locale: Locale; setLocale: (nextLocale: Locale) => void } {
+  const locale = useSyncExternalStore<Locale>(subscribeToLocale, readStoredLocale, () => "ko");
 
   useEffect(() => {
-    function handleStorage(event: StorageEvent) {
-      if (event.key === localeStorageKey) {
-        setLocaleState(normalizeLocale(event.newValue));
-      }
-    }
-
-    function handleLanguageChange(event: Event) {
-      setLocaleState((event as LanguageChangeEvent).detail.locale);
-    }
-
-    window.addEventListener("storage", handleStorage);
-    window.addEventListener("skai:locale-change", handleLanguageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-      window.removeEventListener("skai:locale-change", handleLanguageChange);
-    };
-  }, []);
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   function setLocale(nextLocale: Locale) {
-    setLocaleState(nextLocale);
-
     if (typeof window !== "undefined") {
       window.localStorage.setItem(localeStorageKey, nextLocale);
-      window.dispatchEvent(new CustomEvent("skai:locale-change", { detail: { locale: nextLocale } }));
+      const event: LanguageChangeEvent = new CustomEvent("skai:locale-change", { detail: { locale: nextLocale } });
+      window.dispatchEvent(event);
     }
   }
 
@@ -52,7 +55,7 @@ export function LanguageToggle() {
   const { locale, setLocale } = useLanguagePreference();
 
   return (
-    <div className="language-toggle" aria-label="Language">
+    <div className="language-toggle" aria-label={getCopy("language.toggle.aria", locale)}>
       {supportedLocales.map((item) => (
         <button
           aria-pressed={locale === item}

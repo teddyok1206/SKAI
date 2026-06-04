@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AuthStatus } from "@/components/auth-status";
 import { SkaiMark } from "@/components/skai-mark";
+import { TopbarNav } from "@/components/topbar-nav";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeSelector } from "@/components/theme-selector";
 import { UiModeSync } from "@/components/ui-mode-sync";
 import "pretendard/dist/web/variable/pretendardvariable.css";
 import "@fontsource/jetbrains-mono/400.css";
@@ -38,12 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   </span>
                   <span>SKAI</span>
                 </Link>
-                <nav className="nav" aria-label="Primary">
-                  <Link href="/">Problems</Link>
-                  <Link href="/admin">Admin</Link>
-                  <ThemeSelector />
-                  <AuthStatus />
-                </nav>
+                <TopbarNav />
               </div>
             </header>
             {children}
