@@ -1,0 +1,900 @@
+{
+  "generatedAt": "2026-06-04T20:21:59.631Z",
+  "note": "Current raw JSX text/attribute baseline. New raw user-facing text should go through lib/i18n/copy-registry.json instead of increasing this baseline.",
+  "hardcodedText": [
+    {
+      "file": "app/admin/page.tsx",
+      "attribute": "text",
+      "text": "Admin MVP",
+      "count": 1
+    },
+    {
+      "file": "app/admin/page.tsx",
+      "attribute": "text",
+      "text": "SKAI 문제는 현실의 애매함, 자료, 제약, 산출물, 검증 기준을 함께 담아야 한다.",
+      "count": 1
+    },
+    {
+      "file": "app/admin/page.tsx",
+      "attribute": "text",
+      "text": "문제를 만들고 바로 풀어본다.",
+      "count": 1
+    },
+    {
+      "file": "app/skai/viewer/page.tsx",
+      "attribute": "title",
+      "text": "SKAI File Viewer",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "placeholder",
+      "text": "Description",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "placeholder",
+      "text": "Extracted text or source material",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "placeholder",
+      "text": "File name",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "placeholder",
+      "text": "Material title",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Authoring",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Category",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Constraints, one per line",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Deliverables, one per line",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Difficulty",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Export JSON",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Goal profile",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Local Drafts",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Minutes",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Optional Material",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Problem statement",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Save local draft",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Solve draft",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Starter context, one per line",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Subtitle",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "Title",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "User goal",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "다음 slice에서 Supabase-backed publish/edit flow로 확장할 수 있습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "로컬 저장 초안입니다. 저장 후 바로 풀이 화면에서 smoke할 수 있습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "문제 초안 만들기",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "아직 로컬 문제 초안이 없습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "저장된 문제",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "저장하면 migration이나 seed file로 옮길 JSON이 여기에 표시됩니다.",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "초기 MVP는 하나의 text/extracted material만 저장합니다.",
+      "count": 1
+    },
+    {
+      "file": "components/admin-authoring-client.tsx",
+      "attribute": "text",
+      "text": "풀기",
+      "count": 1
+    },
+    {
+      "file": "components/auth-status.tsx",
+      "attribute": "text",
+      "text": "(null); const [authError, setAuthError] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/auth-status.tsx",
+      "attribute": "text",
+      "text": "(null); const [pendingAction, setPendingAction] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/authored-problem-list.tsx",
+      "attribute": "aria-label",
+      "text": "Authored problem list",
+      "count": 1
+    },
+    {
+      "file": "components/authored-problem-list.tsx",
+      "attribute": "text",
+      "text": "Local Drafts",
+      "count": 1
+    },
+    {
+      "file": "components/authored-problem-list.tsx",
+      "attribute": "text",
+      "text": "직접 만든 문제",
+      "count": 1
+    },
+    {
+      "file": "components/authored-problem-list.tsx",
+      "attribute": "text",
+      "text": "초안 풀기",
+      "count": 1
+    },
+    {
+      "file": "components/branch-tree-explorer.tsx",
+      "attribute": "text",
+      "text": "아직 저장된 attempt가 없습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/branch-tree-explorer.tsx",
+      "attribute": "text",
+      "text": "현재",
+      "count": 1
+    },
+    {
+      "file": "components/conversation-graph-view.tsx",
+      "attribute": "aria-label",
+      "text": "3 dimensional dual graph",
+      "count": 1
+    },
+    {
+      "file": "components/conversation-graph-view.tsx",
+      "attribute": "text",
+      "text": "!node.synthetic)?.id ?? allNodes[0]?.id ?? null; const [selectedNodeId, setSelectedNodeId] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/conversation-graph-view.tsx",
+      "attribute": "text",
+      "text": "(firstSelectableNode); const [internalOverlayControls, setInternalOverlayControls] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/conversation-graph-view.tsx",
+      "attribute": "text",
+      "text": "breakpoint",
+      "count": 1
+    },
+    {
+      "file": "components/conversation-graph-view.tsx",
+      "attribute": "text",
+      "text": "source",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "placeholder",
+      "text": "Founder cohort note: smoke signal, friction, philosophy fit",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "placeholder",
+      "text": "Founder note: 방향성, 품질, 문제 설계 개선점",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "(null); const [remoteStatus, setRemoteStatus] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Founder Review",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Local browser attempts",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "localStorage",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Save note",
+      "count": 2
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "share",
+      "count": 2
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Smoke attempts",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Supabase cohort와 로컬 attempt를 훑고 정성 검증 메모를 남깁니다.",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "Supabase에서 리뷰할 attempt를 찾지 못했습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/founder-review-dashboard.tsx",
+      "attribute": "text",
+      "text": "아직 리뷰할 local attempt가 없습니다.",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "placeholder",
+      "text": "Founder editorial note: 논리 구멍, 자료 품질, 데모 적합성",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Generated Problem Gate",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Good trace",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Ideal bottleneck",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Preview",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Primary failure",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "Weak trace",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "생성 문제 선별",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "실패 패턴과 bottleneck",
+      "count": 1
+    },
+    {
+      "file": "components/generated-problem-editorial-dashboard.tsx",
+      "attribute": "text",
+      "text": "첫 smoke에서는 seed 문제는 항상 노출하고, generated 문제는 checklist를 통과한 항목만 홈에 공개합니다.",
+      "count": 1
+    },
+    {
+      "file": "components/graph-comparison-view.tsx",
+      "attribute": "text",
+      "text": "(defaultGraphOverlayControls); return (",
+      "count": 1
+    },
+    {
+      "file": "components/graph-comparison-view.tsx",
+      "attribute": "text",
+      "text": "getCopy(key, locale); const [overlayControls, setOverlayControls] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/graph-state-transition-view.tsx",
+      "attribute": "text",
+      "text": "degree",
+      "count": 1
+    },
+    {
+      "file": "components/graph-state-transition-view.tsx",
+      "attribute": "text",
+      "text": "pair",
+      "count": 1
+    },
+    {
+      "file": "components/local-problem-solver.tsx",
+      "attribute": "text",
+      "text": "Local Draft",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "(\"all\"); const [difficulty, setDifficulty] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "(\"all\"); const [materialKind, setMaterialKind] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "(\"any\"); const [curation, setCuration] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "[item, getCopy(categoryCopyKeys[item], locale)]), ) as Record",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "[item, getCopy(curationCopyKeys[item], locale)])) as Record",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "[item, getCopy(difficultyCopyKeys[item], locale)]), ) as Record",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "[item, getCopy(materialCopyKeys[item], locale)]), ) as Record",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "Object.fromEntries( (Object.keys(materialCopyKeys) as Array",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "setCategory(event.target.value as FilterValue",
+      "count": 1
+    },
+    {
+      "file": "components/problem-browser.tsx",
+      "attribute": "text",
+      "text": "setDifficulty(event.target.value as FilterValue",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "(\"chat\"); const fileInputRef = useRef",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "(\"single_model\"); const [modelOptionId, setModelOptionId] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "([]); const [activeMaterialId, setActiveMaterialId] = useState(problem.materials[0]?.id ?? \"\"); const [isDraggingAttachment, setIsDraggingAttachment] = useState(false); const [attachmentNotice, setAttachmentNotice] = useState(\"\"); const [copiedTraceEventId, setCopiedTraceEventId] = useState(\"\"); const [workspaceTab, setWorkspaceTab] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "(null); const [model, setModel] = useState(\"\"); const [input, setInput] = useState(\"\"); const [finalAnswer, setFinalAnswer] = useState(\"\"); const [isLoading, setIsLoading] = useState(false); const [isPublishing, setIsPublishing] = useState(false); const [shareUrl, setShareUrl] = useState(\"\"); const [shareNotice, setShareNotice] = useState(\"\"); const [selectedAttachments, setSelectedAttachments] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "(null); const [provider, setProvider] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "(null); const [solvingModeId, setSolvingModeId] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Branch",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Branch Diff",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Branch Tree",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "breakpoint",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Breakpoint",
+      "count": 2
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Budget",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Chat",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Child",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Deliverables",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Final Answer",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "getLocalizedProblem(problem, locale), [locale, problem]); const [attempt, setAttempt] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Graph",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "item.id === materialId)) .filter((material): material is NonNullable",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "item.materialId === material.id); return (",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Local Leaderboard",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Parent",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Playbook",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Problems",
+      "count": 2
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Prompt after",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Prompt before",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Run Counterfactual Judge",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Submit & Judge",
+      "count": 1
+    },
+    {
+      "file": "components/problem-solver.tsx",
+      "attribute": "text",
+      "text": "Tokens",
+      "count": 1
+    },
+    {
+      "file": "components/score-report-card.tsx",
+      "attribute": "text",
+      "text": "Bottleneck",
+      "count": 1
+    },
+    {
+      "file": "components/score-report-card.tsx",
+      "attribute": "text",
+      "text": "getCopy(key, locale); const mirror = buildIntelligenceMirror(report); return (",
+      "count": 1
+    },
+    {
+      "file": "components/score-report-card.tsx",
+      "attribute": "text",
+      "text": "Intelligence Mirror",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "!comment.parentId); const repliesByParent = new Map",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "([]); const [authorName, setAuthorName] = useState(\"SKAI learner\"); const [commentDrafts, setCommentDrafts] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "(null); const [editDrafts, setEditDrafts] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "(null); const [editingCommentId, setEditingCommentId] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "[node.id, node]), ); const graphStatusCounts = conversationGraph.pairs.reduce",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Artifact",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "bottleneck",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Bottleneck & Replay",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "breakpoint",
+      "count": 3
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Breakpoint",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Counterfactual Judge",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Dual Graph",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "getCopy(key, locale); const [attemptState, setAttemptState] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Intent",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Materials",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Prompt after",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Prompt before",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "Raw Transcript",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "text",
+      "text": "SKAI Artifact",
+      "count": 1
+    },
+    {
+      "file": "components/share-attempt-client.tsx",
+      "attribute": "title",
+      "text": "Published .skai",
+      "count": 1
+    },
+    {
+      "file": "components/skai-extension-registry.tsx",
+      "attribute": "text",
+      "text": "getCopy(key, locale); return (",
+      "count": 2
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": ": activeVerification ?",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "(artifact); const [notice, setNotice] = useState(\"\"); const [isDragging, setIsDragging] = useState(false); const [verification, setVerification] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "(null); const fileInputRef = useRef",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "getCopy(key, locale); const [currentArtifact, setCurrentArtifact] = useState",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "Graph",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "Integrity",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "Schema",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "text",
+      "text": "Source",
+      "count": 1
+    },
+    {
+      "file": "components/skai-file-viewer.tsx",
+      "attribute": "title",
+      "text": "3D Dual Graph",
+      "count": 1
+    },
+    {
+      "file": "components/skai-lockup.tsx",
+      "attribute": "aria-label",
+      "text": "SKAI Social Knowledge of AI",
+      "count": 1
+    },
+    {
+      "file": "components/skai-lockup.tsx",
+      "attribute": "text",
+      "text": "Social Knowledge of AI",
+      "count": 1
+    },
+    {
+      "file": "components/skai-viewer-page-header.tsx",
+      "attribute": "text",
+      "text": ".skai Viewer",
+      "count": 1
+    },
+    {
+      "file": "components/skai-viewer-page-header.tsx",
+      "attribute": "text",
+      "text": "SKAI File",
+      "count": 1
+    }
+  ]
+}

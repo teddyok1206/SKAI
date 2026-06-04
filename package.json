@@ -22,9 +22,10 @@
     "verify:skai": "npm run skai:validate && npm run skai:viewer-smoke && npm run judge:regression && npm run typecheck && npm run lint",
     "i18n:inventory": "node scripts/i18n_inventory.mjs",
     "i18n:check": "node scripts/i18n_check.mjs",
+    "i18n:source-check": "node scripts/i18n_source_check.mjs",
     "i18n:update": "node scripts/i18n_update_entry.mjs",
     "i18n:draft": "node scripts/i18n_draft_translate.mjs",
-    "verify:i18n": "npm run i18n:check",
+    "verify:i18n": "npm run i18n:check && npm run i18n:source-check",
     "smoke:live": "node scripts/live_provider_smoke.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."

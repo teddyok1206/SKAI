@@ -453,6 +453,8 @@ Result:
 
 ### 086. I18n Regression
 
+Status: completed.
+
 Goal: keep the system from drifting.
 
 Commands:
@@ -469,6 +471,13 @@ Checks:
 - unused keys;
 - hardcoded user-facing strings in selected component folders;
 - philosophy copy matches approved ko/en official forms.
+
+Result:
+
+- `npm run verify:i18n` now runs registry integrity checks and source usage checks.
+- `scripts/i18n_source_check.mjs` verifies static `getCopy`/`t` keys, dynamic key templates, registry key usage, official hero copy, and selected source hardcoded JSX text.
+- `scripts/i18n_usage_allowlist.json` explicitly reserves currently unused-but-intentional keys.
+- `scripts/i18n_source_baseline.json` freezes the current raw JSX/attribute text baseline. Future work should reduce this baseline; new raw text that increases it fails the check.
 
 Later:
 

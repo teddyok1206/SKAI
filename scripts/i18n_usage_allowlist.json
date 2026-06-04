@@ -1,0 +1,9 @@
+{
+  "reservedKeys": [
+    "extension.coach.layer",
+    "extension.judge.layer",
+    "skaiViewer.action.pdf",
+    "skaiViewer.graphTitle"
+  ],
+  "dynamicKeyTemplates": []
+}
