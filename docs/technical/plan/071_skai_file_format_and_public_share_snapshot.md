@@ -118,6 +118,17 @@ extensions.analysis.skeleton
 extensions.analysis.counterfactualJudge
 ```
 
+Source provenance is core because it is not judge-dependent:
+
+```text
+manifest.source.platform
+manifest.source.conversationId
+manifest.source.primaryProvider
+manifest.source.primaryModel
+```
+
+For SKAI-native attempts, `conversationId` is the attempt id.
+
 ## Public Share Strategy
 
 At publish time:
@@ -205,6 +216,8 @@ Manual smoke:
 - Reframed those fields as future optional analysis extensions.
 - Changed `.skai` graph handling to parse the app-provided graph into a structural subset, stripping annotations and judge-dependent status signals.
 - Kept share page's rich UI free to use `PublishedAttempt.scoreReport`, while `.skai` remains the lightweight portable backbone.
+- Added source provenance to manifest: `platform`, `conversationId`, `exportedFrom`, and optional primary provider/model.
+- Documented that macOS can open `.skai` as JSON only through a chosen text/developer app until SKAI provides a viewer or file association.
 
 ## Verification Result
 

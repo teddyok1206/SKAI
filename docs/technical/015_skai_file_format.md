@@ -68,6 +68,13 @@ The manifest explains what this artifact is and how it was produced.
   "problemId": "problem-id",
   "attemptId": "attempt-id",
   "parentAttemptId": "optional-parent-attempt-id",
+  "source": {
+    "platform": "skai",
+    "conversationId": "attempt-id",
+    "exportedFrom": "skai-web",
+    "primaryProvider": "gemini",
+    "primaryModel": "gemini-2.5-flash-lite"
+  },
   "createdAt": "2026-06-04T00:00:00.000Z",
   "exportedBy": "skai",
   "schemaVersion": "skai.file.v1",
@@ -169,6 +176,35 @@ When a public share page opens:
 5. Allow `.skai` download from the share page.
 
 The share page may still use `PublishedAttempt.scoreReport` for rich in-app analysis. That does not make score report part of `.skai` core.
+
+## Source Provenance
+
+Core `.skai` includes source provenance because it is not judge-dependent analysis.
+
+```json
+{
+  "source": {
+    "platform": "skai",
+    "conversationId": "attempt-id",
+    "exportedFrom": "skai-web",
+    "primaryProvider": "gemini",
+    "primaryModel": "gemini-2.5-flash-lite"
+  }
+}
+```
+
+For SKAI-native artifacts, `conversationId` is the attempt id. For future ChatGPT/Gemini/Claude imports, `platform` and `conversationId` can point to the original source conversation while the payload remains normalized into SKAI trace + graph.
+
+## macOS Opening Behavior
+
+`.skai` v1 is JSON with a custom extension. Without a registered SKAI app or file association, macOS will not know a special native viewer for it. Users can still open it with a text editor or developer tool because the content is JSON, but double-click behavior is not a good product experience yet.
+
+Recommended demo path:
+
+- keep `.skai` as inspectable JSON for now;
+- add a web viewer/import page that accepts drag-and-drop `.skai`;
+- render manifest, integrity status, trace, and 3D Dual Graph;
+- later consider a GitHub preview plugin, VS Code extension, or native file association.
 
 ## Future Analysis Extension
 

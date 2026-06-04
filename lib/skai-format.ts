@@ -122,6 +122,17 @@ function parentAttemptTrace(parent: Attempt) {
   };
 }
 
+function primaryModelSource(trace: TraceEvent[]) {
+  const assistantEvent = trace.find((event) => event.role === "assistant" && event.provider && event.model);
+  const anyModelEvent = trace.find((event) => event.provider && event.model);
+  const sourceEvent = assistantEvent ?? anyModelEvent;
+
+  return {
+    primaryProvider: sourceEvent?.provider,
+    primaryModel: sourceEvent?.model,
+  };
+}
+
 function includesAny(value: string, words: readonly string[]) {
   const normalized = value.toLowerCase();
   return words.some((word) => normalized.includes(word.toLowerCase()));
@@ -334,6 +345,12 @@ export async function buildSkaiFileArtifact(input: {
     problemId: childAttempt.problemId,
     attemptId: childAttempt.attemptId,
     parentAttemptId: input.publishedAttempt.branch?.parentAttemptId,
+    source: {
+      platform: "skai",
+      conversationId: childAttempt.attemptId,
+      exportedFrom: "skai-web",
+      ...primaryModelSource(childAttempt.trace),
+    },
     createdAt,
     exportedBy: "skai",
     schemaVersion: skaiFileSchemaVersion,

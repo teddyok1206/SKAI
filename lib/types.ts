@@ -663,12 +663,21 @@ export interface SkaiFilePrivacyPolicy {
   attachmentText: "included_when_public";
 }
 
+export interface SkaiFileSource {
+  platform: string;
+  conversationId: string;
+  exportedFrom: "skai-web";
+  primaryProvider?: ProviderId;
+  primaryModel?: string;
+}
+
 export interface SkaiFileManifest {
   artifactId: string;
   title: string;
   problemId: string;
   attemptId: string;
   parentAttemptId?: string;
+  source: SkaiFileSource;
   createdAt: string;
   exportedBy: "skai";
   schemaVersion: SkaiFileSchemaVersion;
