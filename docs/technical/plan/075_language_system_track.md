@@ -309,6 +309,8 @@ Result:
 
 ### 081. Graph And `.skai` Viewer Localization
 
+Status: completed.
+
 Goal: localize SKAI's core graph/file surfaces.
 
 Scope:
@@ -407,6 +409,11 @@ Rules:
 - trace raw text stays original;
 - viewer labels are selected by viewer locale;
 - generated coaching extensions may be locale-specific.
+
+Result:
+
+- `.skai` viewer, 3D Dual Graph, graph comparison, graph-state transition, and extension registry chrome now read from the copy registry.
+- Graph ids, P/R/S node tokens, raw Trace content, `.skai` core payload, and extension-generated prose remain unchanged.
 
 ### 086. I18n Regression
 

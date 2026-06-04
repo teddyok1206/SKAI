@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, GraduationCap, Scale } from "lucide-react";
+import { useLanguagePreference } from "@/components/language-toggle";
 import {
   isSkaiCoachExtensionV1,
   isSkaiJudgeExtensionV1,
@@ -8,6 +9,7 @@ import {
   skaiExtensionLabels,
   skaiJudgeExtensionV1,
 } from "@/lib/skai-extensions";
+import { getCopy, type Locale } from "@/lib/i18n";
 import type { AxisScore, SkaiCoachExtensionV1, SkaiFileArtifact, SkaiJudgeExtensionV1 } from "@/lib/types";
 
 function targetLabel(target: { targetKind: string; targetId: string; pairId?: string }) {
@@ -27,9 +29,11 @@ function axisScoreRow(score: AxisScore) {
   );
 }
 
-function JudgeExtensionPanel({ extension }: { extension: SkaiJudgeExtensionV1 }) {
+function JudgeExtensionPanel({ extension, locale }: { extension: SkaiJudgeExtensionV1; locale: Locale }) {
+  const t = (key: string) => getCopy(key, locale);
+
   return (
-    <section className="skai-extension-panel" aria-label="SKAI judge extension">
+    <section className="skai-extension-panel" aria-label={t("extension.judge.aria")}>
       <div className="panel-header compact">
         <div>
           <p className="eyebrow">{skaiExtensionLabels[skaiJudgeExtensionV1]}</p>
@@ -38,21 +42,21 @@ function JudgeExtensionPanel({ extension }: { extension: SkaiJudgeExtensionV1 })
           </h3>
         </div>
         <span className={extension.needsHumanReview ? "signal-chip integrity-warn" : "signal-chip integrity-ok"}>
-          {extension.needsHumanReview ? "human review" : "baseline ok"}
+          {extension.needsHumanReview ? t("extension.status.humanReview") : t("extension.status.baselineOk")}
         </span>
       </div>
 
       <div className="skai-extension-grid">
         <div>
-          <span>Total</span>
+          <span>{t("extension.field.total")}</span>
           <strong>{extension.totalScore ?? "n/a"}</strong>
         </div>
         <div>
-          <span>Generator</span>
+          <span>{t("extension.field.generator")}</span>
           <strong>{extension.generator.kind}</strong>
         </div>
         <div>
-          <span>Graph Hash</span>
+          <span>{t("extension.field.graphHash")}</span>
           <strong>{extension.inputGraphHash.slice(0, 12)}</strong>
         </div>
       </div>
@@ -75,9 +79,11 @@ function JudgeExtensionPanel({ extension }: { extension: SkaiJudgeExtensionV1 })
   );
 }
 
-function CoachExtensionPanel({ extension }: { extension: SkaiCoachExtensionV1 }) {
+function CoachExtensionPanel({ extension, locale }: { extension: SkaiCoachExtensionV1; locale: Locale }) {
+  const t = (key: string) => getCopy(key, locale);
+
   return (
-    <section className="skai-extension-panel" aria-label="SKAI coaching extension">
+    <section className="skai-extension-panel" aria-label={t("extension.coach.aria")}>
       <div className="panel-header compact">
         <div>
           <p className="eyebrow">{skaiExtensionLabels[skaiCoachExtensionV1]}</p>
@@ -116,6 +122,8 @@ function CoachExtensionPanel({ extension }: { extension: SkaiCoachExtensionV1 })
 }
 
 export function SkaiExtensionRegistry({ artifact }: { artifact: SkaiFileArtifact }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const extensions = artifact.extensions ?? {};
   const judgeExtension = extensions[skaiJudgeExtensionV1];
   const coachExtension = extensions[skaiCoachExtensionV1];
@@ -126,22 +134,21 @@ export function SkaiExtensionRegistry({ artifact }: { artifact: SkaiFileArtifact
   }
 
   return (
-    <section className="skai-extension-registry" aria-label="SKAI file extensions">
+    <section className="skai-extension-registry" aria-label={t("extension.registry.aria")}>
       <div className="panel-header compact">
         <div>
-          <p className="eyebrow">Optional Extensions</p>
-          <h3>Derived Layers</h3>
+          <p className="eyebrow">{t("extension.registry.title")}</p>
+          <h3>{t("extension.registry.derivedLayers")}</h3>
         </div>
       </div>
-      {isSkaiJudgeExtensionV1(judgeExtension) ? <JudgeExtensionPanel extension={judgeExtension} /> : null}
-      {isSkaiCoachExtensionV1(coachExtension) ? <CoachExtensionPanel extension={coachExtension} /> : null}
+      {isSkaiJudgeExtensionV1(judgeExtension) ? <JudgeExtensionPanel extension={judgeExtension} locale={locale} /> : null}
+      {isSkaiCoachExtensionV1(coachExtension) ? <CoachExtensionPanel extension={coachExtension} locale={locale} /> : null}
       {unknownKeys.length > 0 ? (
         <div className="skai-extension-unknown">
           <AlertTriangle size={16} />
-          <span>Unknown extension keys: {unknownKeys.join(", ")}</span>
+          <span>{t("extension.unknownKeys")}: {unknownKeys.join(", ")}</span>
         </div>
       ) : null}
     </section>
   );
 }
-

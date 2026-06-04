@@ -2970,5 +2970,1446 @@
     },
     "sourceChecksum": "4232fddd78252974c68a472e3edcbf841288de6a4dc49bf02768c24d63b81a6a",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.traceRole.system",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "System"
+    ],
+    "values": {
+      "ko": "System",
+      "en": "System"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9fff82d0148987f1d5ccec7894e758495b75fdeb1dbbe599fab4988c0683a862",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.selectSkai",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": "`.skai` 파일을 선택해 주세요.",
+      "en": "Choose a `.skai` file."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f08a89f6ee1e0a9046a58eb5e46b28388e59323e309764912ea57bc5c9e02757",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.invalidArtifact",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "SKAI file Artifact 형식이 아닙니다.",
+      "en": "This is not a SKAI file Artifact."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2758b279c1b3431bfbc529c286277430988350e0256d4caff4cc22a066f58e2a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.loaded",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "loaded.",
+      "en": "loaded."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d04889badf27d1d0719a79fcb6eb850123aee38da60a1a53119c93598df600cd",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.readFailed",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일을 읽지 못했습니다.",
+      "en": "Could not read the file."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1670933dedc38e94838abfd3d421cb5a253666b1465da819d31e71507d52ccb1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.saved",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": ".skai saved",
+      "en": ".skai saved"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "39662907297bbe82a686cefe7ff71aea47fd4c2c3a04cdc484e7e1fb8f9a9242",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.notice.shareCopied",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Share link copied.",
+      "en": "Share link copied."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "408178b55210aa506bc51710d17357cc45ec8717d94273f625ec2097e4976c99",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.aria.viewer",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "SKAI file viewer",
+      "en": "SKAI file viewer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b90c8a688b5e68721915f47424f21fa1fb361ade523625cce7feedf2012f6b0b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.standaloneDescription",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace",
+      "3D Dual Graph"
+    ],
+    "values": {
+      "ko": "Trace와 3D Dual Graph를 기준으로 저장, 공유, PDF 출력을 한 표면에서 처리합니다.",
+      "en": "Save, share, and print PDF from one surface anchored to Trace and the 3D Dual Graph."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "37fc31c92dcb02f9fdb6cb1e61de06bdeb4d538a91dac8cb55b23f8e6ec9d2e2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.embeddedDescription",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Artifact"
+    ],
+    "values": {
+      "ko": "이 공유본의 portable graph Artifact입니다.",
+      "en": "Portable graph Artifact for this shared view."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a1c23e4be909b97d27feb6690150e2362c4989b796ac0aca8e4a937d4a0785a9",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.import.title",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": ".skai 파일 열기",
+      "en": "Open .skai file"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c952f10692adfae7a8a9f5ffee61663e12d32875c2996a7985cd57e1e3ba9e49",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.import.description",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일을 드래그하거나 선택해서 같은 viewer surface에서 확인합니다.",
+      "en": "Drag or choose a file to inspect it in the same viewer surface."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e9137f74e8c98b8f36203cd3ae499e72a9740c05644f41994b3264bdc7fa320a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.import.chooseFile",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "파일 선택",
+      "en": "Choose file"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "682ddfa46841cb0b45e17ed9b34132c46db3f117e4052bbce52adfc64c53b0f2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.empty",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "아직 표시할 `.skai` Artifact가 없습니다.",
+      "en": "No `.skai` Artifact to display yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ebc2e4b6cd0a871aff125a3aa9b6fc494840a05969bba577f3600b8d6dc5d418",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.integrity.verified",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "verified",
+      "en": "verified"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ecd55b8776ba366d90c6afbf1dad4ee1b33b8c79bc236741d9413f1b2ba74150",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.integrity.mismatch",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "mismatch",
+      "en": "mismatch"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7c4c11dd68cc4ce4b26bab4e0135d068c6aed7fcb266c2772c0c10316d6da19a",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.integrity.checking",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "checking",
+      "en": "checking"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "10630cf15fa7eae3c92d9bceb51e07d1849cd3de4b1870c128aa084c9fe06286",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.integrity.ok",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "ok",
+      "en": "ok"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "27f59e2d55176eac06d2e3748574e502c4b8a8ebc7ed5ff63bc9fc2e30f613d1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.integrity.changed",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "changed",
+      "en": "changed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6f90b2bd93508023b3e307d966f9d76661d4e962063b540b61c2f029e056bd25",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.graph.pairs",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "pairs",
+      "en": "pairs"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d2fcd73798cae46f828a15f3bbc068bd9c6baff46c9971a93e60a37591c9b518",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "skaiViewer.traceDescription",
+    "domain": "skai_viewer",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "원문은 구조를 검증하기 위한 근거로 접어 둡니다.",
+      "en": "Raw text is folded away as evidence for verifying the structure."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2d391d6219fb1b4e39861dc645846eb924dceb853d713e07f6e1379bfa3eef32",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.node.prompt",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "Prompt node",
+      "en": "Prompt node"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ce4be078ebc6eefef548041983c01b64471cd0538ed6060a98228f2317d353ca",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.node.response",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Response"
+    ],
+    "values": {
+      "ko": "Response node",
+      "en": "Response node"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bd416c9361fc3ee5296e93ec92e77a1a0df3a3824b8376b96afba54dac97b28e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.node.status",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Status"
+    ],
+    "values": {
+      "ko": "Task Status",
+      "en": "Task Status"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2dc428616c5aaf4094369f97831dca6f1b82b2a104b14706fa8b1ce494c2fafd",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.node.synthetic",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "synthetic",
+      "en": "synthetic"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "60751d4e4455be07b2f74f330984b2d645d935a8716879ad59ae7760c827c268",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.node.wait",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "wait",
+      "en": "wait"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d2ded465945cec341d61d54f171a18c6e808c2709d6c17e4f83b53e11522b036",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.empty.noPairs",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response"
+    ],
+    "values": {
+      "ko": "아직 graph로 만들 Prompt-Response pair가 없습니다.",
+      "en": "No Prompt-Response pairs are available for the graph yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "053e998f050895d6d4503f579ff0e811e226f89b17eb4bdbfd700a7dbbd6c761",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.spine.promptGraph",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "Prompt graph",
+      "en": "Prompt graph"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "23db6c108c387d72b3dfec28c0028336465a3da89cfd987de418cb7abadac20d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.spine.responseGraph",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Response"
+    ],
+    "values": {
+      "ko": "Response graph",
+      "en": "Response graph"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e7b95913e0acfeaafac86b2cb808764fd5b660847a22af36adefcdf455639a38",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.focusPair",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "focus pair",
+      "en": "focus pair"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "35c7453f2163e33ad97e2d122a372aef66757d697db15f18ae83756d44ee7486",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.stat.promptNodes",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "prompt nodes",
+      "en": "prompt nodes"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "45a2a8ac7e0c302a54247eff7942eb460dc331cd3a068f2ab1f78887265fca29",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.stat.responseNodes",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "response nodes",
+      "en": "response nodes"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9640ffa40fa99b7ad7d0ba5c8ecf6ea803aaaa350b28b7d0f6d28f54382d5d85",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.stat.statusNodes",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "status nodes",
+      "en": "status nodes"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d5b18782c104a60e20d8dcabe9316cebc71a41da4fc6730b73325193b402c1aa",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.stat.pairedTurns",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "paired turns",
+      "en": "paired turns"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2397d6c6e0e7a0a3ccc63f63d87d25b0ffbd1ba7a62e444ad87a22c8a583a87d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.stat.annotations",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "annotations",
+      "en": "annotations"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e6bea39102cc88db89a299f9081402a3f912b4daf3f8d3f5eda053a2d7bc5e21",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.aria",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph overlay layers",
+      "en": "Graph overlay layers"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c37e3145f35040b658e5c8492bc7d125220d1889bfcf95be86840f7381ad2b60",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.on",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Overlay on",
+      "en": "Overlay on"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48bbeb325bda4b06bb7ae879a4796cbec8b3d499d5d9571fa76a73dc69745b69",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.off",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Overlay off",
+      "en": "Overlay off"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6029d9b49e9be6b16194b5cfda9b67d62c52602bf2913000434fe5ccbb1e87b6",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.bottleneck",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "병목",
+      "en": "Bottleneck"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e2c692b3714367a4d1a5f75ec95d2781032443b435b15484b267b382354237c2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.weakEdge",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "약한 연결",
+      "en": "Weak edge"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7c21ced7431ce4fcf4cbb7b8a377b355ceb4e0428518fc1bb5e819c88fdac6ff",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.recovery",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "회복",
+      "en": "Recovery"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6e95363fc756c60953f0b98ab05029d60929a93100148bd3c962443ebbd7c37b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.verification",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "검증",
+      "en": "Verification"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "52749a8b5e8b967d1d259ca8d6fbf5dad015c415c731df4532ebfbc87943aa76",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.materialGrounding",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 사용",
+      "en": "Material grounding"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f8da265fd757a2f4f37ccd8b04f1bf33b43dde4d5ca5316162ab8d0f8893dd51",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.modelBehavior",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "모델 행동",
+      "en": "Model behavior"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "94e1b9ec06159fa503c91247c2b653a0de8018b335b8b1eb8b6a5e88c28c5340",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.costEfficiency",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "비용",
+      "en": "Cost efficiency"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f3c9c638a80b9227bd35ffd13b8abd608215be699e04a5db66c9010ee8e3b0ae",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.selectedNode",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Selected Node",
+      "en": "Selected Node"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "998fdb8999f6b23c5ed6bd42558a064e2e94eb1d9a94a2d3f1f6ae33d500b842",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.noNodeSelected",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "No node selected",
+      "en": "No node selected"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a1be1a60d9a7566d8fabf30afbc2c22c446b5974577913f041c14bf1c5ae4d49",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.sendPrompt",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "Prompt를 보내면 graph가 채워집니다.",
+      "en": "Send a Prompt to populate the graph."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "478fab8fa9882554a03d685e018d15e4e8c25e55f2966621585392132119eee1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.confidence",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "confidence",
+      "en": "confidence"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "32659c2fb9d12206c78760742f020ebd68826e17afef77607d852c11e9b41aea",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.impact",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "impact",
+      "en": "impact"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d78a6719a1c976e67606b7478abacdc0444fc389d1eed71ad37145e2b3fb6b7b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.noTraceEvent",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace"
+    ],
+    "values": {
+      "ko": "이 synthetic node에는 Trace event가 연결되어 있지 않습니다.",
+      "en": "No Trace event is attached to this synthetic node."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7517fb434e4e12b2bb537efb9756e70302c1c2f179786cd246b9d480b51cffb4",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.statusReasons",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Status"
+    ],
+    "values": {
+      "ko": "Task Status reasons",
+      "en": "Task Status reasons"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9915324e4c201837871690a594622329741725586925d59da70d44530b429c6e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.annotations",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph annotations",
+      "en": "Graph annotations"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1101dd3794fbd8381fa6f00179fe2e0ef7a5e1bcde568c3a544b383200d32627",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.noAnnotations",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 이 graph state에 annotation이 없습니다.",
+      "en": "No annotations on this graph state yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "584813ca25b240bc093ca758d7b0a9ef9d5e9e35e7db79e5fb776c5a2c70b738",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.action.branchFromNode",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "Branch from node",
+      "en": "Branch from node"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "40e8c12c241a4cfdce905797ff4195d9ac31805caee809c6028475a150d65457",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.detail.immutableTrace",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace",
+      "Prompt",
+      "Replay",
+      "Branch"
+    ],
+    "values": {
+      "ko": "Graph는 immutable Trace에서 파생됩니다. 수정은 새 Prompt나 Replay Branch로만 일어납니다.",
+      "en": "Graph is derived from the immutable Trace. Edits happen through new Prompts or Replay Branches."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "312b76fbfbabcfe17e89ff673603ba4e2c413e93e16c594c30b9caa96bb838c2",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.framing",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Framing",
+      "en": "Framing"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "55bda8e4b9d7bc14ba7473cfb425b97d5458cfea854138d643a29f1cab911935",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.decomposition",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Decomposition",
+      "en": "Decomposition"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f88dd6e639d6a87e6bf2598e87a7e1bcad481cb648086ce2d2195c594add1910",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.delegation",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Delegation",
+      "en": "Delegation"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c5cd021d408807bd72c9ab6c59b488744b5e8d6264de08213170e833bba0bebc",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.material_grounding",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Material",
+      "en": "Material"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5aec9d6b2b947d3da37ae4a6ae08d08ac1af8f8381ae19f53dd60ec0221fab50",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.verification",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Verification",
+      "en": "Verification"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "adf6b23159cbed7b04a7310d4442df5b02721509bcb6d419da03aa14282d0ea1",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.adaptation",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Adaptation",
+      "en": "Adaptation"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e4c5e1cc30289a3ca8a738bbd4441e929d950157de09b3c8f033f842d5ceef55",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.context_drift",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Drift",
+      "en": "Drift"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a41e298c3962f3e0f327026846c05bc3ce65d465bf8c92dc77776353f753c48b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.bottleneck",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Bottleneck",
+      "en": "Bottleneck"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8d287adf7099641d6430547acdc0cb8b1012d46b08fa2db22d97da1a6a994f08",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.recovery",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Recovery",
+      "en": "Recovery"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4cdafce419cd9250a5027236a98e1ec2166a41960405865376b622a70610dd5b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.finalization",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Finalization",
+      "en": "Finalization"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2292675b48fba01f85e0199a60c8dac7eb63b09c4defb48d93b85b7847b5ad46",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.model_behavior",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Model",
+      "en": "Model"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "efe0c87470087fa71fc063b8caed09d92f2c33347d682c54942a6755e0023d80",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.cost_efficiency",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Cost",
+      "en": "Cost"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "051aae48389286a9409f81a9ee5c573b5672315a7a404de1ed7e55a2b1e03367",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphComparison.noDelta",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 graph-state delta label이 없습니다.",
+      "en": "No graph-state delta labels yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2cb6df71cce393ea75047b43dd2d661cf132dc053b4463c18e8f73eba70d40a3",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphComparison.title",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Parallel graph comparison",
+      "en": "Parallel graph comparison"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "14c357d0a6d6b9b753614178c49a605a493950b62890bb92584d01bb0fe07304",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphComparison.description",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch",
+      "Orchestration"
+    ],
+    "values": {
+      "ko": "문장 차이가 아니라 parent와 Branch의 Orchestration state 변화를 먼저 봅니다.",
+      "en": "Read the Orchestration state change between parent and Branch before comparing prose."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8419610a3481ef2203b8d1fd2665df8a9979c13b61571cc8708218d99067b2fa",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphComparison.parentGraph",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Parent graph",
+      "en": "Parent graph"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0a246d5a82a09c30ff732c2a007d95b5af61d34fc302e858d0ba6bbdc3e16450",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphComparison.childGraph",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "Child Branch graph",
+      "en": "Child Branch graph"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "851b5e5cc4bc6bb63d1a64fab011dbdda5a0184cd91ac2bc983a55f4ac2fe894",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.title",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph-state transition",
+      "en": "Graph-state transition"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "17e2da1aebe772989780b662e022eda07879e832cb05241cc1c45ddfbbdb526b",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.before",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Before",
+      "en": "Before"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "de40f412cda65c711969e9ed190c3719ffb7bb5da147f6db4caec5b89d90f52d",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.after",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "After",
+      "en": "After"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b1ff601d6c79a56d583e9d1d6e9d6d32df6f3f0f50f590a2894f90dd124c4d20",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.added",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Added",
+      "en": "Added"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fe4262f24030ddb1091a372fa141fc9005b8c6df43c45fc139c5ed96f46c711e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.removed",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Removed",
+      "en": "Removed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "58fdb176ddf60b7f8b3f1b8f92798750618257e2cb40fcd24effa136997f9644",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graphTransition.none",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "none",
+      "en": "none"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3d6988a7376b5f046147085be34196b6af6e885a4336530cd650e9efe7b8329f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.judge.aria",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Judge",
+      "Extension"
+    ],
+    "values": {
+      "ko": "SKAI Judge Extension",
+      "en": "SKAI Judge Extension"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c1f8f3ef7dddc25c5197126350693d6bf7ceac55e1a69449c757c05ebc4453ac",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.coach.aria",
+    "domain": "coaching",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Coaching",
+      "Extension"
+    ],
+    "values": {
+      "ko": "SKAI Coaching Extension",
+      "en": "SKAI Coaching Extension"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "44be6b9c0856b588006571beeca8d47c08ff427304637a175b60cbea55b80e10",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.registry.aria",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Extension"
+    ],
+    "values": {
+      "ko": "SKAI file Extensions",
+      "en": "SKAI file Extensions"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "533240116607bb79ec6ec3319b6f85d8343e538f76af1569942731d5dcad79e3",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.field.total",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Total",
+      "en": "Total"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "600c63a4be2a15e2f415aa67562a733de6ff5b85a72258c7249380658b3f991e",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.field.generator",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Generator",
+      "en": "Generator"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6c1e4eeb977b93e9ccb15073bf6ca24530300dbef34f3940190492c97cb4a5c5",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.field.graphHash",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Graph Hash",
+      "en": "Graph Hash"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5236c3d31dd90f3e4ef88fd6fd9c3df642df587971d46f0ed4e1bff7bfef42af",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "extension.unknownKeys",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Extension"
+    ],
+    "values": {
+      "ko": "Unknown Extension keys",
+      "en": "Unknown Extension keys"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6358b2755e7137bb54580d01f4e57ba00cb6fa9a3cdec2002e2802d57376469f",
+    "updatedAt": "2026-06-05T00:00:00.000Z"
   }
 ]

@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import type { GraphStateSnapshot, GraphStateSnapshotAnnotation, GraphStateTransition } from "@/lib/types";
 
 function statusLabel(snapshot: GraphStateSnapshot) {
@@ -42,7 +46,7 @@ function AnnotationChips({
   );
 }
 
-function GraphStateCard({ label, snapshot }: { label: string; snapshot: GraphStateSnapshot }) {
+function GraphStateCard({ label, snapshot, emptyLabel }: { label: string; snapshot: GraphStateSnapshot; emptyLabel: string }) {
   return (
     <article className="graph-state-card">
       <div className="graph-state-card-top">
@@ -62,12 +66,15 @@ function GraphStateCard({ label, snapshot }: { label: string; snapshot: GraphSta
           </dd>
         </div>
       </dl>
-      <AnnotationChips annotations={snapshot.annotations} emptyLabel="no annotations" />
+      <AnnotationChips annotations={snapshot.annotations} emptyLabel={emptyLabel} />
     </article>
   );
 }
 
 export function GraphStateTransitionView({ transition }: { transition?: GraphStateTransition }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
+
   if (!transition) {
     return null;
   }
@@ -75,14 +82,14 @@ export function GraphStateTransitionView({ transition }: { transition?: GraphSta
   return (
     <div className="graph-transition-view">
       <div className="graph-transition-header">
-        <strong>Graph-state transition</strong>
+        <strong>{t("graphTransition.title")}</strong>
         <span>
           {compactId(transition.parentPairId)} -&gt; {compactId(transition.childPairId)}
         </span>
       </div>
       <div className="graph-state-card-grid">
-        <GraphStateCard label="Before" snapshot={transition.before} />
-        <GraphStateCard label="After" snapshot={transition.after} />
+        <GraphStateCard label={t("graphTransition.before")} snapshot={transition.before} emptyLabel={t("graph.detail.noAnnotations")} />
+        <GraphStateCard label={t("graphTransition.after")} snapshot={transition.after} emptyLabel={t("graph.detail.noAnnotations")} />
       </div>
       {transition.transitionLabels.length > 0 ? (
         <div className="graph-transition-chip-row">
@@ -95,12 +102,12 @@ export function GraphStateTransitionView({ transition }: { transition?: GraphSta
       ) : null}
       <div className="graph-annotation-delta">
         <div>
-          <strong>Added</strong>
-          <AnnotationChips annotations={transition.annotationDelta.added} emptyLabel="none" />
+          <strong>{t("graphTransition.added")}</strong>
+          <AnnotationChips annotations={transition.annotationDelta.added} emptyLabel={t("graphTransition.none")} />
         </div>
         <div>
-          <strong>Removed</strong>
-          <AnnotationChips annotations={transition.annotationDelta.removed} emptyLabel="none" />
+          <strong>{t("graphTransition.removed")}</strong>
+          <AnnotationChips annotations={transition.annotationDelta.removed} emptyLabel={t("graphTransition.none")} />
         </div>
       </div>
     </div>

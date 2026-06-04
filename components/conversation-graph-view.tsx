@@ -6,9 +6,10 @@ import {
   buildGraphOverlayIndex,
   defaultGraphOverlayControls,
   filterGraphOverlaySummary,
-  graphOverlayLayerLabels,
   graphOverlayLayerOrder,
 } from "@/lib/graph-overlay";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy, type Locale } from "@/lib/i18n";
 import type {
   ConversationGraph,
   ConversationGraphAnnotation,
@@ -20,39 +21,24 @@ import type {
   TraceEvent,
 } from "@/lib/types";
 
-function nodeKindLabel(kind: ConversationGraphNode["kind"]) {
+function nodeKindLabel(kind: ConversationGraphNode["kind"], locale: Locale) {
   if (kind === "prompt") {
-    return "Prompt node";
+    return getCopy("graph.node.prompt", locale);
   }
 
   if (kind === "response") {
-    return "Response node";
+    return getCopy("graph.node.response", locale);
   }
 
-  return "Task status";
+  return getCopy("graph.node.status", locale);
 }
 
 function statusClass(pair?: ConversationGraphPair) {
   return pair ? `graph-status ${pair.status} ${pair.isBreakpoint ? "breakpoint" : ""}` : "graph-status";
 }
 
-function annotationKindLabel(kind: ConversationGraphAnnotation["kind"]) {
-  const labels: Record<ConversationGraphAnnotation["kind"], string> = {
-    framing: "Framing",
-    decomposition: "Decomposition",
-    delegation: "Delegation",
-    material_grounding: "Material",
-    verification: "Verification",
-    adaptation: "Adaptation",
-    context_drift: "Drift",
-    bottleneck: "Bottleneck",
-    recovery: "Recovery",
-    finalization: "Finalization",
-    model_behavior: "Model",
-    cost_efficiency: "Cost",
-  };
-
-  return labels[kind];
+function annotationKindLabel(kind: ConversationGraphAnnotation["kind"], locale: Locale) {
+  return getCopy(`graph.annotation.${kind}`, locale);
 }
 
 function annotationSourceLabel(source: ConversationGraphAnnotation["source"]) {
@@ -93,16 +79,16 @@ function nodeToken(node: ConversationGraphNode) {
   return `S${node.sequence + 1}`;
 }
 
-function fixedNodeCaption(node: ConversationGraphNode, pair?: ConversationGraphPair) {
+function fixedNodeCaption(node: ConversationGraphNode, pair: ConversationGraphPair | undefined, locale: Locale) {
   if (node.kind === "task_status" && pair) {
     return pair.status.replace("_", " ");
   }
 
   if (node.synthetic) {
-    return "synthetic";
+    return getCopy("graph.node.synthetic", locale);
   }
 
-  return nodeKindLabel(node.kind).replace(" node", "");
+  return nodeKindLabel(node.kind, locale).replace(" node", "");
 }
 
 function overlaySignalClass(signal: string) {
@@ -129,6 +115,7 @@ function GraphNodeButton({
   annotationCount = 0,
   overlaySummary,
   onSelect,
+  locale,
 }: {
   node?: ConversationGraphNode;
   selected: boolean;
@@ -136,6 +123,7 @@ function GraphNodeButton({
   annotationCount?: number;
   overlaySummary?: GraphOverlaySummary;
   onSelect: (nodeId: string) => void;
+  locale: Locale;
 }) {
   if (!node) {
     return <div className="graph-node missing">NA</div>;
@@ -151,7 +139,7 @@ function GraphNodeButton({
       type="button"
     >
       <strong>{nodeToken(node)}</strong>
-      <span>{fixedNodeCaption(node, pair)}</span>
+      <span>{fixedNodeCaption(node, pair, locale)}</span>
       {node.sourceTraceEventId ? <em>source</em> : null}
       {annotationCount > 0 ? <small className="graph-annotation-badge">{annotationCount}</small> : null}
     </button>
@@ -181,6 +169,8 @@ export function ConversationGraphView({
   overlayControls?: GraphOverlayControls;
   onOverlayControlsChange?: (controls: GraphOverlayControls) => void;
 }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const allNodes = useMemo(
     () => [...graph.promptNodes, ...graph.responseNodes, ...graph.statusNodes],
     [graph.promptNodes, graph.responseNodes, graph.statusNodes],
@@ -298,7 +288,7 @@ export function ConversationGraphView({
         <div className="empty compact-empty">
           <div>
             <Network size={24} />
-            <p>아직 graph로 만들 prompt-response pair가 없습니다.</p>
+            <p>{t("graph.empty.noPairs")}</p>
           </div>
         </div>
       );
@@ -307,8 +297,8 @@ export function ConversationGraphView({
     return (
       <div className="graph-dual-spine" aria-label="3 dimensional dual graph">
         <div className="graph-dual-spine-head">
-          <span>Prompt graph</span>
-          <span>Response graph</span>
+          <span>{t("graph.spine.promptGraph")}</span>
+          <span>{t("graph.spine.responseGraph")}</span>
         </div>
         {graph.pairs.map((pair) => {
           const promptNode = nodeById.get(pair.promptNodeId);
@@ -398,6 +388,7 @@ export function ConversationGraphView({
                     overlaySummary={statusOverlaySummary ?? pairOverlaySummary}
                     selected={pairSetActive}
                     onSelect={selectNode}
+                    locale={locale}
                   />
                 </div>
               ) : null}
@@ -411,6 +402,7 @@ export function ConversationGraphView({
                     overlaySummary={promptOverlaySummary ?? pairOverlaySummary}
                     selected={pairSetActive}
                     onSelect={selectNode}
+                    locale={locale}
                   />
                 </div>
               </div>
@@ -425,9 +417,10 @@ export function ConversationGraphView({
                       overlaySummary={responseOverlaySummary ?? pairOverlaySummary}
                       selected={pairSetActive}
                       onSelect={selectNode}
+                      locale={locale}
                     />
                   ) : (
-                    <div className="graph-node missing">wait</div>
+                    <div className="graph-node missing">{t("graph.node.wait")}</div>
                   )}
                 </div>
               </div>
@@ -443,41 +436,41 @@ export function ConversationGraphView({
       {title ? (
         <div className="graph-view-title">
           <strong>{title}</strong>
-          {focusPair ? <span>focus pair {focusPair.sequence + 1}</span> : null}
+          {focusPair ? <span>{t("graph.focusPair")} {focusPair.sequence + 1}</span> : null}
         </div>
       ) : null}
       <div className="graph-overview">
         <div className="graph-stat">
           <strong>{graph.promptNodes.length}</strong>
-          <span>prompt nodes</span>
+          <span>{t("graph.stat.promptNodes")}</span>
         </div>
         <div className="graph-stat">
           <strong>{graph.responseNodes.length}</strong>
-          <span>response nodes</span>
+          <span>{t("graph.stat.responseNodes")}</span>
         </div>
         <div className="graph-stat">
           <strong>{graph.statusNodes.length}</strong>
-          <span>status nodes</span>
+          <span>{t("graph.stat.statusNodes")}</span>
         </div>
         <div className="graph-stat">
           <strong>{graph.pairs.length}</strong>
-          <span>paired turns</span>
+          <span>{t("graph.stat.pairedTurns")}</span>
         </div>
         <div className="graph-stat">
           <strong>{graph.annotations.length}</strong>
-          <span>annotations</span>
+          <span>{t("graph.stat.annotations")}</span>
         </div>
       </div>
 
       {!hideOverlayControls ? (
-      <div className="graph-overlay-controls" aria-label="Graph overlay layers">
+      <div className="graph-overlay-controls" aria-label={t("graph.overlay.aria")}>
         <button
           className={`button quiet graph-overlay-master ${activeOverlayControls.enabled ? "active" : ""}`}
           onClick={toggleOverlayEnabled}
           type="button"
         >
           {activeOverlayControls.enabled ? <Eye size={15} /> : <EyeOff size={15} />}
-          {activeOverlayControls.enabled ? "Overlay on" : "Overlay off"}
+          {activeOverlayControls.enabled ? t("graph.overlay.on") : t("graph.overlay.off")}
         </button>
         <div className="graph-overlay-layer-list">
           {graphOverlayLayerOrder.map((layer) => {
@@ -493,7 +486,7 @@ export function ConversationGraphView({
                 type="button"
               >
                 <span className={`graph-overlay-dot overlay-layer-${layer}`} />
-                {graphOverlayLayerLabels[layer]}
+                {t(`graph.overlay.${layer}`)}
                 <small>{count}</small>
               </button>
             );
@@ -508,9 +501,9 @@ export function ConversationGraphView({
         {!hideDetailPanel ? (
         <aside className="graph-detail-panel">
           <div>
-            <p className="eyebrow">Selected Node</p>
-            <h3>{selectedNode?.label ?? "No node selected"}</h3>
-            <p className="muted">{selectedNode ? nodeKindLabel(selectedNode.kind) : "Send a prompt to populate the graph."}</p>
+            <p className="eyebrow">{t("graph.detail.selectedNode")}</p>
+            <h3>{selectedNode?.label ?? t("graph.detail.noNodeSelected")}</h3>
+            <p className="muted">{selectedNode ? nodeKindLabel(selectedNode.kind, locale) : t("graph.detail.sendPrompt")}</p>
           </div>
           {selectedPair ? (
             <div className="graph-status-group">
@@ -525,39 +518,39 @@ export function ConversationGraphView({
           {selectedOverlaySummary ? (
             <div className={`graph-overlay-summary ${selectedOverlaySummary.severity}`}>
               <strong>{selectedOverlaySummary.label}</strong>
-              <span>{selectedOverlaySummary.layers.map((layer) => graphOverlayLayerLabels[layer]).join(" / ")}</span>
-              <small>confidence {Math.round(selectedOverlaySummary.confidence * 100)}%</small>
+              <span>{selectedOverlaySummary.layers.map((layer) => t(`graph.overlay.${layer}`)).join(" / ")}</span>
+              <small>{t("graph.detail.confidence")} {Math.round(selectedOverlaySummary.confidence * 100)}%</small>
             </div>
           ) : null}
           {selectedTrace ? (
             <pre className="graph-detail-content">{selectedTrace.content}</pre>
           ) : (
-            <p className="muted">{selectedNode?.summary ?? "No trace event is attached to this synthetic node."}</p>
+            <p className="muted">{selectedNode?.summary ?? t("graph.detail.noTraceEvent")}</p>
           )}
           {selectedPair ? (
             <div className="graph-reason-list">
-              <strong>Task status reasons</strong>
+              <strong>{t("graph.detail.statusReasons")}</strong>
               {selectedPair.statusReasons.map((reason) => (
                 <span key={reason}>{reason}</span>
               ))}
             </div>
           ) : null}
           <div className="graph-annotation-list">
-            <strong>Graph annotations</strong>
+            <strong>{t("graph.detail.annotations")}</strong>
             {selectedAnnotations.length === 0 ? (
-              <span className="muted">No annotations on this graph state yet.</span>
+              <span className="muted">{t("graph.detail.noAnnotations")}</span>
             ) : (
               selectedAnnotations.map((annotation) => (
                 <article className={`graph-annotation-card ${annotation.severity}`} key={annotation.id}>
                   <div>
-                    <span>{annotationKindLabel(annotation.kind)}</span>
+                    <span>{annotationKindLabel(annotation.kind, locale)}</span>
                     <small>{annotationSourceLabel(annotation.source)}</small>
                   </div>
                   <h4>{annotation.title}</h4>
                   <p>{annotation.explanation}</p>
                   <footer>
-                    <span>confidence {Math.round(annotation.confidence * 100)}%</span>
-                    {typeof annotation.scoreImpact === "number" ? <span>impact {annotation.scoreImpact > 0 ? "+" : ""}{annotation.scoreImpact}</span> : null}
+                    <span>{t("graph.detail.confidence")} {Math.round(annotation.confidence * 100)}%</span>
+                    {typeof annotation.scoreImpact === "number" ? <span>{t("graph.detail.impact")} {annotation.scoreImpact > 0 ? "+" : ""}{annotation.scoreImpact}</span> : null}
                   </footer>
                   {annotation.evidenceTraceEventIds.length > 0 ? (
                     <div className="graph-annotation-evidence">
@@ -578,11 +571,11 @@ export function ConversationGraphView({
           </div>
           {onBranchTraceEvent && branchTraceEventId ? (
             <button className="button primary" onClick={() => onBranchTraceEvent(branchTraceEventId)} type="button">
-              <GitBranch size={15} /> Branch from node
+              <GitBranch size={15} /> {t("graph.action.branchFromNode")}
             </button>
           ) : null}
           <p className="muted">
-            <Workflow size={14} /> Graph is derived from the immutable trace. Edits happen through new prompts or replay branches.
+            <Workflow size={14} /> {t("graph.detail.immutableTrace")}
           </p>
         </aside>
         ) : null}

@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { GitBranch } from "lucide-react";
 import { ConversationGraphView } from "@/components/conversation-graph-view";
+import { useLanguagePreference } from "@/components/language-toggle";
 import {
   defaultGraphOverlayControls,
-  graphOverlayLayerLabels,
   graphOverlayLayerOrder,
 } from "@/lib/graph-overlay";
+import { getCopy, type Locale } from "@/lib/i18n";
 import type {
   ConversationGraph,
   GraphOverlayControls,
@@ -15,9 +16,9 @@ import type {
   TraceEvent,
 } from "@/lib/types";
 
-function TransitionLabels({ transition }: { transition?: GraphStateTransition }) {
+function TransitionLabels({ transition, locale }: { transition?: GraphStateTransition; locale: Locale }) {
   if (!transition || transition.transitionLabels.length === 0) {
-    return <p className="muted">아직 graph-state delta label이 없습니다.</p>;
+    return <p className="muted">{getCopy("graphComparison.noDelta", locale)}</p>;
   }
 
   return (
@@ -44,6 +45,8 @@ export function GraphComparisonView({
   childTrace: TraceEvent[];
   transition?: GraphStateTransition;
 }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const [overlayControls, setOverlayControls] = useState<GraphOverlayControls>(defaultGraphOverlayControls);
 
   return (
@@ -51,19 +54,19 @@ export function GraphComparisonView({
       <div className="graph-comparison-header">
         <div>
           <strong>
-            <GitBranch size={16} /> Parallel graph comparison
+            <GitBranch size={16} /> {t("graphComparison.title")}
           </strong>
-          <p className="muted">문장 차이가 아니라 parent와 branch의 orchestration state 변화를 먼저 봅니다.</p>
+          <p className="muted">{t("graphComparison.description")}</p>
         </div>
-        <TransitionLabels transition={transition} />
+        <TransitionLabels transition={transition} locale={locale} />
       </div>
       <div className="graph-comparison-legend">
         {overlayControls.enabled ? (
           graphOverlayLayerOrder
             .filter((layer) => overlayControls.layers[layer])
-            .map((layer) => <span key={layer}>{graphOverlayLayerLabels[layer]}</span>)
+            .map((layer) => <span key={layer}>{t(`graph.overlay.${layer}`)}</span>)
         ) : (
-          <span>Overlay off</span>
+          <span>{t("graph.overlay.off")}</span>
         )}
       </div>
       <div className="graph-comparison-grid">
@@ -74,7 +77,7 @@ export function GraphComparisonView({
           hideDetailPanel
           overlayControls={overlayControls}
           onOverlayControlsChange={setOverlayControls}
-          title="Parent graph"
+          title={t("graphComparison.parentGraph")}
           trace={parentTrace}
         />
         <ConversationGraphView
@@ -85,7 +88,7 @@ export function GraphComparisonView({
           hideOverlayControls
           overlayControls={overlayControls}
           onOverlayControlsChange={setOverlayControls}
-          title="Child branch graph"
+          title={t("graphComparison.childGraph")}
           trace={childTrace}
         />
       </div>

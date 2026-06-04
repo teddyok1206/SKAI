@@ -4,8 +4,10 @@ import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from "re
 import { CheckCircle2, Download, FileJson, Printer, Share2, ShieldCheck, ShieldX, Upload } from "lucide-react";
 import { ConversationGraphView } from "@/components/conversation-graph-view";
 import { GraphComparisonView } from "@/components/graph-comparison-view";
+import { useLanguagePreference } from "@/components/language-toggle";
 import { MarkdownContent } from "@/components/markdown-content";
 import { SkaiExtensionRegistry } from "@/components/skai-extension-registry";
+import { getCopy, type Locale } from "@/lib/i18n";
 import {
   serializeSkaiFileArtifact,
   skaiFileMimeType,
@@ -41,7 +43,7 @@ function isSkaiFileArtifact(value: unknown): value is SkaiFileArtifact {
   );
 }
 
-function traceRoleLabel(role: TraceEvent["role"]) {
+function traceRoleLabel(role: TraceEvent["role"], locale: Locale) {
   if (role === "user") {
     return "Prompt";
   }
@@ -50,7 +52,7 @@ function traceRoleLabel(role: TraceEvent["role"]) {
     return "Response";
   }
 
-  return "System";
+  return getCopy("skaiViewer.traceRole.system", locale);
 }
 
 export function SkaiFileViewer({
@@ -66,6 +68,8 @@ export function SkaiFileViewer({
   title?: string;
   variant?: "standalone" | "embedded";
 }) {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const [currentArtifact, setCurrentArtifact] = useState<SkaiFileArtifact | undefined>(artifact);
   const [notice, setNotice] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -127,7 +131,7 @@ export function SkaiFileViewer({
     setNotice("");
 
     if (!file.name.endsWith(".skai")) {
-      setNotice("`.skai` 파일을 선택해 주세요.");
+      setNotice(t("skaiViewer.notice.selectSkai"));
       return;
     }
 
@@ -136,14 +140,14 @@ export function SkaiFileViewer({
       const parsed = JSON.parse(text) as unknown;
 
       if (!isSkaiFileArtifact(parsed)) {
-        setNotice("SKAI file artifact 형식이 아닙니다.");
+        setNotice(t("skaiViewer.notice.invalidArtifact"));
         return;
       }
 
       setCurrentArtifact(parsed);
-      setNotice(`${file.name} loaded.`);
+      setNotice(`${file.name} ${t("skaiViewer.notice.loaded")}`);
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "파일을 읽지 못했습니다.");
+      setNotice(error instanceof Error ? error.message : t("skaiViewer.notice.readFailed"));
     }
   }
 
@@ -179,7 +183,7 @@ export function SkaiFileViewer({
     anchor.download = skaiFileName(currentArtifact.manifest.title);
     anchor.click();
     URL.revokeObjectURL(url);
-    setNotice(`.skai saved · ${currentArtifact.integrity.artifactHash.slice(0, 12)}`);
+    setNotice(`${t("skaiViewer.notice.saved")} · ${currentArtifact.integrity.artifactHash.slice(0, 12)}`);
   }
 
   async function shareArtifact() {
@@ -200,7 +204,7 @@ export function SkaiFileViewer({
 
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(url);
-      setNotice("Share link copied.");
+      setNotice(t("skaiViewer.notice.shareCopied"));
     }
   }
 
@@ -209,25 +213,23 @@ export function SkaiFileViewer({
   }
 
   return (
-    <section className={`panel skai-file-viewer ${variant === "embedded" ? "embedded" : ""}`} aria-label="SKAI file viewer">
+    <section className={`panel skai-file-viewer ${variant === "embedded" ? "embedded" : ""}`} aria-label={t("skaiViewer.aria.viewer")}>
       <div className="panel-header skai-file-viewer-header">
         <div>
           <p className="eyebrow">{title}</p>
-          <h2>{currentArtifact?.manifest.title ?? "Open a .skai artifact"}</h2>
+          <h2>{currentArtifact?.manifest.title ?? t("skaiViewer.openTitle")}</h2>
           {variant === "standalone" ? (
-            <p className="muted">
-              Trace와 3D Dual Graph를 기준으로 저장, 공유, PDF 출력을 한 표면에서 처리합니다.
-            </p>
+            <p className="muted">{t("skaiViewer.standaloneDescription")}</p>
           ) : (
-            <p className="muted">이 공유본의 portable graph artifact입니다.</p>
+            <p className="muted">{t("skaiViewer.embeddedDescription")}</p>
           )}
         </div>
         <div className="skai-viewer-actions">
           <button className="button" disabled={!currentArtifact} onClick={saveSkaiFile} type="button">
-            <Download size={16} /> .skai 저장
+            <Download size={16} /> {t("skaiViewer.action.save")}
           </button>
           <button className="button" disabled={!currentArtifact} onClick={() => void shareArtifact()} type="button">
-            <Share2 size={16} /> 공유
+            <Share2 size={16} /> {t("skaiViewer.action.share")}
           </button>
           <button className="button primary" disabled={!currentArtifact} onClick={printPdf} type="button">
             <Printer size={16} /> PDF
@@ -252,11 +254,11 @@ export function SkaiFileViewer({
         >
           <FileJson size={20} />
           <div>
-            <strong>.skai 파일 열기</strong>
-            <p className="muted">파일을 드래그하거나 선택해서 같은 viewer surface에서 확인합니다.</p>
+            <strong>{t("skaiViewer.import.title")}</strong>
+            <p className="muted">{t("skaiViewer.import.description")}</p>
           </div>
           <button className="button" onClick={() => fileInputRef.current?.click()} type="button">
-            <Upload size={16} /> 파일 선택
+            <Upload size={16} /> {t("skaiViewer.import.chooseFile")}
           </button>
           <input ref={fileInputRef} hidden accept=".skai,application/json,application/vnd.skai+json" type="file" onChange={handleFileChange} />
         </div>
@@ -266,7 +268,7 @@ export function SkaiFileViewer({
 
       {!currentArtifact || !graph ? (
         <div className="panel-body empty skai-file-empty">
-          <p className="muted">아직 표시할 `.skai` artifact가 없습니다.</p>
+          <p className="muted">{t("skaiViewer.empty")}</p>
         </div>
       ) : (
         <div className="skai-file-viewer-body">
@@ -285,13 +287,13 @@ export function SkaiFileViewer({
               <span>Integrity</span>
               <strong className={activeVerification?.ok ? "integrity-ok" : "integrity-warn"}>
                 {activeVerification?.ok ? <CheckCircle2 size={15} /> : activeVerification ? <ShieldX size={15} /> : <ShieldCheck size={15} />}
-                {activeVerification ? (activeVerification.ok ? "verified" : "mismatch") : "checking"}
+                {activeVerification ? (activeVerification.ok ? t("skaiViewer.integrity.verified") : t("skaiViewer.integrity.mismatch")) : t("skaiViewer.integrity.checking")}
               </strong>
               <small>{currentArtifact.integrity.artifactHash.slice(0, 18)}</small>
             </div>
             <div>
               <span>Graph</span>
-              <strong>{graphStats?.pairs ?? 0} pairs</strong>
+              <strong>{graphStats?.pairs ?? 0} {t("skaiViewer.graph.pairs")}</strong>
               <small>{graphStats?.prompts ?? 0}P / {graphStats?.responses ?? 0}R / {graphStats?.edges ?? 0}E</small>
             </div>
           </div>
@@ -300,7 +302,7 @@ export function SkaiFileViewer({
             <div className="skai-integrity-row">
               {Object.entries(activeVerification.sectionChecks).map(([section, ok]) => (
                 <span className={ok ? "signal-chip integrity-ok" : "signal-chip integrity-warn"} key={section}>
-                  {section}: {ok ? "ok" : "changed"}
+                  {section}: {ok ? t("skaiViewer.integrity.ok") : t("skaiViewer.integrity.changed")}
                 </span>
               ))}
             </div>
@@ -314,17 +316,17 @@ export function SkaiFileViewer({
 
           <SkaiExtensionRegistry artifact={currentArtifact} />
 
-          <section className="skai-file-trace" aria-label="SKAI file trace evidence">
+          <section className="skai-file-trace" aria-label={t("skaiViewer.traceEvidence")}>
             <div className="panel-header compact">
-              <h3>Trace Evidence</h3>
-              <p className="muted">원문은 구조를 검증하기 위한 근거로 접어 둡니다.</p>
+              <h3>{t("skaiViewer.traceEvidence")}</h3>
+              <p className="muted">{t("skaiViewer.traceDescription")}</p>
             </div>
             <div className="raw-transcript">
               {trace.map((event, index) => (
                 <details id={`skai-file-trace-${event.id}`} key={event.id}>
                   <summary>
                     <span>
-                      {index + 1}. {traceRoleLabel(event.role)}
+                      {index + 1}. {traceRoleLabel(event.role, locale)}
                     </span>
                     <small>
                       {event.provider ?? "unknown"} {event.model ? `· ${event.model}` : ""}
