@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-05T16:21:23.832Z",
+  "generatedAt": "2026-06-05T16:26:52.291Z",
   "note": "Current raw JSX text/attribute baseline. New raw user-facing text should go through lib/i18n/copy-registry.json instead of increasing this baseline.",
   "hardcodedText": [
     {
@@ -120,66 +120,6 @@
       "file": "components/founder-review-dashboard.tsx",
       "attribute": "text",
       "text": "아직 리뷰할 local attempt가 없습니다.",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "placeholder",
-      "text": "Founder editorial note: 논리 구멍, 자료 품질, 데모 적합성",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Generated Problem Gate",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Good trace",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Ideal bottleneck",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Preview",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Primary failure",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "Weak trace",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "생성 문제 선별",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "실패 패턴과 bottleneck",
-      "count": 1
-    },
-    {
-      "file": "components/generated-problem-editorial-dashboard.tsx",
-      "attribute": "text",
-      "text": "첫 smoke에서는 seed 문제는 항상 노출하고, generated 문제는 checklist를 통과한 항목만 홈에 공개합니다.",
       "count": 1
     },
     {

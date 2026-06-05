@@ -6630,5 +6630,437 @@
     },
     "sourceChecksum": "48caf5194a2cec589b089fe0dfdb827076c3d67ed9eb04a7b6e27699e6240c97",
     "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.generatedGate.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Generated Problem Gate",
+      "en": "Generated Problem Gate"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "84ca46aa14da52a49da8d13a5d563c71d7fa7b5d4e579ffd944f3cb70ec71f08",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "생성 문제 선별",
+      "en": "Generated problem gate"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6741b8f135c5f39d1f6d378e0e8ba8a2c0b55c8ead9f4804e10000a6561a5f6f",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첫 smoke에서는 seed 문제는 항상 노출하고, generated 문제는 checklist를 통과한 항목만 홈에 공개합니다.",
+      "en": "For the first smoke test, seed problems stay visible and generated problems appear on the home screen only after passing the checklist."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b09afb4b8618f84204a8ecdf7a7a9a10f8f4c977dbfe291e19cafac1bc0adf85",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.summary.generated",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "generated",
+      "en": "generated"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d3e408b6326dd29de64126c90773440d44c2e16ba6b66eb63dba32a8ab035998",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.summary.touched",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "touched",
+      "en": "touched"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ad6e801024d028d5cb0e888106320829cd540a4b24c0241dedf36cee6f02f9cd",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.summary.published",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "published",
+      "en": "published"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d4271b1b2f10f0dc3cc18f14433622068c6354fca9822d820097b9dab7d975ce",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.materialsSuffix",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "materials",
+      "en": "materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a8f435b202a28a3600e88bdc5cb951d83475243352efba9cfb4bf04425f760be",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.state.published",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "published",
+      "en": "published"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d4271b1b2f10f0dc3cc18f14433622068c6354fca9822d820097b9dab7d975ce",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.state.hidden",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "hidden",
+      "en": "hidden"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1526f95424e835f9d6770b617a2d5d9527c1f8233ac523dd192a47c3b9f878ca",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.action.hide",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Hide",
+      "en": "Hide"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d17aeddc80e9cc6eb9170fd11d16842f189cc639d3dbe1121bb2ed2182d4f548",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.action.publish",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Publish",
+      "en": "Publish"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "661938c10b177b28f7efac18e5b0b04665ec47dcaafc260e04dad1446229ce63",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.action.preview",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Preview",
+      "en": "Preview"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bea43b348329a6b94a4ac28564b97bdae524947f264b198bc22cbab559b75016",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.signal.ambiguitySuffix",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "ambiguity",
+      "en": "ambiguity"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3a320523edaa0934b7d88ac55b33040a601f96c39a65b4813ae4aad744bcb0df",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.antiOneShot.label",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "딸깍 방지",
+      "en": "Anti-one-shot"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "500022f75534f76ee12d5c84dedb3b5dae230be4717284faa277c3e3c7c9f688",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.antiOneShot.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "한 줄 최종답 요청만으로 그럴듯한 답이 나오지 않는다.",
+      "en": "A one-line final-answer request should not produce a convincing solution."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e4672aa029cba889ed71137cc68dfae1dc1812905e533c6e6db2781e55d77ba6",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.materialCrossReference.label",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 상호 참조",
+      "en": "Material cross-reference"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b54e59c6b669696b32d273ad3eb6de5fb7c57ad9635a31c8cdffb33dfb540978",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.materialCrossReference.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "자료 간 대조, 누락, 충돌 확인이 실제로 필요하다.",
+      "en": "The problem requires comparing materials, omissions, and conflicts."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "83cc7a61d9ebb34846b8ad2d4cf9b9133ac193a36a5647b3d2a24bf4f5cfc768",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.extractedTextUsable.label",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "추출 텍스트 품질",
+      "en": "Extracted text quality"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1840e0518d57d23d2d0c49851ad6185b29878f09f0d2d9e2d666557cfd601831",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.extractedTextUsable.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "이미지/표/PDF 맥락이 텍스트만으로도 불쾌하지 않게 읽힌다.",
+      "en": "Image, table, or PDF context remains readable without unpleasant text loss."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b961980293a0af377da2aa592fb195a2e6e28a42f62d1de225bcf49c76c229f8",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.domainAccessible.label",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "도메인 장벽",
+      "en": "Domain accessibility"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cf8349fb6a5aeebf5d95ece52a15e7825a9c7dc9fe7f1e08fc3024e4b995d6a9",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.checklist.domainAccessible.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "약대생/일반 지인이 오케스트레이션 전에 전문지식에서 막히지 않는다.",
+      "en": "Pharmacy students or general acquaintances should not be blocked by expert knowledge before orchestration begins."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4f892b1be5ec1390453c6ec4494066fae5a2e569934110b5e2b4dc651b2e2b2d",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.details.summary",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "실패 패턴과 bottleneck",
+      "en": "Failure patterns and bottleneck"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "560891d0b32343ded72b735d907fe00ac557261d4a14a9a143eb95d055d5e153",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.details.primaryFailure",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Primary failure",
+      "en": "Primary failure"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a4b06233dac6f261b8ce33d4626e4a4ad285df3fd72247f99883eb15572694e0",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.details.idealBottleneck",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Ideal bottleneck",
+      "en": "Ideal bottleneck"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9bec8ffcc132686a31a1dbcc6f9c7c18973170d9e218a234a2f2fce8217e9561",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.details.weakTrace",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Weak trace",
+      "en": "Weak trace"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "eae83569dde6f899ed59cabcced4881bd4798e2dc61852afa1d96263b24be0ac",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.details.goodTrace",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Good trace",
+      "en": "Good trace"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d35c768d4d514aff5726bc95d4d6f7665d8871a8b92cf765bc05302f62ef9b41",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "admin.generatedGate.note.placeholder",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Founder editorial note: 논리 구멍, 자료 품질, 데모 적합성",
+      "en": "Founder editorial note: logic gaps, material quality, demo fit"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "26f1ea51a0b21b3ebed8ba8d587d009f97836d4564a4bbadffd9f6899127e04e",
+    "updatedAt": "2026-06-05T16:26:02.155Z"
   }
 ]

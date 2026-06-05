@@ -7,34 +7,36 @@ import {
   generatedProblemBatch001Problems,
   generatedProblemBatch001ReviewNotes,
 } from "@/data/generated-problem-batch-001";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { saveGeneratedProblemEditorialState } from "@/lib/local-store";
 import { useGeneratedProblemEditorialStates } from "@/lib/use-generated-problem-editorial";
 import type { GeneratedProblemEditorialChecklist, GeneratedProblemEditorialState } from "@/lib/types";
 
 const checklistLabels: Array<{
   key: keyof GeneratedProblemEditorialChecklist;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
 }> = [
   {
     key: "antiOneShot",
-    label: "딸깍 방지",
-    description: "한 줄 최종답 요청만으로 그럴듯한 답이 나오지 않는다.",
+    labelKey: "admin.generatedGate.checklist.antiOneShot.label",
+    descriptionKey: "admin.generatedGate.checklist.antiOneShot.description",
   },
   {
     key: "materialCrossReference",
-    label: "자료 상호 참조",
-    description: "자료 간 대조, 누락, 충돌 확인이 실제로 필요하다.",
+    labelKey: "admin.generatedGate.checklist.materialCrossReference.label",
+    descriptionKey: "admin.generatedGate.checklist.materialCrossReference.description",
   },
   {
     key: "extractedTextUsable",
-    label: "추출 텍스트 품질",
-    description: "이미지/표/PDF 맥락이 텍스트만으로도 불쾌하지 않게 읽힌다.",
+    labelKey: "admin.generatedGate.checklist.extractedTextUsable.label",
+    descriptionKey: "admin.generatedGate.checklist.extractedTextUsable.description",
   },
   {
     key: "domainAccessible",
-    label: "도메인 장벽",
-    description: "약대생/일반 지인이 오케스트레이션 전에 전문지식에서 막히지 않는다.",
+    labelKey: "admin.generatedGate.checklist.domainAccessible.label",
+    descriptionKey: "admin.generatedGate.checklist.domainAccessible.description",
   },
 ];
 
@@ -63,6 +65,8 @@ function fallbackState(problemId: string): GeneratedProblemEditorialState {
 }
 
 export function GeneratedProblemEditorialDashboard() {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const editorialStates = useGeneratedProblemEditorialStates();
   const stateMap = new Map(editorialStates.map((state) => [state.problemId, state]));
   const publishedCount = generatedProblemBatch001Problems.filter((problem) => stateMap.get(problem.id)?.isPublished).length;
@@ -107,23 +111,21 @@ export function GeneratedProblemEditorialDashboard() {
   return (
     <section className="panel generated-editorial">
       <div className="panel-header">
-        <p className="eyebrow">Generated Problem Gate</p>
-        <h2>생성 문제 선별</h2>
-        <p className="muted">
-          첫 smoke에서는 seed 문제는 항상 노출하고, generated 문제는 checklist를 통과한 항목만 홈에 공개합니다.
-        </p>
+        <p className="eyebrow">{t("admin.generatedGate.eyebrow")}</p>
+        <h2>{t("admin.generatedGate.title")}</h2>
+        <p className="muted">{t("admin.generatedGate.description")}</p>
       </div>
 
       <div className="panel-body">
         <div className="review-summary">
           <span>
-            <FileText size={14} /> {generatedProblemBatch001Problems.length} generated
+            <FileText size={14} /> {generatedProblemBatch001Problems.length} {t("admin.generatedGate.summary.generated")}
           </span>
           <span>
-            <ShieldCheck size={14} /> {reviewedCount} touched
+            <ShieldCheck size={14} /> {reviewedCount} {t("admin.generatedGate.summary.touched")}
           </span>
           <span>
-            <CheckCircle2 size={14} /> {publishedCount} published
+            <CheckCircle2 size={14} /> {publishedCount} {t("admin.generatedGate.summary.published")}
           </span>
         </div>
       </div>
@@ -142,15 +144,18 @@ export function GeneratedProblemEditorialDashboard() {
                   <div className="tag-row">
                     <span className="tag">{problem.category}</span>
                     <span className="tag">{problem.difficulty}</span>
-                    <span className="tag">{problem.materials.length} materials</span>
+                    <span className="tag">
+                      {problem.materials.length} {t("admin.generatedGate.materialsSuffix")}
+                    </span>
                     <span className={state.isPublished ? "material-state selected" : "material-state"}>
-                      {state.isPublished ? "published" : "hidden"}
+                      {state.isPublished ? t("admin.generatedGate.state.published") : t("admin.generatedGate.state.hidden")}
                     </span>
                   </div>
                   <h3>{problem.title}</h3>
                   <p className="muted">{problem.subtitle}</p>
                   <p className="generated-editorial-signal">
-                    {classification.domain} · {classification.primarySkill.replaceAll("_", " ")} · {classification.ambiguityLevel} ambiguity
+                    {classification.domain} · {classification.primarySkill.replaceAll("_", " ")} · {classification.ambiguityLevel}{" "}
+                    {t("admin.generatedGate.signal.ambiguitySuffix")}
                   </p>
                 </div>
                 <div className="generated-editorial-actions">
@@ -161,10 +166,10 @@ export function GeneratedProblemEditorialDashboard() {
                     type="button"
                   >
                     {state.isPublished ? <ToggleLeft size={16} /> : <ToggleRight size={16} />}
-                    {state.isPublished ? "Hide" : "Publish"}
+                    {state.isPublished ? t("admin.generatedGate.action.hide") : t("admin.generatedGate.action.publish")}
                   </button>
                   <Link className="button quiet" href={`/problems/${problem.id}`}>
-                    Preview
+                    {t("admin.generatedGate.action.preview")}
                   </Link>
                 </div>
               </div>
@@ -178,8 +183,8 @@ export function GeneratedProblemEditorialDashboard() {
                       onChange={(event) => updateChecklist(problem.id, item.key, event.target.checked)}
                     />
                     <span>
-                      <strong>{item.label}</strong>
-                      <small>{item.description}</small>
+                      <strong>{t(item.labelKey)}</strong>
+                      <small>{t(item.descriptionKey)}</small>
                     </span>
                   </label>
                 ))}
@@ -187,23 +192,23 @@ export function GeneratedProblemEditorialDashboard() {
 
               <details className="generated-editorial-details">
                 <summary>
-                  <EyeOff size={14} /> 실패 패턴과 bottleneck
+                  <EyeOff size={14} /> {t("admin.generatedGate.details.summary")}
                 </summary>
                 <div className="generated-editorial-evidence">
                   <div>
-                    <strong>Primary failure</strong>
+                    <strong>{t("admin.generatedGate.details.primaryFailure")}</strong>
                     <p>{classification.primaryFailureMode}</p>
                   </div>
                   <div>
-                    <strong>Ideal bottleneck</strong>
+                    <strong>{t("admin.generatedGate.details.idealBottleneck")}</strong>
                     <p>{classification.idealBottleneck}</p>
                   </div>
                   <div>
-                    <strong>Weak trace</strong>
+                    <strong>{t("admin.generatedGate.details.weakTrace")}</strong>
                     <p>{reviewNotes?.weakTracePattern}</p>
                   </div>
                   <div>
-                    <strong>Good trace</strong>
+                    <strong>{t("admin.generatedGate.details.goodTrace")}</strong>
                     <p>{reviewNotes?.goodTracePattern}</p>
                   </div>
                 </div>
@@ -212,7 +217,7 @@ export function GeneratedProblemEditorialDashboard() {
               <div className="generated-note-row">
                 <textarea
                   className="textarea"
-                  placeholder="Founder editorial note: 논리 구멍, 자료 품질, 데모 적합성"
+                  placeholder={t("admin.generatedGate.note.placeholder")}
                   value={state.note ?? ""}
                   onChange={(event) => updateNote(problem.id, event.target.value)}
                 />
