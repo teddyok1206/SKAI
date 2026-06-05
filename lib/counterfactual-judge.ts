@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { buildBranchDiff } from "@/lib/branch-diff";
-import { getProvider } from "@/lib/providers";
+import { getJudgeProvider } from "@/lib/providers";
 import type {
   Attempt,
   BranchDiff,
@@ -39,7 +39,7 @@ function defaultJudgeModel(provider: ProviderId) {
     groq: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
     xai: process.env.XAI_MODEL ?? "grok-4-fast",
     openrouter: process.env.OPENROUTER_MODEL ?? "openai/gpt-oss-20b",
-    gemini: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
+    gemini: process.env.SKAI_JUDGE_GEMINI_MODEL ?? process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
   };
 
   return models[provider];
@@ -336,7 +336,7 @@ async function tryLlmReport(input: {
   }
 
   try {
-    const provider = getProvider(config.provider);
+    const provider = getJudgeProvider(config.provider);
     const response = await provider.complete({
       provider: config.provider,
       model: config.model,

@@ -29,12 +29,17 @@ OPENROUTER_API_KEY=
 Keep these server-only:
 
 ```bash
-SKAI_JUDGE_MODE=heuristic
+SKAI_JUDGE_MODE=llm
+SKAI_JUDGE_PROVIDER=gemini
+SKAI_JUDGE_MODEL=gemini-2.5-flash-lite
+SKAI_JUDGE_GEMINI_API_KEY=
 SKAI_COUNTERFACTUAL_JUDGE_MODE=heuristic
 SKAI_ALLOW_AUTHENTICATED_PROBLEM_SYNC=false
 ```
 
 Do not expose service-role keys to the browser. The current app does not require a service-role key for the demo path.
+
+`GEMINI_API_KEY` is for user-selected solving traffic. `SKAI_JUDGE_GEMINI_API_KEY` is for SKAI's backend judge traffic. Production smoke must configure the judge-specific key so judge calls can be budgeted, rotated, and rate-limited independently from learner chat. Local development can opt into temporary fallback with `SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK=true`, but this should not be used in production.
 
 ## Supabase Migrations
 
@@ -94,7 +99,7 @@ Expected before external smoke:
 - Supabase URL: pass
 - Supabase anon key: pass
 - Live provider key: pass
-- LLM judge provider key: pass if LLM judge is enabled, otherwise pass in heuristic mode
+- LLM judge provider key: pass. If judge uses Gemini, `SKAI_JUDGE_GEMINI_API_KEY` should be configured.
 - Problem sync policy: pass
 
 This endpoint returns booleans/status text only. It must never expose actual secret values.

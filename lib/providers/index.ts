@@ -3,6 +3,12 @@ import { createOpenAICompatibleProvider } from "@/lib/providers/openai-compatibl
 import type { ModelProvider, ProviderRequest, ProviderResponse } from "@/lib/providers/types";
 import type { ProviderId } from "@/lib/types";
 
+const geminiOpenAIBaseUrl = "https://generativelanguage.googleapis.com/v1beta/openai";
+
+function allowJudgeGeminiKeyFallback() {
+  return process.env.SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK === "true" && process.env.NODE_ENV !== "production";
+}
+
 const providers: Partial<Record<ProviderId, ModelProvider>> = {
   mock: mockProvider,
   openai: createOpenAICompatibleProvider({
@@ -25,7 +31,7 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
   }),
   gemini: createOpenAICompatibleProvider({
     id: "gemini",
-    baseUrl: process.env.GEMINI_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+    baseUrl: process.env.GEMINI_BASE_URL ?? geminiOpenAIBaseUrl,
     apiKey: process.env.GEMINI_API_KEY,
     defaultModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
   }),
@@ -39,6 +45,23 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
 
 export function getProvider(providerId: ProviderId): ModelProvider {
   return providers[providerId] ?? mockProvider;
+}
+
+export function getJudgeProvider(providerId: ProviderId): ModelProvider {
+  if (providerId !== "gemini") {
+    return getProvider(providerId);
+  }
+
+  return createOpenAICompatibleProvider({
+    id: "gemini",
+    baseUrl: process.env.SKAI_JUDGE_GEMINI_BASE_URL ?? process.env.GEMINI_BASE_URL ?? geminiOpenAIBaseUrl,
+    apiKey: process.env.SKAI_JUDGE_GEMINI_API_KEY ?? (allowJudgeGeminiKeyFallback() ? process.env.GEMINI_API_KEY : undefined),
+    defaultModel:
+      process.env.SKAI_JUDGE_GEMINI_MODEL ??
+      process.env.SKAI_JUDGE_MODEL ??
+      process.env.GEMINI_MODEL ??
+      "gemini-2.5-flash-lite",
+  });
 }
 
 export async function completeWithFallback(request: ProviderRequest): Promise<ProviderResponse> {

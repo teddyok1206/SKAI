@@ -4,7 +4,7 @@ import { buildAttachmentContext } from "@/lib/attachment-context";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { normalizeJudgeGraphAnnotations } from "@/lib/judge-graph-annotations";
 import { getLocalizedProblem } from "@/lib/problem-localization";
-import { getProvider } from "@/lib/providers";
+import { getJudgeProvider } from "@/lib/providers";
 import type {
   AxisScore,
   Bottleneck,
@@ -343,7 +343,7 @@ function defaultJudgeModel(provider: ProviderId) {
     groq: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
     xai: process.env.XAI_MODEL ?? "grok-4-fast",
     openrouter: process.env.OPENROUTER_MODEL ?? "openai/gpt-oss-20b",
-    gemini: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
+    gemini: process.env.SKAI_JUDGE_GEMINI_MODEL ?? process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
   };
 
   return models[provider];
@@ -555,7 +555,7 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<Judg
   const startedAt = Date.now();
 
   try {
-    const provider = getProvider(config.provider);
+    const provider = getJudgeProvider(config.provider);
     const response = await provider.complete({
       provider: config.provider,
       model: config.model,

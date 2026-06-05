@@ -262,24 +262,26 @@ XAI_API_KEY=YOUR_XAI_API_KEY
 
 ### Judge Config
 
-Keep judge cheap and stable for first WAN smoke:
-
-```bash
-SKAI_JUDGE_MODE=heuristic
-SKAI_COUNTERFACTUAL_JUDGE_MODE=heuristic
-```
-
-Do not turn on `ensemble` until provider latency/cost is measured on Vercel.
-
-Later LLM judge option:
+Use a backend judge model that is independent from the model a learner selected for solving. The recommended first judge is Gemini Flash-Lite through a judge-specific key:
 
 ```bash
 SKAI_JUDGE_MODE=llm
 SKAI_JUDGE_PROVIDER=gemini
 SKAI_JUDGE_MODEL=gemini-2.5-flash-lite
+SKAI_JUDGE_GEMINI_API_KEY=YOUR_JUDGE_GEMINI_API_KEY
+SKAI_COUNTERFACTUAL_JUDGE_MODE=heuristic
 ```
 
-This uses `GEMINI_API_KEY`, so the matching key must exist.
+Mark `SKAI_JUDGE_GEMINI_API_KEY` as sensitive.
+
+Important separation:
+
+- `GEMINI_API_KEY` is for learner chat when a user explicitly chooses Gemini.
+- `SKAI_JUDGE_GEMINI_API_KEY` is for backend judge/coaching.
+- Local development can temporarily fall back to `GEMINI_API_KEY` only if `SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK=true` and `NODE_ENV` is not production.
+- Production should set `SKAI_JUDGE_GEMINI_API_KEY` so judge traffic can be budgeted, rotated, and rate-limited independently.
+
+Do not turn on `ensemble` until provider latency/cost is measured on Vercel.
 
 ### Safety And Limits
 
@@ -472,6 +474,8 @@ No live provider API key is configured
 
 Check `GEMINI_API_KEY` or whichever provider key you selected.
 
+If health says judge provider failed while `SKAI_JUDGE_MODE=llm` and `SKAI_JUDGE_PROVIDER=gemini`, check `SKAI_JUDGE_GEMINI_API_KEY` first. `GEMINI_API_KEY` is reserved for user solving traffic. Local fallback requires `SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK=true` and never applies in production.
+
 If health says judge provider failed while `SKAI_JUDGE_MODE=heuristic`, that is unexpected. Recheck the env value.
 
 ## Step 10: Verify Static Logo URL
@@ -616,6 +620,7 @@ Fix:
 
 - Confirm selected provider matches key.
 - If provider is Gemini, check `GEMINI_API_KEY`.
+- If judge provider is Gemini, check `SKAI_JUDGE_GEMINI_API_KEY`.
 - Check Vercel function logs.
 - Try mock mode only if the test goal is UI flow rather than live model behavior.
 

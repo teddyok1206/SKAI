@@ -78,6 +78,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - provider별 chat surface mood가 적용됐다.
 - 홈과 풀이 시작 화면은 내부 설명을 줄이고 현재 행동 중심의 미니멀 UI로 정리됐다.
 - Judge pipeline은 heuristic baseline, opt-in LLM judge, opt-in ensemble mode를 지원한다.
+- LLM judge는 사용자 풀이용 모델 선택과 독립된 backend evaluation path다. Gemini judge는 `SKAI_JUDGE_GEMINI_API_KEY`를 우선 사용하고, 사용자 풀이용 Gemini는 계속 `GEMINI_API_KEY`를 사용한다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
 - 공유 화면은 graph skeleton을 첫 구조 학습 표면으로 보여주고, prompt detail/raw transcript는 근거 확인용으로 둔다.
@@ -159,7 +160,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 share의 parent/child full graph 병렬 비교는 `.skai` snapshot이 있는 새 publish에서 복원 가능하다. 오래된 snapshot이나 parent graph가 없는 branch는 여전히 `GraphStateTransition` fallback을 사용한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
-- Judge는 기본값이 아직 heuristic이다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
+- Judge는 LLM mode를 켤 수 있고, Gemini judge key는 사용자 풀이용 key와 분리됐다. Golden calibration runner는 있으나, `SKAI_JUDGE_MODE=llm` 재시작 후 LLM judge 품질을 별도로 검토해야 한다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.

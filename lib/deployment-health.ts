@@ -27,6 +27,10 @@ function hasEnv(name: string) {
   return Boolean(process.env[name]?.trim());
 }
 
+function allowJudgeGeminiKeyFallback() {
+  return process.env.SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK === "true" && process.env.NODE_ENV !== "production";
+}
+
 function safeUrl(value: string | undefined) {
   if (!value?.trim()) {
     return false;
@@ -60,8 +64,36 @@ function judgeProviderConfigured(provider: string | undefined) {
     return true;
   }
 
+  if (provider === "gemini") {
+    return hasEnv("SKAI_JUDGE_GEMINI_API_KEY") || (allowJudgeGeminiKeyFallback() && hasEnv("GEMINI_API_KEY"));
+  }
+
   const envName = providerKeyEnv[provider as ProviderId];
   return envName ? hasEnv(envName) : false;
+}
+
+function judgeProviderDetail(provider: string | undefined) {
+  if (!provider || provider === "mock") {
+    return "Judge provider is mock; no API key is required.";
+  }
+
+  if (provider === "gemini") {
+    if (hasEnv("SKAI_JUDGE_GEMINI_API_KEY")) {
+      return "Judge mode uses Gemini with the dedicated SKAI_JUDGE_GEMINI_API_KEY.";
+    }
+
+    if (hasEnv("GEMINI_API_KEY")) {
+      return allowJudgeGeminiKeyFallback()
+        ? "Judge mode uses Gemini through explicit local GEMINI_API_KEY fallback. Configure SKAI_JUDGE_GEMINI_API_KEY for isolated judge traffic."
+        : "Judge mode uses Gemini, but SKAI_JUDGE_GEMINI_API_KEY is missing. GEMINI_API_KEY is reserved for user solving traffic unless SKAI_ALLOW_JUDGE_GEMINI_KEY_FALLBACK=true in non-production.";
+    }
+
+    return "Judge mode uses Gemini, but SKAI_JUDGE_GEMINI_API_KEY is missing.";
+  }
+
+  return judgeProviderConfigured(provider)
+    ? `Judge mode uses ${provider}; the matching API key is configured.`
+    : `Judge mode uses ${provider}, but the matching API key is missing.`;
 }
 
 function aggregateStatus(checks: DeploymentHealthCheck[]): DeploymentHealthStatus {
@@ -127,9 +159,7 @@ export function getDeploymentHealth(): DeploymentHealthReport {
       judgeMode === "heuristic" || judgeProviderConfigured(judgeProvider) ? "pass" : "fail",
       judgeMode === "heuristic"
         ? "Judge mode is heuristic; no LLM judge key is required."
-        : judgeProviderConfigured(judgeProvider)
-          ? `Judge mode uses ${judgeProvider}; the matching API key is configured.`
-          : `Judge mode uses ${judgeProvider}, but the matching API key is missing.`,
+        : judgeProviderDetail(judgeProvider),
     ),
   );
 
@@ -140,9 +170,7 @@ export function getDeploymentHealth(): DeploymentHealthReport {
       counterfactualJudgeMode !== "llm" || judgeProviderConfigured(counterfactualJudgeProvider) ? "pass" : "fail",
       counterfactualJudgeMode !== "llm"
         ? "Counterfactual judge LLM mode is off."
-        : judgeProviderConfigured(counterfactualJudgeProvider)
-          ? `Counterfactual judge uses ${counterfactualJudgeProvider}; the matching API key is configured.`
-          : `Counterfactual judge uses ${counterfactualJudgeProvider}, but the matching API key is missing.`,
+        : judgeProviderDetail(counterfactualJudgeProvider).replace("Judge mode", "Counterfactual judge"),
     ),
   );
 

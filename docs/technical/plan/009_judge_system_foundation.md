@@ -46,6 +46,7 @@ Excluded:
 - `SKAI_JUDGE_PROVIDER`: provider for single LLM judge. Default: `gemini`.
 - `SKAI_JUDGE_MODEL`: model for single LLM judge. Default follows provider.
 - `SKAI_JUDGE_ENSEMBLE`: comma-separated configs such as `gemini:gemini-2.5-flash-lite,openai:gpt-4.1-nano`.
+- `SKAI_JUDGE_GEMINI_API_KEY`: dedicated Gemini key for backend judge traffic. Production should set this separately from learner chat `GEMINI_API_KEY`.
 
 ## Affected Files
 
