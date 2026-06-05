@@ -87,9 +87,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
 - bilingual language system은 별도 track으로 잡았다. `docs/technical/plan/075_language_system_track.md`는 단순 `ko.ts/en.ts` 이중 관리가 아니라, source locale, status, checksum, protected terms를 가진 copy registry 방식으로 운영하는 계획을 정의한다.
-- language system 076-086이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI, solve flow, graph/viewer, public share chrome, score report chrome 중심의 369개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
+- language system 076-086이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI, solve flow, graph/viewer, public share chrome, score report chrome 중심의 404개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
 - i18n registry는 한 locale이 먼저 수정되면 반대 locale을 `stale` 또는 `missing`으로 표시하는 운영을 전제로 한다. `LanguageToggle`과 localStorage 기반 explicit locale preference hook은 topbar에 붙었고, home hero/topbar/problem browser/auth notice/solve flow/3D Dual Graph/`.skai` viewer/public share chrome/score report chrome은 registry에서 렌더링된다. judge/coaching report는 locale metadata를 저장하고, heuristic/LLM judge는 요청 locale을 반영한다. 문제 본문은 UI copy와 분리된 `Problem.localized` layer로 들어갔고, 3개 seed problem은 영어 problem view와 영어 playbook variant를 가진다. 자료 원문은 source material로 보존하고 번역본은 future derived material로 분리한다. `verify:i18n`은 registry 무결성, source key usage, 공식 hero copy, raw JSX text baseline regression을 함께 검사한다.
-- Admin page header와 `.skai` viewer page title 경로는 registry/fallback copy로 이전했고, raw JSX/attribute source baseline은 149개에서 145개 entry로 줄었다.
+- Admin page header, Admin authoring client, `.skai` viewer page title 경로는 registry/fallback copy로 이전했고, raw JSX/attribute source baseline은 149개에서 87개 entry로 줄었다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
@@ -174,7 +174,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
 - Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
-- i18n source regression gate는 생겼고 baseline도 일부 줄였지만, `scripts/i18n_source_baseline.json`에 남아 있는 raw JSX/attribute text는 계속 줄여야 한다.
+- i18n source regression gate는 생겼고 baseline도 크게 줄였지만, `scripts/i18n_source_baseline.json`에 남아 있는 raw JSX/attribute text는 계속 줄여야 한다.
 - 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization과 reusable logo lockup도 1차 구현됐다.
 - Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
 - Problem solving 중 mark activity는 root `data-skai-activity`로 동기화되며, 모델 처리 중에는 packet density/speed가 올라가고 trace가 쌓이면 artifact node가 pulse한다.
@@ -288,7 +288,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - philosophy/brand copy는 직역하지 않고 ko/en 공식본을 별도로 승인한다.
 - 문제 content localization은 source problem과 derived translation을 분리하는 백본을 만들고 seed problem 영어 view를 추가했다. (1차 완료)
 - `verify:i18n`은 registry check와 source regression check를 함께 수행한다. (완료)
-- seed problem playbook locale variant와 첫 raw JSX baseline reduction slice를 처리했다. (완료)
+- seed problem playbook locale variant와 raw JSX baseline reduction slices를 처리했다. Admin authoring까지 registry 경로로 이전했고 baseline은 87개 entry다. (완료)
 - 다음 구현: raw JSX baseline reduction을 계속 진행하거나 Markdown playbook과 typed app playbook source-of-truth를 통합한다.
 - 완료 조건: `verify:i18n`이 missing/stale/protected-term drift, source key drift, raw JSX text 증가를 검출하고, 주요 route의 copy가 locale registry에서 렌더링된다. (first-impression/solve/viewer/share/judge/problem content/regression backbone 완료)
 

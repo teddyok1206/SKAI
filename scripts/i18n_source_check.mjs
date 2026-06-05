@@ -92,6 +92,10 @@ function shouldIgnoreLiteral(value) {
     return true;
   }
 
+  if (text.includes(";") || /\b(const|function|return|useMemo|useState)\b/.test(text)) {
+    return true;
+  }
+
   return false;
 }
 

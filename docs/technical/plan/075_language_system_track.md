@@ -480,6 +480,7 @@ Result:
 - `scripts/i18n_usage_allowlist.json` explicitly reserves currently unused-but-intentional keys.
 - `scripts/i18n_source_baseline.json` freezes the current raw JSX/attribute text baseline. Future work should reduce this baseline; new raw text that increases it fails the check.
 - Follow-up 088 moved Admin page header copy and the `.skai` viewer page title path away from raw JSX, reducing the hardcoded source baseline from 149 to 145 entries.
+- Follow-up 089 moved Admin authoring copy and fallback draft text into the registry, and tightened the source scanner against TypeScript generic/code-fragment false positives. The hardcoded source baseline is now 87 entries.
 
 Later:
 

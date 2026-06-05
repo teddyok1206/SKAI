@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, FilePlus2, Save } from "lucide-react";
 import { defaultRubric } from "@/data/rubric";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { saveAuthoredProblem } from "@/lib/local-store";
 import type { MaterialKind, Problem, ProblemCategory, ProblemGoalProfile, ProviderId } from "@/lib/types";
 import { useAuthoredProblems } from "@/lib/use-authored-problems";
@@ -79,6 +81,8 @@ function mimeTypeFor(kind: MaterialKind) {
 }
 
 export function AdminAuthoringClient() {
+  const { locale } = useLanguagePreference();
+  const t = (key: string) => getCopy(key, locale);
   const [form, setForm] = useState(initialForm);
   const drafts = useAuthoredProblems();
   const [exportJson, setExportJson] = useState("");
@@ -93,7 +97,7 @@ export function AdminAuthoringClient() {
             {
               id: `${id}-material-1`,
               title: form.materialTitle.trim(),
-              description: form.materialDescription.trim() || "Author-provided local material.",
+              description: form.materialDescription.trim() || getCopy("admin.authoring.default.materialDescription", locale),
               kind: form.materialKind,
               fileName: form.materialFileName.trim() || `${id}-material.txt`,
               mimeType: mimeTypeFor(form.materialKind),
@@ -104,14 +108,14 @@ export function AdminAuthoringClient() {
 
     return {
       id,
-      title: form.title.trim() || "Untitled SKAI problem",
-      subtitle: form.subtitle.trim() || "Local authoring draft",
+      title: form.title.trim() || getCopy("admin.authoring.default.title", locale),
+      subtitle: form.subtitle.trim() || getCopy("admin.authoring.default.subtitle", locale),
       category: form.category,
       difficulty: form.difficulty,
       goalProfile: form.goalProfile,
       estimatedMinutes: Number(form.estimatedMinutes) || 20,
-      statement: form.statement.trim() || "문제 상황을 작성하세요.",
-      userGoal: form.userGoal.trim() || "사용자가 AI와 함께 달성해야 할 목표를 작성하세요.",
+      statement: form.statement.trim() || getCopy("admin.authoring.default.statement", locale),
+      userGoal: form.userGoal.trim() || getCopy("admin.authoring.default.userGoal", locale),
       constraints: lines(form.constraints),
       starterContext: lines(form.starterContext),
       deliverables: lines(form.deliverables),
@@ -120,7 +124,7 @@ export function AdminAuthoringClient() {
       rubric: defaultRubric,
       createdAt: now,
     };
-  }, [form]);
+  }, [form, locale]);
 
   function updateField<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((current) => ({
@@ -139,22 +143,22 @@ export function AdminAuthoringClient() {
     <div className="authoring-layout">
       <section className="panel">
         <div className="panel-header">
-          <p className="eyebrow">Authoring</p>
-          <h2>문제 초안 만들기</h2>
-          <p className="muted">로컬 저장 초안입니다. 저장 후 바로 풀이 화면에서 smoke할 수 있습니다.</p>
+          <p className="eyebrow">{t("admin.authoring.eyebrow")}</p>
+          <h2>{t("admin.authoring.title")}</h2>
+          <p className="muted">{t("admin.authoring.description")}</p>
         </div>
         <div className="panel-body authoring-form">
           <label>
-            <span>Title</span>
+            <span>{t("admin.authoring.field.title")}</span>
             <input className="input" value={form.title} onChange={(event) => updateField("title", event.target.value)} />
           </label>
           <label>
-            <span>Subtitle</span>
+            <span>{t("admin.authoring.field.subtitle")}</span>
             <input className="input" value={form.subtitle} onChange={(event) => updateField("subtitle", event.target.value)} />
           </label>
           <div className="authoring-row">
             <label>
-              <span>Category</span>
+              <span>{t("admin.authoring.field.category")}</span>
               <select className="select" value={form.category} onChange={(event) => updateField("category", event.target.value as ProblemCategory)}>
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -164,7 +168,7 @@ export function AdminAuthoringClient() {
               </select>
             </label>
             <label>
-              <span>Difficulty</span>
+              <span>{t("admin.authoring.field.difficulty")}</span>
               <select
                 className="select"
                 value={form.difficulty}
@@ -180,7 +184,7 @@ export function AdminAuthoringClient() {
           </div>
           <div className="authoring-row">
             <label>
-              <span>Goal profile</span>
+              <span>{t("admin.authoring.field.goalProfile")}</span>
               <select
                 className="select"
                 value={form.goalProfile}
@@ -194,7 +198,7 @@ export function AdminAuthoringClient() {
               </select>
             </label>
             <label>
-              <span>Minutes</span>
+              <span>{t("admin.authoring.field.minutes")}</span>
               <input
                 className="input"
                 min={5}
@@ -205,39 +209,39 @@ export function AdminAuthoringClient() {
             </label>
           </div>
           <label>
-            <span>Problem statement</span>
+            <span>{t("admin.authoring.field.statement")}</span>
             <textarea className="textarea" value={form.statement} onChange={(event) => updateField("statement", event.target.value)} />
           </label>
           <label>
-            <span>User goal</span>
+            <span>{t("admin.authoring.field.userGoal")}</span>
             <textarea className="textarea" value={form.userGoal} onChange={(event) => updateField("userGoal", event.target.value)} />
           </label>
           <label>
-            <span>Constraints, one per line</span>
+            <span>{t("admin.authoring.field.constraints")}</span>
             <textarea className="textarea" value={form.constraints} onChange={(event) => updateField("constraints", event.target.value)} />
           </label>
           <label>
-            <span>Starter context, one per line</span>
+            <span>{t("admin.authoring.field.starterContext")}</span>
             <textarea className="textarea" value={form.starterContext} onChange={(event) => updateField("starterContext", event.target.value)} />
           </label>
           <label>
-            <span>Deliverables, one per line</span>
+            <span>{t("admin.authoring.field.deliverables")}</span>
             <textarea className="textarea" value={form.deliverables} onChange={(event) => updateField("deliverables", event.target.value)} />
           </label>
           <div className="authoring-material">
             <div>
-              <p className="eyebrow">Optional Material</p>
-              <p className="muted">초기 MVP는 하나의 text/extracted material만 저장합니다.</p>
+              <p className="eyebrow">{t("admin.authoring.material.eyebrow")}</p>
+              <p className="muted">{t("admin.authoring.material.description")}</p>
             </div>
             <input
               className="input"
-              placeholder="Material title"
+              placeholder={t("admin.authoring.placeholder.materialTitle")}
               value={form.materialTitle}
               onChange={(event) => updateField("materialTitle", event.target.value)}
             />
             <input
               className="input"
-              placeholder="Description"
+              placeholder={t("admin.authoring.placeholder.materialDescription")}
               value={form.materialDescription}
               onChange={(event) => updateField("materialDescription", event.target.value)}
             />
@@ -255,25 +259,25 @@ export function AdminAuthoringClient() {
               </select>
               <input
                 className="input"
-                placeholder="File name"
+                placeholder={t("admin.authoring.placeholder.fileName")}
                 value={form.materialFileName}
                 onChange={(event) => updateField("materialFileName", event.target.value)}
               />
             </div>
             <textarea
               className="textarea"
-              placeholder="Extracted text or source material"
+              placeholder={t("admin.authoring.placeholder.materialText")}
               value={form.materialText}
               onChange={(event) => updateField("materialText", event.target.value)}
             />
           </div>
           <div className="actions">
             <button className="button primary" onClick={saveDraft} type="button">
-              <Save size={16} /> Save local draft
+              <Save size={16} /> {t("admin.authoring.action.saveDraft")}
             </button>
             {savedProblemId ? (
               <Link className="button" href={`/problems/local/${savedProblemId}`}>
-                Solve draft <ArrowRight size={16} />
+                {t("admin.authoring.action.solveDraft")} <ArrowRight size={16} />
               </Link>
             ) : null}
           </div>
@@ -282,12 +286,12 @@ export function AdminAuthoringClient() {
 
       <aside className="panel">
         <div className="panel-header">
-          <p className="eyebrow">Local Drafts</p>
-          <h2>저장된 문제</h2>
+          <p className="eyebrow">{t("admin.authoring.drafts.eyebrow")}</p>
+          <h2>{t("admin.authoring.drafts.title")}</h2>
         </div>
         <div className="panel-body">
           {drafts.length === 0 ? (
-            <p className="muted">아직 로컬 문제 초안이 없습니다.</p>
+            <p className="muted">{t("admin.authoring.drafts.empty")}</p>
           ) : (
             <div className="material-list">
               {drafts.map((problem) => (
@@ -295,27 +299,30 @@ export function AdminAuthoringClient() {
                   <span>
                     <strong>{problem.title}</strong>
                     <small>
-                      {problem.category} · {problem.difficulty} · {problem.estimatedMinutes}분
+                      {problem.category} · {problem.difficulty} ·{" "}
+                      {locale === "ko"
+                        ? `${problem.estimatedMinutes}${t("admin.authoring.minutesSuffix")}`
+                        : `${problem.estimatedMinutes} ${t("admin.authoring.minutesSuffix")}`}
                     </small>
                   </span>
-                  <span className="material-state">풀기</span>
+                  <span className="material-state">{t("admin.authoring.drafts.solve")}</span>
                 </Link>
               ))}
             </div>
           )}
         </div>
         <div className="panel-body">
-          <h3>Export JSON</h3>
+          <h3>{t("admin.authoring.export.title")}</h3>
           {exportJson ? (
             <pre className="material-text authoring-export">{exportJson}</pre>
           ) : (
-            <p className="muted">저장하면 migration이나 seed file로 옮길 JSON이 여기에 표시됩니다.</p>
+            <p className="muted">{t("admin.authoring.export.empty")}</p>
           )}
         </div>
         <div className="panel-body">
           <div className="compact-empty">
             <FilePlus2 size={18} />
-            <p>다음 slice에서 Supabase-backed publish/edit flow로 확장할 수 있습니다.</p>
+            <p>{t("admin.authoring.nextSlice")}</p>
           </div>
         </div>
       </aside>

@@ -6068,5 +6068,567 @@
     },
     "sourceChecksum": "74993e743d85e15934f53daf94016844e9b8775770cad7980da4feaaf3a83e9e",
     "updatedAt": "2026-06-04T20:33:12.406Z"
+  },
+  {
+    "key": "admin.authoring.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Authoring",
+      "en": "Authoring"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "07a6b1fd0c94535789379447413320528374d6f6e3c8812162abeec80d56a862",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 초안 만들기",
+      "en": "Create a problem draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "315a02c3d592cc60771327dc9ef1fdd1fb26000cc9209dcb68471ac14a53aef7",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로컬 저장 초안입니다. 저장 후 바로 풀이 화면에서 smoke할 수 있습니다.",
+      "en": "This is a locally saved draft. After saving, you can smoke-test it directly in the solving screen."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a1dca8b1d4e1d4ff055dac1dbca2dc7bdd3ef146bc635ae4ef70b37566bafa4b",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Title",
+      "en": "Title"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d46d368970a2b5df721333ae2bbb653eab4962504b35b06594d69965acb17b5b",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.subtitle",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Subtitle",
+      "en": "Subtitle"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d86970c6f415d5574caed5bd46ffca34b7345b9666c2ab792c8d437d70021444",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.category",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Category",
+      "en": "Category"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8005aaccf300456084f9fe1c02cac49fae34657535f38101c8e2dddb463ee19a",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.difficulty",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Difficulty",
+      "en": "Difficulty"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d9653badb1fcc09da1403769412fc4835ec16833c9d52fe3dbab0130b2dba56f",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.goalProfile",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Goal profile",
+      "en": "Goal profile"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "37b67c170f55451af3c9f3744c7461f3d85adf8fcf76b13ef804a93f6ce3a5fb",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.minutes",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Minutes",
+      "en": "Minutes"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "559baa90c8f4ce9486d643ae980c6b8cb78cc93eedaf25be2d4bf5f87dc6e09e",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.statement",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Problem statement",
+      "en": "Problem statement"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5987b0578cb6c2a75403764e6aa72791f99b72394ef5993d8dfa616c520a9659",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.userGoal",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "User goal",
+      "en": "User goal"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ab2099dba836e0a0318f6f50c6e8381e0193d4749911832b96317668a376b166",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.constraints",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Constraints, one per line",
+      "en": "Constraints, one per line"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "949ae418296aeab083d0a7e81c02fb60053bd7aaeda9d9f9cbe5328e66e13c26",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.starterContext",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Starter context, one per line",
+      "en": "Starter context, one per line"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2d5b2fbbae1cf5fb1e43d9486b83f12dce08fdbe680d322fed39f260c7ef95a4",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.field.deliverables",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Deliverables, one per line",
+      "en": "Deliverables, one per line"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "074bd7e7487afe598a2572f00c2f0f5b0c42bb1146a8c31c2e82479be11a11d7",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.material.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Optional Material",
+      "en": "Optional Material"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f4a9bf9c3b3147c5cba6aad824b7200a396e907fb594cc8c54afe20de73b28a3",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.material.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초기 MVP는 하나의 text/extracted material만 저장합니다.",
+      "en": "The initial MVP saves one text/extracted material only."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3171352e399bfe7170b13c044c03c36b2bee5236770ce366b10fa6fac83cd008",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.placeholder.materialTitle",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Material title",
+      "en": "Material title"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0919de4af36cc9f6927257100aa7bd8408acc809c9b1832f6ce39ae2f3e95e0f",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.placeholder.materialDescription",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Description",
+      "en": "Description"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b2cb22fb0a36c44a0cd4203529f8bdf0b6ffa64f73f47861e280f57efc2708cb",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.placeholder.fileName",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "File name",
+      "en": "File name"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "56823848eaab3a0a5949b50205414ac87c85a6aeddf13e2bf565c104455a8782",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.placeholder.materialText",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Extracted text or source material",
+      "en": "Extracted text or source material"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9cb1ec65a994dd80b10fbd597a0a3bf02771d444b3c55b3a1a08e363186ed2cb",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.action.saveDraft",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Save local draft",
+      "en": "Save local draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f97f9ede0374c571e6acdb69fd9e72881d24d6872d2f25301be6de00dd2bcfba",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.action.solveDraft",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Solve draft",
+      "en": "Solve draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "04bea65863a05940bd30c562ad4f99190db31933a9e98136c43d5c5654915097",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.drafts.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local Drafts",
+      "en": "Local Drafts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6391bdde047e6a38b5ab69ac0019639dddb91fa327edd0ef09b901940ddf76b1",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.drafts.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장된 문제",
+      "en": "Saved problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d3f89900395d320f25835e9b0501e5d69b9c50b4ade50d19339bd89f348fb720",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.drafts.empty",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 로컬 문제 초안이 없습니다.",
+      "en": "No local problem drafts yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "703a83f193fb3542d6a1b70b68f84584716dd8cf0f0ccb46185349bd6bfe51d9",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.drafts.solve",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "풀기",
+      "en": "Solve"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b7d27b0f67b2d31eb2d349dc7e2d74a643b353d74d35f580b4babea3071aa7ba",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.export.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Export JSON",
+      "en": "Export JSON"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c96ae3e414c42837fbff22dc230a3750d033e74aa17db92d68f1502e29e54808",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.export.empty",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장하면 migration이나 seed file로 옮길 JSON이 여기에 표시됩니다.",
+      "en": "After saving, JSON for a migration or seed file will appear here."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "35657164095fb30b1984793896a1dcaac4fa1756738fdd2cbfea81d9dbf57c9b",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.nextSlice",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "다음 slice에서 Supabase-backed publish/edit flow로 확장할 수 있습니다.",
+      "en": "A future slice can extend this into a Supabase-backed publish/edit flow."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "16203134bd28637bd25cd4de92b5e34311f6c1bb2a856336af89fb84b118b6e0",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.default.materialDescription",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Author-provided local material.",
+      "en": "Author-provided local material."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bce8f39e7b6c15e7b90734d5edc3d2a819c74b3a5e9ecb211acffa229afb917b",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.default.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "Untitled SKAI problem",
+      "en": "Untitled SKAI problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b22638a253ed2a57495a029c9a36e18d019c758de38f3fe622dfc9039e92906f",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.default.subtitle",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local authoring draft",
+      "en": "Local authoring draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7c2fc682ad497d30936196313c9f617a5e8223381d10d292c11b57d5c9427323",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.default.statement",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 상황을 작성하세요.",
+      "en": "Describe the problem situation."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bf2d5fc5c330f3084edd198d810c22ee27054d2628476016e6d8d98da517f056",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.default.userGoal",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "사용자가 AI와 함께 달성해야 할 목표를 작성하세요.",
+      "en": "Describe the goal the user must achieve with AI."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "a153e602ef3eef28972e77fbd2541455fb77b026a9c5a6c01d30ab6fec309be0",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
+  },
+  {
+    "key": "admin.authoring.minutesSuffix",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "분",
+      "en": "min"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48caf5194a2cec589b089fe0dfdb827076c3d67ed9eb04a7b6e27699e6240c97",
+    "updatedAt": "2026-06-05T16:19:48.846Z"
   }
 ]
