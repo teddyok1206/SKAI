@@ -326,20 +326,34 @@ function buildGraph(trace, branch) {
   [...allPromptNodes, ...allResponseNodes, ...statusNodes].forEach((node) => ensureIncidence(index, node.id));
   [...promptEdges, ...responseEdges, ...statusEdges].forEach((edge) => addEdgeToIndex(index, edge));
 
-  const branchGraph = branch
-    ? {
-        ...branch,
-        breakpointTraceEventId: branch.parentTraceEventId,
-        breakpointNodeId: undefined,
-        breakpointPairId: undefined,
-        clonedTraceEventIds: trace.reduce((acc, item) => {
-          if (item.sourceTraceEventId) {
-            acc[item.id] = item.sourceTraceEventId;
-          }
-          return acc;
-        }, {}),
+  let branchGraph;
+
+  if (branch) {
+    const clonedTraceEventIds = trace.reduce((acc, item) => {
+      if (item.sourceTraceEventId) {
+        acc[item.id] = item.sourceTraceEventId;
       }
-    : undefined;
+      return acc;
+    }, {});
+    const breakpointEvent = trace.find(
+      (item) => item.sourceTraceEventId === branch.parentTraceEventId || item.id === branch.parentTraceEventId,
+    );
+    const breakpointTraceEventId = breakpointEvent?.id;
+    const breakpointNodeId = breakpointTraceEventId
+      ? promptNodeByTraceEventId[breakpointTraceEventId] ?? responseNodeByTraceEventId[breakpointTraceEventId]
+      : undefined;
+    const breakpointPairId = breakpointTraceEventId
+      ? pairByPromptTraceEventId[breakpointTraceEventId] ?? pairByResponseTraceEventId[breakpointTraceEventId]
+      : undefined;
+
+    branchGraph = {
+      ...branch,
+      breakpointTraceEventId,
+      breakpointNodeId,
+      breakpointPairId,
+      clonedTraceEventIds,
+    };
+  }
 
   return {
     attemptId,
@@ -638,4 +652,3 @@ async function main() {
 }
 
 await main();
-

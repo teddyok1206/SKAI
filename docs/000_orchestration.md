@@ -87,6 +87,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - judge/coaching 개발 체계는 `.skai fixture -> derived extension -> unified viewer overlay -> regression` 루프로 고정했다. `fixtures/skai/`의 golden artifacts, `npm run skai:validate`, `npm run judge:fixture`, `npm run judge:regression`이 core contract와 extension 구조를 빠르게 검증한다.
 - `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
+- `.skai` fixture graph는 Prompt edge, Response edge, Status edge, dual node, branch breakpoint anchor invariant를 통과한다. Branch replay fixture도 실제 앱 graph builder와 같이 `breakpointNodeId`와 `breakpointPairId`를 resolve한다.
 - bilingual language system은 별도 track으로 잡았다. `docs/technical/plan/075_language_system_track.md`는 단순 `ko.ts/en.ts` 이중 관리가 아니라, source locale, status, checksum, protected terms를 가진 copy registry 방식으로 운영하는 계획을 정의한다.
 - language system 076-086이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI, solve flow, graph/viewer, public share chrome, score report chrome, admin/operator chrome, local draft chrome, My SKAI account surface 중심의 500개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
 - i18n registry는 한 locale이 먼저 수정되면 반대 locale을 `stale` 또는 `missing`으로 표시하는 운영을 전제로 한다. `LanguageToggle`과 localStorage 기반 explicit locale preference hook은 topbar에 붙었고, home hero/topbar/problem browser/auth notice/solve flow/3D Dual Graph/`.skai` viewer/public share chrome/score report chrome은 registry에서 렌더링된다. judge/coaching report는 locale metadata를 저장하고, heuristic/LLM judge는 요청 locale을 반영한다. 문제 본문은 UI copy와 분리된 `Problem.localized` layer로 들어갔고, 3개 seed problem은 영어 problem view와 영어 playbook variant를 가진다. 자료 원문은 source material로 보존하고 번역본은 future derived material로 분리한다. `verify:i18n`은 registry 무결성, source key usage, 공식 hero copy, raw JSX text baseline regression을 함께 검사한다.
@@ -153,7 +154,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
 - assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
 - 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
-- 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐으므로, 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility를 관찰하는 쪽으로 넘긴다.
+- 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐고 fixture invariant도 통과했다. 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility, messy real-user trace behavior를 관찰하는 쪽으로 넘긴다.
 - Evaluation Overlay는 1차 구현됐지만, edge-native weak-edge annotation은 아직 제한적이다. 현재는 pair-level annotation fallback이 local node/rung/cell styling을 만든다.
 - 공개 share의 parent/child full graph 병렬 비교는 `.skai` snapshot이 있는 새 publish에서 복원 가능하다. 오래된 snapshot이나 parent graph가 없는 branch는 여전히 `GraphStateTransition` fallback을 사용한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.

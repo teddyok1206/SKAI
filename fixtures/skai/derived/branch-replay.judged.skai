@@ -3,7 +3,7 @@
   "extension": ".skai",
   "extensions": {
     "skai.coach.v1": {
-      "artifactHash": "c3203828766e1dbaef7826e33bef71c021168e003c15607788ac28c50fe6fcdb",
+      "artifactHash": "9fae299aace87e3a904bbc9bb60b085aeedc1ac97488edcd3906bb080700fc4c",
       "coachingVersion": "coach.fixture.001",
       "comments": [
         {
@@ -51,13 +51,13 @@
         "kind": "deterministic_fixture",
         "promptVersion": "fixture-coach.001"
       },
-      "inputGraphHash": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "inputGraphHash": "aec6acbfb05ad057779a624be8d1c568a37a01975860ffa59514bd367a40fb36",
       "nextPracticeTargets": [],
       "schemaVersion": "skai.coach.v1",
       "summary": "이 fixture는 사용자가 AI에게 답을 맡기기보다 문제 구조를 좁혀 간 좋은 기준 사례입니다."
     },
     "skai.judge.v1": {
-      "artifactHash": "c3203828766e1dbaef7826e33bef71c021168e003c15607788ac28c50fe6fcdb",
+      "artifactHash": "9fae299aace87e3a904bbc9bb60b085aeedc1ac97488edcd3906bb080700fc4c",
       "axisScores": [
         {
           "axis": "problem_definition",
@@ -152,7 +152,7 @@
         "kind": "deterministic_fixture",
         "promptVersion": "fixture-heuristic.001"
       },
-      "inputGraphHash": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "inputGraphHash": "aec6acbfb05ad057779a624be8d1c568a37a01975860ffa59514bd367a40fb36",
       "needsHumanReview": false,
       "rubricVersion": "rubric.fixture.001",
       "schemaVersion": "skai.judge.v1",
@@ -162,12 +162,12 @@
   "format": "SKAI",
   "integrity": {
     "algorithm": "sha256",
-    "artifactHash": "eefc0d49c0ca3fa6ba4e7955ab2801c1435825ab557c3809d351c965f3a975ba",
+    "artifactHash": "e8e163bf0433baab8d1e3e9a6dbf9afe7086fec3c3e13277e64d6d2e9208fde2",
     "canonicalization": "stable-json-v1",
     "sectionHashes": {
       "attempt": "93553faabd71260dfb362b4d76008258570b0d1e810aa22f5d9c771b2aefe43d",
       "branch": "70f8f3c2942e4e5c6a2212c277eee453cc31126894e9978774dd625b5a67c2e3",
-      "graph": "42dba2c5457055b50867d7f5a1606e66ad6a2a05c858a011286fd83fe4cdc936",
+      "graph": "aec6acbfb05ad057779a624be8d1c568a37a01975860ffa59514bd367a40fb36",
       "manifest": "2eefaf50ef0b7ab25164efcb83519243927db7c33cc4d9280ed5c10b4a75a14a",
       "problem": "ddce7332d94ed97c6b8cec63643c833e09fc19d174a4f6e223b23dc0abc729a1"
     }
@@ -415,7 +415,9 @@
         "annotations": [],
         "attemptId": "fixture-branch-replay",
         "branch": {
-          "breakpointTraceEventId": "fixture-branch-parent-u2",
+          "breakpointNodeId": "prompt:fixture-branch-replay-u2",
+          "breakpointPairId": "pair:fixture-branch-replay-u2:fixture-branch-replay-a2",
+          "breakpointTraceEventId": "fixture-branch-replay-u2",
           "clonedTraceEventIds": {
             "fixture-branch-replay-a1": "fixture-branch-parent-a1",
             "fixture-branch-replay-u1": "fixture-branch-parent-u1",
