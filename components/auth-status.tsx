@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, LogOut } from "lucide-react";
 import { useLanguagePreference } from "@/components/language-toggle";
-import { getCopy } from "@/lib/i18n";
+import { getCopy, localeStorageKey } from "@/lib/i18n";
 import { createSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase";
+import { loadMyPageSnapshot } from "@/lib/supabase-persistence";
 
 export function AuthStatus() {
-  const { locale } = useLanguagePreference();
+  const { locale, setLocale } = useLanguagePreference();
   const [email, setEmail] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"sign-in" | "sign-out" | null>(null);
@@ -23,11 +24,27 @@ export function AuthStatus() {
 
     let mounted = true;
 
+    async function applyProfileLocaleIfUnset() {
+      if (typeof window === "undefined" || window.localStorage.getItem(localeStorageKey)) {
+        return;
+      }
+
+      const snapshot = await loadMyPageSnapshot();
+
+      if (mounted && snapshot?.authenticated && snapshot.profile?.preferredLocale) {
+        setLocale(snapshot.profile.preferredLocale);
+      }
+    }
+
     void supabase.auth
       .getUser()
       .then(({ data }) => {
         if (mounted) {
           setEmail(data.user?.email ?? null);
+        }
+
+        if (data.user) {
+          void applyProfileLocaleIfUnset();
         }
       })
       .catch(() => {
@@ -41,6 +58,11 @@ export function AuthStatus() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setEmail(session?.user.email ?? null);
       setPendingAction(null);
+
+      if (session?.user) {
+        void applyProfileLocaleIfUnset();
+      }
+
       router.refresh();
     });
 
@@ -48,7 +70,7 @@ export function AuthStatus() {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [locale, router, supabase]);
+  }, [locale, router, setLocale, supabase]);
 
   if (!isConfigured || !supabase) {
     return (

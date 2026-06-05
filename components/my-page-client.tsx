@@ -264,6 +264,7 @@ export function MyPageClient() {
                 <Save size={14} /> {t("myPage.profile.title")}
               </p>
               <h2>{t("myPage.profile.description")}</h2>
+              <p className="muted">{t("myPage.profile.usage")}</p>
             </div>
             <div className="panel-body my-page-profile-form">
               <label>

@@ -8188,5 +8188,24 @@
     },
     "sourceChecksum": "856e8abf5e29840b03503c80cc0c9452eab70e5f45b8d01b9beeaad69e3dcc5b",
     "updatedAt": "2026-06-05T16:46:16.740Z"
+  },
+  {
+    "key": "myPage.profile.usage",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt",
+      "Response"
+    ],
+    "values": {
+      "ko": "이 profile은 공개 share의 Prompt/Response 파트별 댓글 작성자명과 로그인 사용자의 초기 언어 설정에 사용됩니다.",
+      "en": "This profile is used for Prompt/Response comment author labels on public shares and for the signed-in user's initial language preference."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2dcd7a5b69db6f0d3b3dad577b87f06a301b322b67dc8b7e9612644ca1a9f2b0",
+    "updatedAt": "2026-06-05T16:59:14.836Z"
   }
 ]

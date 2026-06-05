@@ -1,3 +1,4 @@
+import type { MyPageSnapshot } from "@/lib/my-page";
 import type { Attempt, FounderCohortSnapshot, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
 
 export async function syncAttemptToSupabase(attempt: Attempt, problem: Problem) {
@@ -136,4 +137,14 @@ export async function loadFounderCohortFromSupabase(): Promise<FounderCohortSnap
   }
 
   return (await response.json()) as FounderCohortSnapshot;
+}
+
+export async function loadMyPageSnapshot(): Promise<MyPageSnapshot | null> {
+  const response = await fetch("/api/me", { cache: "no-store" }).catch(() => null);
+
+  if (!response?.ok) {
+    return null;
+  }
+
+  return (await response.json()) as MyPageSnapshot;
 }

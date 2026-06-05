@@ -87,11 +87,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `npm run skai:viewer-smoke`는 derived `.judged.skai`가 unified viewer/extension registry에서 읽을 수 있는 필드를 갖췄는지 확인하고, `npm run verify:skai`는 `.skai` validate, viewer smoke, judge regression, typecheck, lint를 한 번에 실행한다.
 - `.skai` optional extension으로 `skai.judge.v1`, `skai.coach.v1` 타입과 viewer registry slot을 추가했다. 이 extension들은 core graph를 수정하지 않고 `pairId`/`traceEventId`/`attemptId` 같은 stable id를 참조한다.
 - bilingual language system은 별도 track으로 잡았다. `docs/technical/plan/075_language_system_track.md`는 단순 `ko.ts/en.ts` 이중 관리가 아니라, source locale, status, checksum, protected terms를 가진 copy registry 방식으로 운영하는 계획을 정의한다.
-- language system 076-086이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI, solve flow, graph/viewer, public share chrome, score report chrome, admin/operator chrome, local draft chrome, My SKAI account surface 중심의 499개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
+- language system 076-086이 완료됐다. `docs/design/004_copy_inventory.md`는 copy posture를 분류하고, `lib/i18n/copy-registry.json`은 first-impression UI, solve flow, graph/viewer, public share chrome, score report chrome, admin/operator chrome, local draft chrome, My SKAI account surface 중심의 500개 entry를 가진다. `npm run i18n:inventory`, `npm run i18n:check`, `npm run i18n:update`, `npm run i18n:draft`, `npm run verify:i18n`이 있다.
 - i18n registry는 한 locale이 먼저 수정되면 반대 locale을 `stale` 또는 `missing`으로 표시하는 운영을 전제로 한다. `LanguageToggle`과 localStorage 기반 explicit locale preference hook은 topbar에 붙었고, home hero/topbar/problem browser/auth notice/solve flow/3D Dual Graph/`.skai` viewer/public share chrome/score report chrome은 registry에서 렌더링된다. judge/coaching report는 locale metadata를 저장하고, heuristic/LLM judge는 요청 locale을 반영한다. 문제 본문은 UI copy와 분리된 `Problem.localized` layer로 들어갔고, 3개 seed problem은 영어 problem view와 영어 playbook variant를 가진다. 자료 원문은 source material로 보존하고 번역본은 future derived material로 분리한다. `verify:i18n`은 registry 무결성, source key usage, 공식 hero copy, raw JSX text baseline regression을 함께 검사한다.
 - Admin page header, Admin authoring client, Generated Problem Gate, local draft surfaces, `.skai` viewer page title 경로는 registry/fallback copy로 이전했고, raw JSX/attribute source baseline은 149개에서 72개 entry로 줄었다.
 - 공유 화면에는 초보자도 graph 용어 없이 읽을 수 있는 problem/material/process/checking universal layer가 있다.
 - Publish/share flow는 local snapshot 저장, remote attempt sync, remote published snapshot sync 순서를 보장하며, share page는 Supabase/local fallback을 확인하는 동안 loading state를 보여준다.
+- 공유는 최종 답변 게시가 아니라 사용자의 문제 해결 방식, Prompt sequence, Response 흐름, `.skai` Artifact를 함께 공개하고 특정 Prompt/Response 파트에 댓글을 다는 학습 루프다.
 - Score report는 Intelligence Mirror로 시작하며 intent, control, verification, artifact 형성 정도를 먼저 보여준다.
 - 공유 화면의 prompt skeleton 카드에는 trace event별 댓글과 답글을 남길 수 있다.
 - 공개 댓글은 email/phone/API-key-like text를 저장 전 redaction하고, script-like content와 excessive links를 차단하는 1차 privacy guardrail을 지난다.
@@ -297,6 +298,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Google login 이후 사용자가 자신의 계정, display identity, privacy/data control, orchestration summary를 확인할 수 있는 `/me` 마이페이지를 만든다. (완료: `docs/technical/plan/092_user_mypage_identity_surface.md`)
 - 백엔드는 얇은 `user_profiles` 테이블과 user-scoped summary API로 시작한다. (완료: `supabase/migrations/011_user_profiles.sql`, `/api/me`, `/api/me/profile`)
 - 마이페이지는 점수 경쟁판이 아니라 개인 `Trace`/`Artifact`/공개 상태/데이터 소유권 제어실이어야 한다.
+- Profile identity는 share/comment loop와 연결되어야 한다. `default_author_label`은 Prompt/Response 파트별 댓글 작성 기본 이름으로 쓰이고, `preferred_locale`은 로그인 사용자의 초기 language preference로 쓰인다. (완료: `docs/technical/plan/093_profile_identity_integration.md`)
 - 이 slice는 홈페이지 redesign을 다루지 않는다.
 - 완료 조건: 로그인 사용자가 `/me`에서 계정/profile/orchestration summary/recent artifact를 보고, 비로그인 사용자는 sign-in CTA와 local demo 안내를 본다. (완료)
 

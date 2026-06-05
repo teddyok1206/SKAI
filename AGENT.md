@@ -40,6 +40,8 @@ The current goal is not to build a full Baekjoon-scale platform. The first goal 
 - Make beginner education and expert benchmarking compatible, but do not assume they need the same UX.
 - Design around real unclear problems, not only clean benchmark tasks.
 - Respect data ownership and consent from the beginning. Shared prompt traces must have a deliberate privacy model.
+- Treat sharing as a core SKAI learning loop: users should be able to share their problem-solving process, prompt sequence, model responses, and `.skai` Artifact, then discuss specific Prompt/Response parts through trace-attached comments.
+- Profile identity must support that sharing loop. Public display names, default author labels, and privacy settings should serve trace/artifact discussion, not generic social networking or leaderboard behavior.
 
 ## Demo Priorities
 

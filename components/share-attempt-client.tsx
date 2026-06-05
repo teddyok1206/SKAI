@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -42,6 +42,7 @@ import {
   createPromptCommentInSupabase,
   deletePromptCommentInSupabase,
   loadPromptCommentsFromSupabase,
+  loadMyPageSnapshot,
   loadPublishedAttemptFromSupabase,
   reportPromptCommentInSupabase,
   updatePromptCommentInSupabase,
@@ -179,6 +180,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const loadedAttemptId = attempt?.attemptId;
   const [comments, setComments] = useState<PromptComment[]>([]);
   const [authorName, setAuthorName] = useState("SKAI learner");
+  const authorNameTouchedRef = useRef(false);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
@@ -186,6 +188,26 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
   const [commentNotice, setCommentNotice] = useState("");
   const [artifactNotice, setArtifactNotice] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void loadMyPageSnapshot().then((snapshot) => {
+      if (cancelled || authorNameTouchedRef.current || !snapshot?.authenticated) {
+        return;
+      }
+
+      const profileAuthorName = snapshot.profile?.defaultAuthorLabel || snapshot.profile?.displayName;
+
+      if (profileAuthorName) {
+        setAuthorName(profileAuthorName.slice(0, 40));
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -835,7 +857,10 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
                 className="input"
                 maxLength={40}
                 value={authorName}
-                onChange={(event) => setAuthorName(event.target.value)}
+                onChange={(event) => {
+                  authorNameTouchedRef.current = true;
+                  setAuthorName(event.target.value);
+                }}
               />
             </label>
             <p className="muted">{t("share.comment.description")}</p>

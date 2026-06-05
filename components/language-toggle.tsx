@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { getCopy, localeStorageKey, normalizeLocale, supportedLocales, type Locale } from "@/lib/i18n";
 
 type LanguageChangeEvent = CustomEvent<{ locale: Locale }>;
@@ -40,13 +40,13 @@ export function useLanguagePreference(): { locale: Locale; setLocale: (nextLocal
     document.documentElement.lang = locale;
   }, [locale]);
 
-  function setLocale(nextLocale: Locale) {
+  const setLocale = useCallback((nextLocale: Locale) => {
     if (typeof window !== "undefined") {
       window.localStorage.setItem(localeStorageKey, nextLocale);
       const event: LanguageChangeEvent = new CustomEvent("skai:locale-change", { detail: { locale: nextLocale } });
       window.dispatchEvent(event);
     }
-  }
+  }, []);
 
   return { locale, setLocale };
 }

@@ -26,6 +26,29 @@ const commentDeleteRequestSchema = z.object({
   attemptId: z.string().min(1).max(120),
 });
 
+function isGenericAuthorLabel(value: string) {
+  const normalized = value.trim().toLowerCase();
+  return !normalized || normalized === "skai learner";
+}
+
+async function profileAuthorLabel(
+  supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>,
+  user: { id: string; email?: string | null },
+) {
+  const emailFallback = user.email?.split("@")[0]?.trim() || "SKAI learner";
+  const result = await supabase
+    .from("user_profiles")
+    .select("default_author_label,display_name")
+    .eq("user_id", user.id)
+    .maybeSingle<{ default_author_label: string | null; display_name: string | null }>();
+
+  if (result.error) {
+    return emailFallback;
+  }
+
+  return result.data?.default_author_label?.trim() || result.data?.display_name?.trim() || emailFallback;
+}
+
 function rowToComment(row: {
   id: string;
   attempt_id: string;
@@ -122,9 +145,11 @@ export async function POST(request: Request) {
   }
 
   const { comment } = parsed.data;
+  const fallbackAuthorName = await profileAuthorLabel(supabase, user);
+  const authorName = isGenericAuthorLabel(comment.authorName) ? fallbackAuthorName : comment.authorName;
   const moderation = moderateComment({
     body: comment.body,
-    authorName: comment.authorName,
+    authorName,
     maxBodyChars: operationGuardrails.maxCommentBodyChars,
   });
 
@@ -184,7 +209,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const authorLabel = safeComment.authorName.trim() || user.email?.split("@")[0] || "SKAI learner";
+  const authorLabel = safeComment.authorName.trim() || fallbackAuthorName;
   const { error } = await supabase.from("prompt_comments").insert({
     id: safeComment.id,
     attempt_id: safeComment.attemptId,
