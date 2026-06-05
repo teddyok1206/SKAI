@@ -15,7 +15,7 @@ export function LocalProblemSolver({ problemId }: { problemId: string }) {
     return (
       <section className="panel">
         <div className="panel-header">
-          <p className="eyebrow">Local Draft</p>
+          <p className="eyebrow">{t("solve.localDraft.eyebrow")}</p>
           <h2>{t("solve.localDraft.notFoundTitle")}</h2>
         </div>
         <div className="panel-body">

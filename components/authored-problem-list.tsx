@@ -2,20 +2,30 @@
 
 import Link from "next/link";
 import { ArrowRight, BarChart3, Clock, Layers3 } from "lucide-react";
+import { useLanguagePreference } from "@/components/language-toggle";
+import { getCopy } from "@/lib/i18n";
 import { useAuthoredProblems } from "@/lib/use-authored-problems";
 import type { Problem } from "@/lib/types";
 
-const categoryLabel: Record<Problem["category"], string> = {
-  workplace: "업무",
-  research: "자료조사",
-  creative: "창작",
-  data_analysis: "데이터",
-  coding: "코딩",
-  strategy: "전략",
+const categoryCopyKeys: Record<Problem["category"], string> = {
+  workplace: "problemBrowser.category.workplace",
+  research: "problemBrowser.category.research",
+  creative: "problemBrowser.category.creative",
+  data_analysis: "problemBrowser.category.dataAnalysis",
+  coding: "problemBrowser.category.coding",
+  strategy: "problemBrowser.category.strategy",
+};
+
+const difficultyCopyKeys: Record<Problem["difficulty"], string> = {
+  intro: "problemBrowser.difficulty.intro",
+  standard: "problemBrowser.difficulty.standard",
+  advanced: "problemBrowser.difficulty.advanced",
 };
 
 export function AuthoredProblemList() {
+  const { locale } = useLanguagePreference();
   const problems = useAuthoredProblems();
+  const t = (key: string) => getCopy(key, locale);
 
   if (problems.length === 0) {
     return null;
@@ -24,29 +34,32 @@ export function AuthoredProblemList() {
   return (
     <>
       <section className="section-heading">
-        <p className="eyebrow">Local Drafts</p>
-        <h2>직접 만든 문제</h2>
+        <p className="eyebrow">{t("localDraft.list.eyebrow")}</p>
+        <h2>{t("localDraft.list.title")}</h2>
       </section>
-      <section className="grid problem-grid" aria-label="Authored problem list">
+      <section className="grid problem-grid" aria-label={t("localDraft.list.aria")}>
         {problems.map((problem) => (
           <article className="card problem-card local-draft-card" key={problem.id}>
             <div>
               <div className="tag-row">
                 <span className="tag">
-                  <Layers3 size={13} /> {categoryLabel[problem.category]}
+                  <Layers3 size={13} /> {t(categoryCopyKeys[problem.category])}
                 </span>
                 <span className="tag">
-                  <Clock size={13} /> {problem.estimatedMinutes}분
+                  <Clock size={13} />{" "}
+                  {locale === "ko"
+                    ? `${problem.estimatedMinutes}${t("localDraft.list.minutesSuffix")}`
+                    : `${problem.estimatedMinutes} ${t("localDraft.list.minutesSuffix")}`}
                 </span>
                 <span className="tag">
-                  <BarChart3 size={13} /> {problem.difficulty}
+                  <BarChart3 size={13} /> {t(difficultyCopyKeys[problem.difficulty])}
                 </span>
               </div>
               <h2>{problem.title}</h2>
               <p className="muted">{problem.subtitle}</p>
             </div>
             <Link className="button" href={`/problems/local/${problem.id}`}>
-              초안 풀기 <ArrowRight size={16} />
+              {t("localDraft.list.action.solve")} <ArrowRight size={16} />
             </Link>
           </article>
         ))}

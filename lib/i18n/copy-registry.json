@@ -7062,5 +7062,101 @@
     },
     "sourceChecksum": "26f1ea51a0b21b3ebed8ba8d587d009f97836d4564a4bbadffd9f6899127e04e",
     "updatedAt": "2026-06-05T16:26:02.155Z"
+  },
+  {
+    "key": "localDraft.list.eyebrow",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local Drafts",
+      "en": "Local Drafts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6391bdde047e6a38b5ab69ac0019639dddb91fa327edd0ef09b901940ddf76b1",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "localDraft.list.title",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "직접 만든 문제",
+      "en": "Authored problems"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "84e513b17d56a2e98de96e45f9f774e8f322082def3ad71751e2f4f6e4a5a02b",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "localDraft.list.aria",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Authored problem list",
+      "en": "Authored problem list"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ecd75df4cbdd0c4de901ee1393214ba2db6b84fa37e069a7357f4560413931c1",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "localDraft.list.action.solve",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초안 풀기",
+      "en": "Solve draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "49dcdadf24806fa3babd603b4a146590e03d1eeb63d33f8e673310ad377d9ee5",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "localDraft.list.minutesSuffix",
+    "domain": "problem_browser",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "분",
+      "en": "min"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48caf5194a2cec589b089fe0dfdb827076c3d67ed9eb04a7b6e27699e6240c97",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "solve.localDraft.eyebrow",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local Draft",
+      "en": "Local Draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e519a5ab4e32b2c9baab3c6037b8d7077e7024f8da3eb2f4ed9c9a5928336fc9",
+    "updatedAt": "2026-06-05T16:29:46.062Z"
   }
 ]

@@ -1,31 +1,7 @@
 {
-  "generatedAt": "2026-06-05T16:26:52.291Z",
+  "generatedAt": "2026-06-05T16:30:23.433Z",
   "note": "Current raw JSX text/attribute baseline. New raw user-facing text should go through lib/i18n/copy-registry.json instead of increasing this baseline.",
   "hardcodedText": [
-    {
-      "file": "components/authored-problem-list.tsx",
-      "attribute": "aria-label",
-      "text": "Authored problem list",
-      "count": 1
-    },
-    {
-      "file": "components/authored-problem-list.tsx",
-      "attribute": "text",
-      "text": "Local Drafts",
-      "count": 1
-    },
-    {
-      "file": "components/authored-problem-list.tsx",
-      "attribute": "text",
-      "text": "직접 만든 문제",
-      "count": 1
-    },
-    {
-      "file": "components/authored-problem-list.tsx",
-      "attribute": "text",
-      "text": "초안 풀기",
-      "count": 1
-    },
     {
       "file": "components/branch-tree-explorer.tsx",
       "attribute": "text",
@@ -132,12 +108,6 @@
       "file": "components/graph-state-transition-view.tsx",
       "attribute": "text",
       "text": "pair",
-      "count": 1
-    },
-    {
-      "file": "components/local-problem-solver.tsx",
-      "attribute": "text",
-      "text": "Local Draft",
       "count": 1
     },
     {

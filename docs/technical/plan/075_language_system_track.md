@@ -482,6 +482,7 @@ Result:
 - Follow-up 088 moved Admin page header copy and the `.skai` viewer page title path away from raw JSX, reducing the hardcoded source baseline from 149 to 145 entries.
 - Follow-up 089 moved Admin authoring copy and fallback draft text into the registry, and tightened the source scanner against TypeScript generic/code-fragment false positives. The hardcoded source baseline is now 87 entries.
 - Follow-up 090 moved Generated Problem Gate operator copy and editorial checklist labels into the registry. The hardcoded source baseline is now 77 entries.
+- Follow-up 091 moved local draft list/not-found chrome into the registry and reused problem browser category/difficulty keys. The hardcoded source baseline is now 72 entries.
 
 Later:
 
