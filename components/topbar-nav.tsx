@@ -13,6 +13,7 @@ export function TopbarNav() {
     <nav className="nav" aria-label={getCopy("nav.aria.primary", locale)}>
       <Link href="/">{getCopy("nav.problems", locale)}</Link>
       <Link href="/admin">{getCopy("nav.admin", locale)}</Link>
+      <Link href="/me">{getCopy("nav.mySkai", locale)}</Link>
       <LanguageToggle />
       <ThemeSelector />
       <AuthStatus />

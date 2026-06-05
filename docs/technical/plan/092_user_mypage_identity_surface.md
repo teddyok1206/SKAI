@@ -213,13 +213,9 @@ Files:
 UI direction:
 
 - 카드 남발 금지. full-width bands + compact panels.
-- 첫 화면은 “계정 정보”보다 “My SKAI graph control surface” 느낌이어야 한다.
-- 상단에 3-spine mini graph summary:
-  - Prompt spine count
-  - Response spine count
-  - Status/artifact count
-  - published artifact count
-- 그래프는 decorative가 아니라 실제 summary count와 연결한다.
+- 첫 화면은 “계정 정보”보다 “My SKAI control surface” 느낌이어야 한다.
+- 상단 summary는 그래프 UI가 아니라 compact metrics로 충분하다.
+- Prompt, Response, judged attempt, published artifact count처럼 실제 trace 데이터와 연결된 수치만 노출한다.
 - 설정 form은 아래쪽 compact panel로 둔다.
 
 Copy:
@@ -227,27 +223,6 @@ Copy:
 - `myPage.*` registry key 추가
 - 한국어/English 모두 approved 또는 draft/stale 규칙 준수
 - `SKAI`, `.skai`, `Orchestration`, `Trace`, `Artifact`, `3D Dual Graph` protected terms 유지
-
-## 홈페이지 graph-like 아이디어와 분리
-
-홈페이지 자체를 graph-like하게 만드는 아이디어는 좋다. 다만 이 slice에서 같이 구현하지 않는다.
-
-이유:
-
-- 마이페이지는 account/privacy/backend shape가 핵심이다.
-- 홈페이지 graph-like UI는 first impression/brand/navigation 정보 구조가 핵심이다.
-- 둘을 동시에 바꾸면 UX 회귀 원인을 분리하기 어렵다.
-
-후속 slice 후보:
-
-- `093_home_graph_entry_surface`
-- 홈 hero를 “문제 목록 위 장식”이 아니라 `Intent + Materials -> Orchestration -> Artifact`의 실제 entry map으로 재구성한다.
-- 각 node는 실제 route로 이어진다.
-  - Intent: 문제 선택
-  - Materials: 자료 기반 문제
-  - Orchestration: 풀이/trace
-  - Artifact: `.skai` viewer/share
-- 단, landing page처럼 설명문이 길어지지 않게 한다.
 
 ## 구현 순서
 
@@ -321,6 +296,27 @@ Copy:
 - 새 UI copy는 registry에서 렌더링된다.
 - 기존 solve/share/viewer/judge 회귀가 없다.
 
+## 구현 결과
+
+- `supabase/migrations/011_user_profiles.sql`을 추가했다.
+- `lib/my-page.ts`에 My SKAI snapshot/profile/summary 타입을 추가했다.
+- `GET /api/me`는 Supabase session user 기준으로 profile fallback, attempts, trace, published share, comments summary를 반환한다.
+- `PATCH /api/me/profile`은 display name, bio, preferred locale, default author label만 저장한다.
+- `/me` route와 `MyPageClient`를 추가했다.
+- topbar에 `My SKAI` 링크를 추가했다.
+- 마이페이지는 compact metrics, account identity, SKAI Profile form, Data control, local browser data, recent artifacts, privacy/export section으로 구성된다.
+- 홈페이지 redesign 또는 graph-style homepage 작업은 포함하지 않았다.
+- `myPage.*`와 `nav.mySkai` copy registry key를 추가했다.
+- Supabase deployment checklist와 Vercel first deployment guide에 `011_user_profiles.sql`을 추가했다.
+
+## 검증 결과
+
+- `npm run verify:i18n` 통과.
+- `conda run -n SKAI npm run typecheck` 통과.
+- `conda run -n SKAI npm run lint` 통과.
+- `conda run -n SKAI npm run build` 통과.
+- `npm run verify:skai` 통과.
+
 ## 상태
 
-- 계획 완료. 구현 전.
+- 완료.

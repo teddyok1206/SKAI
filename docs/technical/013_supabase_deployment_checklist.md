@@ -52,6 +52,7 @@ Apply migrations in order:
 008_seed_demo_problems_and_harden_problem_rls.sql
 009_attempt_solving_mode.sql
 010_prompt_comment_edit_delete_reports.sql
+011_user_profiles.sql
 ```
 
 Migration `008` does two important things:

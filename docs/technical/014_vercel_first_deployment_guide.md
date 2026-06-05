@@ -90,6 +90,7 @@ supabase/migrations/007_counterfactual_report.sql
 supabase/migrations/008_seed_demo_problems_and_harden_problem_rls.sql
 supabase/migrations/009_attempt_solving_mode.sql
 supabase/migrations/010_prompt_comment_edit_delete_reports.sql
+supabase/migrations/011_user_profiles.sql
 ```
 
 Important:

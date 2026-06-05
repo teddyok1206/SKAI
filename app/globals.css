@@ -1185,6 +1185,114 @@ h3 {
   border-color: color-mix(in srgb, var(--gold) 36%, var(--line));
 }
 
+.my-page-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.my-page-hero h1 {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: 0;
+}
+
+.my-page-panel {
+  max-width: 860px;
+}
+
+.my-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.my-page-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.my-page-metric,
+.my-page-local-grid > div,
+.my-page-field-list > div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.my-page-metric span,
+.my-page-local-grid span,
+.my-page-field-list span,
+.my-page-profile-form label > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.my-page-metric strong {
+  font-size: 20px;
+}
+
+.my-page-field-list,
+.my-page-profile-form,
+.my-page-data-list,
+.my-page-recent-list {
+  display: grid;
+  gap: 12px;
+}
+
+.my-page-field-list strong {
+  overflow-wrap: anywhere;
+}
+
+.my-page-profile-form label {
+  display: grid;
+  gap: 7px;
+}
+
+.my-page-profile-form .textarea {
+  min-height: 96px;
+}
+
+.my-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.my-page-data-list p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.my-page-local-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.my-page-recent-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.my-page-recent-row h3 {
+  margin: 0 0 6px;
+}
+
 .founder-review {
   margin-top: 18px;
 }
@@ -4436,7 +4544,17 @@ summary {
   }
 
   .review-row-main,
-  .review-note {
+  .review-note,
+  .my-page-grid,
+  .my-page-recent-row {
+    grid-template-columns: 1fr;
+  }
+
+  .my-page-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .my-page-local-grid {
     grid-template-columns: 1fr;
   }
 

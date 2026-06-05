@@ -7158,5 +7158,1035 @@
     },
     "sourceChecksum": "e519a5ab4e32b2c9baab3c6037b8d7077e7024f8da3eb2f4ed9c9a5928336fc9",
     "updatedAt": "2026-06-05T16:29:46.062Z"
+  },
+  {
+    "key": "nav.mySkai",
+    "domain": "navigation",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "My SKAI",
+      "en": "My SKAI"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "616399aa6f64a62ff0a34bd279b9d46005ff046fda5fe1562026a237b5230374",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.loading",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "My SKAI를 불러오는 중입니다.",
+      "en": "Loading My SKAI."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3c8037f071786e4f33492f14d8fe228ef6be6dc59e1e22bcd3037ceaecb765c4",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.hero.eyebrow",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "My SKAI",
+      "en": "My SKAI"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "616399aa6f64a62ff0a34bd279b9d46005ff046fda5fe1562026a237b5230374",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.hero.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Orchestration"
+    ],
+    "values": {
+      "ko": "나의 Orchestration 기록",
+      "en": "My Orchestration record"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d70fa29cd2f4d0bce9736f6ea541e99ddd7f5f310180fd02b5d59d500a4a998f",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.hero.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "계정, 공개 이름, Trace 저장 상태, 최근 Artifact를 한 곳에서 확인합니다.",
+      "en": "Review your account, public name, Trace storage state, and recent Artifacts in one place."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3840fc0d6bcbf6c08320b31ed0ab0e28b82242cd0bff757f15c80fabf3fef088",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.auth.title",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그인이 필요합니다.",
+      "en": "Sign in required."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "72b31b543aa23b2c5da7627cb8e94f2a9df606d6ef04442dbea6c22187066e5b",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.auth.description",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI",
+      "Artifact"
+    ],
+    "values": {
+      "ko": "My SKAI는 Supabase login으로 동기화된 attempt와 공개 Artifact를 보여줍니다. 로컬 데모 데이터는 이 브라우저에만 남아 있습니다.",
+      "en": "My SKAI shows attempts and public Artifacts synced through Supabase login. Local demo data stays in this browser only."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3029c6e852a509c1d1eb60a34c4ea4c315d2ea7de65b7b66db2f6dfffa9ceb57",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.auth.signIn",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Google로 로그인",
+      "en": "Sign in with Google"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "23807ad5067e8ae8399ef65931bb11e13f33b2af6165c0737f87c96ac46da9f7",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.auth.notConfigured",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Supabase가 설정되지 않아 local demo mode로 표시됩니다.",
+      "en": "Supabase is not configured, so this page is shown in local demo mode."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b905c702d35182c97a30613d6b184b2c6ad65a6342a14d4c1183d5ea7ad57ad1",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.reason.profileUnavailable",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "프로필 테이블 migration이 아직 적용되지 않았습니다. 계정 요약은 계속 볼 수 있습니다.",
+      "en": "The profile migration has not been applied yet. Account summary remains available."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c70d6657d3fdbeef06d6cf9857d1ea6977b754f0c51079359b0333fe009b913c",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "계정",
+      "en": "Account"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "57d50ab17f3ad3fab93f7baed42e34e8d75881326cce081341c17d7290f5e750",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.email",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Email",
+      "en": "Email"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d4e6b766603816621dd1f56773955156e4ae0a08b12c16647b078b9463281251",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.provider",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Provider",
+      "en": "Provider"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c57d74e0829b343075c3b9ac36fbdcf3b79888097ec5b6f0bd9bea5a21da6af7",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.createdAt",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Created",
+      "en": "Created"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7f5b553f43fd78fc3112cf62c2eebf9360799d21e8b9b39b7ef47104ebbd356f",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.lastSignInAt",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Last sign-in",
+      "en": "Last sign-in"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "90b234dc93f3e23ea7df04b2a5dd72daf2f99cd22c1a09223432336cd25d1d14",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.identity.unknown",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "확인 불가",
+      "en": "Unknown"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2b6bed38984853516d5106d903c85d39426d25bf2136e406a4cb2e5a262eb06f",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Orchestration"
+    ],
+    "values": {
+      "ko": "Orchestration snapshot",
+      "en": "Orchestration snapshot"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e7eb9d62f841817e35e7a373cf2f6d32689decb6902c073332aacbc85422159a",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.attempts",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Attempts",
+      "en": "Attempts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6593fba74d4975c2ba190ee0671d8456654a8ade8da38414783e4838ed67c6e6",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.judged",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Judged",
+      "en": "Judged"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8c923fa5a10a86c8a4a0a006312a21f5759d62f972f72c086ffd7ad4617834df",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.published",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Published",
+      "en": "Published"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2a27d63fe819c773b07ace838c9d7f746693ab7e38492c0d906b894c3d332501",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.comments",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Comments",
+      "en": "Comments"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dbe6d037ce30c236bce325e8297cdc1af08a17a10e3e92e0814d925bf8b20f6d",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.branches",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "Branches",
+      "en": "Branches"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6762435216a695de0ccc34705000598ea72c4417f3c82b1a06f4abe0c5089edb",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.prompts",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Prompt"
+    ],
+    "values": {
+      "ko": "Prompts",
+      "en": "Prompts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3a71c3cc5363277830f27d8a0c19d8868cd26bd2e6f1fe421661399fb9d07112",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.responses",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Response"
+    ],
+    "values": {
+      "ko": "Responses",
+      "en": "Responses"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b0e8120c8d7068e641c7594e6c18ab7518808d76a427a7b3454a3c85c1016409",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.materials",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Attached materials",
+      "en": "Attached materials"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8057c3a04175401ea22af06e98131058a3f9e18c022a0a195c4ffe42264a3a60",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.summary.cost",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Estimated cost",
+      "en": "Estimated cost"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2d4b0c4469955d435f7d27b9fcb6b8a56304161e07f2026773095a2bc760c533",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "SKAI"
+    ],
+    "values": {
+      "ko": "SKAI Profile",
+      "en": "SKAI Profile"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b7d809e3f454296c533f502335ce563979df88d3b1a1fabf9576cba6357f4cf3",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개 댓글과 공유 화면에서 사용할 표시 이름을 관리합니다.",
+      "en": "Manage the display identity used for public comments and shared pages."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9224873ff9ef095f1135a7c9bb407637cd8c1f29e8c96d29fb1b9f30b4a3c196",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.displayName",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Display name",
+      "en": "Display name"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4e9815b57b2b43158efecac930343c257da4aba1cd7180cea637e841b169bdb0",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.bio",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Bio",
+      "en": "Bio"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e00a232d55d9f020c584b582dc8b25506febd635678e307ee3e15227a21fcb58",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.preferredLocale",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Preferred language",
+      "en": "Preferred language"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5301bc34aa5b3c4aa49f3dab718e59af59f50955c48e1f7b02ab0223379e0060",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.defaultAuthorLabel",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Default author label",
+      "en": "Default author label"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f0bbe858e4b2f8cc301a56249f6893e1eab653ccef30c63d62eff745133c8621",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.locale.ko",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "한국어",
+      "en": "Korean"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0d1a6c997d22ae408f6991f0dc8616f5420f55dd56a182808383a2bb10508837",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.locale.en",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "English",
+      "en": "English"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "ab8b37013501704a0cb38d8be396f4f8ceac2271afdd411c6219512833d239b3",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.save",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장",
+      "en": "Save"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8cd4429ce357f92e716c0c960f15d3e07411d2a1f2bc1c8afa1e19c9499b49f7",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.saving",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장 중",
+      "en": "Saving"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "eb3840e49645eee0b2e2746201c7f94cab956adadd164fae980ceebafa960357",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.saved",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장되었습니다.",
+      "en": "Saved."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "88299ecf5adcc2b25d47a9f45d252cd261aec1768210c3a7e97f976869fb21ee",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.failed",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "저장하지 못했습니다.",
+      "en": "Could not save."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "48cce894209fe88595d59f5d4d8ccce7a5fba206dfb6224b7fa7e8711e4ab055",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.placeholder.displayName",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공개 표시 이름",
+      "en": "Public display name"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "966dca0d4ce431ea39fa4b087b7c4f1d65c01ee4b12a3b42c5d59ab1bed0a419",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.placeholder.bio",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "나의 AI 활용 목표나 관심 영역",
+      "en": "Your AI practice goal or interest area"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "66b943968f2888625cc4f9ac5f47ef65eaea05121ad8b6157a6ad1b04f8b09a8",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.profile.placeholder.authorLabel",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "댓글과 공유 화면에 표시될 이름",
+      "en": "Name shown in comments and shared pages"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f7cd8413128b0b8bd24ef1aa92c439abe9291d0be08c8da7fb9775d203341c77",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.data.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Data control",
+      "en": "Data control"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1ebe6f4213b929a1e45b33c19f5382947f437a6c14070b5881208bac014d19f0",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.data.privateTrace",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Trace"
+    ],
+    "values": {
+      "ko": "Private Trace는 본인 계정 범위에서만 조회됩니다.",
+      "en": "Private Trace is visible only within your account scope."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "066a47c8a8d1995ebecd2b32c165ad7a1516246c5fa2aacf65e04cff47b57e51",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.data.publicArtifact",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Artifact"
+    ],
+    "values": {
+      "ko": "공개 share를 만든 Artifact만 외부에서 볼 수 있습니다.",
+      "en": "Only Artifacts you publish through share can be viewed externally."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7d5233f6ca5818506dabc6e777462c162fbaa4049eaac6ac744e700a4af3f1a0",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.data.localOnly",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로컬 데이터는 이 브라우저 localStorage에만 있습니다.",
+      "en": "Local data exists only in this browser localStorage."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f22614c31b1e322629f301f3a818edf2afe0888a316a51f1aed83b179c864b21",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.data.synced",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Supabase synced",
+      "en": "Supabase synced"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d7914cf096ed4be6714631027592e60056f455d90b2829ee712843f802925249",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.local.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local browser data",
+      "en": "Local browser data"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "b9153d805b65efc47e3a60cf6bf6e48f3501bae68c6fd00469d80d782236aae2",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.local.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "로그인과 별개로 이 브라우저에 남아 있는 local-only 데이터입니다.",
+      "en": "Local-only data that remains in this browser independently of login."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9a8f5ba174a1d6ae0bfe4902a1f0a29f9db00e009d15cb0ae196959e64a30269",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.local.attempts",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local attempts",
+      "en": "Local attempts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f449e74a6d409e96bbb622a6828e33243db46c098d198517febcda5472812e3b",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.local.published",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Artifact"
+    ],
+    "values": {
+      "ko": "Local published artifacts",
+      "en": "Local published artifacts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "3df24783c6174b558b1bbc02c066ba3e1ffd4f2fc462680736f8b00e739d9784",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.local.authored",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Authored drafts",
+      "en": "Authored drafts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "4505b7c01a9b32f7ea7c40b36f0ba850fa1f155e98a78edf220c5f8119653aaf",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.recent.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Artifact"
+    ],
+    "values": {
+      "ko": "Recent artifacts",
+      "en": "Recent artifacts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "46968697ec0f470da708ea8cf7ab0f854a8c3e08fc6ad9b45deaf5321563a080",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.recent.empty",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 Supabase에 동기화된 attempt가 없습니다.",
+      "en": "No attempts have been synced to Supabase yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "266eab2d2b07ea24e2df5e4877511e476d2f6732075ae591c9e21b4bc1d96a63",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.recent.openProblem",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "문제 열기",
+      "en": "Open problem"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0b75f0205284aca00019dd43bbdce68355ce58656213bd7bba1b6deee096f428",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.recent.openShare",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유 보기",
+      "en": "Open share"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dbfdf4a14dd1bd6cc32150355528faaae296cf154bbe3030c434885590e3a16c",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.recent.updated",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Updated",
+      "en": "Updated"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f1700c07ca2a47d4a3aa4c0918cef8524b5e5603da532483b81ebd11618b23f8",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.privacy.title",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Privacy and export",
+      "en": "Privacy and export"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7f1cafff0f1b4f18c6580cde8b5f51863e5ef02949eeb421aee8b5ff6af9483f",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.privacy.description",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai",
+      "Judge",
+      "Coaching"
+    ],
+    "values": {
+      "ko": ".skai는 attempt의 핵심 구조를 저장하는 경량 포맷입니다. Judge나 Coaching report는 optional extension으로 붙습니다.",
+      "en": ".skai is a lightweight format for the core attempt structure. Judge and Coaching reports attach as optional extensions."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "00688e8b216f095053b3e88315f1906ee65197e526209b137dd7049dc174f896",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.privacy.viewer",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      ".skai"
+    ],
+    "values": {
+      "ko": ".skai viewer 열기",
+      "en": "Open .skai viewer"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "21072f083bf255138ea63f578427f0db372298f436f6bb36ec3219ad3f1a8dec",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.privacy.deleteNote",
+    "domain": "system",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "계정 삭제와 대량 export는 destructive action이므로 후속 slice에서 별도 확인 절차와 함께 구현합니다.",
+      "en": "Account deletion and bulk export are destructive actions, so a later slice will implement them with a separate confirmation flow."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5267ba38b6ff519a4c69792f9987aad4000ef9aada5c46e199efb30e1af670df",
+    "updatedAt": "2026-06-05T16:44:33.483Z"
+  },
+  {
+    "key": "myPage.auth.localMode",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Local Demo",
+      "en": "Local Demo"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "da85f30c9260225c14a93da3c3d17dfe4097f04fdf9abda36c15d5b9112028bf",
+    "updatedAt": "2026-06-05T16:46:16.740Z"
+  },
+  {
+    "key": "myPage.auth.authMode",
+    "domain": "auth",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Auth",
+      "en": "Auth"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "856e8abf5e29840b03503c80cc0c9452eab70e5f45b8d01b9beeaad69e3dcc5b",
+    "updatedAt": "2026-06-05T16:46:16.740Z"
   }
 ]
