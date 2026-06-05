@@ -965,22 +965,6 @@
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
-    "key": "problemBrowser.summary.hiddenGenerated",
-    "domain": "problem_browser",
-    "sourceLocale": "ko",
-    "protectedTerms": [],
-    "values": {
-      "ko": "개 생성 문제 검토 대기",
-      "en": "generated problems pending review"
-    },
-    "status": {
-      "ko": "approved",
-      "en": "approved"
-    },
-    "sourceChecksum": "3d45974dd54c89993dbd9883801b5272f64eefabdd4e2ca5f96a3741b1188d2a",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
-  },
-  {
     "key": "problemBrowser.action.reset",
     "domain": "problem_browser",
     "sourceLocale": "ko",

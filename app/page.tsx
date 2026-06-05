@@ -20,11 +20,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <HomeHero firstProblemHref={`/problems/${problems[0].id}`} />
       <AuthNotice auth={params?.auth} message={params?.message} />
 
-      <ProblemBrowser
-        problems={problems}
-        classifications={generatedProblemBatch001Classifications}
-        generatedProblemIds={Object.keys(generatedProblemBatch001Classifications)}
-      />
+      <ProblemBrowser problems={problems} classifications={generatedProblemBatch001Classifications} />
 
       <AuthoredProblemList />
     </main>

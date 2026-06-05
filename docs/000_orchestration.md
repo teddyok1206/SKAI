@@ -33,9 +33,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 문제 목록, 문제 풀이 화면, in-app AI 대화, trace capture, 제출, judge report, 공유 화면이 있다.
 - ChatGPT Pro로 생성한 30문제 batch 001을 원본 archive와 앱용 normalized data로 분리해 반영했다.
 - 생성 batch는 category/difficulty/goalProfile/classification/playbook/material extracted text를 보존하며, synthetic href는 앱에서 제거해 404 자료 링크를 만들지 않는다.
-- 생성 문제는 기본적으로 홈에서 숨기고, Admin editorial checklist를 통과해 publish된 항목만 smoke 후보로 노출한다.
+- 현재 앱의 33개 문제는 smoke 후보가 아니라 확정된 playable corpus다. Seed 3개와 generated batch 001 30개는 `docs/problem_generation/002_corpus_finalization_audit.md`에 audit 상태로 남겼고, `npm run problem:check`가 material/playbook/corpus 정합성을 검사한다.
+- Generated Problem Gate는 current batch 001 홈 노출을 막는 local gate가 아니라 future generated batch authoring/editorial QA 도구로 유지한다.
 - 홈 문제 목록은 keyword search, scenario lane, collapsed advanced filter로 탐색할 수 있다.
-- Admin page에는 generated problem별 anti-one-shot, material cross-reference, extracted text usability, domain accessibility checklist와 publish/hide toggle이 있다.
+- Admin page에는 generated problem별 anti-one-shot, material cross-reference, extracted text usability, domain accessibility checklist와 publish/hide toggle이 있다. 이 Gate는 future batch QA 용도이며, confirmed corpus 노출 여부는 더 이상 localStorage publish state에 의존하지 않는다.
 - Admin page에서 local authored problem draft를 만들고, 홈에서 확인하고, `/problems/local/...`에서 기존 solver로 풀 수 있다.
 - Admin page에는 local smoke attempts를 문제/모델/모드/점수/비용/branch 상태로 훑고 founder note를 저장하는 review dashboard가 있다.
 - Admin founder review dashboard는 Supabase remote cohort snapshot도 함께 표시한다. Service-role 전체 cohort 조회는 `SKAI_FOUNDER_EMAILS` allowlist가 있을 때만 사용하고, 아니면 현재 사용자 RLS 범위로 내려간다.
@@ -161,8 +162,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
-- Generated problem editorial gate는 localStorage 기준이다. Supabase-backed publish state, reviewer assignment, multi-user editorial workflow는 아직 없다.
-- Problem browser는 local app data 기준이다. Supabase-backed problem discovery, user-level recommendation, saved curation은 아직 없다.
+- Generated problem editorial gate는 localStorage 기준의 future-batch QA 도구다. Confirmed batch 001은 홈에서 모두 노출되며, Supabase-backed reviewer assignment나 multi-user editorial workflow는 아직 없다.
+- Problem browser는 local app data 기준의 confirmed corpus를 보여준다. Supabase-backed problem discovery, user-level recommendation, saved curation은 아직 없다.
 - 공개 풀이 댓글은 1차 privacy/misuse guardrail과 edit/soft-delete/report baseline이 있다. notification, founder moderation queue, ML moderation은 아직 없다.
 - Founder review dashboard는 localStorage와 Supabase cohort snapshot을 함께 본다. Remote founder notes, export, advanced filtering은 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.

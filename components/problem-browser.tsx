@@ -6,7 +6,6 @@ import { ArrowRight, BarChart3, Clock, FileText, Layers3, RotateCcw, Search, Sli
 import type { GeneratedProblemClassification } from "@/data/generated-problem-batch-001";
 import { useLanguagePreference } from "@/components/language-toggle";
 import { getCopy } from "@/lib/i18n";
-import { useGeneratedProblemEditorialMap } from "@/lib/use-generated-problem-editorial";
 import { getLocalizedProblem } from "@/lib/problem-localization";
 import type { Problem, ProblemCategory, MaterialKind } from "@/lib/types";
 
@@ -50,7 +49,6 @@ type FilterValue<T extends string> = "all" | T;
 interface ProblemBrowserProps {
   problems: Problem[];
   classifications?: Record<string, GeneratedProblemClassification>;
-  generatedProblemIds?: string[];
 }
 
 function problemMaterialKinds(problem: Problem) {
@@ -129,7 +127,7 @@ function materialCountLabel(problem: Problem, locale: "ko" | "en") {
   return locale === "ko" ? `${problem.materials.length}${suffix}` : `${problem.materials.length} ${suffix}`;
 }
 
-export function ProblemBrowser({ problems, classifications = {}, generatedProblemIds = [] }: ProblemBrowserProps) {
+export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowserProps) {
   const { locale } = useLanguagePreference();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<FilterValue<ProblemCategory>>("all");
@@ -165,24 +163,9 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
       >,
     [locale],
   );
-  const editorialMap = useGeneratedProblemEditorialMap();
-  const generatedProblemIdSet = useMemo(() => new Set(generatedProblemIds), [generatedProblemIds]);
-  const visibleProblems = useMemo(
-    () =>
-      problems.filter((problem) => {
-        if (!generatedProblemIdSet.has(problem.id)) {
-          return true;
-        }
-
-        return editorialMap.get(problem.id)?.isPublished ?? false;
-      }),
-    [editorialMap, generatedProblemIdSet, problems],
-  );
-  const hiddenGeneratedCount = problems.length - visibleProblems.length;
-
   const filteredProblems = useMemo(
     () =>
-      visibleProblems.filter((problem) => {
+      problems.filter((problem) => {
         const classification = classifications[problem.id];
         const materialKinds = problemMaterialKinds(problem);
 
@@ -208,7 +191,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
 
         return curationMatches(problem, classification, curation);
       }),
-    [category, classifications, curation, difficulty, locale, materialKind, query, visibleProblems],
+    [category, classifications, curation, difficulty, locale, materialKind, problems, query],
   );
 
   const topDomains = useMemo(() => {
@@ -243,7 +226,7 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
         </div>
         <div className="problem-browser-count">
           <strong>{filteredProblems.length}</strong>
-          <span>/ {visibleProblems.length}</span>
+          <span>/ {problems.length}</span>
         </div>
       </div>
 
@@ -321,9 +304,6 @@ export function ProblemBrowser({ problems, classifications = {}, generatedProble
         <div className="problem-browser-summary">
           <span>
             <SlidersHorizontal size={14} /> {topDomains.length > 0 ? topDomains.join(" · ") : getCopy("problemBrowser.summary.noResults", locale)}
-            {hiddenGeneratedCount > 0
-              ? ` · ${locale === "ko" ? `${hiddenGeneratedCount}${getCopy("problemBrowser.summary.hiddenGenerated", locale)}` : `${hiddenGeneratedCount} ${getCopy("problemBrowser.summary.hiddenGenerated", locale)}`}`
-              : ""}
           </span>
           {hasActiveFilter ? (
             <button className="button quiet" onClick={resetFilters} type="button">

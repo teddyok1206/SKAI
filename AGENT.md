@@ -97,6 +97,9 @@ The first demo should prove as many of these as possible:
 - If a problem has official materials, the playbook must say exactly which materials to attach before each relevant prompt.
 - Include an optional final-answer field draft when it helps run end-to-end judge tests quickly.
 - When adding or materially editing a problem, update its playbook in the same task.
+- When adding, importing, or materially editing a problem corpus batch, run `npm run problem:check` before committing.
+- Keep `docs/problem_generation/002_corpus_finalization_audit.md` aligned when the confirmed problem set changes.
+- Do not hide confirmed corpus problems behind local founder/editorial state. Editorial gates are for future/unconfirmed batches, not for already audited playable corpus.
 
 ## Language System Rules
 

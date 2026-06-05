@@ -399,7 +399,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "low",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "만족도 개선 아이디어만 나열하고 예산·담당 시간·팀장 저항을 반영하지 못한다.",
         "idealBottleneck": "Turn 3에서 HR 표준화와 팀별 자율성의 충돌을 파일럿 구조로 해결하는 지점",
         "graphPattern": "목표/제약 정의 → 자료별 pain point 맵핑 → 이해관계자 충돌 발견 → 30일 실험안으로 조정 → 상태가 '불만 원인 혼재'에서 '채택 가능한 운영 변화'로 이동"
@@ -846,7 +846,7 @@
           {
             "id": "abstract-conflict-evidence-map-m1",
             "title": "초록 A",
-            "description": "관찰 연구 초록",
+            "description": "스마트폰 사용과 수면 집중도 관계를 다룬 관찰 연구 초록",
             "kind": "text",
             "fileName": "sleep_focus_abstract_a.txt",
             "mimeType": "text/plain",
@@ -856,7 +856,7 @@
           {
             "id": "abstract-conflict-evidence-map-m2",
             "title": "초록 B",
-            "description": "소규모 실험 초록",
+            "description": "앱 차단 실험과 자기보고 집중도 변화를 다룬 소규모 실험 초록",
             "kind": "text",
             "fileName": "sleep_focus_abstract_b.txt",
             "mimeType": "text/plain",
@@ -1057,7 +1057,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "medium",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "최대 지원금만 보고 신청을 권하며 자부담 비율과 단체 등록 기간 리스크를 놓친다.",
         "idealBottleneck": "Turn 3에서 자부담 현금 최소 요건과 현 예산의 차이를 계산해 조건부 전략으로 전환하는 지점",
         "graphPattern": "신청 목표 제시 → 공고 요건 추출 → 예산/자격/시간 제약 대조 → 신청·보류 기준 분기 → 상태가 '막연한 신청 희망'에서 '조건부 의사결정'으로 이동"
@@ -1365,7 +1365,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "medium",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "댓글 다수의 분위기를 여론으로 단정하거나 찬반 양쪽의 근거와 운영 제약을 섞어버린다.",
         "idealBottleneck": "Turn 3에서 의견 빈도보다 쟁점 다양성과 영향받는 집단을 중심으로 재구성하는 지점",
         "graphPattern": "정책 목표 확인 → 시민 의견을 쟁점별 클러스터링 → 부서 메모로 실행 리스크 검증 → 추가 공론화 질문 도출 → 상태가 '의견 목록'에서 '균형 브리프'로 이동"
@@ -1771,7 +1771,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "low",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "친근한 톤을 유행어와 농담으로만 해석해 보안 SaaS의 신뢰 요구를 놓친다.",
         "idealBottleneck": "Turn 3에서 콘텐츠 유형별 톤 허용 범위를 나누고 금지선을 정의하는 지점",
         "graphPattern": "리프레시 목표 확인 → 기존 가이드/성과/불만 분석 → 톤 원칙과 경계 설정 → 샘플 문안 테스트 설계 → 상태가 '느낌 중심 요청'에서 '운영 가능한 보이스 가이드'로 이동"
@@ -2375,7 +2375,7 @@
           {
             "id": "survey-segmentation-plan-m2",
             "title": "주관식 답변 발췌",
-            "description": "응답자 의견 일부",
+            "description": "정량 응답만으로 해석하기 어려운 주관식 응답 일부 발췌",
             "kind": "csv",
             "fileName": "open_ended_responses_sample.csv",
             "mimeType": "text/csv",
@@ -2432,7 +2432,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "low",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "평균 점수가 높은 군을 바로 타깃으로 정하고 모집 편향과 실행 가능성을 무시한다.",
         "idealBottleneck": "Turn 3에서 통계 결론이 아니라 검증 가능한 세그먼트 가설로 표현을 낮추는 지점",
         "graphPattern": "분석 목표 확인 → 정량/정성 자료 연결 → 표본 한계와 실행 제약 반영 → 세그먼트별 실험 설계 → 상태가 '평균표'에서 '검증 가능한 사용자군 전략'으로 이동"
@@ -2594,7 +2594,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "low",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "0 판매일을 수요 없음으로 처리하거나 프로모션 효과를 일반 수요로 착각한다.",
         "idealBottleneck": "Turn 2에서 품절·프로모션 태그를 판매량과 연결해 관측 왜곡을 표시하는 지점",
         "graphPattern": "발주 목표 확인 → 판매 데이터 왜곡 요인 탐지 → 스프레드시트 전처리 규칙 설계 → 비용 제약 반영 → 상태가 '원시 판매량'에서 '검증 가능한 예측 입력'으로 이동"
@@ -3164,7 +3164,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "medium",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "반복문 코드만 고치고 발송 한도, 중복, 상태 불일치, 운영 복구 절차를 놓친다.",
         "idealBottleneck": "Turn 3에서 코드 결함과 업무 프로세스 결함을 분리해 테스트 모드와 상태 전이를 설계하는 지점",
         "graphPattern": "자동화 목표 확인 → 코드/로그/시트 구조에서 실패 모드 추출 → 상태 머신과 안전장치 설계 → pseudocode/운영 매뉴얼 작성 → 상태가 '깨지는 스크립트'에서 '운영 가능한 자동화'로 이동"
@@ -3278,7 +3278,7 @@
           {
             "id": "accessibility-regression-test-plan-m3",
             "title": "릴리즈 메모",
-            "description": "최근 변경 사항",
+            "description": "접근성 회귀 가능성을 확인해야 하는 최근 프론트엔드 변경 사항",
             "kind": "text",
             "fileName": "frontend_release_note.txt",
             "mimeType": "text/plain",
@@ -3565,7 +3565,7 @@
           {
             "id": "community-event-under-budget-m1",
             "title": "장소 후보표",
-            "description": "대관 후보 요약",
+            "description": "예산과 운영 리스크를 함께 비교해야 하는 커뮤니티 행사 대관 후보 요약",
             "kind": "spreadsheet",
             "fileName": "venue_options.xlsx",
             "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -3585,7 +3585,7 @@
           {
             "id": "community-event-under-budget-m3",
             "title": "봉사자 가능 시간",
-            "description": "가명 봉사자 일정",
+            "description": "역할 배치와 시간대 공백을 확인해야 하는 가명 봉사자 가능 일정",
             "kind": "csv",
             "fileName": "volunteer_availability.csv",
             "mimeType": "text/csv",
@@ -3778,7 +3778,7 @@
         ],
         "ambiguityLevel": "high",
         "externalKnowledgeNeed": "low",
-        "expectedTurns": 5,
+        "expectedTurns": 4,
         "primaryFailureMode": "가장 큰 고객 요청이나 가장 쉬운 기능 중 하나만 선택하고 전략 원칙·용량·기존 고객 리스크를 함께 보지 못한다.",
         "idealBottleneck": "Turn 3에서 18인주 제약 안에서 Now 조합을 만들고 제외 기능의 설명을 설계하는 지점",
         "graphPattern": "갈등 상황 제시 → 요청별 근거/비용/전략 적합성 추출 → 용량 제약으로 조합 비교 → 커뮤니케이션까지 작성 → 상태가 '팀 간 주장 경쟁'에서 '설명 가능한 로드맵'으로 이동"
