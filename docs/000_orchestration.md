@@ -292,6 +292,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 다음 구현: raw JSX baseline reduction을 계속 진행하거나 Markdown playbook과 typed app playbook source-of-truth를 통합한다.
 - 완료 조건: `verify:i18n`이 missing/stale/protected-term drift, source key drift, raw JSX text 증가를 검출하고, 주요 route의 copy가 locale registry에서 렌더링된다. (first-impression/solve/viewer/share/judge/problem content/regression backbone 완료)
 
+우선순위 2.6: user identity and My SKAI surface
+
+- Google login 이후 사용자가 자신의 계정, display identity, privacy/data control, orchestration summary를 확인할 수 있는 `/me` 마이페이지를 만든다. (계획 완료: `docs/technical/plan/092_user_mypage_identity_surface.md`)
+- 백엔드는 얇은 `user_profiles` 테이블과 user-scoped summary API로 시작한다.
+- 마이페이지는 점수 경쟁판이 아니라 개인 `Trace`/`Artifact`/공개 상태/데이터 소유권 제어실이어야 한다.
+- 홈페이지 graph-like entry surface는 좋은 방향이지만 account/privacy slice와 분리해 후속 `093_home_graph_entry_surface` 후보로 둔다.
+- 완료 조건: 로그인 사용자가 `/me`에서 계정/profile/orchestration summary/recent artifact를 보고, 비로그인 사용자는 sign-in CTA와 local demo 안내를 본다.
+
 우선순위 3: playbook insertion and smoke operator UX
 
 - 문제별 playbook prompt를 UI에서 composer로 삽입할 수 있게 한다. (완료)
