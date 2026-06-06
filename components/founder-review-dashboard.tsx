@@ -6,7 +6,7 @@ import { Cloud, GitBranch, MessageSquareText, Save, Share2, Trophy } from "lucid
 import { problems as seedProblems } from "@/data/problems";
 import { saveFounderReviewNote } from "@/lib/local-store";
 import { loadFounderCohortFromSupabase } from "@/lib/supabase-persistence";
-import type { Attempt, FounderCohortAttempt, FounderCohortSnapshot, FounderReviewNote, Problem } from "@/lib/types";
+import type { Attempt, FounderCalibrationVerdict, FounderCohortAttempt, FounderCohortSnapshot, FounderReviewNote, Problem } from "@/lib/types";
 import { useAuthoredProblems } from "@/lib/use-authored-problems";
 import { useFounderReviewNotes, useLocalAttempts } from "@/lib/use-local-review";
 
@@ -42,6 +42,70 @@ function modeLabel(mode: FounderCohortSnapshot["mode"]) {
   return "Local fallback";
 }
 
+const calibrationVerdicts: FounderCalibrationVerdict[] = ["judge_ok", "too_harsh", "too_generous", "missed_bottleneck", "needs_review"];
+
+const calibrationLabels: Record<FounderCalibrationVerdict, string> = {
+  judge_ok: "Judge OK",
+  too_harsh: "Too harsh",
+  too_generous: "Too generous",
+  missed_bottleneck: "Missed bottleneck",
+  needs_review: "Needs review",
+};
+
+function reviewSignal(attempt: { totalScore?: number; judgeMode?: string }, graphAnnotationCount?: number) {
+  const needsReview = typeof attempt.totalScore !== "number" || attempt.totalScore < 55 || graphAnnotationCount === 0;
+
+  return needsReview ? "review" : "baseline";
+}
+
+function CalibrationControls({
+  value,
+  expectedScore,
+  labels,
+  onChange,
+  onExpectedScoreChange,
+}: {
+  value: FounderCalibrationVerdict;
+  expectedScore?: number;
+  labels: {
+    calibration: string;
+    expectedScore: string;
+    optional: string;
+  };
+  onChange: (value: FounderCalibrationVerdict) => void;
+  onExpectedScoreChange: (value: number | undefined) => void;
+}) {
+  return (
+    <div className="review-calibration-controls">
+      <label>
+        <span>{labels.calibration}</span>
+        <select className="input" value={value} onChange={(event) => onChange(event.target.value as FounderCalibrationVerdict)}>
+          {calibrationVerdicts.map((verdict) => (
+            <option key={verdict} value={verdict}>
+              {calibrationLabels[verdict]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span>{labels.expectedScore}</span>
+        <input
+          className="input"
+          max={100}
+          min={0}
+          onChange={(event) => {
+            const parsed = Number.parseInt(event.target.value, 10);
+            onExpectedScoreChange(Number.isNaN(parsed) ? undefined : parsed);
+          }}
+          placeholder={labels.optional}
+          type="number"
+          value={typeof expectedScore === "number" ? expectedScore : ""}
+        />
+      </label>
+    </div>
+  );
+}
+
 function CohortReviewRow({
   attempt,
   note,
@@ -52,11 +116,19 @@ function CohortReviewRow({
   problemName: string;
 }) {
   const [draft, setDraft] = useState(note?.note ?? "");
+  const [verdict, setVerdict] = useState<FounderCalibrationVerdict>(note?.calibrationLabel?.verdict ?? "needs_review");
+  const [expectedScore, setExpectedScore] = useState<number | undefined>(note?.calibrationLabel?.expectedScore);
 
   function saveNote() {
     saveFounderReviewNote({
       attemptId: attempt.id,
       note: draft.trim(),
+      calibrationLabel: {
+        verdict,
+        expectedScore,
+        note: draft.trim(),
+        updatedAt: new Date().toISOString(),
+      },
       updatedAt: new Date().toISOString(),
     });
   }
@@ -76,6 +148,7 @@ function CohortReviewRow({
           </span>
           <span>{formatUsd(attempt.totalEstimatedCostUsd)} est</span>
           <span>{attempt.judgeMode ?? "no judge"}</span>
+          <span>{reviewSignal(attempt)}</span>
           {attempt.isBranch ? (
             <span>
               <GitBranch size={13} /> trace {(attempt.branchParentTraceIndex ?? 0) + 1}
@@ -89,6 +162,13 @@ function CohortReviewRow({
         </div>
       </div>
       <div className="review-note">
+        <CalibrationControls
+          expectedScore={expectedScore}
+          labels={{ calibration: "Calibration", expectedScore: "Expected score", optional: "optional" }}
+          onChange={setVerdict}
+          onExpectedScoreChange={setExpectedScore}
+          value={verdict}
+        />
         <textarea
           className="textarea"
           placeholder="Founder cohort note: smoke signal, friction, philosophy fit"
@@ -114,13 +194,22 @@ function AttemptReviewRow({
   problemName: string;
 }) {
   const [draft, setDraft] = useState(note?.note ?? "");
+  const [verdict, setVerdict] = useState<FounderCalibrationVerdict>(note?.calibrationLabel?.verdict ?? "judge_ok");
+  const [expectedScore, setExpectedScore] = useState<number | undefined>(note?.calibrationLabel?.expectedScore);
   const score = attempt.scoreReport?.totalScore;
   const cost = attemptCost(attempt);
+  const graphAnnotationCount = attempt.scoreReport?.graphAnnotations?.length ?? 0;
 
   function saveNote() {
     saveFounderReviewNote({
       attemptId: attempt.id,
       note: draft.trim(),
+      calibrationLabel: {
+        verdict,
+        expectedScore,
+        note: draft.trim(),
+        updatedAt: new Date().toISOString(),
+      },
       updatedAt: new Date().toISOString(),
     });
   }
@@ -140,6 +229,8 @@ function AttemptReviewRow({
           </span>
           <span>{formatUsd(cost)} est</span>
           <span>{attempt.scoreReport?.judgeMode ?? "no judge"}</span>
+          <span>{attempt.scoreReport?.needsHumanReview ? "human review" : reviewSignal({ totalScore: score, judgeMode: attempt.scoreReport?.judgeMode }, graphAnnotationCount)}</span>
+          <span>{graphAnnotationCount} annotations</span>
           {attempt.branch ? (
             <span>
               <GitBranch size={13} /> trace {attempt.branch.parentTraceIndex + 1}
@@ -153,6 +244,13 @@ function AttemptReviewRow({
         </div>
       </div>
       <div className="review-note">
+        <CalibrationControls
+          expectedScore={expectedScore}
+          labels={{ calibration: "Calibration", expectedScore: "Expected score", optional: "optional" }}
+          onChange={setVerdict}
+          onExpectedScoreChange={setExpectedScore}
+          value={verdict}
+        />
         <textarea
           className="textarea"
           placeholder="Founder note: 방향성, 품질, 문제 설계 개선점"

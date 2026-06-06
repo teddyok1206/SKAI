@@ -8191,5 +8191,85 @@
     },
     "sourceChecksum": "2dcd7a5b69db6f0d3b3dad577b87f06a301b322b67dc8b7e9612644ca1a9f2b0",
     "updatedAt": "2026-06-05T16:59:14.836Z"
+  },
+  {
+    "key": "extension.field.confidence",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Confidence",
+      "en": "Confidence"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bf0daa297877f6beaee4add7f45562e638fc149e35003e3cb3faadb1f11b78fa",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "key": "extension.field.promptVersion",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Prompt version",
+      "en": "Prompt version"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "534d21097a36da700903394ca4b322e8bebff5090513eb267980538f8bdf835f",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "key": "extension.field.evidence",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Evidence",
+      "en": "Evidence"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "0c92d9f4cc448ff17f74d7326c0fb8f66cdbabbb4a8877a8700575b7e4b35429",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "key": "extension.finding.kind",
+    "domain": "judge",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Kind",
+      "en": "Kind"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "25a5509fe951dc49d01e52922c32791c7fb069347331d927e1698ce073e97ff1",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.review",
+    "domain": "graph",
+    "sourceLocale": "en",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Review",
+      "en": "Review"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "fa190ed8b6148516537e6ae99b4aa72832fc1a2e87b4160453aa9b13350ea6eb",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
   }
 ]

@@ -17,6 +17,7 @@ export const graphOverlaySchemaVersion = "graph-overlay.v0.sparse-index";
 export const graphOverlayLayerOrder: GraphOverlayLayer[] = [
   "bottleneck",
   "weakEdge",
+  "review",
   "recovery",
   "verification",
   "materialGrounding",
@@ -29,6 +30,7 @@ export const defaultGraphOverlayControls: GraphOverlayControls = {
   layers: {
     bottleneck: true,
     weakEdge: true,
+    review: true,
     verification: false,
     materialGrounding: false,
     recovery: true,
@@ -40,6 +42,7 @@ export const defaultGraphOverlayControls: GraphOverlayControls = {
 export const graphOverlayLayerLabels: Record<GraphOverlayLayer, string> = {
   bottleneck: "병목",
   weakEdge: "약한 연결",
+  review: "검토 필요",
   verification: "검증",
   materialGrounding: "자료 사용",
   recovery: "회복",
@@ -108,6 +111,10 @@ function firstOverlayMapping(annotation: ConversationGraphAnnotation): {
   severity: GraphOverlaySeverity;
 } {
   const severity = normalizeSeverity(annotation);
+
+  if (annotation.confidence < 0.55 || annotation.source === "human") {
+    return { layer: "review", signal: "human_review", severity: severity === "positive" ? "watch" : severity };
+  }
 
   if (annotation.kind === "bottleneck") {
     return { layer: "bottleneck", signal: "bottleneck_node", severity };

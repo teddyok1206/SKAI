@@ -1380,6 +1380,22 @@ h3 {
   align-items: end;
 }
 
+.review-calibration-controls {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) 148px;
+  gap: 8px;
+}
+
+.review-calibration-controls label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .review-note .textarea {
   min-height: 78px;
 }
@@ -3475,6 +3491,10 @@ h3 {
   background: transparent;
 }
 
+.graph-overlay-dot.overlay-layer-review {
+  background: var(--accent);
+}
+
 .graph-overlay-dot.overlay-layer-verification {
   background: var(--blue);
 }
@@ -4405,6 +4425,16 @@ summary {
   overflow: hidden;
   font-family: var(--font-mono);
   font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skai-extension-axis small,
+.skai-extension-evidence {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

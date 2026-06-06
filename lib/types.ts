@@ -177,6 +177,17 @@ export interface Attempt {
 export interface FounderReviewNote {
   attemptId: string;
   note: string;
+  calibrationLabel?: FounderCalibrationLabel;
+  updatedAt: string;
+}
+
+export type FounderCalibrationVerdict = "judge_ok" | "too_harsh" | "too_generous" | "missed_bottleneck" | "needs_review";
+
+export interface FounderCalibrationLabel {
+  verdict: FounderCalibrationVerdict;
+  expectedScore?: number;
+  axisFocus?: ScoreAxis;
+  note?: string;
   updatedAt: string;
 }
 
@@ -246,6 +257,8 @@ export interface AxisScore {
   label: string;
   score: number;
   rationale: string;
+  confidence?: number;
+  evidenceIds?: string[];
 }
 
 export interface Bottleneck {
@@ -386,6 +399,7 @@ export type GraphOverlaySeverity = "neutral" | "positive" | "watch" | "critical"
 export type GraphOverlayLayer =
   | "bottleneck"
   | "weakEdge"
+  | "review"
   | "verification"
   | "materialGrounding"
   | "recovery"
@@ -395,6 +409,7 @@ export type GraphOverlayLayer =
 export type GraphOverlaySignal =
   | "bottleneck_node"
   | "weak_edge"
+  | "human_review"
   | "recovery"
   | "verification"
   | "material_grounding"
@@ -481,6 +496,11 @@ export interface ScoreReport {
   judgeProvider: ProviderId;
   judgeModel: string;
   judgeMode?: JudgeMode;
+  judgePromptVersion?: string;
+  rubricVersion?: string;
+  confidence?: number;
+  needsHumanReview?: boolean;
+  uncertaintyNotes?: string[];
   judgeRuns?: JudgeRunSummary[];
   judgeDisagreement?: string[];
   locale?: ReportLocale;
@@ -911,9 +931,11 @@ export interface SkaiExtensionBase {
 export interface SkaiJudgeFinding {
   id: string;
   target: SkaiExtensionTarget;
+  kind?: "strength" | "bottleneck" | "risk" | "missed_opportunity";
   axis?: ScoreAxis;
   severity: ConversationGraphAnnotationSeverity;
   confidence: number;
+  evidenceIds?: string[];
   title: string;
   explanation: string;
   suggestedAction?: string;

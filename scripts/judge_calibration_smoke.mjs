@@ -344,13 +344,21 @@ function orderingChecks(results) {
       }
 
       const [weak, average, strong] = entries;
+      const weakAverageGap = average.totalScore - weak.totalScore;
+      const averageStrongGap = strong.totalScore - average.totalScore;
       return {
         problemId,
         passed: weak.totalScore <= average.totalScore && average.totalScore <= strong.totalScore,
+        gapPassed: weakAverageGap >= 6 && averageStrongGap >= 8,
+        annotationPassed: entries.every((entry) => entry.graphAnnotationCount > 0),
         scores: {
           weak: weak.totalScore,
           average: average.totalScore,
           strong: strong.totalScore,
+        },
+        gaps: {
+          weakAverage: weakAverageGap,
+          averageStrong: averageStrongGap,
         },
       };
     })
@@ -362,7 +370,11 @@ function calibrationStatus(results, checks, errors) {
     return "failed";
   }
 
-  if (results.length === 0 || checks.some((check) => !check.passed)) {
+  if (results.length === 0 || checks.some((check) => !check.passed || !check.annotationPassed)) {
+    return "failed";
+  }
+
+  if (checks.some((check) => !check.gapPassed)) {
     return "needs_review";
   }
 
@@ -381,8 +393,8 @@ function reportMarkdown(report) {
     "## Ordering Checks",
     "",
     ...report.orderingChecks.map((check) => {
-      const marker = check.passed ? "pass" : "review";
-      return `- ${check.problemId}: ${marker} (weak ${check.scores.weak}, average ${check.scores.average}, strong ${check.scores.strong})`;
+      const marker = check.passed && check.annotationPassed ? (check.gapPassed ? "pass" : "gap-review") : "fail";
+      return `- ${check.problemId}: ${marker} (weak ${check.scores.weak}, average ${check.scores.average}, strong ${check.scores.strong}; gaps ${check.gaps.weakAverage}/${check.gaps.averageStrong}; annotations ${check.annotationPassed ? "yes" : "no"})`;
     }),
     report.orderingChecks.length === 0 ? "- no complete problem triplet in this run" : "",
     "",

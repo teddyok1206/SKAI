@@ -23,8 +23,9 @@ function targetLabel(target: { targetKind: string; targetId: string; pairId?: st
 function axisScoreRow(score: AxisScore) {
   return (
     <div className="skai-extension-axis" key={score.axis}>
-      <span>{score.label}</span>
+      <span>{score.label}{typeof score.confidence === "number" ? ` · ${Math.round(score.confidence * 100)}%` : ""}</span>
       <strong>{score.score}</strong>
+      {score.evidenceIds && score.evidenceIds.length > 0 ? <small>{score.evidenceIds.slice(0, 2).join(", ")}</small> : null}
     </div>
   );
 }
@@ -56,6 +57,14 @@ function JudgeExtensionPanel({ extension, locale }: { extension: SkaiJudgeExtens
           <strong>{extension.generator.kind}</strong>
         </div>
         <div>
+          <span>{t("extension.field.confidence")}</span>
+          <strong>{extension.findings.length > 0 ? `${Math.round((extension.findings.reduce((sum, finding) => sum + finding.confidence, 0) / extension.findings.length) * 100)}%` : "n/a"}</strong>
+        </div>
+        <div>
+          <span>{t("extension.field.promptVersion")}</span>
+          <strong>{extension.generator.promptVersion ?? "n/a"}</strong>
+        </div>
+        <div>
           <span>{t("extension.field.graphHash")}</span>
           <strong>{extension.inputGraphHash.slice(0, 12)}</strong>
         </div>
@@ -68,9 +77,17 @@ function JudgeExtensionPanel({ extension, locale }: { extension: SkaiJudgeExtens
           <article className={`skai-extension-finding severity-${finding.severity}`} key={finding.id}>
             <div>
               <strong>{finding.title}</strong>
-              <small>{targetLabel(finding.target)}</small>
+              <small>
+                {finding.kind ? `${t("extension.finding.kind")}: ${finding.kind} · ` : ""}
+                {targetLabel(finding.target)}
+              </small>
             </div>
             <p>{finding.explanation}</p>
+            {finding.evidenceIds && finding.evidenceIds.length > 0 ? (
+              <small className="skai-extension-evidence">
+                {t("extension.field.evidence")}: {finding.evidenceIds.slice(0, 4).join(", ")}
+              </small>
+            ) : null}
             {finding.suggestedAction ? <p className="muted">{finding.suggestedAction}</p> : null}
           </article>
         ))}

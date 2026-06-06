@@ -374,6 +374,12 @@ Deliverable:
 - strict zod schema for `SkaiJudgeOutputV1`;
 - normalization that rejects unanchored findings or moves them to attempt-level with low confidence.
 
+Status:
+
+- Completed in `docs/technical/plan/099_research_judge_remaining_slices.md`.
+- LLM judge schema now accepts `findings`, confidence, prompt/rubric version, uncertainty, and human-review metadata while preserving legacy output compatibility.
+- Direct graph targets can be normalized from pair/node/edge ids.
+
 ### Slice C. Gemini LLM Judge Prompt V2
 
 Files likely affected:
@@ -387,6 +393,12 @@ Deliverable:
 - uses evidence packet;
 - outputs graph-indexed JSON only;
 - stores prompt version.
+
+Status:
+
+- Completed in `docs/technical/judge_research/003_judge_prompt_v2.md`.
+- Runtime prompt version is `judge-prompt.research-v2.001`.
+- Judge context includes deterministic evidence packet and graph target guide.
 
 ### Slice D. Calibration Fixture Expansion
 
@@ -403,6 +415,12 @@ Deliverable:
 - expected findings file;
 - regression that checks ordering and target hit rate.
 
+Status:
+
+- Partially completed as calibration runner hardening in `docs/technical/plan/099_research_judge_remaining_slices.md`.
+- Runner now reports score gaps and graph annotation presence.
+- Larger fixture expansion remains useful after live Gemini judge traces are collected.
+
 ### Slice E. Founder Review Calibration Loop
 
 Files likely affected:
@@ -416,6 +434,12 @@ Deliverable:
 - store human label/override against judge run;
 - export calibration dataset;
 - show agreement/drift summary.
+
+Status:
+
+- Local-first baseline completed in `docs/technical/plan/099_research_judge_remaining_slices.md`.
+- Founder dashboard stores calibration verdict and expected score in local founder notes.
+- Supabase persistence/export remains a future schema slice.
 
 ### Slice F. Viewer Overlay Upgrade
 
@@ -431,6 +455,12 @@ Deliverable:
 - finding severity overlay;
 - material-grounding overlay;
 - uncertainty/needsHumanReview badge.
+
+Status:
+
+- Completed as viewer/overlay baseline in `docs/technical/plan/099_research_judge_remaining_slices.md`.
+- `.skai` extension viewer shows confidence, prompt version, finding kind, and evidence ids.
+- Graph overlay has a review layer for low-confidence or human-source annotations.
 
 ## Non-Goals
 

@@ -3,7 +3,7 @@ import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
 import { buildConversationGraph } from "@/lib/conversation-graph";
 import { buildJudgeEvidencePacket, formatJudgeEvidenceForContext } from "@/lib/judge-evidence";
-import { normalizeJudgeGraphAnnotations } from "@/lib/judge-graph-annotations";
+import { normalizeJudgeGraphAnnotations, type RawJudgeGraphAnnotation } from "@/lib/judge-graph-annotations";
 import { getLocalizedProblem } from "@/lib/problem-localization";
 import { getJudgeProvider } from "@/lib/providers";
 import type {
@@ -20,7 +20,8 @@ import type {
   WorkflowStep,
 } from "@/lib/types";
 
-const rubricVersion = "v0";
+const rubricVersion = "rubric.research-v1";
+const judgePromptVersion = "judge-prompt.research-v2.001";
 
 const providerIds = ["mock", "openai", "groq", "xai", "openrouter", "gemini"] as const;
 const scoreAxisValues = [
@@ -69,14 +70,38 @@ const axisLabels: Record<ReportLocale, Record<AxisScore["axis"], string>> = {
 };
 
 const llmJudgeSchema = z.object({
+  rubricVersion: z.string().optional(),
+  judgePromptVersion: z.string().optional(),
+  totalScore: z.coerce.number().min(0).max(100).optional(),
+  confidence: z.coerce.number().min(0).max(100).optional(),
+  needsHumanReview: z.boolean().optional(),
   coachSummary: z.string().min(1),
   axisScores: z.array(
     z.object({
       axis: z.enum(scoreAxisValues),
       score: z.coerce.number().min(0).max(100),
+      confidence: z.coerce.number().min(0).max(100).optional(),
       rationale: z.string().min(1),
+      evidenceIds: z.array(z.string()).default([]),
     }),
   ),
+  findings: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        kind: z.enum(["strength", "bottleneck", "risk", "missed_opportunity"]).default("bottleneck"),
+        severity: z.enum(["info", "positive", "watch", "critical"]),
+        axis: z.enum(scoreAxisValues),
+        targetKind: z.enum(["attempt", "pair", "prompt_node", "response_node", "status_node", "edge", "trace_event"]),
+        targetId: z.string().min(1),
+        evidenceIds: z.array(z.string()).default([]),
+        confidence: z.coerce.number().min(0).max(100).optional(),
+        title: z.string().min(1).max(140),
+        explanation: z.string().min(1).max(1000),
+        replaySuggestion: z.string().max(600).optional(),
+      }),
+    )
+    .default([]),
   strengths: z.array(z.string()).default([]),
   improvements: z.array(z.string()).default([]),
   bottlenecks: z
@@ -104,7 +129,8 @@ const llmJudgeSchema = z.object({
     .array(
       z.object({
         targetTraceEventId: z.string().optional(),
-        targetKind: z.enum(["pair", "node"]).optional(),
+        targetKind: z.enum(["attempt", "pair", "node", "edge", "trace_event", "prompt_node", "response_node", "status_node"]).optional(),
+        targetId: z.string().optional(),
         kind: z.enum(graphAnnotationKindValues),
         severity: z.enum(["info", "positive", "watch", "critical"]),
         axis: z.enum(scoreAxisValues).optional(),
@@ -117,6 +143,7 @@ const llmJudgeSchema = z.object({
     )
     .max(12)
     .default([]),
+  uncertaintyNotes: z.array(z.string()).default([]),
 });
 
 interface JudgeInput {
@@ -446,6 +473,15 @@ function buildHeuristicReport(input: JudgeInput, evidence?: JudgeEvidencePacket)
     judgeProvider: "mock",
     judgeModel: "heuristic-coach-v0",
     judgeMode: "heuristic",
+    judgePromptVersion: "heuristic-evidence-v1",
+    rubricVersion,
+    confidence: evidence ? 0.66 : 0.55,
+    needsHumanReview:
+      !evidence ||
+      evidence.warnings.includes("possible_one_shot_process") ||
+      evidence.warnings.includes("required_materials_not_attached") ||
+      evidence.warnings.includes("missing_verification_step"),
+    uncertaintyNotes: evidence?.warnings ?? [],
     locale: input.locale,
     sourceLocale: input.locale,
     translationStatus: "source",
@@ -514,6 +550,40 @@ function getLlmJudgeConfigs(mode: JudgeMode): JudgeConfig[] {
   ];
 }
 
+function buildGraphTargetGuide(input: JudgeInput) {
+  const graph = buildConversationGraph(input.trace, undefined, undefined, {
+    problemMaterialCount: input.problem.materials.length,
+  });
+  const pairs = graph.pairs
+    .map((pair) =>
+      [
+        `sequence ${pair.sequence}`,
+        `pairId=${pair.id}`,
+        `promptNodeId=${pair.promptNodeId}`,
+        `responseNodeId=${pair.responseNodeId ?? "none"}`,
+        `statusNodeId=${pair.statusNodeId}`,
+        `promptTraceEventId=${pair.promptTraceEventId}`,
+        `responseTraceEventId=${pair.responseTraceEventId ?? "none"}`,
+        `status=${pair.status}`,
+      ].join(" | "),
+    )
+    .join("\n");
+  const edges = [...graph.promptEdges, ...graph.responseEdges, ...graph.statusEdges]
+    .map((edge) => `edgeId=${edge.id} | projection=${edge.projection} | pairId=${edge.pairId ?? "none"} | traceEventId=${edge.traceEventId ?? "none"}`)
+    .join("\n");
+
+  return [
+    "Graph target guide:",
+    "Use these stable ids for findings.targetId whenever possible.",
+    "",
+    "Pairs:",
+    pairs || "No pairs.",
+    "",
+    "Edges:",
+    edges || "No edges.",
+  ].join("\n");
+}
+
 function buildJudgeContext(input: JudgeInput, evidence: JudgeEvidencePacket) {
   const problem = getLocalizedProblem(input.problem, input.locale);
   const trace = input.trace
@@ -562,6 +632,8 @@ function buildJudgeContext(input: JudgeInput, evidence: JudgeEvidencePacket) {
     "Deterministic evidence packet:",
     formatJudgeEvidenceForContext(evidence),
     "",
+    buildGraphTargetGuide(input),
+    "",
     "Trace:",
     trace || "No trace events.",
     "",
@@ -582,7 +654,132 @@ function extractJsonObject(value: string) {
   return JSON.parse(withoutFence.slice(start, end + 1)) as unknown;
 }
 
+function clampConfidence(value?: number) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return 0.72;
+  }
+
+  const normalized = value > 1 ? value / 100 : value;
+  return Math.max(0, Math.min(1, normalized));
+}
+
+function findingSeverityToBottleneckSeverity(severity: "info" | "positive" | "watch" | "critical"): Bottleneck["severity"] {
+  if (severity === "critical") {
+    return "high";
+  }
+
+  if (severity === "watch") {
+    return "medium";
+  }
+
+  return "low";
+}
+
+function targetKindToGraphAnnotationKind(kind: string): RawJudgeGraphAnnotation["targetKind"] {
+  if (kind === "prompt_node" || kind === "response_node" || kind === "status_node") {
+    return kind;
+  }
+
+  if (kind === "pair" || kind === "edge" || kind === "trace_event" || kind === "attempt") {
+    return kind;
+  }
+
+  return "pair";
+}
+
+function findingKindToAnnotationKind(kind: "strength" | "bottleneck" | "risk" | "missed_opportunity", axis: AxisScore["axis"]) {
+  if (kind === "strength" && axis === "adaptation") {
+    return "recovery" as const;
+  }
+
+  if (kind === "strength" && axis === "verification") {
+    return "verification" as const;
+  }
+
+  if (axis === "verification") {
+    return "verification" as const;
+  }
+
+  if (axis === "efficiency") {
+    return "cost_efficiency" as const;
+  }
+
+  if (axis === "adaptation") {
+    return "adaptation" as const;
+  }
+
+  if (axis === "decomposition") {
+    return "decomposition" as const;
+  }
+
+  if (axis === "instruction_clarity") {
+    return "delegation" as const;
+  }
+
+  if (kind === "risk") {
+    return "bottleneck" as const;
+  }
+
+  return kind === "missed_opportunity" ? "context_drift" : "bottleneck";
+}
+
+function traceEventIdsFromEvidenceIds(input: {
+  traceEventIds: Set<string>;
+  evidenceIds: string[];
+  fallbackTargetKind: string;
+  fallbackTargetId: string;
+}) {
+  const fromEvidence = input.evidenceIds.filter((id) => input.traceEventIds.has(id));
+
+  if (fromEvidence.length > 0) {
+    return fromEvidence.slice(0, 6);
+  }
+
+  if (input.fallbackTargetKind === "trace_event" && input.traceEventIds.has(input.fallbackTargetId)) {
+    return [input.fallbackTargetId];
+  }
+
+  return [];
+}
+
+function findingsToRawAnnotations(input: {
+  findings: z.infer<typeof llmJudgeSchema>["findings"];
+  trace: TraceEvent[];
+}): RawJudgeGraphAnnotation[] {
+  const traceEventIds = new Set(input.trace.map((event) => event.id));
+
+  return input.findings
+    .filter((finding) => finding.severity !== "info")
+    .map((finding): RawJudgeGraphAnnotation => {
+      const evidenceTraceEventIds = traceEventIdsFromEvidenceIds({
+        traceEventIds,
+        evidenceIds: finding.evidenceIds,
+        fallbackTargetKind: finding.targetKind,
+        fallbackTargetId: finding.targetId,
+      });
+      const targetTraceEventId =
+        finding.targetKind === "trace_event" && traceEventIds.has(finding.targetId)
+          ? finding.targetId
+          : evidenceTraceEventIds[0];
+
+      return {
+        targetTraceEventId,
+        targetKind: targetKindToGraphAnnotationKind(finding.targetKind),
+        targetId: finding.targetKind === "trace_event" || finding.targetKind === "attempt" ? undefined : finding.targetId,
+        kind: findingKindToAnnotationKind(finding.kind, finding.axis),
+        severity: finding.severity,
+        axis: finding.axis,
+        scoreImpact: finding.severity === "critical" ? -12 : finding.severity === "watch" ? -6 : finding.severity === "positive" ? 6 : 0,
+        confidence: clampConfidence(finding.confidence) * 100,
+        title: finding.title,
+        explanation: finding.explanation,
+        evidenceTraceEventIds,
+      };
+    });
+}
+
 function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer<typeof llmJudgeSchema>): ScoreReport {
+  const reportConfidence = clampConfidence(raw.confidence);
   const axisScores = defaultRubric.map((item) => {
     const found = raw.axisScores.find((score) => score.axis === item.axis);
 
@@ -590,6 +787,8 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
       axis: item.axis,
       label: axisLabels[input.locale][item.axis],
       score: clampScore(found?.score ?? 50),
+      confidence: clampConfidence(found?.confidence),
+      evidenceIds: found?.evidenceIds?.slice(0, 8) ?? [],
       rationale:
         found?.rationale ??
         (input.locale === "ko"
@@ -602,17 +801,45 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
     id: crypto.randomUUID(),
     attemptId: input.attemptId,
     problemId: input.problem.id,
-    totalScore: weightedTotal(input.problem, axisScores),
+    totalScore: typeof raw.totalScore === "number" ? clampScore(raw.totalScore) : weightedTotal(input.problem, axisScores),
     axisScores,
     coachSummary: raw.coachSummary,
-    strengths: raw.strengths.slice(0, 4),
-    improvements: raw.improvements.slice(0, 4),
-    bottlenecks: raw.bottlenecks.slice(0, 4),
+    strengths: [
+      ...raw.findings.filter((finding) => finding.kind === "strength").map((finding) => `${finding.title}: ${finding.explanation}`),
+      ...raw.strengths,
+    ].slice(0, 4),
+    improvements: [
+      ...raw.findings
+        .filter((finding) => finding.kind !== "strength")
+        .map((finding) => `${finding.title}: ${finding.explanation}`),
+      ...raw.improvements,
+    ].slice(0, 4),
+    bottlenecks: [
+      ...raw.findings
+        .filter((finding) => finding.kind === "bottleneck" || finding.kind === "risk" || finding.severity === "critical")
+        .map((finding) => ({
+          traceEventId: finding.targetKind === "trace_event" ? finding.targetId : undefined,
+          label: finding.title,
+          severity: findingSeverityToBottleneckSeverity(finding.severity),
+          explanation: finding.explanation,
+          replaySuggestion: finding.replaySuggestion ?? finding.explanation,
+        })),
+      ...raw.bottlenecks,
+    ].slice(0, 4),
     workflow: raw.workflow.length > 0 ? raw.workflow.slice(0, 6) : buildWorkflow(input.trace, input.locale),
     nextPracticeTargets: raw.nextPracticeTargets.slice(0, 4),
     judgeProvider: config.provider,
     judgeModel: config.model,
     judgeMode: "llm",
+    judgePromptVersion: raw.judgePromptVersion ?? judgePromptVersion,
+    rubricVersion: raw.rubricVersion ?? rubricVersion,
+    confidence: reportConfidence,
+    needsHumanReview:
+      raw.needsHumanReview ??
+      (reportConfidence < 0.65 ||
+        raw.uncertaintyNotes.length > 0 ||
+        raw.findings.some((finding) => finding.targetKind === "attempt" && finding.severity !== "positive")),
+    uncertaintyNotes: raw.uncertaintyNotes.slice(0, 5),
     locale: input.locale,
     sourceLocale: input.locale,
     translationStatus: "source",
@@ -625,7 +852,7 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
       attemptId: input.attemptId,
       trace: input.trace,
       scoreReport: report,
-      rawAnnotations: raw.graphAnnotations,
+      rawAnnotations: [...findingsToRawAnnotations({ findings: raw.findings, trace: input.trace }), ...raw.graphAnnotations],
       problemMaterialCount: input.problem.materials.length,
     }),
   };
@@ -693,7 +920,10 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig, evidence: Jud
       systemPrompt: [
         "You are SKAI Judge, an evaluator for AI orchestration skill.",
         "Evaluate the human user's process, not the model's raw intelligence.",
-        "Focus on problem definition, decomposition, instruction clarity, adaptation, verification, efficiency, material use, and final artifact quality.",
+        `Rubric version: ${rubricVersion}. Judge prompt version: ${judgePromptVersion}.`,
+        "Focus on problem framing, decomposition/workflow, instruction/output control, material/context grounding, adaptation, verification/uncertainty control, efficiency/context economy, and final artifact quality.",
+        "Use the deterministic evidence packet as structured evidence, but do not treat keyword signals as final truth.",
+        "Prefer graph-targeted findings. Anchor each finding to a real pair/node/edge/trace_event id from the Graph target guide.",
         "For graphAnnotations, target trace event ids from the supplied trace. Do not invent trace ids.",
         "Use pair targets for prompt-response orchestration states unless a specific prompt or response node is the issue.",
         "Do not reward fake precision. Explain bottlenecks concretely.",
@@ -706,15 +936,25 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig, evidence: Jud
           role: "user",
           content: [
             "Return a JSON object with these keys:",
+            `rubricVersion: \"${rubricVersion}\"`,
+            `judgePromptVersion: \"${judgePromptVersion}\"`,
+            "totalScore: number",
+            "confidence: number from 0 to 100",
+            "needsHumanReview: boolean",
             "coachSummary: string",
-            "axisScores: array of {axis, score, rationale}",
+            "axisScores: array of {axis, score, confidence, rationale, evidenceIds}",
+            "findings: array of {id?, kind, severity, axis, targetKind, targetId, evidenceIds, confidence, title, explanation, replaySuggestion?}",
             "strengths: string[]",
             "improvements: string[]",
             "bottlenecks: array of {traceEventId?, label, severity, explanation, replaySuggestion}",
             "workflow: array of {title, summary, relatedTraceEventIds}",
             "nextPracticeTargets: string[]",
             "graphAnnotations: array of {targetTraceEventId?, targetKind?, kind, severity, axis?, scoreImpact?, confidence?, title, explanation, evidenceTraceEventIds}",
+            "uncertaintyNotes: string[]",
             `Allowed axes: ${scoreAxisValues.join(", ")}`,
+            "Allowed finding kinds: strength, bottleneck, risk, missed_opportunity",
+            "Allowed finding severities: info, positive, watch, critical",
+            "Allowed finding targetKind values: attempt, pair, prompt_node, response_node, status_node, edge, trace_event",
             `Allowed graph annotation kinds: ${graphAnnotationKindValues.join(", ")}`,
             "Allowed graph annotation severities: info, positive, watch, critical",
             "For confidence, use 0-1 or 0-100. The server will normalize it.",
@@ -827,6 +1067,11 @@ function aggregateReports(input: JudgeInput, reports: ScoreReport[]): ScoreRepor
     judgeProvider: primary.judgeProvider,
     judgeModel: `ensemble(${reports.map((report) => report.judgeModel).join(",")})`,
     judgeMode: "ensemble",
+    judgePromptVersion: primary.judgePromptVersion ?? judgePromptVersion,
+    rubricVersion,
+    confidence: reports.reduce((sum, report) => sum + (report.confidence ?? 0.65), 0) / reports.length,
+    needsHumanReview: reports.some((report) => report.needsHumanReview) || detectDisagreement(reports, input.locale).length > 0,
+    uncertaintyNotes: uniqueStrings(reports.flatMap((report) => report.uncertaintyNotes ?? []), 5),
     locale: input.locale,
     sourceLocale: input.locale,
     translationStatus: "source",

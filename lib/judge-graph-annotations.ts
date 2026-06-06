@@ -13,7 +13,8 @@ import type {
 
 export interface RawJudgeGraphAnnotation {
   targetTraceEventId?: string;
-  targetKind?: "pair" | "node";
+  targetKind?: "attempt" | "pair" | "node" | "edge" | "trace_event" | "prompt_node" | "response_node" | "status_node";
+  targetId?: string;
   kind: ConversationGraphAnnotationKind;
   severity: ConversationGraphAnnotationSeverity;
   axis?: ScoreAxis;
@@ -79,6 +80,59 @@ function targetForTraceEvent(input: {
   return undefined;
 }
 
+function isKnownGraphTarget(graph: ConversationGraph, targetKind: string | undefined, targetId: string | undefined) {
+  if (!targetKind || !targetId) {
+    return false;
+  }
+
+  if (targetKind === "pair") {
+    return graph.pairs.some((pair) => pair.id === targetId);
+  }
+
+  if (targetKind === "edge") {
+    return [...graph.promptEdges, ...graph.responseEdges, ...graph.statusEdges].some((edge) => edge.id === targetId);
+  }
+
+  if (targetKind === "node" || targetKind === "prompt_node" || targetKind === "response_node" || targetKind === "status_node") {
+    return [...graph.promptNodes, ...graph.responseNodes, ...graph.statusNodes].some((node) => node.id === targetId);
+  }
+
+  return false;
+}
+
+function normalizeDirectTarget(input: {
+  graph: ConversationGraph;
+  targetKind: RawJudgeGraphAnnotation["targetKind"];
+  targetId?: string;
+}): { targetKind: ConversationGraphAnnotationTargetKind; targetId: string } | undefined {
+  if (!input.targetKind || !input.targetId || !isKnownGraphTarget(input.graph, input.targetKind, input.targetId)) {
+    return undefined;
+  }
+
+  if (input.targetKind === "pair") {
+    return {
+      targetKind: "pair",
+      targetId: input.targetId,
+    };
+  }
+
+  if (input.targetKind === "edge") {
+    return {
+      targetKind: "edge",
+      targetId: input.targetId,
+    };
+  }
+
+  if (input.targetKind === "node" || input.targetKind === "prompt_node" || input.targetKind === "response_node" || input.targetKind === "status_node") {
+    return {
+      targetKind: "node",
+      targetId: input.targetId,
+    };
+  }
+
+  return undefined;
+}
+
 export function normalizeJudgeGraphAnnotations(input: {
   attemptId: string;
   trace: TraceEvent[];
@@ -102,23 +156,25 @@ export function normalizeJudgeGraphAnnotations(input: {
       raw.targetTraceEventId && traceEventIds.has(raw.targetTraceEventId)
         ? raw.targetTraceEventId
         : evidenceTraceEventIds[0];
-
-    if (!targetTraceEventId) {
-      continue;
-    }
-
-    const target = targetForTraceEvent({
+    const directTarget = normalizeDirectTarget({
       graph,
-      traceEventId: targetTraceEventId,
-      preferredTargetKind: raw.targetKind ?? "pair",
+      targetKind: raw.targetKind,
+      targetId: raw.targetId,
     });
+    const target = directTarget ?? (targetTraceEventId
+      ? targetForTraceEvent({
+          graph,
+          traceEventId: targetTraceEventId,
+          preferredTargetKind: raw.targetKind === "node" ? "node" : "pair",
+        })
+      : undefined);
 
     if (!target) {
       continue;
     }
 
     normalized.push({
-      id: `annotation:${raw.kind}:${target.targetKind}:${target.targetId}:llm:${targetTraceEventId}:${index}`,
+      id: `annotation:${raw.kind}:${target.targetKind}:${target.targetId}:llm:${targetTraceEventId ?? "direct"}:${index}`,
       attemptId: input.attemptId,
       graphSchemaVersion: conversationGraphSchemaVersion,
       targetKind: target.targetKind,
@@ -130,7 +186,7 @@ export function normalizeJudgeGraphAnnotations(input: {
       confidence: clampConfidence(raw.confidence),
       title: compact(raw.title, 120),
       explanation: compact(raw.explanation, 900),
-      evidenceTraceEventIds: evidenceTraceEventIds.length > 0 ? evidenceTraceEventIds : [targetTraceEventId],
+      evidenceTraceEventIds: evidenceTraceEventIds.length > 0 ? evidenceTraceEventIds : targetTraceEventId ? [targetTraceEventId] : [],
       source: "llm_judge",
       createdAt: input.scoreReport.createdAt,
     });
