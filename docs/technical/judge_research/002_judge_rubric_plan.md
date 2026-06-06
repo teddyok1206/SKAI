@@ -354,6 +354,13 @@ Deliverable:
 - deterministic evidence packet from trace/problem/materials/graph;
 - unit tests or script checks against fixtures.
 
+Status:
+
+- Completed in `docs/technical/plan/098_judge_evidence_packet_builder.md`.
+- `lib/judge-evidence.ts` builds `skai.judge.evidence.v1`.
+- `npm run judge:evidence` checks fixture trace/graph/material input shape.
+- `judgeAttempt()` now passes the deterministic evidence packet into heuristic and LLM judge paths.
+
 ### Slice B. Judge Output Schema V1
 
 Files likely affected:

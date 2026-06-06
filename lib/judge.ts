@@ -2,12 +2,14 @@ import { z } from "zod";
 import { defaultRubric } from "@/data/rubric";
 import { buildAttachmentContext } from "@/lib/attachment-context";
 import { buildConversationGraph } from "@/lib/conversation-graph";
+import { buildJudgeEvidencePacket, formatJudgeEvidenceForContext } from "@/lib/judge-evidence";
 import { normalizeJudgeGraphAnnotations } from "@/lib/judge-graph-annotations";
 import { getLocalizedProblem } from "@/lib/problem-localization";
 import { getJudgeProvider } from "@/lib/providers";
 import type {
   AxisScore,
   Bottleneck,
+  JudgeEvidencePacket,
   JudgeMode,
   JudgeRunSummary,
   Problem,
@@ -155,6 +157,128 @@ function weightedTotal(problem: Problem, axisScores: AxisScore[]) {
   return Math.round(weighted);
 }
 
+function appendEvidenceRationale(score: AxisScore, evidence: JudgeEvidencePacket | undefined, locale: ReportLocale): AxisScore {
+  if (!evidence) {
+    return score;
+  }
+
+  const notes: string[] = [];
+
+  if (score.axis === "problem_definition") {
+    if (evidence.signals.hasExplicitGoal) {
+      notes.push(locale === "ko" ? "목표 신호 있음" : "goal signal present");
+    }
+    if (evidence.signals.hasConstraints) {
+      notes.push(locale === "ko" ? "제약/가정 신호 있음" : "constraints/assumptions present");
+    }
+  }
+
+  if (score.axis === "decomposition" && evidence.signals.hasDecomposition) {
+    notes.push(locale === "ko" ? "task 분해 신호 있음" : "decomposition signal present");
+  }
+
+  if (score.axis === "instruction_clarity") {
+    if (evidence.signals.hasDeliverableContract) {
+      notes.push(locale === "ko" ? "산출물 계약 신호 있음" : "deliverable contract present");
+    }
+    if (evidence.signals.hasMaterialInstruction) {
+      notes.push(locale === "ko" ? "자료 사용 지시 신호 있음" : "material-use instruction present");
+    }
+  }
+
+  if (score.axis === "adaptation" && evidence.signals.hasAdaptationReference) {
+    notes.push(locale === "ko" ? "이전 응답 반영 신호 있음" : "response-aware adaptation present");
+  }
+
+  if (score.axis === "verification") {
+    if (evidence.signals.hasVerification) {
+      notes.push(locale === "ko" ? "검증 신호 있음" : "verification signal present");
+    }
+    if (evidence.signals.hasAssumptionSeparation) {
+      notes.push(locale === "ko" ? "가정/사실 분리 신호 있음" : "assumption/fact separation present");
+    }
+  }
+
+  if (score.axis === "efficiency" && evidence.signals.repeatedContextBurden > 0) {
+    notes.push(
+      locale === "ko"
+        ? `반복 context burden ${Math.round(evidence.signals.repeatedContextBurden * 100)}%`
+        : `repeated context burden ${Math.round(evidence.signals.repeatedContextBurden * 100)}%`,
+    );
+  }
+
+  if (score.axis === "final_quality") {
+    notes.push(
+      locale === "ko"
+        ? `최종 산출물 coverage ${Math.round(evidence.signals.finalAnswerCoverage * 100)}%`
+        : `final artifact coverage ${Math.round(evidence.signals.finalAnswerCoverage * 100)}%`,
+    );
+  }
+
+  if (notes.length === 0) {
+    return score;
+  }
+
+  return {
+    ...score,
+    rationale: `${score.rationale} ${locale === "ko" ? "Evidence packet:" : "Evidence packet:"} ${notes.join(", ")}.`,
+  };
+}
+
+function adjustAxisScoreWithEvidence(score: AxisScore, evidence: JudgeEvidencePacket | undefined, locale: ReportLocale): AxisScore {
+  if (!evidence) {
+    return score;
+  }
+
+  let delta = 0;
+
+  if (score.axis === "problem_definition") {
+    delta += evidence.signals.hasExplicitGoal ? 6 : -4;
+    delta += evidence.signals.hasConstraints ? 4 : 0;
+    delta += evidence.signals.hasAssumptionSeparation ? 3 : 0;
+  }
+
+  if (score.axis === "decomposition") {
+    delta += evidence.signals.hasDecomposition ? 10 : -5;
+    delta += evidence.counts.promptPairCount >= 3 ? 3 : 0;
+  }
+
+  if (score.axis === "instruction_clarity") {
+    delta += evidence.signals.hasDeliverableContract ? 7 : -3;
+    delta += evidence.signals.hasMaterialInstruction ? 4 : 0;
+  }
+
+  if (score.axis === "adaptation") {
+    delta += evidence.signals.hasAdaptationReference ? 9 : 0;
+    delta += evidence.signals.branchReplayUsed ? 6 : 0;
+  }
+
+  if (score.axis === "verification") {
+    delta += evidence.signals.hasVerification ? 10 : -6;
+    delta += evidence.signals.hasHumanDecisionBoundary ? 4 : 0;
+    delta -= evidence.warnings.includes("some_problem_materials_unused") ? 4 : 0;
+  }
+
+  if (score.axis === "efficiency") {
+    delta -= Math.round(evidence.signals.repeatedContextBurden * 12);
+    delta += evidence.counts.userTurnCount > 0 && evidence.counts.userTurnCount <= 4 ? 3 : 0;
+  }
+
+  if (score.axis === "final_quality") {
+    delta += Math.round(evidence.signals.finalAnswerCoverage * 10);
+    delta += evidence.signals.hasDeliverableContract ? 3 : 0;
+  }
+
+  return appendEvidenceRationale(
+    {
+      ...score,
+      score: clampScore(score.score + delta),
+    },
+    evidence,
+    locale,
+  );
+}
+
 function axisScore(axis: AxisScore["axis"], traceText: string, finalAnswer: string, turnCount: number, locale: ReportLocale): AxisScore {
   const combined = `${traceText}\n${finalAnswer}`;
   const keywordSets: Record<AxisScore["axis"], string[]> = {
@@ -268,12 +392,14 @@ function buildWorkflow(trace: TraceEvent[], locale: ReportLocale): WorkflowStep[
   ];
 }
 
-function buildHeuristicReport(input: JudgeInput): ScoreReport {
+function buildHeuristicReport(input: JudgeInput, evidence?: JudgeEvidencePacket): ScoreReport {
   const userTurnCount = input.trace.filter((event) => event.role === "user").length;
   const traceText = input.trace
     .map((event) => `${event.role}: ${event.content}\n${buildAttachmentContext(event.attachments)}`)
     .join("\n");
-  const axisScores = defaultRubric.map((item) => axisScore(item.axis, traceText, input.finalAnswer, userTurnCount, input.locale));
+  const axisScores = defaultRubric.map((item) =>
+    adjustAxisScoreWithEvidence(axisScore(item.axis, traceText, input.finalAnswer, userTurnCount, input.locale), evidence, input.locale),
+  );
   const bottlenecks = findBottlenecks(input.trace, input.locale);
   const strengths = axisScores
     .filter((score) => score.score >= 76)
@@ -388,7 +514,7 @@ function getLlmJudgeConfigs(mode: JudgeMode): JudgeConfig[] {
   ];
 }
 
-function buildJudgeContext(input: JudgeInput) {
+function buildJudgeContext(input: JudgeInput, evidence: JudgeEvidencePacket) {
   const problem = getLocalizedProblem(input.problem, input.locale);
   const trace = input.trace
     .map((event, index) => {
@@ -432,6 +558,9 @@ function buildJudgeContext(input: JudgeInput) {
     "",
     "Rubric:",
     problem.rubric.map((item) => `- ${item.axis} (${item.weight}): ${item.description}`).join("\n"),
+    "",
+    "Deterministic evidence packet:",
+    formatJudgeEvidenceForContext(evidence),
     "",
     "Trace:",
     trace || "No trace events.",
@@ -532,9 +661,9 @@ function runSummary(input: {
   };
 }
 
-function runHeuristicJudge(input: JudgeInput): JudgeRunInternal {
+function runHeuristicJudge(input: JudgeInput, evidence?: JudgeEvidencePacket): JudgeRunInternal {
   const startedAt = Date.now();
-  const report = buildHeuristicReport(input);
+  const report = buildHeuristicReport(input, evidence);
 
   return {
     report,
@@ -551,7 +680,7 @@ function runHeuristicJudge(input: JudgeInput): JudgeRunInternal {
   };
 }
 
-async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<JudgeRunInternal> {
+async function runLlmJudge(input: JudgeInput, config: JudgeConfig, evidence: JudgeEvidencePacket): Promise<JudgeRunInternal> {
   const startedAt = Date.now();
 
   try {
@@ -571,7 +700,7 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig): Promise<Judg
         `Write every human-facing field in ${input.locale === "ko" ? "Korean" : "English"}. Keep SKAI technical tokens such as Prompt, Response, Trace, Branch, Replay, Judge, and Coaching when useful.`,
         "Return only valid JSON. Do not include markdown fences.",
       ].join(" "),
-      contextMessage: buildJudgeContext(input),
+      contextMessage: buildJudgeContext(input, evidence),
       messages: [
         {
           role: "user",
@@ -726,14 +855,24 @@ function withGraphAnnotations(input: JudgeInput, report: ScoreReport): ScoreRepo
 }
 
 export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
-  const heuristicRun = runHeuristicJudge(input);
+  const evidenceGraph = buildConversationGraph(input.trace, undefined, undefined, {
+    problemMaterialCount: input.problem.materials.length,
+  });
+  const evidence = buildJudgeEvidencePacket({
+    attemptId: input.attemptId,
+    problem: input.problem,
+    trace: input.trace,
+    finalAnswer: input.finalAnswer,
+    graph: evidenceGraph,
+  });
+  const heuristicRun = runHeuristicJudge(input, evidence);
   const mode = getJudgeMode();
 
   if (mode === "heuristic") {
     return withGraphAnnotations(input, withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []));
   }
 
-  const llmRuns = await Promise.all(getLlmJudgeConfigs(mode).map((config) => runLlmJudge(input, config)));
+  const llmRuns = await Promise.all(getLlmJudgeConfigs(mode).map((config) => runLlmJudge(input, config, evidence)));
   const allRuns = [heuristicRun, ...llmRuns];
   const successfulReports = allRuns.map((run) => run.report).filter((report): report is ScoreReport => Boolean(report));
   const successfulLlmReports = llmRuns.map((run) => run.report).filter((report): report is ScoreReport => Boolean(report));

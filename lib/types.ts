@@ -262,6 +262,87 @@ export interface WorkflowStep {
   relatedTraceEventIds: string[];
 }
 
+export type JudgeEvidenceSignalKind =
+  | "explicit_goal"
+  | "constraints"
+  | "deliverable_contract"
+  | "decomposition"
+  | "material_instruction"
+  | "verification"
+  | "assumption_separation"
+  | "human_decision_boundary"
+  | "adaptation_reference"
+  | "branch_replay"
+  | "final_answer_coverage"
+  | "repeated_context_burden";
+
+export type JudgeEvidenceItemKind = "positive" | "gap" | "risk" | "metric";
+export type JudgeEvidenceTargetKind = "attempt" | "trace_event" | "pair" | "node" | "edge" | "material";
+
+export interface JudgeMaterialCoverage {
+  materialId: string;
+  title: string;
+  fileName: string;
+  kind: MaterialKind;
+  attachedTraceEventIds: string[];
+  referencedTraceEventIds: string[];
+  instructionTraceEventIds: string[];
+  status: "unused" | "referenced" | "attached" | "instructed";
+}
+
+export interface JudgeGraphSignal {
+  id: string;
+  label: string;
+  value: number | string;
+  targetIds: string[];
+}
+
+export interface JudgeEvidenceItem {
+  id: string;
+  kind: JudgeEvidenceItemKind;
+  signal: JudgeEvidenceSignalKind;
+  axis?: ScoreAxis;
+  targetKind: JudgeEvidenceTargetKind;
+  targetId: string;
+  evidenceTraceEventIds: string[];
+  confidence: number;
+  summary: string;
+}
+
+export interface JudgeEvidencePacket {
+  schemaVersion: "skai.judge.evidence.v1";
+  attemptId: string;
+  problemId: string;
+  generatedAt: string;
+  counts: {
+    turnCount: number;
+    userTurnCount: number;
+    assistantTurnCount: number;
+    promptPairCount: number;
+    attachmentCount: number;
+    requiredMaterialCount: number;
+    attachedRequiredMaterialCount: number;
+  };
+  signals: {
+    hasExplicitGoal: boolean;
+    hasConstraints: boolean;
+    hasDeliverableContract: boolean;
+    hasDecomposition: boolean;
+    hasMaterialInstruction: boolean;
+    hasVerification: boolean;
+    hasAssumptionSeparation: boolean;
+    hasHumanDecisionBoundary: boolean;
+    hasAdaptationReference: boolean;
+    branchReplayUsed: boolean;
+    finalAnswerCoverage: number;
+    repeatedContextBurden: number;
+  };
+  materialCoverage: JudgeMaterialCoverage[];
+  graphSignals: JudgeGraphSignal[];
+  evidenceItems: JudgeEvidenceItem[];
+  warnings: string[];
+}
+
 export type ConversationGraphAnnotationTargetKind = "node" | "edge" | "pair";
 
 export type ConversationGraphAnnotationKind =
