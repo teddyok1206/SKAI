@@ -33,6 +33,41 @@ const scoreAxisValues = [
   "efficiency",
   "final_quality",
 ] as const;
+
+const legacyBottleneckSeveritySchema = z.preprocess((value) => {
+  if (value === "watch") {
+    return "medium";
+  }
+
+  if (value === "critical") {
+    return "high";
+  }
+
+  if (value === "info" || value === "positive") {
+    return "low";
+  }
+
+  return value;
+}, z.enum(["low", "medium", "high"]));
+
+const judgeFindingSeveritySchema = z.preprocess((value) => {
+  if (value === "low") {
+    return "info";
+  }
+
+  if (value === "medium") {
+    return "watch";
+  }
+
+  if (value === "high") {
+    return "critical";
+  }
+
+  return value;
+}, z.enum(["info", "positive", "watch", "critical"]));
+
+const optionalStringSchema = z.preprocess((value) => (value === null ? undefined : value), z.string().max(600).optional());
+
 const graphAnnotationKindValues = [
   "framing",
   "decomposition",
@@ -90,7 +125,7 @@ const llmJudgeSchema = z.object({
       z.object({
         id: z.string().optional(),
         kind: z.enum(["strength", "bottleneck", "risk", "missed_opportunity"]).default("bottleneck"),
-        severity: z.enum(["info", "positive", "watch", "critical"]),
+        severity: judgeFindingSeveritySchema,
         axis: z.enum(scoreAxisValues),
         targetKind: z.enum(["attempt", "pair", "prompt_node", "response_node", "status_node", "edge", "trace_event"]),
         targetId: z.string().min(1),
@@ -98,7 +133,7 @@ const llmJudgeSchema = z.object({
         confidence: z.coerce.number().min(0).max(100).optional(),
         title: z.string().min(1).max(140),
         explanation: z.string().min(1).max(1000),
-        replaySuggestion: z.string().max(600).optional(),
+        replaySuggestion: optionalStringSchema,
       }),
     )
     .default([]),
@@ -109,7 +144,7 @@ const llmJudgeSchema = z.object({
       z.object({
         traceEventId: z.string().optional(),
         label: z.string(),
-        severity: z.enum(["low", "medium", "high"]),
+        severity: legacyBottleneckSeveritySchema,
         explanation: z.string(),
         replaySuggestion: z.string(),
       }),
@@ -132,7 +167,7 @@ const llmJudgeSchema = z.object({
         targetKind: z.enum(["attempt", "pair", "node", "edge", "trace_event", "prompt_node", "response_node", "status_node"]).optional(),
         targetId: z.string().optional(),
         kind: z.enum(graphAnnotationKindValues),
-        severity: z.enum(["info", "positive", "watch", "critical"]),
+        severity: judgeFindingSeveritySchema,
         axis: z.enum(scoreAxisValues).optional(),
         scoreImpact: z.coerce.number().min(-25).max(25).optional(),
         confidence: z.coerce.number().min(0).max(100).optional(),
@@ -728,6 +763,7 @@ function traceEventIdsFromEvidenceIds(input: {
   evidenceIds: string[];
   fallbackTargetKind: string;
   fallbackTargetId: string;
+  fallbackTraceEventId?: string;
 }) {
   const fromEvidence = input.evidenceIds.filter((id) => input.traceEventIds.has(id));
 
@@ -739,6 +775,10 @@ function traceEventIdsFromEvidenceIds(input: {
     return [input.fallbackTargetId];
   }
 
+  if (input.fallbackTargetKind === "attempt" && input.fallbackTraceEventId) {
+    return [input.fallbackTraceEventId];
+  }
+
   return [];
 }
 
@@ -747,6 +787,7 @@ function findingsToRawAnnotations(input: {
   trace: TraceEvent[];
 }): RawJudgeGraphAnnotation[] {
   const traceEventIds = new Set(input.trace.map((event) => event.id));
+  const fallbackTraceEventId = input.trace.find((event) => event.role === "user")?.id ?? input.trace[0]?.id;
 
   return input.findings
     .filter((finding) => finding.severity !== "info")
@@ -756,6 +797,7 @@ function findingsToRawAnnotations(input: {
         evidenceIds: finding.evidenceIds,
         fallbackTargetKind: finding.targetKind,
         fallbackTargetId: finding.targetId,
+        fallbackTraceEventId,
       });
       const targetTraceEventId =
         finding.targetKind === "trace_event" && traceEventIds.has(finding.targetId)
@@ -764,13 +806,13 @@ function findingsToRawAnnotations(input: {
 
       return {
         targetTraceEventId,
-        targetKind: targetKindToGraphAnnotationKind(finding.targetKind),
+        targetKind: finding.targetKind === "attempt" ? "trace_event" : targetKindToGraphAnnotationKind(finding.targetKind),
         targetId: finding.targetKind === "trace_event" || finding.targetKind === "attempt" ? undefined : finding.targetId,
         kind: findingKindToAnnotationKind(finding.kind, finding.axis),
         severity: finding.severity,
         axis: finding.axis,
         scoreImpact: finding.severity === "critical" ? -12 : finding.severity === "watch" ? -6 : finding.severity === "positive" ? 6 : 0,
-        confidence: clampConfidence(finding.confidence) * 100,
+        confidence: clampConfidence(finding.confidence) * (finding.targetKind === "attempt" ? 72 : 100),
         title: finding.title,
         explanation: finding.explanation,
         evidenceTraceEventIds,
@@ -834,11 +876,12 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
     judgePromptVersion: raw.judgePromptVersion ?? judgePromptVersion,
     rubricVersion: raw.rubricVersion ?? rubricVersion,
     confidence: reportConfidence,
-    needsHumanReview:
-      raw.needsHumanReview ??
+    needsHumanReview: Boolean(
+      raw.needsHumanReview ||
       (reportConfidence < 0.65 ||
         raw.uncertaintyNotes.length > 0 ||
         raw.findings.some((finding) => finding.targetKind === "attempt" && finding.severity !== "positive")),
+    ),
     uncertaintyNotes: raw.uncertaintyNotes.slice(0, 5),
     locale: input.locale,
     sourceLocale: input.locale,
@@ -954,9 +997,12 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig, evidence: Jud
             `Allowed axes: ${scoreAxisValues.join(", ")}`,
             "Allowed finding kinds: strength, bottleneck, risk, missed_opportunity",
             "Allowed finding severities: info, positive, watch, critical",
+            "Do not use low, medium, or high for findings[].severity.",
             "Allowed finding targetKind values: attempt, pair, prompt_node, response_node, status_node, edge, trace_event",
+            "For legacy bottlenecks[].severity, use low, medium, or high only. Do not use finding severities there.",
             `Allowed graph annotation kinds: ${graphAnnotationKindValues.join(", ")}`,
             "Allowed graph annotation severities: info, positive, watch, critical",
+            "Do not use low, medium, or high for graphAnnotations[].severity.",
             "For confidence, use 0-1 or 0-100. The server will normalize it.",
           ].join("\n"),
         },
@@ -1085,6 +1131,7 @@ function withJudgeRuns(report: ScoreReport, mode: JudgeMode, runs: JudgeRunInter
     judgeMode: mode,
     judgeRuns: runs.map((run) => run.summary),
     judgeDisagreement: disagreement,
+    needsHumanReview: report.needsHumanReview || disagreement.length > 0,
   };
 }
 

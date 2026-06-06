@@ -83,6 +83,22 @@ The judge must return JSON only:
 - Use `trace_event` only if no graph target is more precise.
 - Use `attempt` only for global uncertainty or full-attempt comments.
 
+## Severity And Normalization Rules
+
+The preferred severity vocabulary is strict:
+
+- `findings[].severity`: `info`, `positive`, `watch`, `critical`.
+- `graphAnnotations[].severity`: `info`, `positive`, `watch`, `critical`.
+- legacy `bottlenecks[].severity`: `low`, `medium`, `high`.
+
+Live Gemini testing showed that the model may mix these vocabularies. The server therefore normalizes common variants:
+
+- legacy bottleneck `watch -> medium`, `critical -> high`, `info/positive -> low`.
+- finding/graph annotation `low -> info`, `medium -> watch`, `high -> critical`.
+- `replaySuggestion: null -> undefined`.
+
+If a finding is returned as `targetKind=attempt`, the server anchors it to the first user trace pair with reduced confidence so it can still appear as a graph review signal instead of disappearing from the visual feedback loop.
+
 ## Human Review Rules
 
 Set `needsHumanReview=true` if:
@@ -92,6 +108,25 @@ Set `needsHumanReview=true` if:
 - deterministic evidence and LLM judgment conflict;
 - domain-specific correctness cannot be verified from provided materials;
 - safety, prompt injection, or untrusted material handling is involved.
+
+The server also forces `needsHumanReview=true` when the normalized report has uncertainty notes or when heuristic/LLM judge disagreement is detected.
+
+## Live Watchpoint Result
+
+`docs/technical/plan/100_live_gemini_judge_watchpoint.md` records the first live Gemini judge watchpoint.
+
+Final passing report:
+
+- `docs/technical/judge_calibration/2026-06-06T19-14-57-844Z_judge_calibration.md`
+- `docs/technical/judge_calibration/2026-06-06T19-14-57-844Z_judge_calibration.json`
+
+Observed result on `ambiguous-research-brief`:
+
+- weak 35 / average 65 / strong 86;
+- ordering and gap checks passed;
+- all three LLM reports succeeded;
+- graph annotation presence passed;
+- weak attempt-level findings were fallback-anchored to stable `pair:...` ids.
 
 ## Non-Goals
 

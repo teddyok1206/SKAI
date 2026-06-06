@@ -1,0 +1,646 @@
+{
+  "startedAt": "2026-06-06T19:14:57.844Z",
+  "baseUrl": "http://127.0.0.1:3013",
+  "status": "passed",
+  "results": [
+    {
+      "sampleId": "golden-ambiguous-research-brief-weak",
+      "problemId": "ambiguous-research-brief",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 35,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.85,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "사용자가 AI와의 대화를 통해 문제를 구체화하려는 의도는 있었으나, 첫 번째 상호작용에서 이를 효과적으로 수행하지 못했습니다. 실제 대화 흐름이 더 길었다면 다른 양상을 보였을 수 있습니다.",
+        "제공된 증거만으로는 사용자가 AI의 응답을 바탕으로 계획을 수정하거나 추가 질문을 하려는 시도가 있었는지 명확히 판단하기 어렵습니다. 단일 상호작용으로 보일 수 있는 부분이 있어 효율성 및 적응성 평가에 영향을 미쳤습니다."
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 1,
+          "totalScore": 48
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 15460,
+          "totalScore": 35
+        }
+      ],
+      "judgeDisagreement": [
+        "총점 차이가 13점입니다. judge calibration이 필요합니다.",
+        "적응력 축에서 judge 간 점수 차이가 큽니다.",
+        "효율성 축에서 judge 간 점수 차이가 큽니다.",
+        "최종품질 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 6,
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "bottleneck",
+          "severity": "critical",
+          "axis": "problem_definition",
+          "confidence": 0.504,
+          "title": "초기 요청의 모호성으로 인한 문제 정의 실패",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "decomposition",
+          "severity": "critical",
+          "axis": "decomposition",
+          "confidence": 0.504,
+          "title": "하위 작업 분해 및 AI에게 배분 실패",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:delegation:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "delegation",
+          "severity": "critical",
+          "axis": "instruction_clarity",
+          "confidence": 0.504,
+          "title": "AI에게 명확한 지시 및 출력 형식 정의 부족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:3",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "verification",
+          "severity": "critical",
+          "axis": "verification",
+          "confidence": 0.504,
+          "title": "검증 계획 및 AI 응답 검증 부재",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "bottleneck",
+          "severity": "critical",
+          "axis": "final_quality",
+          "confidence": 0.504,
+          "title": "최종 산출물의 목표 및 제약 미충족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:cost_efficiency:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:llm:golden-ambiguous-research-brief-weak-u1:5",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "cost_efficiency",
+          "severity": "watch",
+          "axis": "efficiency",
+          "confidence": 0.504,
+          "title": "단일 상호작용으로 복잡한 문제 해결 시도",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "초기 요청의 모호성으로 인한 문제 정의 실패",
+        "하위 작업 분해 및 AI에게 배분 실패",
+        "AI에게 명확한 지시 및 출력 형식 정의 부족",
+        "검증 계획 및 AI 응답 검증 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:explicit_goal"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:verification"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-average",
+      "problemId": "ambiguous-research-brief",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 65,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 1,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "최종 산출물에 대한 'final_answer_coverage' 메트릭이 0%로 표시되어 있으나, 이는 최종 산출물이 명시적으로 제공되지 않았거나 평가 시스템이 이를 인식하지 못했기 때문일 수 있습니다. 실제 사용자가 생성한 결과물은 조사 질문, 발표 구조, 출처 유형 등을 포함하고 있어 부분적으로는 요구사항을 충족했습니다."
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 66
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 13089,
+          "totalScore": 65
+        }
+      ],
+      "judgeDisagreement": [
+        "검증력 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 9,
+      "graphAnnotations": [
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2:golden-ambiguous-research-brief-average-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:llm:golden-ambiguous-research-brief-average-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "decomposition",
+          "severity": "watch",
+          "axis": "decomposition",
+          "confidence": 0.4752,
+          "title": "작업 분해가 명확하지 않음",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:adaptation:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:llm:golden-ambiguous-research-brief-average-u1:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "adaptation",
+          "severity": "watch",
+          "axis": "adaptation",
+          "confidence": 0.4752,
+          "title": "AI 응답 기반 계획 조정 부족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:llm:golden-ambiguous-research-brief-average-u1:2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "verification",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.5904,
+          "title": "검증 계획의 구체성 부족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:llm:golden-ambiguous-research-brief-average-u1:3",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "axis": "final_quality",
+          "confidence": 0.41759999999999997,
+          "title": "최종 산출물 요구사항 일부 미충족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:framing:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:llm:golden-ambiguous-research-brief-average-u1:4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "framing",
+          "severity": "positive",
+          "axis": "problem_definition",
+          "confidence": 0.82,
+          "title": "초기 문제 정의 및 불확실성 명시",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:delegation:pair:pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2:llm:golden-ambiguous-research-brief-average-u2:5",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2",
+          "kind": "delegation",
+          "severity": "info",
+          "axis": "decomposition",
+          "confidence": 0.82,
+          "title": "가정 설정 및 하위 작업 위임",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u2"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2:llm:golden-ambiguous-research-brief-average-u2:6",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "검증 계획 필요성 인지",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u2"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "작업 분해가 명확하지 않음",
+        "AI 응답 기반 계획 조정 부족",
+        "검증 계획의 구체성 부족",
+        "최종 산출물 요구사항 일부 미충족"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 85,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:explicit_goal",
+            "evidence:constraints"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 50,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 70,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 40,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 60,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:verification"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 70,
+          "confidence": 1,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 50,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-strong",
+      "problemId": "ambiguous-research-brief",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 86,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 1,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "최종 산출물(response:golden-ambiguous-research-brief-strong-a4)의 구체적인 내용에 대한 직접적인 분석이 제한적이므로, 'final_answer_coverage' 지표와 'AI 응답 한계 명시의 구체성 부족'에 대한 평가는 간접적인 증거에 기반합니다."
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 1,
+          "totalScore": 91
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 11610,
+          "totalScore": 86
+        }
+      ],
+      "judgeDisagreement": [
+        "검증력 축에서 judge 간 점수 차이가 큽니다.",
+        "효율성 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 16,
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4:golden-ambiguous-research-brief-strong-u4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "AI 응답 한계 명시의 구체성 부족",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u4"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1:golden-ambiguous-research-brief-strong-u1:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u2:golden-ambiguous-research-brief-strong-a2:golden-ambiguous-research-brief-strong-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u2:golden-ambiguous-research-brief-strong-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3:golden-ambiguous-research-brief-strong-u3:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u3"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:adaptation:pair:pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3:golden-ambiguous-research-brief-strong-u3:adaptation",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3",
+          "kind": "adaptation",
+          "severity": "info",
+          "axis": "adaptation",
+          "confidence": 0.68,
+          "title": "Course correction",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u3"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4:golden-ambiguous-research-brief-strong-u4:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u4"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1:llm:golden-ambiguous-research-brief-strong-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1",
+          "kind": "bottleneck",
+          "severity": "positive",
+          "axis": "problem_definition",
+          "confidence": 1,
+          "title": "명확한 목표 및 제약 조건 정의",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3:llm:golden-ambiguous-research-brief-strong-u3:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3",
+          "kind": "decomposition",
+          "severity": "positive",
+          "axis": "decomposition",
+          "confidence": 1,
+          "title": "체계적인 하위 Task 분해",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u3"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "AI 응답 한계 명시의 구체성 부족",
+        "최종 산출물의 포괄성"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 96,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:explicit_goal",
+            "evidence:constraints"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 96,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 96,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 96,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 80,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:verification"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 96,
+          "confidence": 1,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 86,
+          "confidence": 1,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    }
+  ],
+  "orderingChecks": [
+    {
+      "problemId": "ambiguous-research-brief",
+      "passed": true,
+      "gapPassed": true,
+      "annotationPassed": true,
+      "scores": {
+        "weak": 35,
+        "average": 65,
+        "strong": 86
+      },
+      "gaps": {
+        "weakAverage": 30,
+        "averageStrong": 21
+      }
+    }
+  ],
+  "errors": []
+}

@@ -381,6 +381,33 @@ function calibrationStatus(results, checks, errors) {
   return "passed";
 }
 
+function graphAnnotationSummary(annotation) {
+  return {
+    id: annotation.id,
+    targetKind: annotation.targetKind,
+    targetId: annotation.targetId,
+    kind: annotation.kind,
+    severity: annotation.severity,
+    axis: annotation.axis,
+    confidence: annotation.confidence,
+    title: annotation.title,
+    evidenceTraceEventIds: annotation.evidenceTraceEventIds ?? [],
+    source: annotation.source,
+  };
+}
+
+function judgeRunSummary(run) {
+  return {
+    judgeKind: run.judgeKind,
+    status: run.status,
+    judgeProvider: run.judgeProvider,
+    judgeModel: run.judgeModel,
+    latencyMs: run.latencyMs,
+    totalScore: run.totalScore,
+    error: run.error,
+  };
+}
+
 function reportMarkdown(report) {
   return [
     `# Judge Calibration ${report.startedAt}`,
@@ -406,7 +433,19 @@ function reportMarkdown(report) {
         "",
         `- totalScore: ${result.totalScore}`,
         `- judgeMode: ${result.judgeMode}`,
+        result.judgePromptVersion ? `- judgePromptVersion: ${result.judgePromptVersion}` : "",
+        typeof result.confidence === "number" ? `- confidence: ${result.confidence}` : "",
+        typeof result.needsHumanReview === "boolean" ? `- needsHumanReview: ${result.needsHumanReview}` : "",
+        result.judgeRuns.length > 0
+          ? `- judgeRuns: ${result.judgeRuns.map((run) => `${run.judgeKind}:${run.status}${run.error ? `(${run.error.slice(0, 120)})` : ""}`).join(" / ")}`
+          : "",
         `- graphAnnotations: ${result.graphAnnotationCount}`,
+        result.graphAnnotations.length > 0
+          ? `- graphTargets: ${result.graphAnnotations
+              .slice(0, 4)
+              .map((annotation) => `${annotation.targetKind}:${annotation.targetId}:${annotation.kind}`)
+              .join(" / ")}`
+          : "",
         `- bottlenecks: ${result.bottlenecks.join(", ") || "none"}`,
         `- axisScores: ${result.axisScores.map((axis) => `${axis.axis} ${axis.score}`).join(" / ")}`,
         "",
@@ -455,11 +494,21 @@ async function main() {
         judgeMode: report.judgeMode ?? "heuristic",
         judgeProvider: report.judgeProvider,
         judgeModel: report.judgeModel,
+        judgePromptVersion: report.judgePromptVersion,
+        rubricVersion: report.rubricVersion,
+        confidence: report.confidence,
+        needsHumanReview: report.needsHumanReview,
+        uncertaintyNotes: report.uncertaintyNotes ?? [],
+        judgeRuns: report.judgeRuns?.map(judgeRunSummary) ?? [],
+        judgeDisagreement: report.judgeDisagreement ?? [],
         graphAnnotationCount: report.graphAnnotations?.length ?? 0,
+        graphAnnotations: report.graphAnnotations?.slice(0, 8).map(graphAnnotationSummary) ?? [],
         bottlenecks: report.bottlenecks?.map((item) => item.label) ?? [],
         axisScores: report.axisScores?.map((item) => ({
           axis: item.axis,
           score: item.score,
+          confidence: item.confidence,
+          evidenceIds: item.evidenceIds ?? [],
         })) ?? [],
       });
     } catch (error) {

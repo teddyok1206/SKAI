@@ -141,6 +141,7 @@
 
 ## 다음 작업
 
-- Gemini live judge key를 넣은 뒤 `SKAI_JUDGE_MODE=llm`으로 prompt v2 품질을 실제 trace에서 검증한다.
-- LLM output이 unanchored finding을 자주 내면 prompt를 더 좁히거나 normalization에서 human-review signal을 더 강하게 표시한다.
+- Live Gemini judge watchpoint는 `docs/technical/plan/100_live_gemini_judge_watchpoint.md`에서 1차 통과했다.
+- 다음 live judge 검증은 `club-budget-workflow`처럼 materials-heavy 문제에서 material grounding target과 source-use finding을 확인한다.
+- LLM output이 unanchored finding을 내면 현재는 첫 user trace pair로 낮은-confidence fallback anchor를 부여한다. 다음 단계는 target hit rate와 fallback rate를 report metric으로 분리하는 것이다.
 - Founder calibration labels를 Supabase에 저장하려면 별도 migration/API slice가 필요하다.
