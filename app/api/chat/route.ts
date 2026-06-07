@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getProblem } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
 import { compileProviderContextCached } from "@/lib/context-compiler";
+import { ndjsonResponse } from "@/lib/ndjson-stream";
 import { completeProviderRequest, streamProviderRequest } from "@/lib/providers";
 
 const attachmentSchema = z.object({
@@ -74,53 +75,35 @@ export async function POST(request: Request) {
     });
 
     if (parsed.data.stream) {
-      const encoder = new TextEncoder();
+      return ndjsonResponse(async (send) => {
+        send({
+          type: "context",
+          compiledContext: compiledContext.metadata,
+        });
 
-      const stream = new ReadableStream({
-        async start(controller) {
-          function send(payload: unknown) {
-            controller.enqueue(encoder.encode(`${JSON.stringify(payload)}\n`));
-          }
-
-          try {
-            send({
-              type: "context",
-              compiledContext: compiledContext.metadata,
-            });
-
-            for await (const event of streamProviderRequest({
-              provider: parsed.data.provider,
-              model: parsed.data.model,
-              problem,
-              messages: compiledContext.messages,
-            })) {
-              if (event.type === "ready" || event.type === "done") {
-                send({
-                  ...event,
-                  compiledContext: compiledContext.metadata,
-                });
-                continue;
-              }
-
-              send(event);
+        try {
+          for await (const event of streamProviderRequest({
+            provider: parsed.data.provider,
+            model: parsed.data.model,
+            problem,
+            messages: compiledContext.messages,
+          })) {
+            if (event.type === "ready" || event.type === "done") {
+              send({
+                ...event,
+                compiledContext: compiledContext.metadata,
+              });
+              continue;
             }
-          } catch (error) {
-            send({
-              type: "error",
-              error: error instanceof Error ? error.message : "Provider stream failed.",
-            });
-          } finally {
-            controller.close();
-          }
-        },
-      });
 
-      return new Response(stream, {
-        headers: {
-          "Content-Type": "application/x-ndjson; charset=utf-8",
-          "Cache-Control": "no-cache, no-transform",
-          "X-Accel-Buffering": "no",
-        },
+            send(event);
+          }
+        } catch (error) {
+          send({
+            type: "error",
+            error: error instanceof Error ? error.message : "Provider stream failed.",
+          });
+        }
       });
     }
 

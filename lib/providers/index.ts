@@ -16,30 +16,50 @@ const providers: Partial<Record<ProviderId, ModelProvider>> = {
     baseUrl: process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1",
     apiKey: process.env.OPENAI_API_KEY,
     defaultModel: process.env.OPENAI_MODEL ?? "gpt-4.1-nano",
+    streaming: {
+      enabled: true,
+      includeUsage: true,
+    },
   }),
   groq: createOpenAICompatibleProvider({
     id: "groq",
     baseUrl: process.env.GROQ_BASE_URL ?? "https://api.groq.com/openai/v1",
     apiKey: process.env.GROQ_API_KEY,
     defaultModel: process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
+    streaming: {
+      enabled: true,
+      includeUsage: false,
+    },
   }),
   xai: createOpenAICompatibleProvider({
     id: "xai",
     baseUrl: process.env.XAI_BASE_URL ?? "https://api.x.ai/v1",
     apiKey: process.env.XAI_API_KEY,
     defaultModel: process.env.XAI_MODEL ?? "grok-4-fast",
+    streaming: {
+      enabled: true,
+      includeUsage: false,
+    },
   }),
   gemini: createOpenAICompatibleProvider({
     id: "gemini",
     baseUrl: process.env.GEMINI_BASE_URL ?? geminiOpenAIBaseUrl,
     apiKey: process.env.GEMINI_API_KEY,
     defaultModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite",
+    streaming: {
+      enabled: true,
+      includeUsage: false,
+    },
   }),
   openrouter: createOpenAICompatibleProvider({
     id: "openrouter",
     baseUrl: process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
     defaultModel: process.env.OPENROUTER_MODEL ?? "openai/gpt-oss-20b",
+    streaming: {
+      enabled: true,
+      includeUsage: false,
+    },
   }),
 };
 
@@ -61,6 +81,9 @@ export function getJudgeProvider(providerId: ProviderId): ModelProvider {
       process.env.SKAI_JUDGE_MODEL ??
       process.env.GEMINI_MODEL ??
       "gemini-2.5-flash-lite",
+    streaming: {
+      enabled: false,
+    },
   });
 }
 

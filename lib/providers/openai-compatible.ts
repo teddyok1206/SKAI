@@ -58,6 +58,10 @@ interface OpenAICompatibleProviderOptions {
   baseUrl: string;
   apiKey?: string;
   defaultModel: string;
+  streaming?: {
+    enabled?: boolean;
+    includeUsage?: boolean;
+  };
 }
 
 function buildMessages(request: ProviderRequest): OpenAICompatibleMessage[] {
@@ -138,7 +142,6 @@ function modelRun(input: {
   firstTokenAt?: string;
   completedAt?: string;
   usage?: OpenAICompatibleUsage | null;
-  outputText?: string;
 }) {
   const completedAt = input.completedAt ?? new Date().toISOString();
   const latencyMs = Date.now() - input.startedAtMs;
@@ -172,7 +175,72 @@ function modelRun(input: {
   };
 }
 
+async function* sseDataEvents(body: ReadableStream<Uint8Array>) {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { value, done } = await reader.read();
+
+    if (done) {
+      break;
+    }
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split(/\r?\n/);
+    buffer = lines.pop() ?? "";
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+
+      if (!line.startsWith("data:")) {
+        continue;
+      }
+
+      const data = line.slice(5).trim();
+
+      if (!data || data === "[DONE]") {
+        continue;
+      }
+
+      yield data;
+    }
+  }
+
+  const tail = buffer.trim();
+  if (tail.startsWith("data:") && !tail.includes("[DONE]")) {
+    const data = tail.slice(5).trim();
+    if (data) {
+      yield data;
+    }
+  }
+}
+
+function streamBody(input: {
+  model: string;
+  temperature: number;
+  messages: OpenAICompatibleMessage[];
+  includeUsage: boolean;
+}) {
+  return {
+    model: input.model,
+    temperature: input.temperature,
+    messages: input.messages,
+    stream: true,
+    ...(input.includeUsage
+      ? {
+          stream_options: {
+            include_usage: true,
+          },
+        }
+      : {}),
+  };
+}
+
 export function createOpenAICompatibleProvider(options: OpenAICompatibleProviderOptions): ModelProvider {
+  const streamingEnabled = options.streaming?.enabled ?? true;
+
   return {
     id: options.id,
     async complete(request: ProviderRequest): Promise<ProviderResponse> {
@@ -221,150 +289,100 @@ export function createOpenAICompatibleProvider(options: OpenAICompatibleProvider
         }),
       };
     },
-    async *stream(request: ProviderRequest): AsyncGenerator<ProviderStreamEvent> {
-      if (!options.apiKey) {
-        throw new Error(`${options.id} API key is not configured.`);
-      }
-
-      const startedAt = Date.now();
-      const requestStartedAt = new Date(startedAt).toISOString();
-      const responseModel = request.model || options.defaultModel;
-      const streamId = `stream:${crypto.randomUUID()}`;
-      const messages = buildMessages(request);
-
-      const response = await fetch(`${options.baseUrl.replace(/\/$/, "")}/chat/completions`, {
-        method: "POST",
-        headers: headersForProvider(options),
-        body: JSON.stringify({
-          model: responseModel,
-          temperature: request.temperature ?? 0.4,
-          messages,
-          stream: true,
-          ...(options.id === "openai"
-            ? {
-                stream_options: {
-                  include_usage: true,
-                },
-              }
-            : {}),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`${options.id} stream failed: ${response.status} ${errorText}`);
-      }
-
-      if (!response.body) {
-        throw new Error(`${options.id} stream returned no response body.`);
-      }
-
-      yield {
-        type: "ready",
-        modelRun: modelRun({
-          id: streamId,
-          provider: options.id,
-          model: responseModel,
-          startedAtMs: startedAt,
-          requestStartedAt,
-        }),
-      };
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let fullMessage = "";
-      let responseId: string | undefined;
-      let usage: OpenAICompatibleUsage | null | undefined;
-      let firstTokenAt: string | undefined;
-
-      while (true) {
-        const { value, done } = await reader.read();
-
-        if (done) {
-          break;
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split(/\r?\n/);
-        buffer = lines.pop() ?? "";
-
-        for (const rawLine of lines) {
-          const line = rawLine.trim();
-
-          if (!line.startsWith("data:")) {
-            continue;
-          }
-
-          const data = line.slice(5).trim();
-
-          if (!data || data === "[DONE]") {
-            continue;
-          }
-
-          const chunk = JSON.parse(data) as OpenAICompatibleStreamChunk;
-          responseId = chunk.id ?? responseId;
-          usage = chunk.usage ?? usage;
-          const delta = chunk.choices?.map((choice) => choice.delta?.content ?? "").join("") ?? "";
-
-          if (!delta) {
-            continue;
-          }
-
-          if (!firstTokenAt) {
-            firstTokenAt = new Date().toISOString();
-          }
-
-          fullMessage += delta;
-          yield {
-            type: "delta",
-            delta,
-          };
-        }
-      }
-
-      const tail = buffer.trim();
-      if (tail.startsWith("data:") && !tail.includes("[DONE]")) {
-        const data = tail.slice(5).trim();
-        if (data) {
-          const chunk = JSON.parse(data) as OpenAICompatibleStreamChunk;
-          responseId = chunk.id ?? responseId;
-          usage = chunk.usage ?? usage;
-          const delta = chunk.choices?.map((choice) => choice.delta?.content ?? "").join("") ?? "";
-          if (delta) {
-            if (!firstTokenAt) {
-              firstTokenAt = new Date().toISOString();
+    ...(streamingEnabled
+      ? {
+          async *stream(request: ProviderRequest): AsyncGenerator<ProviderStreamEvent> {
+            if (!options.apiKey) {
+              throw new Error(`${options.id} API key is not configured.`);
             }
-            fullMessage += delta;
+
+            const startedAt = Date.now();
+            const requestStartedAt = new Date(startedAt).toISOString();
+            const responseModel = request.model || options.defaultModel;
+            const streamId = `stream:${crypto.randomUUID()}`;
+            const messages = buildMessages(request);
+
+            const response = await fetch(`${options.baseUrl.replace(/\/$/, "")}/chat/completions`, {
+              method: "POST",
+              headers: headersForProvider(options),
+              body: JSON.stringify(
+                streamBody({
+                  model: responseModel,
+                  temperature: request.temperature ?? 0.4,
+                  messages,
+                  includeUsage: Boolean(options.streaming?.includeUsage),
+                }),
+              ),
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`${options.id} stream failed: ${response.status} ${errorText}`);
+            }
+
+            if (!response.body) {
+              throw new Error(`${options.id} stream returned no response body.`);
+            }
+
             yield {
-              type: "delta",
-              delta,
+              type: "ready",
+              modelRun: modelRun({
+                id: streamId,
+                provider: options.id,
+                model: responseModel,
+                startedAtMs: startedAt,
+                requestStartedAt,
+              }),
             };
-          }
+
+            let fullMessage = "";
+            let responseId: string | undefined;
+            let usage: OpenAICompatibleUsage | null | undefined;
+            let firstTokenAt: string | undefined;
+
+            for await (const data of sseDataEvents(response.body)) {
+              const chunk = JSON.parse(data) as OpenAICompatibleStreamChunk;
+              responseId = chunk.id ?? responseId;
+              usage = chunk.usage ?? usage;
+              const delta = chunk.choices?.map((choice) => choice.delta?.content ?? "").join("") ?? "";
+
+              if (!delta) {
+                continue;
+              }
+
+              if (!firstTokenAt) {
+                firstTokenAt = new Date().toISOString();
+              }
+
+              fullMessage += delta;
+              yield {
+                type: "delta",
+                delta,
+              };
+            }
+
+            const message = fullMessage.trim();
+
+            if (!message) {
+              throw new Error(`${options.id} returned an empty stream.`);
+            }
+
+            yield {
+              type: "done",
+              message,
+              modelRun: modelRun({
+                id: responseId ?? streamId,
+                provider: options.id,
+                model: responseModel,
+                startedAtMs: startedAt,
+                requestStartedAt,
+                firstTokenAt,
+                completedAt: new Date().toISOString(),
+                usage,
+              }),
+            };
+          },
         }
-      }
-
-      const message = fullMessage.trim();
-
-      if (!message) {
-        throw new Error(`${options.id} returned an empty stream.`);
-      }
-
-      yield {
-        type: "done",
-        message,
-        modelRun: modelRun({
-          id: responseId ?? streamId,
-          provider: options.id,
-          model: responseModel,
-          startedAtMs: startedAt,
-          requestStartedAt,
-          firstTokenAt,
-          completedAt: new Date().toISOString(),
-          usage,
-          outputText: message,
-        }),
-      };
-    },
+      : {}),
   };
 }

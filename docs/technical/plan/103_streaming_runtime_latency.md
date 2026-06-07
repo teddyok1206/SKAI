@@ -81,6 +81,16 @@ Only `done` creates the assistant trace event.
 9. Add copy keys for runtime statuses.
 10. Update docs and run verification.
 
+## Follow-up: Gemini And Backend Simplification
+
+The first implementation made every OpenAI-compatible provider share the same streaming path. The follow-up hardens this for Gemini and simplifies the backend:
+
+1. Make streaming support explicit in provider options so Gemini is not just an accidental beneficiary of the generic adapter.
+2. Keep OpenAI-only `stream_options.include_usage` out of Gemini requests.
+3. Extract SSE line parsing and NDJSON response encoding into focused helpers.
+4. Keep `/api/chat` route as orchestration glue only: validate, compile context, select complete/stream path, return response.
+5. Smoke test Gemini streaming when `GEMINI_API_KEY` is present, without logging secrets.
+
 ## Verification
 
 - `conda run -n SKAI npm run typecheck`
@@ -114,6 +124,9 @@ This slice improves perceived and actual responsiveness without turning SKAI int
 - Updated solver chat flow to render partial assistant output from a runtime buffer and commit only completed assistant responses to trace.
 - Added SKAI mark packet-flow runtime loader and runtime status pill.
 - Added runtime copy registry entries.
+- Hardened Gemini streaming by making provider streaming options explicit and keeping OpenAI-only streamed usage options out of Gemini requests.
+- Extracted NDJSON response encoding into `lib/ndjson-stream.ts`, keeping `/api/chat` focused on request validation, context compilation, and provider orchestration.
+- Extracted OpenAI-compatible SSE `data:` parsing into the shared provider adapter so OpenAI, Groq, xAI, Gemini, and OpenRouter use the same minimal stream path.
 
 ## Verification Result
 
@@ -123,3 +136,5 @@ This slice improves perceived and actual responsiveness without turning SKAI int
 - `conda run -n SKAI npm run build`: passed.
 - Local production smoke on `127.0.0.1:3014` with mock provider streaming returned `context`, `ready`, multiple `delta`, and `done` NDJSON events.
 - Repeated smoke request returned `cacheHit: true`.
+- Local production smoke on `127.0.0.1:3015` with Gemini provider streaming returned `context`, `ready`, multiple `delta`, and `done` NDJSON events.
+- Gemini streaming smoke recorded `timeToFirstTokenMs: 868` for the test request without exposing the API key.
