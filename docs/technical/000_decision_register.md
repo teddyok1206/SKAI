@@ -45,7 +45,7 @@
 | TDR-039 | Model selection | Support model selection internally and in expert/admin modes | Accepted | 모델 선택은 중요하지만 기본 사용자 풀이 화면이 API playground처럼 보이면 안 됨 | 2026-06-01 |
 | TDR-040 | Judge separation | Separate conversation model and judge model | Accepted | 사용자 경험 모델과 평가 모델의 요구조건이 다름 | 2026-06-01 |
 | TDR-041 | Judge execution | Synchronous first, queue-ready data model | Accepted | 초기 UX는 즉시 채점이 좋고, 느려지면 queue로 전환 | 2026-06-01 |
-| TDR-042 | Leaderboard | Per-problem leaderboard required | Accepted | 백준형 구조와 문제별 비교에 필요 | 2026-06-01 |
+| TDR-042 | Leaderboard | Per-problem score leaderboard required | Superseded | Superseded by TDR-096: 백준형 비교는 필요하지만 learner surface가 점수 경쟁판이 되면 SKAI가 orchestration 훈련이 아니라 score grinder로 흐름 | 2026-06-01 |
 | TDR-043 | Admin authoring | Admin problem authoring UI required | Accepted | 기업/HR/교육 고객은 문제 출제가 필요함 | 2026-06-01 |
 | TDR-044 | Budget | Monthly cap KRW 200,000; event cap KRW 100,000 | Accepted | 저가 provider 우선, 비싼 GPT API 사용 지양 | 2026-06-01 |
 | TDR-045 | Demo success signal | User realizes AI quality depends heavily on their usage method | Accepted | 실제 사용자 피드백에서 이 인식 변화가 발견되어야 함 | 2026-06-01 |
@@ -99,6 +99,9 @@
 | TDR-093 | `.skai` file format | Implement `.skai v1` as canonical JSON with section-level SHA-256 hashes and embedded structural graph snapshots | Accepted | SKAI needs a portable orchestration backbone before plugins, share replay, portfolio, or certification layers; judge reports and derived analysis should be optional extensions, while JSON keeps v1 inspectable and hashes create tamper evidence without overclaiming authorship | 2026-06-04 |
 | TDR-094 | Confirmed problem corpus | Treat the current 33 problems as playable corpus after audit and automated corpus check, while keeping editorial gate for future generated batches | Accepted | Users should not have to depend on a local founder publish toggle to access confirmed problems; future quality control should happen through `npm run problem:check`, corpus audit updates, and batch review before merge | 2026-06-06 |
 | TDR-095 | Independent Gemini judge key | Require `SKAI_JUDGE_GEMINI_API_KEY` for Gemini-backed LLM judge traffic, separate from learner chat `GEMINI_API_KEY` | Accepted | The model a learner chooses is part of the attempt trace, while judge/coaching is SKAI backend evaluation; mixing their keys or runtime path would blur cost, rate-limit, and product responsibility boundaries. Local fallback to `GEMINI_API_KEY` is explicit and non-production only | 2026-06-06 |
+| TDR-096 | Structural comparison over leaderboard | Replace learner-facing score leaderboards with attempt history, shared traces, graph motifs, branch/replay comparison, and optional coach readings | Accepted | SKAI should compare how people structure AI work, not push users to optimize for a single total score. A symbolic score may exist, but the primary surfaces are trace, graph, material use, verification, and share discussion | 2026-06-07 |
+| TDR-097 | Provider failure handling | Do not auto-fill failed learner provider calls with mock responses | Accepted | A failed model call is runtime evidence, not a model response. Auto-mock fallback contaminates cold-start traces and makes provider behavior indistinguishable from learner orchestration | 2026-06-07 |
+| TDR-098 | `.skai` core without judge | Allow `.skai` export/public share from unjudged attempts; keep score reports as optional extensions | Accepted | The portable backbone is the problem snapshot, trace, graph, branch, provenance, and integrity. Judge/coaching reports are derived readings that may be absent or versioned separately | 2026-06-07 |
 
 ## Decision Template
 

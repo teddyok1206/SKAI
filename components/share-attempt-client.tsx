@@ -305,7 +305,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
   const userEvents = publishedAttempt.trace.filter((event) => event.role === "user");
   const assistantEvents = publishedAttempt.trace.filter((event) => event.role === "assistant");
   const attachmentCount = publishedAttempt.trace.reduce((sum, event) => sum + (event.attachments?.length ?? 0), 0);
-  const relatedEventIds = new Set(publishedAttempt.scoreReport.bottlenecks.map((item) => item.traceEventId).filter(Boolean));
+  const relatedEventIds = new Set(publishedAttempt.scoreReport?.bottlenecks.map((item) => item.traceEventId).filter(Boolean) ?? []);
   const problem = problems.find((item) => item.id === publishedAttempt.problemId);
   const skaiFile = publishedAttempt.skaiFile;
   const conversationGraph =
@@ -536,10 +536,12 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
           <strong>{attachmentCount}</strong>
           <span>{t("share.overview.materialsUsed")}</span>
         </div>
-        <div className="share-stat">
-          <strong>{attempt.scoreReport.totalScore}</strong>
-          <span>{t("share.overview.coachScore")}</span>
-        </div>
+        {attempt.scoreReport ? (
+          <div className="share-stat score-meta">
+            <strong>{attempt.scoreReport.totalScore}</strong>
+            <span>{t("share.overview.symbolicScore")}</span>
+          </div>
+        ) : null}
       </section>
 
       <section className="skai-artifact-section" aria-label={t("share.artifact.aria")}>
@@ -553,7 +555,7 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
               <h2>{skaiArtifact.headline}</h2>
               <p>{skaiArtifact.title}</p>
             </div>
-            <strong>{skaiArtifact.score}</strong>
+            {typeof skaiArtifact.score === "number" ? <strong>{skaiArtifact.score}</strong> : <span className="artifact-unjudged">{t("share.artifact.unjudged")}</span>}
           </div>
           <div className="artifact-graph-mark" aria-hidden="true">
             <div className="artifact-node intent">
@@ -1096,30 +1098,32 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         </div>
       </section>
 
-      <section className="panel" style={{ marginTop: 16 }}>
-        <div className="panel-header">
-          <h2>
-            <Route size={20} /> Bottleneck & Replay
-          </h2>
-        </div>
-        <div className="panel-body bottleneck-grid">
-          {attempt.scoreReport.bottlenecks.length === 0 ? (
-            <p className="muted">{t("share.bottleneck.empty")}</p>
-          ) : (
-            attempt.scoreReport.bottlenecks.map((item) => (
-              <article className={`bottleneck-card ${item.severity}`} key={`${item.label}-${item.traceEventId ?? "none"}`}>
-                <div className="bottleneck-card-header">
-                  <strong>{item.label}</strong>
-                  <span>{item.severity}</span>
-                </div>
-                <p className="muted">{item.explanation}</p>
-                <p>{item.replaySuggestion}</p>
-                {item.traceEventId ? <a href={`#trace-${item.traceEventId}`}>{t("share.bottleneck.viewRelatedPrompt")}</a> : null}
-              </article>
-            ))
-          )}
-        </div>
-      </section>
+      {attempt.scoreReport ? (
+        <section className="panel" style={{ marginTop: 16 }}>
+          <div className="panel-header">
+            <h2>
+              <Route size={20} /> Bottleneck & Replay
+            </h2>
+          </div>
+          <div className="panel-body bottleneck-grid">
+            {attempt.scoreReport.bottlenecks.length === 0 ? (
+              <p className="muted">{t("share.bottleneck.empty")}</p>
+            ) : (
+              attempt.scoreReport.bottlenecks.map((item) => (
+                <article className={`bottleneck-card ${item.severity}`} key={`${item.label}-${item.traceEventId ?? "none"}`}>
+                  <div className="bottleneck-card-header">
+                    <strong>{item.label}</strong>
+                    <span>{item.severity}</span>
+                  </div>
+                  <p className="muted">{item.explanation}</p>
+                  <p>{item.replaySuggestion}</p>
+                  {item.traceEventId ? <a href={`#trace-${item.traceEventId}`}>{t("share.bottleneck.viewRelatedPrompt")}</a> : null}
+                </article>
+              ))
+            )}
+          </div>
+        </section>
+      ) : null}
 
       {attempt.counterfactualReport ? (
         <section className="panel" style={{ marginTop: 16 }}>
@@ -1167,9 +1171,11 @@ export function ShareAttemptClient({ attemptId }: { attemptId: string }) {
         </section>
       ) : null}
 
-      <div style={{ marginTop: 16 }}>
-        <ScoreReportCard report={attempt.scoreReport} showBottlenecks={false} />
-      </div>
+      {attempt.scoreReport ? (
+        <div style={{ marginTop: 16 }}>
+          <ScoreReportCard report={attempt.scoreReport} showBottlenecks={false} />
+        </div>
+      ) : null}
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="panel-header">

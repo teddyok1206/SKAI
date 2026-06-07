@@ -27,7 +27,7 @@ Therefore the first prompt in each playbook includes the necessary problem situa
 
 Each problem playbook should include:
 
-- problem id and recommended solving mode,
+- problem id and operator smoke mode/model notes,
 - attachment instructions,
 - exact prompt blocks in send order,
 - optional final-answer field draft,

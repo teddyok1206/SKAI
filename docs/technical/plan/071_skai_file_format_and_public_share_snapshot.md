@@ -145,7 +145,7 @@ Important: `.skai` graph snapshots must be structural. The builder should accept
 At share render time:
 
 1. Load `PublishedAttempt` from local/Supabase.
-2. Use current `PublishedAttempt.scoreReport` for the rich share UI because the app still has that analysis outside `.skai`.
+2. If current `PublishedAttempt.scoreReport` exists, use it as a rich in-app analysis extension; otherwise render the core graph/share view without a score report.
 3. If `parent` graph and `parentTrace` exist in `.skai`, show structural parent/child `GraphComparisonView`.
 4. Fall back to rebuilding from trace and `GraphStateTransitionView` for old snapshots.
 
@@ -215,7 +215,7 @@ Manual smoke:
 - Removed score report, visual artifact, universal summary, skeleton, overlay index, graph transition, and counterfactual report from the `.skai` core payload.
 - Reframed those fields as future optional analysis extensions.
 - Changed `.skai` graph handling to parse the app-provided graph into a structural subset, stripping annotations and judge-dependent status signals.
-- Kept share page's rich UI free to use `PublishedAttempt.scoreReport`, while `.skai` remains the lightweight portable backbone.
+- Kept share page's rich UI free to use optional `PublishedAttempt.scoreReport`, while `.skai` remains the lightweight portable backbone and unjudged exports remain valid.
 - Added source provenance to manifest: `platform`, `conversationId`, `exportedFrom`, and optional primary provider/model.
 - Documented that macOS can open `.skai` as JSON only through a chosen text/developer app until SKAI provides a viewer or file association.
 

@@ -68,8 +68,8 @@ classification:
 playbook:
 각 문제마다 SKAI 운영자가 smoke test에 쓸 수 있는 paste-ready prompt playbook을 작성하라.
 반드시 포함:
-- recommendedMode
-- recommendedModel
+- operatorSmokeMode
+- operatorSmokeModel
 - attachments
 - Turn 1
 - Turn 2
@@ -170,8 +170,8 @@ JSON으로 출력하라. markdown code fence는 쓰지 말라.
         "graphPattern": ""
       },
       "playbook": {
-        "recommendedMode": "",
-        "recommendedModel": "",
+        "operatorSmokeMode": "",
+        "operatorSmokeModel": "",
         "attachments": [],
         "turns": [
           {

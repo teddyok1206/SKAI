@@ -11,7 +11,7 @@ const publishedSchema = z.object({
     title: z.string().min(1).max(220),
     workflow: z.array(z.unknown()).max(20),
     trace: z.array(z.unknown()).max(operationGuardrails.maxTraceEventsPerJudge),
-    scoreReport: z.unknown(),
+    scoreReport: z.unknown().optional(),
     branch: z.unknown().optional(),
     counterfactualReport: z.unknown().optional(),
     solvingMode: z.enum(["single_model", "material_grounded", "verification_drill"]).optional(),

@@ -146,6 +146,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [attachmentNotice, setAttachmentNotice] = useState("");
   const [copiedTraceEventId, setCopiedTraceEventId] = useState("");
   const [workspaceTab, setWorkspaceTab] = useState<"chat" | "graph">("chat");
+  const [showOperatorPlaybook, setShowOperatorPlaybook] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedSolvingMode = useMemo(() => getSolvingMode(solvingModeId), [solvingModeId]);
@@ -157,9 +158,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const providerProfile = provider ? providerUiProfiles[provider] : null;
   const problemAttempts = getAttempts().filter((item) => item.problemId === problem.id);
   const branchTree = buildBranchTree(problemAttempts, problem.id);
-  const leaderboard = problemAttempts
-    .filter((item) => item.scoreReport)
-    .sort((a, b) => (b.scoreReport?.totalScore ?? 0) - (a.scoreReport?.totalScore ?? 0))
+  const attemptHistory = problemAttempts
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, 5);
 
   const totalTokens = attempt?.trace.reduce(
@@ -212,6 +212,19 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
 
     return "ready";
   }, [attempt?.trace.length, conversationGraph?.pairs.length, input, isLoading, selectedAttachments.length]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      setShowOperatorPlaybook(params.get("operator") === "1" || params.get("playbook") === "1");
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.skaiActivity = skaiActivity;
@@ -506,20 +519,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       });
       setSelectedAttachments([]);
     } catch (error) {
-      const assistantEvent = makeTraceEvent({
-        attemptId: attempt.id,
-        problemId: problem.id,
-        role: "assistant",
-        content: `${t("solve.notice.modelCallFailed")}\n\n${error instanceof Error ? error.message : "Unknown error"}`,
-        provider: "mock",
-        model: "error",
-        branchId: attempt.branch?.id,
-      });
-      updateAttempt({
-        ...nextAttempt,
-        trace: [...nextTrace, assistantEvent],
-        updatedAt: new Date().toISOString(),
-      });
+      setAttachmentNotice(`${t("solve.notice.modelCallFailed")} ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsLoading(false);
     }
@@ -568,10 +568,6 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
-    if (!attempt.scoreReport) {
-      return;
-    }
-
     if (!conversationGraph) {
       return;
     }
@@ -589,7 +585,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       attemptId: attempt.id,
       problemId: problem.id,
       title: attempt.title,
-      workflow: attempt.scoreReport.workflow,
+      workflow: attempt.scoreReport?.workflow ?? [],
       trace: publicTrace,
       scoreReport: attempt.scoreReport,
       branch: attempt.branch,
@@ -1001,14 +997,21 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           </Link>
         </div>
         <div className="panel-body">
-          <h3>Local Leaderboard</h3>
-          {leaderboard.length === 0 ? (
-            <p className="muted">{t("solve.leaderboard.empty")}</p>
+          <h3>{t("solve.history.title")}</h3>
+          {attemptHistory.length === 0 ? (
+            <p className="muted">{t("solve.history.empty")}</p>
           ) : (
             <ol className="constraint-list">
-              {leaderboard.map((item) => (
+              {attemptHistory.map((item) => (
                 <li key={item.id}>
-                  {item.scoreReport?.totalScore ?? 0}점 · {item.provider}/{item.model}
+                  {new Date(item.updatedAt).toLocaleString(locale === "ko" ? "ko-KR" : "en-US", {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}{" "}
+                  · {t(`solve.history.${item.status}`)} · {item.trace.length} {t("solve.workspace.events")}
+                  {item.branch ? ` · ${t("solve.history.branch")}` : ""}
                 </li>
               ))}
             </ol>
@@ -1123,7 +1126,7 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         )}
 
         <div className="composer">
-          {playbook ? (
+          {showOperatorPlaybook && playbook ? (
             <div className="playbook-strip" aria-label={t("solve.playbook.aria")}>
               <div className="playbook-strip-header">
                 <div className="playbook-title">
@@ -1248,22 +1251,20 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         </div>
       </section>
 
-      {attempt.scoreReport ? (
-        <div style={{ gridColumn: "1 / -1" }}>
-          <ScoreReportCard report={attempt.scoreReport} />
-          <div className="actions" style={{ marginTop: 12 }}>
-            <button className="button primary" disabled={isPublishing} onClick={() => void publishAttempt()}>
-              <Share2 size={16} /> {isPublishing ? t("solve.publish.publishing") : t("solve.publish.publish")}
-            </button>
-            {shareUrl ? (
-              <a className="button" href={shareUrl}>
-                {t("solve.publish.viewShare")}
-              </a>
-            ) : null}
-          </div>
-          {shareNotice ? <p className="attachment-notice">{shareNotice}</p> : null}
+      <div style={{ gridColumn: "1 / -1" }}>
+        {attempt.scoreReport ? <ScoreReportCard report={attempt.scoreReport} /> : null}
+        <div className="actions" style={{ marginTop: 12 }}>
+          <button className="button primary" disabled={isPublishing || attempt.trace.length === 0} onClick={() => void publishAttempt()}>
+            <Share2 size={16} /> {isPublishing ? t("solve.publish.publishing") : t("solve.publish.publish")}
+          </button>
+          {shareUrl ? (
+            <a className="button" href={shareUrl}>
+              {t("solve.publish.viewShare")}
+            </a>
+          ) : null}
         </div>
-      ) : null}
+        {shareNotice ? <p className="attachment-notice">{shareNotice}</p> : null}
+      </div>
 
       {attempt.branch ? (
         <section className="panel" style={{ gridColumn: "1 / -1" }}>

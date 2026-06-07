@@ -1801,22 +1801,6 @@
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
-    "key": "solve.leaderboard.empty",
-    "domain": "solve",
-    "sourceLocale": "ko",
-    "protectedTerms": [],
-    "values": {
-      "ko": "아직 이 문제의 채점 기록이 없습니다.",
-      "en": "No judged attempts for this problem yet."
-    },
-    "status": {
-      "ko": "approved",
-      "en": "approved"
-    },
-    "sourceChecksum": "9c46825231e58b0bffac9591b1e87c0e7258ad3773598fc845ddf6f3d5099bb2",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
-  },
-  {
     "key": "solve.workspace.aria",
     "domain": "solve",
     "sourceLocale": "ko",
@@ -4585,22 +4569,6 @@
       "en": "approved"
     },
     "sourceChecksum": "95609d66bd02b506c7dd299e352fda181ef405dc43dc591d316987d23739c9d1",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
-  },
-  {
-    "key": "share.overview.coachScore",
-    "domain": "share",
-    "sourceLocale": "ko",
-    "protectedTerms": [],
-    "values": {
-      "ko": "coach score",
-      "en": "coach score"
-    },
-    "status": {
-      "ko": "approved",
-      "en": "approved"
-    },
-    "sourceChecksum": "0a7d0ac2f57abd131f42d0bd067ad9a597024a2568a1a0d0ba8572416c21218d",
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
@@ -8270,5 +8238,165 @@
     },
     "sourceChecksum": "fa190ed8b6148516537e6ae99b4aa72832fc1a2e87b4160453aa9b13350ea6eb",
     "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "key": "solve.history.title",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "최근 시도",
+      "en": "Recent attempts"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "d6328bb2c4c8a2d52a1ec66ed9793e1c01bf2032781a90aee219b96663c8afd2",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.empty",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "아직 이 문제의 시도가 없습니다.",
+      "en": "No attempts for this problem yet."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c6869f8a9a0901af2cd789c0f2b2a87759fafe4ddadf33e8240972128688b117",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.draft",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "초안",
+      "en": "Draft"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "1cbeedccd2bf6c97ea151c800b33396fb2002fdea303dcaa9e76e87b8b2595bd",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.submitted",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "제출됨",
+      "en": "Submitted"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dd43a031d962e671e358fc2a91aacb4ba1d5de7af89b117158be13a601f713ce",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.judged",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "평가됨",
+      "en": "Judged"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "546a1113f13de65192824190d1760a5cf53046df884c81dfb86e1d8510844e3d",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.published",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "공유됨",
+      "en": "Published"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "9303b07fe36db91271a0a1c1523a704be27c5c43ecbb2f727d00bc71c283dd89",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.history.branch",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "브랜치",
+      "en": "Branch"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "6fd28a7452a1789cb10190f08d33645bd9f32ceb8f3a0eae5cf1e20f5f0e78a1",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "share.overview.symbolicScore",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "상징 점수",
+      "en": "Symbolic score"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "03b87ac03e941db8b3d611d88b51362055f171233ddef1dedc0e2403a0da521a",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "share.artifact.unjudged",
+    "domain": "share",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "비채점",
+      "en": "Unjudged"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "214e93bcc9f6a8d822aa372d9ced4e498a8557a9bca8e0f9b9d578e0706f5d91",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "scoreReport.scoreNote",
+    "domain": "judge",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "구조 판단을 돕는 보조 지표입니다. 순위가 아닙니다.",
+      "en": "A supporting reading of structure, not a rank."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "c28ccf311e6b38bbe0698b602f1f9a44e22a3f9844d4a9efb33d0e58af9f19a6",
+    "updatedAt": "2026-06-07T14:19:44.579Z"
   }
 ]

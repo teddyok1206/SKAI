@@ -64,29 +64,7 @@ export function getJudgeProvider(providerId: ProviderId): ModelProvider {
   });
 }
 
-export async function completeWithFallback(request: ProviderRequest): Promise<ProviderResponse> {
+export async function completeProviderRequest(request: ProviderRequest): Promise<ProviderResponse> {
   const provider = getProvider(request.provider);
-
-  try {
-    return await provider.complete(request);
-  } catch (error) {
-    if (request.provider === "mock") {
-      throw error;
-    }
-
-    const fallback = await mockProvider.complete({
-      ...request,
-      provider: "mock",
-      model: "mock-orchestrator",
-    });
-
-    return {
-      ...fallback,
-      message: [
-        `선택한 provider(${request.provider}) 호출에 실패해 mock mode로 전환했습니다.`,
-        "",
-        fallback.message,
-      ].join("\n"),
-    };
-  }
+  return provider.complete(request);
 }

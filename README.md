@@ -13,7 +13,7 @@ The current implementation is a Next.js MVP shell with:
 - Synchronous judge endpoint.
 - Coach-style score report with total score and multi-axis scores.
 - Strategy-first published attempt view.
-- Local per-problem leaderboard.
+- Local attempt history and branch/replay navigation.
 - Supabase-ready schema and auth helper.
 
 ## Local Development

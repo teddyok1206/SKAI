@@ -507,7 +507,7 @@ button {
 .ui-mode-surface[data-ui-mode="engine"] .playbook-strip,
 .ui-mode-surface[data-ui-mode="engine"] .graph-stat,
 .ui-mode-surface[data-ui-mode="engine"] .graph-status,
-.ui-mode-surface[data-ui-mode="engine"] .score-circle,
+.ui-mode-surface[data-ui-mode="engine"] .score-meta-card,
 .ui-mode-surface[data-ui-mode="engine"] .comment-meta {
   font-family: var(--mode-control-font);
 }
@@ -2214,16 +2214,35 @@ h3 {
   line-height: 1.45;
 }
 
-.score-circle {
+.score-meta-card {
   display: grid;
-  width: 148px;
-  height: 148px;
-  place-items: center;
-  border: 10px solid color-mix(in srgb, var(--accent) 18%, var(--surface-muted));
-  border-radius: 50%;
-  color: var(--accent-strong);
-  font-size: 42px;
+  gap: 7px;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 14px;
+}
+
+.score-meta-card span {
+  color: var(--muted);
+  font-size: 11px;
   font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.score-meta-card strong {
+  color: var(--accent-strong);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.score-meta-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .axis-list {
@@ -2265,7 +2284,7 @@ h3 {
 
 .share-overview {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -2291,6 +2310,26 @@ h3 {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+  text-transform: uppercase;
+}
+
+.share-stat.score-meta {
+  background: color-mix(in srgb, var(--surface-muted) 70%, var(--surface));
+}
+
+.share-stat.score-meta strong {
+  color: var(--accent-strong);
+  font-size: 28px;
+}
+
+.artifact-unjudged {
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 7px 10px;
   text-transform: uppercase;
 }
 

@@ -35,7 +35,7 @@ Excluded:
 
 ## Product Rules
 
-- A playbook turn is only a visible draft. The user can edit it before sending.
+- A playbook turn is only an operator-visible draft. The operator can edit it before sending, and the normal learner path must not expose this playbook panel.
 - Required materials are added as normal visible attachment chips.
 - Existing composer text is not discarded. New playbook text appends below it.
 - The UI should stay compact enough to preserve the chat-first workflow.

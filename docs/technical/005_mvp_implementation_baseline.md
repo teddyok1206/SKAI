@@ -50,7 +50,7 @@ Accepted provider direction:
 - Multi-provider support can start with one or two providers.
 - Counterfactual replay can begin as judge explanation before full replay.
 - Comment threads can be minimal.
-- Leaderboard can be basic.
+- Cross-attempt comparison can be basic, but should not be a score-sorted learner leaderboard.
 - Enterprise-grade privacy controls can wait, while publish boundaries and warnings must exist.
 
 ## Build Order
@@ -58,7 +58,7 @@ Accepted provider direction:
 1. Scaffold Next.js app.
 2. Add Supabase project config and local env template.
 3. Implement Google login.
-4. Define DB schema for users, problems, attempts, trace events, model runs, judge runs, score reports, published attempts, comments, and leaderboards.
+4. Define DB schema for users, problems, attempts, trace events, model runs, judge runs, score reports, published attempts, comments, and structural comparison metadata.
 5. Build one seed problem.
 6. Build in-app chat with trace capture.
 7. Add provider adapter interface and one live provider.
@@ -66,7 +66,6 @@ Accepted provider direction:
 9. Add synchronous judge endpoint.
 10. Add coach-style report.
 11. Add strategy-first shared attempt view.
-12. Add basic per-problem leaderboard.
+12. Add local attempt history and shared trace comparison.
 13. Add admin problem authoring MVP.
 14. Add budget guardrails and founder log review view.
-

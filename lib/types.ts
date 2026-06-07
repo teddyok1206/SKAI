@@ -516,7 +516,7 @@ export interface PublishedAttempt {
   title: string;
   workflow: WorkflowStep[];
   trace: TraceEvent[];
-  scoreReport: ScoreReport;
+  scoreReport?: ScoreReport;
   branch?: AttemptBranch;
   counterfactualReport?: CounterfactualJudgeReport;
   solvingMode?: SolvingModeId;

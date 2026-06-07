@@ -136,7 +136,7 @@ function primaryModelSource(trace: TraceEvent[]) {
 }
 
 function manifestLocale(input: PublishedAttempt): ReportLocale {
-  return input.scoreReport.locale ?? input.scoreReport.sourceLocale ?? "ko";
+  return input.scoreReport?.locale ?? input.scoreReport?.sourceLocale ?? "ko";
 }
 
 function problemDisplayLocale(problem: Problem): ReportLocale | undefined {

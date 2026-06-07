@@ -28,11 +28,10 @@ export function ScoreReportCard({ report, showBottlenecks = true }: { report: Sc
         ))}
       </div>
       <div className="panel-body report-grid">
-        <div>
-          <div className="score-circle">{report.totalScore}</div>
-          <p className="muted" style={{ marginTop: 10 }}>
-            {t("scoreReport.symbolicScore")}
-          </p>
+        <div className="score-meta-card">
+          <span>{t("scoreReport.symbolicScore")}</span>
+          <strong>{report.totalScore}</strong>
+          <p>{t("scoreReport.scoreNote")}</p>
         </div>
         <div className="axis-list">
           {report.axisScores.map((axis) => (

@@ -71,7 +71,7 @@ function curationMatches(problem: Problem, classification: GeneratedProblemClass
   return problem.goalProfile === "accuracy_first" || problem.difficulty === "advanced" || classification?.primarySkill === "verification";
 }
 
-function buildSearchText(problem: Problem, classification: GeneratedProblemClassification | undefined, locale: "ko" | "en") {
+function buildSearchText(problem: Problem, locale: "ko" | "en") {
   const localizedProblem = getLocalizedProblem(problem, locale);
 
   return [
@@ -80,7 +80,6 @@ function buildSearchText(problem: Problem, classification: GeneratedProblemClass
     localizedProblem.subtitle,
     problem.category,
     problem.difficulty,
-    problem.goalProfile,
     localizedProblem.statement,
     localizedProblem.userGoal,
     ...localizedProblem.constraints,
@@ -93,28 +92,20 @@ function buildSearchText(problem: Problem, classification: GeneratedProblemClass
       material.fileName,
       material.extractedText,
     ]),
-    classification?.domain,
-    classification?.subdomain,
-    classification?.primarySkill,
-    ...(classification?.secondarySkills ?? []),
-    ...(classification?.materialProfile ?? []),
-    classification?.primaryFailureMode,
-    classification?.idealBottleneck,
-    classification?.graphPattern,
   ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
 }
 
-function matchesQuery(problem: Problem, classification: GeneratedProblemClassification | undefined, query: string, locale: "ko" | "en") {
+function matchesQuery(problem: Problem, query: string, locale: "ko" | "en") {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) {
     return true;
   }
 
   const terms = normalizedQuery.split(/\s+/).filter(Boolean);
-  const haystack = buildSearchText(problem, classification, locale);
+  const haystack = buildSearchText(problem, locale);
   return terms.every((term) => haystack.includes(term));
 }
 
@@ -169,7 +160,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
         const classification = classifications[problem.id];
         const materialKinds = problemMaterialKinds(problem);
 
-        if (!matchesQuery(problem, classification, query, locale)) {
+        if (!matchesQuery(problem, query, locale)) {
           return false;
         }
 
@@ -197,7 +188,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
   const topDomains = useMemo(() => {
     const domainCounts = new Map<string, number>();
     for (const problem of filteredProblems) {
-      const domain = classifications[problem.id]?.domain ?? categoryLabels[problem.category];
+      const domain = categoryLabels[problem.category];
       domainCounts.set(domain, (domainCounts.get(domain) ?? 0) + 1);
     }
 
@@ -205,7 +196,7 @@ export function ProblemBrowser({ problems, classifications = {} }: ProblemBrowse
       .sort((a, b) => b[1] - a[1])
       .slice(0, 4)
       .map(([domain, count]) => `${domain} ${count}`);
-  }, [categoryLabels, classifications, filteredProblems]);
+  }, [categoryLabels, filteredProblems]);
 
   const hasActiveFilter = query.trim() || category !== "all" || difficulty !== "all" || materialKind !== "any" || curation !== "all";
 

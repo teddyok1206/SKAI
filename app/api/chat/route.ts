@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getProblem } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
 import { compileProviderContext } from "@/lib/context-compiler";
-import { completeWithFallback } from "@/lib/providers";
+import { completeProviderRequest } from "@/lib/providers";
 
 const attachmentSchema = z.object({
   id: z.string().min(1).max(120),
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       messages: parsed.data.messages,
       branch: parsed.data.branch,
     });
-    const response = await completeWithFallback({
+    const response = await completeProviderRequest({
       provider: parsed.data.provider,
       model: parsed.data.model,
       problem,

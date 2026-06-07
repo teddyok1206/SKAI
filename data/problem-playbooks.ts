@@ -21,16 +21,16 @@ export interface LocalizedProblemPlaybook {
   locale: ReportLocale;
   sourceLocale: ReportLocale;
   translationStatus: TranslationStatus;
-  recommendedMode?: string;
-  recommendedModel?: string;
+  operatorSmokeMode?: string;
+  operatorSmokeModel?: string;
   turns?: LocalizedProblemPlaybookTurn[];
   finalAnswerDraft?: string;
 }
 
 export interface ProblemPlaybook {
   problemId: Problem["id"];
-  recommendedMode: string;
-  recommendedModel: string;
+  operatorSmokeMode: string;
+  operatorSmokeModel: string;
   turns: ProblemPlaybookTurn[];
   finalAnswerDraft?: string;
   locale?: ReportLocale;
@@ -43,15 +43,15 @@ const seedProblemPlaybooks: ProblemPlaybook[] = [
     problemId: "ambiguous-research-brief",
     locale: "ko",
     availableLocales: ["ko", "en"],
-    recommendedMode: "Single Model or Verification Drill",
-    recommendedModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
+    operatorSmokeMode: "Single Model or Verification Drill",
+    operatorSmokeModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
     localized: {
       en: {
         locale: "en",
         sourceLocale: "ko",
         translationStatus: "translated",
-        recommendedMode: "Single Model or Verification Drill",
-        recommendedModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
+        operatorSmokeMode: "Single Model or Verification Drill",
+        operatorSmokeModel: "Gemini Flash-Lite for live smoke, SKAI Mock for no-key demo",
         turns: [
           {
             id: "turn-1",
@@ -211,15 +211,15 @@ AI에게는 후보 비교, 문제정의 재작성, 하위 task 설계, 브리프
     problemId: "club-budget-workflow",
     locale: "ko",
     availableLocales: ["ko", "en"],
-    recommendedMode: "Material Grounded",
-    recommendedModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
+    operatorSmokeMode: "Material Grounded",
+    operatorSmokeModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
     localized: {
       en: {
         locale: "en",
         sourceLocale: "ko",
         translationStatus: "translated",
-        recommendedMode: "Material Grounded",
-        recommendedModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
+        operatorSmokeMode: "Material Grounded",
+        operatorSmokeModel: "Gemini Flash-Lite for image/material smoke, SKAI Mock for no-key demo",
         turns: [
           {
             id: "turn-1",
@@ -387,15 +387,15 @@ Failure scenarios include missing receipts, mismatched payer names, signup witho
     problemId: "counterfactual-product-review",
     locale: "ko",
     availableLocales: ["ko", "en"],
-    recommendedMode: "Verification Drill",
-    recommendedModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
+    operatorSmokeMode: "Verification Drill",
+    operatorSmokeModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
     localized: {
       en: {
         locale: "en",
         sourceLocale: "ko",
         translationStatus: "translated",
-        recommendedMode: "Verification Drill",
-        recommendedModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
+        operatorSmokeMode: "Verification Drill",
+        operatorSmokeModel: "Gemini Flash-Lite or Groq Llama for live smoke, SKAI Mock for no-key demo",
         turns: [
           {
             id: "turn-1",
@@ -625,8 +625,8 @@ export function getLocalizedProblemPlaybook(problemId: string, locale: ReportLoc
 
   return {
     ...playbook,
-    recommendedMode: localized.recommendedMode ?? playbook.recommendedMode,
-    recommendedModel: localized.recommendedModel ?? playbook.recommendedModel,
+    operatorSmokeMode: localized.operatorSmokeMode ?? playbook.operatorSmokeMode,
+    operatorSmokeModel: localized.operatorSmokeModel ?? playbook.operatorSmokeModel,
     turns: playbook.turns.map((turn) => {
       const localizedTurn = localizedTurns.get(turn.id);
 

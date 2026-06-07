@@ -141,10 +141,6 @@ function statusFromResponse(input) {
     return "mock_success";
   }
 
-  if (input.actualProvider === "mock" || input.message.includes("mock mode로 전환")) {
-    return "fallback_mock";
-  }
-
   if (input.actualProvider === input.requestedProvider) {
     return "live_success";
   }

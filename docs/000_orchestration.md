@@ -43,7 +43,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
-- 모델 선택에는 visible default가 없다. 사용자는 풀이 시작 전 정확히 하나의 모델을 명시적으로 선택해야 하며, Gemini Flash-Lite와 OpenAI cheap baseline `gpt-4.1-nano`는 병렬적인 선택 가능한 provider option이다. OpenAI option/pricing/provider fallback은 nano 기준이다.
+- 모델 선택에는 visible default가 없다. 사용자는 풀이 시작 전 정확히 하나의 모델을 명시적으로 선택해야 하며, Gemini Flash-Lite와 OpenAI cheap baseline `gpt-4.1-nano`는 병렬적인 선택 가능한 provider option이다. OpenAI option/pricing은 nano 기준이며, provider 실패는 mock 응답으로 자동 대체하지 않고 runtime notice로 표면화한다.
 - `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.
 - `npm run calibrate:judge`로 3개 seed problem의 weak/average/strong golden attempts 9개를 `/api/judge`에 반복 채점할 수 있다.
@@ -54,8 +54,8 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 다음 UX 기준은 모델들을 병렬 실행 엔진처럼 보여주는 것이다. 어떤 모델도 default/recommended처럼 보이면 안 된다.
 - 데모에서는 하나의 attempt가 하나의 풀이 모드와 하나의 모델에 고정된다.
 - 각 문제는 `docs/problem_playbooks/`에 paste-ready prompt playbook을 가진다.
-- 풀이 화면 composer에는 문제별 playbook turn을 visible draft로 삽입하는 operator UX가 있다.
-- playbook turn은 자동 전송되지 않으며, 필요한 문제 자료도 visible attachment chip으로만 붙는다.
+- 풀이 화면의 일반 learner path에는 문제별 playbook/final-answer draft가 보이지 않는다.
+- 문제별 playbook turn 삽입 UX는 founder/operator smoke를 위한 query flag(`?operator=1` 또는 `?playbook=1`)에서만 보인다. Playbook turn은 자동 전송되지 않으며, 필요한 문제 자료도 visible attachment chip으로만 붙는다.
 - Supabase Auth, Google OAuth sign-in/callback/sign-out flow, Supabase persistence baseline이 있다.
 - Google OAuth callback은 현재 page 복귀용 `next` 값을 local path로 sanitize한다.
 - `/api/deployment/health`는 Supabase/provider/judge/problem-sync 설정 상태를 secret 없이 점검한다.
@@ -164,8 +164,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 추가 provider별 품질/비용/latency 비교가 필요하다. Gemini live connectivity baseline은 통과했다.
 - visible solving setup은 unselected model state로 시작하고, 사용자가 명시적으로 하나의 모델을 고르기 전에는 attempt를 시작할 수 없다.
 - raw provider/model selector는 expert/admin tooling으로 분리해야 한다.
-- assistant response마다 전체 답변을 복사하는 message-level copy button이 필요하다.
-- 일부 AI 답변의 Markdown emphasis, 특히 `**bold**`, 가 raw syntax로 보이는 렌더링 경로가 남아 있다.
+- assistant response마다 전체 답변을 복사하는 message-level copy button과 Markdown/LaTeX 렌더링 경로는 solve/share surface에 들어갔다.
 - 3D Dual Graph는 ladder geometry와 단일 surface로 정리됐고 fixture invariant도 통과했다. 다음 평가는 실제 브라우저 smoke에서 node density, selected-set readability, branch anchor visibility, messy real-user trace behavior를 관찰하는 쪽으로 넘긴다.
 - Evaluation Overlay는 1차 구현됐지만, edge-native weak-edge annotation은 아직 제한적이다. 현재는 pair-level annotation fallback이 local node/rung/cell styling을 만든다.
 - 공개 share의 parent/child full graph 병렬 비교는 `.skai` snapshot이 있는 새 publish에서 복원 가능하다. 오래된 snapshot이나 parent graph가 없는 branch는 여전히 `GraphStateTransition` fallback을 사용한다.
@@ -184,11 +183,11 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - LLM judge-native graph annotation mapping은 들어갔지만 live judge calibration, skeleton comparison, habit motif report, graph snapshot persistence는 아직 후속 작업이다.
 - counterfactual judge는 heuristic baseline이며 LLM mode는 API key 기반 opt-in이다.
 - SaaS 운영 관점의 rate limiting, abuse detection, virus scanning, object storage는 아직 없다.
-- per-problem leaderboard는 local/basic 수준이다.
+- score-sorted per-problem leaderboard는 learner surface에서 제거했다. 현재는 local attempt history와 branch/replay navigation을 남기고, 미래 비교는 graph motif, shared trace, material/verification pattern 중심으로 설계한다.
 - 비용 추적은 provider usage token과 demo pricing registry 기반의 추정치다. 실제 billing API, free tier, cache, image/tool 세부 과금은 아직 반영하지 않는다.
 - uploaded xlsx/pdf/OCR 파싱은 MVP 밖으로 남아 있다.
 - certification/anti-cheat/prompt similarity는 아직 구현 전이다.
-- Playbook prompt는 UI에서 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
+- Playbook prompt는 operator flag에서만 삽입 가능하지만, Markdown playbook과 typed app playbook이 아직 이중 관리된다.
 - i18n source regression gate는 생겼고 baseline도 크게 줄였지만, `scripts/i18n_source_baseline.json`에 남아 있는 raw JSX/attribute text는 계속 줄여야 한다.
 - 3-node mark는 topbar에 1차 적용됐고, Human/Engine mode tokenization과 reusable logo lockup도 1차 구현됐다.
 - Engine Mode mark에는 intent/material packet이 artifact node로 흐르는 sparse packet-flow animation이 있다.
@@ -323,9 +322,9 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 
 우선순위 3: playbook insertion and smoke operator UX
 
-- 문제별 playbook prompt를 UI에서 composer로 삽입할 수 있게 한다. (완료)
+- 문제별 playbook prompt를 operator flag에서만 composer로 삽입할 수 있게 한다. (완료)
 - 필요한 자료 첨부를 step별로 명시한다. (완료)
-- 삽입된 prompt는 숨은 context가 아니라 사용자가 볼 수 있는 composer text여야 한다. (완료)
+- 삽입된 prompt는 숨은 context가 아니라 operator가 볼 수 있는 composer text여야 한다. 일반 learner path에는 노출하지 않는다. (완료)
 - 완료 조건: 손타이핑 없이 반복 가능한 sample attempt를 생성한다. (완료)
 - 후속: Markdown playbook과 typed app playbook의 source of truth를 통합한다.
 
@@ -413,7 +412,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `docs/technical/plan/031_llm_judge_graph_annotation_schema.md`: LLM judge graph annotation schema와 trace id 기반 graph target mapping.
 - `docs/technical/plan/032_graph_skeleton_sharing.md`: graph skeleton generator와 공유 화면 skeleton-first 읽기 경로.
 - `docs/technical/plan/033_golden_attempts_judge_calibration.md`: 9개 golden attempt judge calibration runner와 heuristic baseline 기록.
-- `docs/technical/plan/034_playbook_insertion_operator_ux.md`: 문제별 playbook prompt를 composer/final answer에 visible draft로 삽입하는 operator UX.
+- `docs/technical/plan/034_playbook_insertion_operator_ux.md`: 문제별 playbook prompt를 operator-only composer/final answer draft로 삽입하는 smoke UX.
 - `docs/technical/plan/035_cost_guardrails.md`: provider/model pricing registry와 attempt-level 비용 표시.
 - `docs/technical/plan/036_supabase_deployment_hardening.md`: deployment health route, production sync boundary, Supabase RLS checklist.
 - `docs/technical/plan/037_admin_authoring_mvp.md`: localStorage 기반 문제 출제 초안 작성, 홈 노출, local problem solve route.

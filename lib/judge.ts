@@ -297,7 +297,7 @@ function countMatches(text: string, keywords: string[]) {
 }
 
 function clampScore(score: number) {
-  return Math.max(35, Math.min(96, Math.round(score)));
+  return Math.max(0, Math.min(100, Math.round(score)));
 }
 
 function weightedTotal(problem: Problem, axisScores: AxisScore[]) {

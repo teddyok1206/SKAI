@@ -39,7 +39,7 @@ export interface SkaiArtifact {
   id: string;
   title: string;
   headline: string;
-  score: number;
+  score?: number;
   nodes: SkaiArtifactNode[];
   timeline: SkaiArtifactTimelineStep[];
   metrics: {
@@ -219,14 +219,14 @@ export function buildSkaiArtifact(input: {
   const prompts = attempt.trace.filter((event) => event.role === "user").length;
   const responses = attempt.trace.filter((event) => event.role === "assistant").length;
   const materials = attachmentCount(attempt.trace);
-  const bottlenecks = attempt.scoreReport.bottlenecks.length;
+  const bottlenecks = attempt.scoreReport?.bottlenecks.length ?? 0;
   const verifications = roleCount(skeleton, "verification");
 
   return {
     id: `artifact:${attempt.id}`,
     title: attempt.title,
     headline: "구조가 드러났습니다.",
-    score: attempt.scoreReport.totalScore,
+    score: attempt.scoreReport?.totalScore,
     nodes: [
       {
         id: "intent",
@@ -295,11 +295,12 @@ export function skaiArtifactToText(artifact: SkaiArtifact) {
   const timelineLines = artifact.timeline
     .map((step) => `${step.sequence}. ${step.label} (${step.status})`)
     .join("\n");
+  const scoreLine = typeof artifact.score === "number" ? `Symbolic score: ${artifact.score}` : undefined;
 
   return [
     `SKAI Artifact: ${artifact.title}`,
     artifact.headline,
-    `Score: ${artifact.score}`,
+    scoreLine,
     `Graph signature: ${artifact.signature}`,
     nodeLines,
     timelineLines,
@@ -310,6 +311,12 @@ export function skaiArtifactToText(artifact: SkaiArtifact) {
 
 export function skaiArtifactToSvg(artifact: SkaiArtifact) {
   const topSteps = artifact.timeline.slice(0, 4);
+  const scoreText =
+    typeof artifact.score === "number"
+      ? `<text x="640" y="238" fill="#1d1d1f" font-size="26" font-weight="900">SYMBOLIC ${artifact.score}</text>
+  <text x="640" y="266" fill="#6e6e73" font-size="13" font-weight="800">coach reading, not rank</text>`
+      : `<text x="640" y="238" fill="#1d1d1f" font-size="26" font-weight="900">UNJUDGED</text>
+  <text x="640" y="266" fill="#6e6e73" font-size="13" font-weight="800">graph artifact only</text>`;
   const timelineText = topSteps
     .map(
       (step, index) =>
@@ -338,8 +345,7 @@ export function skaiArtifactToSvg(artifact: SkaiArtifact) {
   <text x="152" y="240" text-anchor="middle" fill="#075e63" font-size="13" font-weight="900">INTENT</text>
   <text x="152" y="310" text-anchor="middle" fill="#075e63" font-size="12" font-weight="900">MATERIAL</text>
   <text x="552" y="276" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">ARTIFACT</text>
-  <text x="640" y="238" fill="#1d1d1f" font-size="46" font-weight="900">${artifact.score}</text>
-  <text x="640" y="266" fill="#6e6e73" font-size="13" font-weight="800">symbolic coach score</text>
+  ${scoreText}
   <text x="640" y="304" fill="#087c7c" font-size="18" font-weight="900">${xmlEscape(artifact.signature)}</text>
   <text x="640" y="330" fill="#6e6e73" font-size="13">prompts ${artifact.metrics.prompts} · responses ${artifact.metrics.responses} · materials ${artifact.metrics.materials}</text>
   <text x="72" y="306" fill="#1d1d1f" font-size="16" font-weight="900">Directed timeline</text>

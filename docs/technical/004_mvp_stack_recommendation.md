@@ -102,11 +102,11 @@ However, the database should include a `judge_runs` table with statuses:
 
 This allows queue migration later without changing the product model.
 
-## Per-Problem Leaderboard
+## Per-Problem Comparison
 
-Each problem should have its own leaderboard.
+Each problem should support comparison across attempts, but this should not start as a score-sorted leaderboard.
 
-The leaderboard should be secondary to learning and portfolio value, but it is still needed for the Baekjoon-like shape of the product.
+The current direction is attempt history, shared trace review, graph motifs, branch/replay comparison, and later structural halls of fame. A symbolic score may be shown as a coach reading, but learner UI should not push rank grinding.
 
 ## Admin Problem Authoring
 
@@ -152,7 +152,7 @@ Accepted technically acceptable rough edges:
 - Multi-provider support for every model on day one.
 - Perfect counterfactual replay.
 - Full comment threading.
-- High-scale leaderboard.
+- High-scale structural comparison/community surfaces.
 - Enterprise-grade privacy controls.
 
 ## What Must Not Fail In First Demo

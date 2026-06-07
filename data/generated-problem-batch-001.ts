@@ -38,8 +38,10 @@ interface RawPlaybookTurn {
 }
 
 interface RawPlaybook {
-  recommendedMode: string;
-  recommendedModel: string;
+  recommendedMode?: string;
+  recommendedModel?: string;
+  operatorSmokeMode?: string;
+  operatorSmokeModel?: string;
   attachments: string[];
   turns: RawPlaybookTurn[];
   optionalFinalAnswerFieldDraft: string;
@@ -105,10 +107,12 @@ function normalizeModeLabel(mode: string) {
 }
 
 function normalizePlaybook(problemId: string, playbook: RawPlaybook): ProblemPlaybook {
+  const smokeMode = playbook.operatorSmokeMode ?? playbook.recommendedMode ?? "guided-collaboration";
+
   return {
     problemId,
-    recommendedMode: normalizeModeLabel(playbook.recommendedMode),
-    recommendedModel: "Gemini Flash-Lite or OpenAI cheap baseline for live smoke, SKAI Mock for no-key demo",
+    operatorSmokeMode: normalizeModeLabel(smokeMode),
+    operatorSmokeModel: "Gemini Flash-Lite or OpenAI cheap baseline for live smoke, SKAI Mock for no-key demo",
     turns: playbook.turns.map((turn, index) => ({
       id: `turn-${turn.turn}`,
       label: `Turn ${turn.turn}`,
@@ -146,8 +150,8 @@ export const generatedProblemBatch001ReviewNotes = Object.fromEntries(
       smokeNotes: playbook.smokeNotes,
       weakTracePattern: playbook.weakTracePattern,
       goodTracePattern: playbook.goodTracePattern,
-      originalRecommendedMode: playbook.recommendedMode,
-      originalRecommendedModel: playbook.recommendedModel,
+      rawSmokeMode: playbook.operatorSmokeMode ?? playbook.recommendedMode,
+      rawSmokeModel: playbook.operatorSmokeModel ?? playbook.recommendedModel,
       batchAttachments: playbook.attachments,
     },
   ]),

@@ -14,6 +14,8 @@ Build the first runnable SKAI demo as a Next.js full-stack app that demonstrates
 6. User can publish/share the attempt in a strategy-first view.
 7. Users can see per-problem comparison data.
 
+Update: score-sorted learner leaderboards were later superseded by structural comparison surfaces. See TDR-096.
+
 ## Scope
 
 This plan implements a local/deployable MVP shell, not the final production system.
@@ -33,7 +35,7 @@ Included:
 - Synchronous judge endpoint.
 - Coach-style score report.
 - Strategy-first published attempt view.
-- Basic per-problem leaderboard/comparison using local demo storage.
+- Basic per-problem comparison using local demo storage. Later cleanup removed score-sorted learner leaderboards in favor of attempt history, share, graph motifs, and branch/replay.
 - Admin problem-authoring placeholder.
 - Cost guardrail constants.
 
@@ -172,7 +174,7 @@ Completed:
 - Score report.
 - Publish action.
 - Strategy-first share page.
-- Local per-problem leaderboard.
+- Local per-problem comparison.
 - Admin placeholder.
 - Supabase migration draft.
 - `.env.example`.

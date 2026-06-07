@@ -170,8 +170,10 @@ function validatePlaybook(playbook, problem, materialIds, label) {
     return;
   }
 
-  if (!isNonEmptyString(playbook.recommendedMode, 3)) fail(`${label}: playbook.recommendedMode is missing`);
-  if (!isNonEmptyString(playbook.recommendedModel, 3)) fail(`${label}: playbook.recommendedModel is missing`);
+  const smokeMode = playbook.operatorSmokeMode ?? playbook.recommendedMode;
+  const smokeModel = playbook.operatorSmokeModel ?? playbook.recommendedModel;
+  if (!isNonEmptyString(smokeMode, 3)) fail(`${label}: playbook smoke mode is missing`);
+  if (!isNonEmptyString(smokeModel, 3)) fail(`${label}: playbook smoke model is missing`);
   assertArray(playbook.smokeNotes, `${label}: playbook.smokeNotes`, 1);
   if (!isNonEmptyString(playbook.weakTracePattern, 20)) fail(`${label}: weakTracePattern is missing or too short`);
   if (!isNonEmptyString(playbook.goodTracePattern, 40)) fail(`${label}: goodTracePattern is missing or too short`);
