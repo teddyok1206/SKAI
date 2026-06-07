@@ -91,6 +91,7 @@ supabase/migrations/008_seed_demo_problems_and_harden_problem_rls.sql
 supabase/migrations/009_attempt_solving_mode.sql
 supabase/migrations/010_prompt_comment_edit_delete_reports.sql
 supabase/migrations/011_user_profiles.sql
+supabase/migrations/012_founder_review_notes.sql
 ```
 
 Important:

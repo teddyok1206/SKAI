@@ -66,7 +66,99 @@ const judgeFindingSeveritySchema = z.preprocess((value) => {
   return value;
 }, z.enum(["info", "positive", "watch", "critical"]));
 
-const optionalStringSchema = z.preprocess((value) => (value === null ? undefined : value), z.string().max(600).optional());
+const judgeFindingKindSchema = z.preprocess((value) => {
+  if (typeof value !== "string") {
+    return "bottleneck";
+  }
+
+  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+
+  if (normalized === "strength" || normalized === "positive" || normalized === "good_move") {
+    return "strength";
+  }
+
+  if (normalized === "risk" || normalized === "warning") {
+    return "risk";
+  }
+
+  if (
+    normalized === "missed_opportunity" ||
+    normalized === "opportunity" ||
+    normalized === "improvement" ||
+    normalized === "suggestion"
+  ) {
+    return "missed_opportunity";
+  }
+
+  return "bottleneck";
+}, z.enum(["strength", "bottleneck", "risk", "missed_opportunity"]));
+
+const optionalStringSchema = z.preprocess((value) => {
+  if (value === null || typeof value === "undefined") {
+    return undefined;
+  }
+
+  if (typeof value === "string") {
+    return value.slice(0, 600);
+  }
+
+  return value;
+}, z.string().max(600).optional());
+const graphTargetKindValues = [
+  "attempt",
+  "pair",
+  "node",
+  "prompt_node",
+  "response_node",
+  "status_node",
+  "edge",
+  "trace_event",
+] as const;
+const graphTargetKindSet = new Set<string>(graphTargetKindValues);
+
+function normalizeTargetKindValue(value: unknown) {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+
+  if (normalized === "prompt" || normalized === "promptnode" || normalized === "prompt_graph_node") {
+    return "prompt_node";
+  }
+
+  if (normalized === "response" || normalized === "responsenode" || normalized === "response_graph_node") {
+    return "response_node";
+  }
+
+  if (
+    normalized === "status" ||
+    normalized === "task_status" ||
+    normalized === "statusnode" ||
+    normalized === "status_layer_node"
+  ) {
+    return "status_node";
+  }
+
+  if (normalized === "trace" || normalized === "traceevent") {
+    return "trace_event";
+  }
+
+  if (normalized === "graph_node" || normalized === "conversation_node") {
+    return "node";
+  }
+
+  return graphTargetKindSet.has(normalized) ? normalized : "attempt";
+}
+
+const judgeTargetKindSchema = z.preprocess(normalizeTargetKindValue, z.enum(graphTargetKindValues));
+const optionalJudgeTargetKindSchema = z.preprocess((value) => {
+  if (value === null || value === "") {
+    return undefined;
+  }
+
+  return normalizeTargetKindValue(value);
+}, z.enum(graphTargetKindValues).optional());
 
 const graphAnnotationKindValues = [
   "framing",
@@ -124,10 +216,10 @@ const llmJudgeSchema = z.object({
     .array(
       z.object({
         id: z.string().optional(),
-        kind: z.enum(["strength", "bottleneck", "risk", "missed_opportunity"]).default("bottleneck"),
+        kind: judgeFindingKindSchema.default("bottleneck"),
         severity: judgeFindingSeveritySchema,
         axis: z.enum(scoreAxisValues),
-        targetKind: z.enum(["attempt", "pair", "prompt_node", "response_node", "status_node", "edge", "trace_event"]),
+        targetKind: judgeTargetKindSchema,
         targetId: z.string().min(1),
         evidenceIds: z.array(z.string()).default([]),
         confidence: z.coerce.number().min(0).max(100).optional(),
@@ -146,7 +238,7 @@ const llmJudgeSchema = z.object({
         label: z.string(),
         severity: legacyBottleneckSeveritySchema,
         explanation: z.string(),
-        replaySuggestion: z.string(),
+        replaySuggestion: optionalStringSchema,
       }),
     )
     .default([]),
@@ -164,7 +256,7 @@ const llmJudgeSchema = z.object({
     .array(
       z.object({
         targetTraceEventId: z.string().optional(),
-        targetKind: z.enum(["attempt", "pair", "node", "edge", "trace_event", "prompt_node", "response_node", "status_node"]).optional(),
+        targetKind: optionalJudgeTargetKindSchema,
         targetId: z.string().optional(),
         kind: z.enum(graphAnnotationKindValues),
         severity: judgeFindingSeveritySchema,
@@ -710,12 +802,66 @@ function findingSeverityToBottleneckSeverity(severity: "info" | "positive" | "wa
   return "low";
 }
 
+function normalizeBottleneckLabel(value: string) {
+  return value.replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function bottleneckTokens(value: string) {
+  return normalizeBottleneckLabel(value)
+    .replace(/[()[\]{}.,:;'"`]/g, " ")
+    .split(/\s+/)
+    .map((token) =>
+      token
+        .replace(/(입니다|합니다|부족함|부족하다|부족|있음|없음)$/g, "")
+        .replace(/(이|가|은|는|을|를|의|에|와|과)$/g, ""),
+    )
+    .filter((token) => token.length > 1 && !["및", "대한", "기반", "따른", "요구된", "명시적인"].includes(token));
+}
+
+function isSimilarBottleneckLabel(left: string, right: string) {
+  const leftTokens = new Set(bottleneckTokens(left));
+  const rightTokens = new Set(bottleneckTokens(right));
+  const smaller = leftTokens.size <= rightTokens.size ? leftTokens : rightTokens;
+  const larger = smaller === leftTokens ? rightTokens : leftTokens;
+
+  if (smaller.size === 0) {
+    return false;
+  }
+
+  let overlap = 0;
+  for (const token of smaller) {
+    if (larger.has(token)) {
+      overlap += 1;
+    }
+  }
+
+  return overlap / smaller.size >= 0.75;
+}
+
+function dedupeBottlenecks(items: Bottleneck[]) {
+  const seen = new Set<string>();
+  const deduped: Bottleneck[] = [];
+
+  for (const item of items) {
+    const key = normalizeBottleneckLabel(item.label);
+
+    if (seen.has(key) || deduped.some((existing) => isSimilarBottleneckLabel(existing.label, item.label))) {
+      continue;
+    }
+
+    seen.add(key);
+    deduped.push(item);
+  }
+
+  return deduped;
+}
+
 function targetKindToGraphAnnotationKind(kind: string): RawJudgeGraphAnnotation["targetKind"] {
   if (kind === "prompt_node" || kind === "response_node" || kind === "status_node") {
     return kind;
   }
 
-  if (kind === "pair" || kind === "edge" || kind === "trace_event" || kind === "attempt") {
+  if (kind === "pair" || kind === "node" || kind === "edge" || kind === "trace_event" || kind === "attempt") {
     return kind;
   }
 
@@ -856,7 +1002,7 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
         .map((finding) => `${finding.title}: ${finding.explanation}`),
       ...raw.improvements,
     ].slice(0, 4),
-    bottlenecks: [
+    bottlenecks: dedupeBottlenecks([
       ...raw.findings
         .filter((finding) => finding.kind === "bottleneck" || finding.kind === "risk" || finding.severity === "critical")
         .map((finding) => ({
@@ -866,8 +1012,11 @@ function normalizeLlmReport(input: JudgeInput, config: JudgeConfig, raw: z.infer
           explanation: finding.explanation,
           replaySuggestion: finding.replaySuggestion ?? finding.explanation,
         })),
-      ...raw.bottlenecks,
-    ].slice(0, 4),
+      ...raw.bottlenecks.map((bottleneck) => ({
+          ...bottleneck,
+          replaySuggestion: bottleneck.replaySuggestion ?? bottleneck.explanation,
+        })),
+    ]).slice(0, 4),
     workflow: raw.workflow.length > 0 ? raw.workflow.slice(0, 6) : buildWorkflow(input.trace, input.locale),
     nextPracticeTargets: raw.nextPracticeTargets.slice(0, 4),
     judgeProvider: config.provider,
@@ -998,7 +1147,7 @@ async function runLlmJudge(input: JudgeInput, config: JudgeConfig, evidence: Jud
             "Allowed finding kinds: strength, bottleneck, risk, missed_opportunity",
             "Allowed finding severities: info, positive, watch, critical",
             "Do not use low, medium, or high for findings[].severity.",
-            "Allowed finding targetKind values: attempt, pair, prompt_node, response_node, status_node, edge, trace_event",
+            "Allowed finding targetKind values: attempt, pair, node, prompt_node, response_node, status_node, edge, trace_event",
             "For legacy bottlenecks[].severity, use low, medium, or high only. Do not use finding severities there.",
             `Allowed graph annotation kinds: ${graphAnnotationKindValues.join(", ")}`,
             "Allowed graph annotation severities: info, positive, watch, critical",

@@ -1,0 +1,714 @@
+{
+  "startedAt": "2026-06-07T09:40:35.468Z",
+  "baseUrl": "http://127.0.0.1:3013",
+  "status": "passed",
+  "graphMetrics": {
+    "annotationCount": 40,
+    "validTargetCount": 40,
+    "lowConfidenceAnchorCount": 7,
+    "duplicateCount": 0,
+    "targetHitRate": 1,
+    "lowConfidenceAnchorRate": 0.175,
+    "duplicateFindingRate": 0
+  },
+  "results": [
+    {
+      "sampleId": "golden-club-budget-workflow-weak",
+      "problemId": "club-budget-workflow",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 35,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.85,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "현재 제공된 증거만으로는 사용자의 의도와 AI의 실제 수행 능력을 완전히 파악하기 어렵습니다. 특히, 'golden-club-budget-workflow-weak'라는 ID는 초기 또는 약한 시도를 나타내는 것으로 보이며, 이는 평가 점수에 영향을 미쳤습니다.",
+        "단일 턴으로 진행되어 적응 및 반복 운영 가능성에 대한 심층적인 평가가 제한적이었습니다."
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 48
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 17950,
+          "totalScore": 35
+        }
+      ],
+      "judgeDisagreement": [
+        "총점 차이가 13점입니다. judge calibration이 필요합니다.",
+        "적응력 축에서 judge 간 점수 차이가 큽니다.",
+        "효율성 축에서 judge 간 점수 차이가 큽니다.",
+        "최종품질 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 9,
+      "graphMetrics": {
+        "annotationCount": 9,
+        "validTargetCount": 9,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 2,
+        "lowConfidenceAnchorRate": 0.222,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:missing-material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Available materials not used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "bottleneck",
+          "severity": "critical",
+          "axis": "problem_definition",
+          "confidence": 0.504,
+          "title": "문제 정의 및 제약 조건의 모호성",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "decomposition",
+          "severity": "critical",
+          "axis": "decomposition",
+          "confidence": 0.7,
+          "title": "작업 분해의 부재",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:delegation:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "delegation",
+          "severity": "critical",
+          "axis": "instruction_clarity",
+          "confidence": 0.7,
+          "title": "AI 지시의 불명확성 및 결과물 계약 부재",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:3",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "verification",
+          "severity": "critical",
+          "axis": "verification",
+          "confidence": 0.72,
+          "title": "검증 단계 부재 및 자료 활용 미흡",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1",
+            "golden-club-budget-workflow-weak-a1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "bottleneck",
+          "severity": "critical",
+          "axis": "final_quality",
+          "confidence": 0.504,
+          "title": "최종 결과물 요구사항 미충족",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:5",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "verification",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.5616,
+          "title": "미사용 필수 자료",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:framing:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:llm:golden-club-budget-workflow-weak-u1:7",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "framing",
+          "severity": "critical",
+          "axis": "problem_definition",
+          "confidence": 0.7,
+          "title": "문제 정의 및 제약 조건의 모호성",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "문제 정의 및 제약 조건의 모호성",
+        "작업 분해의 부재",
+        "AI 지시의 불명확성 및 결과물 계약 부재",
+        "검증 단계 부재 및 자료 활용 미흡"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:explicit_goal",
+            "evidence:constraints"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:verification",
+            "evidence:material_instruction",
+            "evidence:material_unused"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 35,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-average",
+      "problemId": "club-budget-workflow",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 65,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.85,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 1,
+          "totalScore": 64
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 14665,
+          "totalScore": 65
+        }
+      ],
+      "judgeDisagreement": [
+        "적응력 축에서 judge 간 점수 차이가 큽니다.",
+        "최종품질 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 13,
+      "graphMetrics": {
+        "annotationCount": 13,
+        "validTargetCount": 13,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 4,
+        "lowConfidenceAnchorRate": 0.308,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:missing-material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Available materials not used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "axis": "problem_definition",
+          "confidence": 0.504,
+          "title": "문제 정의 및 제약 조건의 모호성",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "decomposition",
+          "severity": "watch",
+          "axis": "decomposition",
+          "confidence": 0.504,
+          "title": "업무 분해의 상세 부족",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "verification",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.5616,
+          "title": "미사용 필수 자료 존재",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:3",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "verification",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.4752,
+          "title": "검증 절차의 부재",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "axis": "final_quality",
+          "confidence": 0.41759999999999997,
+          "title": "최종 산출물의 불완전성",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:framing:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:5",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "framing",
+          "severity": "watch",
+          "confidence": 0.7,
+          "title": "문제 정의 및 제약 조건의 모호성",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:llm:golden-club-budget-workflow-average-u1:6",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "decomposition",
+          "severity": "watch",
+          "confidence": 0.7,
+          "title": "업무 분해의 상세 부족",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "문제 정의 및 제약 조건의 모호성",
+        "업무 분해의 상세 부족",
+        "미사용 필수 자료 존재",
+        "검증 절차의 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 50,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:explicit_goal",
+            "evidence:constraints"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 50,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 70,
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 40,
+          "confidence": 0.6,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 50,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:verification",
+            "evidence:material_unused"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 70,
+          "confidence": 0.8,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 60,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-strong",
+      "problemId": "club-budget-workflow",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 79,
+      "judgeMode": "llm",
+      "judgeProvider": "gemini",
+      "judgeModel": "gemini-2.5-flash-lite",
+      "judgePromptVersion": "judge-prompt.research-v2.001",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.95,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "AI의 최종 응답이 사용자가 요구한 '업무 분해도', 'AI task 분배안', '사람 검토 지점', '운영 체크리스트', '실패 시나리오 대응책'과 같은 구체적인 결과물 형태로 명확하게 구분되어 제시되지 않았습니다. 전반적인 워크플로우 설명으로 요약되어 최종 산출물의 완성도 평가에 어려움이 있었습니다."
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 80
+        },
+        {
+          "judgeKind": "llm",
+          "status": "succeeded",
+          "judgeProvider": "gemini",
+          "judgeModel": "gemini-2.5-flash-lite",
+          "latencyMs": 17675,
+          "totalScore": 79
+        }
+      ],
+      "judgeDisagreement": [
+        "문제정의 축에서 judge 간 점수 차이가 큽니다.",
+        "최종품질 축에서 judge 간 점수 차이가 큽니다."
+      ],
+      "graphAnnotationCount": 18,
+      "graphMetrics": {
+        "annotationCount": 18,
+        "validTargetCount": 18,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 1,
+        "lowConfidenceAnchorRate": 0.056,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4:golden-club-budget-workflow-strong-u4",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "최종 산출물 형태의 구체성 부족",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u4"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2:golden-club-budget-workflow-strong-u2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "AI 응답 기반 계획 조정 부족",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u2"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:golden-club-budget-workflow-strong-u1:material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "material_grounding",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.96,
+          "title": "Material used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:golden-club-budget-workflow-strong-u1:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2:golden-club-budget-workflow-strong-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4:golden-club-budget-workflow-strong-u4:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u4"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:decomposition:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:llm:golden-club-budget-workflow-strong-u1:0",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "decomposition",
+          "severity": "positive",
+          "axis": "decomposition",
+          "confidence": 0.9,
+          "title": "문제 상황을 명확히 이해하고 AI 워크플로우 설계를 위한 하위 작업으로 효과적으로 분해함",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "llm_judge"
+        },
+        {
+          "id": "annotation:delegation:pair:pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2:llm:golden-club-budget-workflow-strong-u2:1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2",
+          "kind": "delegation",
+          "severity": "positive",
+          "axis": "instruction_clarity",
+          "confidence": 0.9,
+          "title": "AI 작업의 입력, 출력, 검증 기준 및 개인정보 처리 주의사항을 구체적으로 명시함",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u2"
+          ],
+          "source": "llm_judge"
+        }
+      ],
+      "bottlenecks": [
+        "AI 응답에 따른 계획 및 프롬프트 조정이 부족함",
+        "요구된 최종 산출물 형태의 구체성이 부족함",
+        "최종 산출물 형태의 구체성 부족",
+        "AI 응답 기반 계획 조정 부족"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 90,
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence:explicit_goal",
+            "evidence:constraints"
+          ]
+        },
+        {
+          "axis": "decomposition",
+          "score": 95,
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence:decomposition"
+          ]
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 90,
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence:deliverable_contract"
+          ]
+        },
+        {
+          "axis": "adaptation",
+          "score": 50,
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence:adaptation_reference"
+          ]
+        },
+        {
+          "axis": "verification",
+          "score": 90,
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence:verification",
+            "evidence:material_instruction"
+          ]
+        },
+        {
+          "axis": "efficiency",
+          "score": 70,
+          "confidence": 0.8,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 60,
+          "confidence": 0.85,
+          "evidenceIds": [
+            "evidence:final_answer_coverage"
+          ]
+        }
+      ]
+    }
+  ],
+  "orderingChecks": [
+    {
+      "problemId": "club-budget-workflow",
+      "passed": true,
+      "gapPassed": true,
+      "annotationPassed": true,
+      "scores": {
+        "weak": 35,
+        "average": 65,
+        "strong": 79
+      },
+      "gaps": {
+        "weakAverage": 30,
+        "averageStrong": 14
+      }
+    }
+  ],
+  "errors": []
+}

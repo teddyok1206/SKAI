@@ -39,15 +39,16 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "첫 문제 풀기",
-      "en": "Start first problem"
+      "ko": "문제 시작",
+      "en": "Start a problem"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "c80b8211f410b550c904b96e897f5af4eae828534b88c753a8954eb9ebf0b961",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "7b6f3a9599acaa00098a5c4c8454aeb5b42edc0fdce90ec31d7ff722c6a524ff",
+    "updatedAt": "2026-06-07T09:18:00.108Z",
+    "notes": "Home CTA should be direct and product-like, not gamified."
   },
   {
     "key": "home.cta.viewProblems",
@@ -55,15 +56,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "문제 보기",
-      "en": "Browse problems"
+      "ko": "문제 고르기",
+      "en": "Choose a problem"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "dc770cad0ef961bff5c330101b9a6f7216db3e6a5de883a8ddf0dc009c1981a8",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "0d9e6aa4f8d6df3db368aec70260beeb3b2aa22d518cdb6264166841eca8df82",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "nav.problems",
@@ -339,18 +340,18 @@
   {
     "key": "problemBrowser.eyebrow",
     "domain": "problem_browser",
-    "sourceLocale": "en",
+    "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "Problems",
-      "en": "Problems"
+      "ko": "Practice",
+      "en": "Practice"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "bde2ae68398a418ba2f7755904afd07bebdfa1fabf1b47d6a086146b0d679a8a",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "64dbf48d60925608fe9c687f637c2edf28b703c7ca5bb4fc95848a9a6ed9f308",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.title",
@@ -358,15 +359,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "오늘 풀 수 있는 문제",
-      "en": "Problems Available Today"
+      "ko": "의도, 자료, 검증을 연습하세요",
+      "en": "Practice intent, materials, and verification"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "c8d92d8a6132a576f3bd2c6fc5064a2ea9e20c63f7070dd900cbd0e8d9b3daa8",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "1297a04c7a361aeac8aa5f98c92477902d325a6f6287fac10378832ab145439b",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.search.placeholder",
@@ -374,33 +375,31 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "문제나 자료 검색",
-      "en": "Search problems or materials"
+      "ko": "문제, 자료, 상황 검색",
+      "en": "Search tasks, materials, contexts"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "41b517e32ab29f3ac35505a9b3cd4016224f14ca792716719c73ad45e498fae2",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "f20131e3fe09e4e118aca7ed0b1135072e666cd742c717643d053249b99adb19",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.curation.all",
     "domain": "problem_browser",
     "sourceLocale": "ko",
-    "protectedTerms": [
-      "Smoke"
-    ],
+    "protectedTerms": [],
     "values": {
-      "ko": "Smoke 후보",
-      "en": "Smoke candidates"
+      "ko": "전체",
+      "en": "All"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "187e65f7544953c21e90c6cdc09c1f0f7b7d0d7ab16774eba2d148fdec35aee7",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "762e53f3ba671c1e7a2029d9bc43f7883e3aed941fc18dfcdf460f12f5ff2ecf",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.curation.firstRun",
@@ -408,15 +407,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "처음 체감",
-      "en": "First experience"
+      "ko": "처음 시작",
+      "en": "Start here"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "4712c61e5f81e3ff1ada3f504e73531aa88117508c880143bced45b9095dc9b2",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "0bc48e712c88aa5dcb3bf9d6b011c126fced0495854e196dc442742d8b9651c4",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.curation.materialControl",
@@ -424,15 +423,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "자료 다루기",
-      "en": "Material control"
+      "ko": "자료 통제",
+      "en": "Control materials"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "b10d0580c910e99f98b5f18e47b4fdabb8dc06c8c4ef0670fd5465d9f430d190",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "282ab6cfcb4c91bf1b1ace868f25a433be6d73bf6e77b0d31afc39b783bbdf68",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.curation.verificationReplay",
@@ -442,15 +441,15 @@
       "Replay"
     ],
     "values": {
-      "ko": "검증/Replay",
-      "en": "Verification/Replay"
+      "ko": "검증과 Replay",
+      "en": "Verify and Replay"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "0732bf3331cf94769aa1fcfbe9693ebbb31c89f788b281fcf5b067e6f843da8b",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "20f3acd6ac5a0ad5311cc0731bd813821359f610dc51bd67e401857e630740c4",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.filter.details",
@@ -458,15 +457,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "세부 필터",
-      "en": "Advanced filters"
+      "ko": "필터",
+      "en": "Filters"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "217a39cdac924db6dd28cf8fbab1d0022f282a626fc04809e939db3ea6ced4ef",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "5fb652e906c1c8944c69672b52e6fec4cd9362eafd97a83428c955ba2adb1b53",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.empty.title",
@@ -474,15 +473,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "조건에 맞는 문제가 없습니다.",
-      "en": "No problems match these filters."
+      "ko": "맞는 문제가 없습니다.",
+      "en": "No matching problems."
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "fa8f7d2c755e1653cf617fc3e97cbc35b70c88b6467a6c9e953cf62967847602",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "ee4266a5ecf8d8cba2d2a4d3c6dc2b266824f109ea7f9948f532e070e546ff7a",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.empty.reset",
@@ -498,7 +497,7 @@
       "en": "approved"
     },
     "sourceChecksum": "887ae6c2c796b2275606f0f091a0515792aae0b86200da3067d528b7f0a812c7",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.category.workplace",
@@ -922,15 +921,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "전체 분야",
-      "en": "All categories"
+      "ko": "전체",
+      "en": "All"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "f46a6d204a9a71e0ac0668db864acbf2c45f334904d7ff2f875dfbf811f672ed",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "762e53f3ba671c1e7a2029d9bc43f7883e3aed941fc18dfcdf460f12f5ff2ecf",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.filter.allDifficulties",
@@ -938,15 +937,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "전체 난이도",
-      "en": "All difficulties"
+      "ko": "전체",
+      "en": "All"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "f14dbc0a8cf7fedc759fa9942ea306cb37c35855cdfa268a64b7c50fa69cf5c9",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "762e53f3ba671c1e7a2029d9bc43f7883e3aed941fc18dfcdf460f12f5ff2ecf",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.summary.noResults",
@@ -962,7 +961,7 @@
       "en": "approved"
     },
     "sourceChecksum": "a0e7ed4026bed5458fbedf627c11671cf993645d39cdde2cba8402997c5017c2",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.action.reset",
@@ -978,7 +977,7 @@
       "en": "approved"
     },
     "sourceChecksum": "563b0c5493d01eb885ee57ce83bea1889f86a4af6bdb71fefea2c7f28906086b",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.action.solve",
@@ -986,15 +985,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "풀기",
-      "en": "Solve"
+      "ko": "시작",
+      "en": "Start"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "b7d27b0f67b2d31eb2d349dc7e2d74a643b353d74d35f580b4babea3071aa7ba",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "86ae4115fed7eeec50fc0a8aad896eeba3a26edfdf2e867ed41e60e37d6d05ef",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "problemBrowser.empty.description",
@@ -1002,15 +1001,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "검색어나 필터를 줄이면 다시 볼 수 있습니다.",
-      "en": "Reduce the search terms or filters to see problems again."
+      "ko": "검색어나 필터를 줄여보세요.",
+      "en": "Try fewer terms or filters."
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "15ce1e16aa4727ef36906b6719995bc0bbad7acde4c30141b2384d3c9d583943",
-    "updatedAt": "2026-06-05T00:00:00.000Z"
+    "sourceChecksum": "6d2ce4c8ffd1c9ada7af208a9abfb78a7e44dc1c87d6956d0d7a547633fb8e8b",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "skaiViewer.page.lead",
@@ -7053,15 +7052,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "Local Drafts",
-      "en": "Local Drafts"
+      "ko": "내 초안",
+      "en": "My drafts"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "6391bdde047e6a38b5ab69ac0019639dddb91fa327edd0ef09b901940ddf76b1",
-    "updatedAt": "2026-06-05T16:29:46.062Z"
+    "sourceChecksum": "2f337783da19c85fe2cc6598edb854155ac4dce4ed8a5a84604892906d2e5625",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "localDraft.list.title",
@@ -7077,7 +7076,7 @@
       "en": "approved"
     },
     "sourceChecksum": "84e513b17d56a2e98de96e45f9f774e8f322082def3ad71751e2f4f6e4a5a02b",
-    "updatedAt": "2026-06-05T16:29:46.062Z"
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "localDraft.list.aria",
@@ -7085,15 +7084,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "Authored problem list",
+      "ko": "직접 만든 문제 목록",
       "en": "Authored problem list"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "ecd75df4cbdd0c4de901ee1393214ba2db6b84fa37e069a7357f4560413931c1",
-    "updatedAt": "2026-06-05T16:29:46.062Z"
+    "sourceChecksum": "9f62b9623f9ea234f694ee8035760d987b33ec7ef1e448cc167a3e32ee4ed4e2",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "localDraft.list.action.solve",
@@ -7101,15 +7100,15 @@
     "sourceLocale": "ko",
     "protectedTerms": [],
     "values": {
-      "ko": "초안 풀기",
-      "en": "Solve draft"
+      "ko": "초안 시작",
+      "en": "Start draft"
     },
     "status": {
       "ko": "approved",
       "en": "approved"
     },
-    "sourceChecksum": "49dcdadf24806fa3babd603b4a146590e03d1eeb63d33f8e673310ad377d9ee5",
-    "updatedAt": "2026-06-05T16:29:46.062Z"
+    "sourceChecksum": "390fd858c85255d205ff8c4791d305f71b3befa1e616adc7b4a8735d90a90221",
+    "updatedAt": "2026-06-07T09:18:00.108Z"
   },
   {
     "key": "localDraft.list.minutesSuffix",

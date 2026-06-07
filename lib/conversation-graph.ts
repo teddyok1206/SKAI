@@ -62,17 +62,76 @@ function addAnnotationToIndex(index: ConversationGraphIndex, annotation: Convers
   }
 }
 
+const annotationSeverityRank = {
+  info: 1,
+  positive: 2,
+  watch: 3,
+  critical: 4,
+} satisfies Record<ConversationGraphAnnotation["severity"], number>;
+
+const annotationSourceRank = {
+  deterministic: 1,
+  heuristic_judge: 2,
+  llm_judge: 3,
+  human: 4,
+} satisfies Record<ConversationGraphAnnotation["source"], number>;
+
+function compactAnnotationKeyText(value: string) {
+  return value.replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function annotationMergeKey(annotation: ConversationGraphAnnotation) {
+  return [
+    annotation.targetKind,
+    annotation.targetId,
+    annotation.kind,
+    annotation.axis ?? "no-axis",
+    compactAnnotationKeyText(annotation.title),
+  ].join("|");
+}
+
 function dedupeAnnotations(annotations: ConversationGraphAnnotation[]) {
   const seen = new Set<string>();
+  const mergedByKey = new Map<string, ConversationGraphAnnotation>();
 
-  return annotations.filter((annotation) => {
+  for (const annotation of annotations) {
     if (seen.has(annotation.id)) {
-      return false;
+      continue;
     }
 
     seen.add(annotation.id);
-    return true;
-  });
+    const key = annotationMergeKey(annotation);
+    const existing = mergedByKey.get(key);
+
+    if (!existing) {
+      mergedByKey.set(key, annotation);
+      continue;
+    }
+
+    mergedByKey.set(key, {
+      ...existing,
+      severity:
+        annotationSeverityRank[annotation.severity] > annotationSeverityRank[existing.severity]
+          ? annotation.severity
+          : existing.severity,
+      scoreImpact:
+        Math.abs(annotation.scoreImpact ?? 0) > Math.abs(existing.scoreImpact ?? 0)
+          ? annotation.scoreImpact
+          : existing.scoreImpact,
+      confidence: Math.max(existing.confidence, annotation.confidence),
+      explanation:
+        annotationSourceRank[annotation.source] > annotationSourceRank[existing.source]
+          ? annotation.explanation
+          : existing.explanation,
+      evidenceTraceEventIds: [...new Set([...existing.evidenceTraceEventIds, ...annotation.evidenceTraceEventIds])],
+      source:
+        annotationSourceRank[annotation.source] > annotationSourceRank[existing.source]
+          ? annotation.source
+          : existing.source,
+    });
+  }
+
+  return [...mergedByKey.values()];
 }
 
 function inferTaskStatus(

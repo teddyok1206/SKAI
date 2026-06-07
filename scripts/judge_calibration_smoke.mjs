@@ -396,6 +396,53 @@ function graphAnnotationSummary(annotation) {
   };
 }
 
+function normalizedAnnotationTitle(annotation) {
+  return String(annotation.title ?? "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function annotationDuplicateKey(annotation) {
+  return [
+    annotation.targetKind ?? "unknown-target-kind",
+    annotation.targetId ?? "unknown-target-id",
+    annotation.kind ?? "unknown-kind",
+    annotation.axis ?? "no-axis",
+    normalizedAnnotationTitle(annotation),
+  ].join("|");
+}
+
+function graphAnnotationMetrics(annotations = []) {
+  const validTargetCount = annotations.filter(
+    (annotation) => Boolean(annotation.targetKind) && Boolean(annotation.targetId),
+  ).length;
+  const lowConfidenceAnchorCount = annotations.filter(
+    (annotation) => annotation.source === "llm_judge" && typeof annotation.confidence === "number" && annotation.confidence <= 0.55,
+  ).length;
+  const seenKeys = new Set();
+  let duplicateCount = 0;
+
+  for (const annotation of annotations) {
+    const key = annotationDuplicateKey(annotation);
+    if (seenKeys.has(key)) {
+      duplicateCount += 1;
+    } else {
+      seenKeys.add(key);
+    }
+  }
+
+  return {
+    annotationCount: annotations.length,
+    validTargetCount,
+    targetHitRate: annotations.length > 0 ? Number((validTargetCount / annotations.length).toFixed(3)) : 0,
+    lowConfidenceAnchorCount,
+    lowConfidenceAnchorRate: annotations.length > 0 ? Number((lowConfidenceAnchorCount / annotations.length).toFixed(3)) : 0,
+    duplicateCount,
+    duplicateFindingRate: annotations.length > 0 ? Number((duplicateCount / annotations.length).toFixed(3)) : 0,
+  };
+}
+
 function judgeRunSummary(run) {
   return {
     judgeKind: run.judgeKind,
@@ -408,6 +455,34 @@ function judgeRunSummary(run) {
   };
 }
 
+function aggregateGraphMetrics(results) {
+  const totals = results.reduce(
+    (acc, result) => {
+      acc.annotationCount += result.graphMetrics.annotationCount;
+      acc.validTargetCount += result.graphMetrics.validTargetCount;
+      acc.lowConfidenceAnchorCount += result.graphMetrics.lowConfidenceAnchorCount;
+      acc.duplicateCount += result.graphMetrics.duplicateCount;
+      return acc;
+    },
+    {
+      annotationCount: 0,
+      validTargetCount: 0,
+      lowConfidenceAnchorCount: 0,
+      duplicateCount: 0,
+    },
+  );
+
+  return {
+    ...totals,
+    targetHitRate:
+      totals.annotationCount > 0 ? Number((totals.validTargetCount / totals.annotationCount).toFixed(3)) : 0,
+    lowConfidenceAnchorRate:
+      totals.annotationCount > 0 ? Number((totals.lowConfidenceAnchorCount / totals.annotationCount).toFixed(3)) : 0,
+    duplicateFindingRate:
+      totals.annotationCount > 0 ? Number((totals.duplicateCount / totals.annotationCount).toFixed(3)) : 0,
+  };
+}
+
 function reportMarkdown(report) {
   return [
     `# Judge Calibration ${report.startedAt}`,
@@ -416,6 +491,9 @@ function reportMarkdown(report) {
     `- baseUrl: ${report.baseUrl}`,
     `- sampleCount: ${report.results.length}`,
     `- judgeModes: ${[...new Set(report.results.map((result) => result.judgeMode))].join(", ") || "none"}`,
+    `- graphTargetHitRate: ${report.graphMetrics.targetHitRate}`,
+    `- lowConfidenceAnchorRate: ${report.graphMetrics.lowConfidenceAnchorRate}`,
+    `- duplicateFindingRate: ${report.graphMetrics.duplicateFindingRate}`,
     "",
     "## Ordering Checks",
     "",
@@ -440,6 +518,7 @@ function reportMarkdown(report) {
           ? `- judgeRuns: ${result.judgeRuns.map((run) => `${run.judgeKind}:${run.status}${run.error ? `(${run.error.slice(0, 120)})` : ""}`).join(" / ")}`
           : "",
         `- graphAnnotations: ${result.graphAnnotationCount}`,
+        `- graphMetrics: targetHit ${result.graphMetrics.targetHitRate}, lowConfidenceAnchor ${result.graphMetrics.lowConfidenceAnchorRate}, duplicate ${result.graphMetrics.duplicateFindingRate}`,
         result.graphAnnotations.length > 0
           ? `- graphTargets: ${result.graphAnnotations
               .slice(0, 4)
@@ -485,6 +564,7 @@ async function main() {
   for (const sample of selectedSamples) {
     try {
       const report = await judgeSample(args.baseUrl, sample);
+      const graphAnnotations = report.graphAnnotations ?? [];
       results.push({
         sampleId: sample.id,
         problemId: sample.problemId,
@@ -501,8 +581,9 @@ async function main() {
         uncertaintyNotes: report.uncertaintyNotes ?? [],
         judgeRuns: report.judgeRuns?.map(judgeRunSummary) ?? [],
         judgeDisagreement: report.judgeDisagreement ?? [],
-        graphAnnotationCount: report.graphAnnotations?.length ?? 0,
-        graphAnnotations: report.graphAnnotations?.slice(0, 8).map(graphAnnotationSummary) ?? [],
+        graphAnnotationCount: graphAnnotations.length,
+        graphMetrics: graphAnnotationMetrics(graphAnnotations),
+        graphAnnotations: graphAnnotations.slice(0, 8).map(graphAnnotationSummary),
         bottlenecks: report.bottlenecks?.map((item) => item.label) ?? [],
         axisScores: report.axisScores?.map((item) => ({
           axis: item.axis,
@@ -526,6 +607,7 @@ async function main() {
     startedAt,
     baseUrl: args.baseUrl,
     status: calibrationStatus(results, checks, errors),
+    graphMetrics: aggregateGraphMetrics(results),
     results,
     orderingChecks: checks,
     errors,

@@ -5,7 +5,11 @@ import Link from "next/link";
 import { Cloud, GitBranch, MessageSquareText, Save, Share2, Trophy } from "lucide-react";
 import { problems as seedProblems } from "@/data/problems";
 import { saveFounderReviewNote } from "@/lib/local-store";
-import { loadFounderCohortFromSupabase } from "@/lib/supabase-persistence";
+import {
+  loadFounderCohortFromSupabase,
+  loadFounderReviewNotesFromSupabase,
+  saveFounderReviewNoteToSupabase,
+} from "@/lib/supabase-persistence";
 import type { Attempt, FounderCalibrationVerdict, FounderCohortAttempt, FounderCohortSnapshot, FounderReviewNote, Problem } from "@/lib/types";
 import { useAuthoredProblems } from "@/lib/use-authored-problems";
 import { useFounderReviewNotes, useLocalAttempts } from "@/lib/use-local-review";
@@ -56,6 +60,16 @@ function reviewSignal(attempt: { totalScore?: number; judgeMode?: string }, grap
   const needsReview = typeof attempt.totalScore !== "number" || attempt.totalScore < 55 || graphAnnotationCount === 0;
 
   return needsReview ? "review" : "baseline";
+}
+
+function mergeFounderNotes(localNotes: FounderReviewNote[], remoteNotes: FounderReviewNote[]) {
+  const noteMap = new Map(remoteNotes.map((note) => [note.attemptId, note]));
+
+  for (const note of localNotes) {
+    noteMap.set(note.attemptId, note);
+  }
+
+  return [...noteMap.values()];
 }
 
 function CalibrationControls({
@@ -109,10 +123,12 @@ function CalibrationControls({
 function CohortReviewRow({
   attempt,
   note,
+  onSaveNote,
   problemName,
 }: {
   attempt: FounderCohortAttempt;
   note?: FounderReviewNote;
+  onSaveNote: (note: FounderReviewNote) => void;
   problemName: string;
 }) {
   const [draft, setDraft] = useState(note?.note ?? "");
@@ -120,7 +136,7 @@ function CohortReviewRow({
   const [expectedScore, setExpectedScore] = useState<number | undefined>(note?.calibrationLabel?.expectedScore);
 
   function saveNote() {
-    saveFounderReviewNote({
+    onSaveNote({
       attemptId: attempt.id,
       note: draft.trim(),
       calibrationLabel: {
@@ -187,10 +203,12 @@ function CohortReviewRow({
 function AttemptReviewRow({
   attempt,
   note,
+  onSaveNote,
   problemName,
 }: {
   attempt: Attempt;
   note?: FounderReviewNote;
+  onSaveNote: (note: FounderReviewNote) => void;
   problemName: string;
 }) {
   const [draft, setDraft] = useState(note?.note ?? "");
@@ -201,7 +219,7 @@ function AttemptReviewRow({
   const graphAnnotationCount = attempt.scoreReport?.graphAnnotations?.length ?? 0;
 
   function saveNote() {
-    saveFounderReviewNote({
+    onSaveNote({
       attemptId: attempt.id,
       note: draft.trim(),
       calibrationLabel: {
@@ -271,12 +289,14 @@ export function FounderReviewDashboard() {
   const notes = useFounderReviewNotes();
   const authoredProblems = useAuthoredProblems();
   const [remoteCohort, setRemoteCohort] = useState<FounderCohortSnapshot | null>(null);
+  const [remoteNotes, setRemoteNotes] = useState<FounderReviewNote[]>([]);
   const [remoteStatus, setRemoteStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const problemMap = useMemo(
     () => new Map([...seedProblems, ...authoredProblems].map((problem) => [problem.id, problem])),
     [authoredProblems],
   );
-  const noteMap = useMemo(() => new Map(notes.map((note) => [note.attemptId, note])), [notes]);
+  const mergedNotes = useMemo(() => mergeFounderNotes(notes, remoteNotes), [notes, remoteNotes]);
+  const noteMap = useMemo(() => new Map(mergedNotes.map((note) => [note.attemptId, note])), [mergedNotes]);
   const judgedCount = attempts.filter((attempt) => attempt.scoreReport).length;
   const branchCount = attempts.filter((attempt) => attempt.branch).length;
   const totalCost = attempts.reduce((sum, attempt) => sum + attemptCost(attempt), 0);
@@ -302,6 +322,26 @@ export function FounderReviewDashboard() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void loadFounderReviewNotesFromSupabase().then((loadedNotes) => {
+      if (!cancelled) {
+        setRemoteNotes(loadedNotes);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function persistReviewNote(note: FounderReviewNote) {
+    saveFounderReviewNote(note);
+    setRemoteNotes((current) => [note, ...current.filter((item) => item.attemptId !== note.attemptId)]);
+    void saveFounderReviewNoteToSupabase(note);
+  }
 
   return (
     <section className="panel founder-review">
@@ -339,14 +379,19 @@ export function FounderReviewDashboard() {
               {remoteCohort.attempts.length === 0 ? (
                 <p className="muted">Supabase에서 리뷰할 attempt를 찾지 못했습니다.</p>
               ) : (
-                remoteCohort.attempts.map((attempt) => (
+                remoteCohort.attempts.map((attempt) => {
+                  const note = noteMap.get(attempt.id);
+
+                  return (
                   <CohortReviewRow
                     attempt={attempt}
-                    key={attempt.id}
-                    note={noteMap.get(attempt.id)}
+                    key={`${attempt.id}:${note?.updatedAt ?? "none"}`}
+                    note={note}
+                    onSaveNote={persistReviewNote}
                     problemName={problemTitle(attempt.problemId, problemMap)}
                   />
-                ))
+                  );
+                })
               )}
             </div>
           </>
@@ -380,14 +425,19 @@ export function FounderReviewDashboard() {
         {attempts.length === 0 ? (
           <p className="muted">아직 리뷰할 local attempt가 없습니다.</p>
         ) : (
-          attempts.map((attempt) => (
+          attempts.map((attempt) => {
+            const note = noteMap.get(attempt.id);
+
+            return (
             <AttemptReviewRow
               attempt={attempt}
-              key={attempt.id}
-              note={noteMap.get(attempt.id)}
+              key={`${attempt.id}:${note?.updatedAt ?? "none"}`}
+              note={note}
+              onSaveNote={persistReviewNote}
               problemName={problemTitle(attempt.problemId, problemMap)}
             />
-          ))
+            );
+          })
         )}
       </div>
     </section>

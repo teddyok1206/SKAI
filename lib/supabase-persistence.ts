@@ -1,5 +1,5 @@
 import type { MyPageSnapshot } from "@/lib/my-page";
-import type { Attempt, FounderCohortSnapshot, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
+import type { Attempt, FounderCohortSnapshot, FounderReviewNote, Problem, PromptComment, PublishedAttempt } from "@/lib/types";
 
 export async function syncAttemptToSupabase(attempt: Attempt, problem: Problem) {
   const response = await fetch("/api/attempts/sync", {
@@ -137,6 +137,38 @@ export async function loadFounderCohortFromSupabase(): Promise<FounderCohortSnap
   }
 
   return (await response.json()) as FounderCohortSnapshot;
+}
+
+export async function loadFounderReviewNotesFromSupabase(attemptIds?: string[]): Promise<FounderReviewNote[]> {
+  const query =
+    attemptIds && attemptIds.length > 0
+      ? `?attemptIds=${encodeURIComponent(attemptIds.slice(0, 100).join(","))}`
+      : "";
+  const response = await fetch(`/api/founder/review-notes${query}`, { cache: "no-store" }).catch(() => null);
+
+  if (!response?.ok) {
+    return [];
+  }
+
+  const data = (await response.json()) as { notes?: FounderReviewNote[] };
+
+  return data.notes ?? [];
+}
+
+export async function saveFounderReviewNoteToSupabase(
+  note: FounderReviewNote,
+): Promise<{ synced?: boolean; reason?: string; mode?: string }> {
+  const response = await fetch("/api/founder/review-notes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(note),
+  }).catch(() => null);
+
+  if (!response?.ok) {
+    return { synced: false, reason: "request_failed" };
+  }
+
+  return (await response.json()) as { synced?: boolean; reason?: string; mode?: string };
 }
 
 export async function loadMyPageSnapshot(): Promise<MyPageSnapshot | null> {

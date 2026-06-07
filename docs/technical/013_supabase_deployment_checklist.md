@@ -58,6 +58,7 @@ Apply migrations in order:
 009_attempt_solving_mode.sql
 010_prompt_comment_edit_delete_reports.sql
 011_user_profiles.sql
+012_founder_review_notes.sql
 ```
 
 Migration `008` does two important things:
@@ -66,6 +67,8 @@ Migration `008` does two important things:
 - removes broad authenticated insert/update policies on `public.problems`.
 
 After `008`, normal learners should not be able to mutate problem definitions through Supabase RLS.
+
+Migration `012` persists founder calibration notes per reviewer/attempt. It is not required for basic solving, but it is required if the founder review dashboard should keep judge calibration labels across browsers and sessions.
 
 ## Google OAuth
 

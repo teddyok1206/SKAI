@@ -83,11 +83,12 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - `lib/judge-evidence.ts`는 `skai.judge.evidence.v1` deterministic evidence packet을 만든다. Judge는 trace/problem/material/3D dual graph에서 turn count, material coverage, decomposition, verification, adaptation, final answer coverage, repeated context burden 같은 신호를 먼저 추출한 뒤 heuristic/LLM judge에 전달한다.
 - LLM judge output schema는 research rubric 기반 V1로 확장됐다. `findings`, confidence, evidence ids, direct graph target ids, `needsHumanReview`, uncertainty notes, rubric/prompt version을 받을 수 있고, 기존 legacy judge output도 normalize한다.
 - Gemini LLM judge prompt V2는 `judge-prompt.research-v2.001`로 고정됐다. Judge context에는 deterministic evidence packet과 graph target guide가 함께 들어가며, judge는 모델 성능이 아니라 사람의 orchestration을 평가하도록 지시된다.
-- Judge calibration runner는 weak/average/strong ordering뿐 아니라 score gap과 graph annotation presence를 보고한다. gap이 너무 작으면 통과처럼 숨기지 않고 `needs_review`로 표시한다.
+- Judge calibration runner는 weak/average/strong ordering뿐 아니라 score gap, graph annotation presence, graph target hit rate, low-confidence anchor rate, duplicate finding rate를 보고한다. gap이 너무 작으면 통과처럼 숨기지 않고 `needs_review`로 표시한다.
 - Live Gemini judge watchpoint는 `ambiguous-research-brief` golden triplet에서 통과했다. `docs/technical/plan/100_live_gemini_judge_watchpoint.md`와 `docs/technical/judge_calibration/2026-06-06T19-14-57-844Z_judge_calibration.md`가 결과를 기록한다. Gemini LLM judge는 weak 35 / average 65 / strong 86 ordering, graph annotation presence, stable pair id anchoring을 통과했다.
-- Live watchpoint 중 발견된 schema fragility를 보정했다. LLM이 severity vocabulary나 nullable optional field를 조금 다르게 내도 normalize하고, attempt-level finding은 첫 user trace pair로 낮은-confidence fallback anchor를 만든다.
+- Materials-heavy Live Gemini judge watchpoint는 `club-budget-workflow`에서 수행했다. Clean full triplet run `docs/technical/judge_calibration/2026-06-07T09-40-35-468Z_judge_calibration.md`에서 weak < average < strong ordering, 세 level LLM judge succeeded, graph target hit rate 1, duplicate finding rate 0을 확인했다.
+- Live watchpoint 중 발견된 schema fragility를 보정했다. LLM이 severity vocabulary, nullable/long optional field, targetKind/finding kind enum label을 조금 다르게 내도 normalize하고, attempt-level/unknown-target finding은 첫 user trace pair로 낮은-confidence fallback anchor를 만든다.
 - Judge disagreement와 uncertainty notes는 `needsHumanReview=true`로 표면화한다. 이는 LLM judge의 자신감보다 founder calibration loop를 우선하는 방향이다.
-- Founder review dashboard에는 local calibration label, expected score, human review signal, graph annotation count가 들어갔다. 이는 아직 Supabase-backed calibration dataset이 아니라 smoke founder가 판단을 남기는 local-first loop다.
+- Founder review dashboard에는 local calibration label, expected score, human review signal, graph annotation count가 들어갔다. Local-first save는 유지하되 `supabase/migrations/012_founder_review_notes.sql`과 `/api/founder/review-notes`를 통해 Supabase-backed reviewer/attempt note sync도 가능해졌다.
 - `.skai` extension viewer는 judge confidence, judge prompt version, finding kind, evidence ids를 보여준다. Graph overlay에는 낮은 confidence나 human-source annotation을 위한 `review` layer가 추가됐다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
 - 공유 화면은 overview, workflow map, prompt skeleton, bottleneck/replay, coach report, raw transcript 순서로 풀이를 보여준다.
@@ -170,14 +171,14 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - 공개 share의 parent/child full graph 병렬 비교는 `.skai` snapshot이 있는 새 publish에서 복원 가능하다. 오래된 snapshot이나 parent graph가 없는 branch는 여전히 `GraphStateTransition` fallback을 사용한다.
 - 미래에는 여러 AI를 동시에 굴리는 multi-AI/harness solving mode가 필요하다.
 - multi-AI/harness graph는 아직 데이터 모델과 UI 모두 설계 단계다. 기존 single-attempt/single-model trace를 깨지 않고 model lane과 inter-model edge를 추가하는 방식으로 계획해야 한다.
-- Judge는 LLM mode를 켤 수 있고, Gemini judge key는 사용자 풀이용 key와 분리됐다. Research rubric 기반 schema/prompt/viewer overlay/local founder calibration loop는 들어갔다. `/api/judge` calibration smoke는 route 성공과 함께 `counterfactual-product-review` weak-average gap을 `needs_review`로 표면화했고, live Gemini watchpoint는 `ambiguous-research-brief` triplet에서 stable graph id anchoring을 통과했다. 다음 judge 강화는 materials-heavy 문제에서 material grounding target을 검증하고, founder labels를 Supabase-backed dataset/export로 승격하는 것이다.
+- Judge는 LLM mode를 켤 수 있고, Gemini judge key는 사용자 풀이용 key와 분리됐다. Research rubric 기반 schema/prompt/viewer overlay/founder calibration loop는 들어갔다. `/api/judge` calibration smoke는 route 성공과 함께 `counterfactual-product-review` weak-average gap을 `needs_review`로 표면화했고, live Gemini watchpoint는 `ambiguous-research-brief`와 `club-budget-workflow`에서 stable graph id anchoring을 통과했다. 다음 judge 강화는 더 많은 materials-heavy/generated corpus에서 calibration을 반복하고 founder labels를 export/analysis dataset으로 승격하는 것이다.
 - Queue worker는 아직 없다. 현재 judge는 synchronous pipeline이다.
 - Supabase RLS, sync path, deployed Google OAuth settings는 checklist와 health route가 생겼지만 실제 원격 프로젝트 적용/배포 smoke는 아직 필요하다.
 - Admin problem authoring은 local draft MVP다. Supabase-backed create/edit/publish, multi-material upload, rubric editor는 아직 없다.
 - Generated problem editorial gate는 localStorage 기준의 future-batch QA 도구다. Confirmed batch 001은 홈에서 모두 노출되며, Supabase-backed reviewer assignment나 multi-user editorial workflow는 아직 없다.
 - Problem browser는 local app data 기준의 confirmed corpus를 보여준다. Supabase-backed problem discovery, user-level recommendation, saved curation은 아직 없다.
 - 공개 풀이 댓글은 1차 privacy/misuse guardrail과 edit/soft-delete/report baseline이 있다. notification, founder moderation queue, ML moderation은 아직 없다.
-- Founder review dashboard는 localStorage와 Supabase cohort snapshot을 함께 본다. Remote founder notes, export, advanced filtering은 아직 없다.
+- Founder review dashboard는 localStorage와 Supabase cohort snapshot, reviewer/attempt note sync를 함께 본다. Calibration export, advanced filtering, multi-founder review assignment는 아직 없다.
 - Branch Tree explorer는 localStorage attempts 기준이다. Supabase-backed cross-user/multi-session branch tree는 아직 없다.
 - Graph tab은 단일 attempt 내부 구조 시각화이고, Branch Tree는 여러 attempt 사이 lineage navigation이다.
 - LLM judge-native graph annotation mapping은 들어갔지만 live judge calibration, skeleton comparison, habit motif report, graph snapshot persistence는 아직 후속 작업이다.
