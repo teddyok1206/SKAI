@@ -1,6 +1,6 @@
 import { mockProvider } from "@/lib/providers/mock";
 import { createOpenAICompatibleProvider } from "@/lib/providers/openai-compatible";
-import type { ModelProvider, ProviderRequest, ProviderResponse } from "@/lib/providers/types";
+import type { ModelProvider, ProviderRequest, ProviderResponse, ProviderStreamEvent } from "@/lib/providers/types";
 import type { ProviderId } from "@/lib/types";
 
 const geminiOpenAIBaseUrl = "https://generativelanguage.googleapis.com/v1beta/openai";
@@ -67,4 +67,28 @@ export function getJudgeProvider(providerId: ProviderId): ModelProvider {
 export async function completeProviderRequest(request: ProviderRequest): Promise<ProviderResponse> {
   const provider = getProvider(request.provider);
   return provider.complete(request);
+}
+
+export async function* streamProviderRequest(request: ProviderRequest): AsyncGenerator<ProviderStreamEvent> {
+  const provider = getProvider(request.provider);
+
+  if (!provider.stream) {
+    const response = await provider.complete(request);
+    yield {
+      type: "ready",
+      modelRun: response.modelRun,
+    };
+    yield {
+      type: "delta",
+      delta: response.message,
+    };
+    yield {
+      type: "done",
+      message: response.message,
+      modelRun: response.modelRun,
+    };
+    return;
+  }
+
+  yield* provider.stream(request);
 }

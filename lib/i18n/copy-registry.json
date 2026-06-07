@@ -8398,5 +8398,197 @@
     },
     "sourceChecksum": "c28ccf311e6b38bbe0698b602f1f9a44e22a3f9844d4a9efb33d0e58af9f19a6",
     "updatedAt": "2026-06-07T14:19:44.579Z"
+  },
+  {
+    "key": "solve.runtime.context_compiling",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Context를 구성하는 중",
+      "en": "Compiling context"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "90777e9668350f52091bd0256aa3d5aa69cb99933e17ee6a6958ed7a66fa00e5",
+    "updatedAt": "2026-06-07T15:13:24.036Z"
+  },
+  {
+    "key": "solve.runtime.context_compiled",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Context 구성 완료",
+      "en": "Context compiled"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "e9a860414f68dde908f4d21a70e124b439d03e0fe0ddbf180ddf4a101e7d6cbd",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.waiting_first_token",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첫 토큰을 기다리는 중",
+      "en": "Waiting for first token"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "94049831e4abcccf3a9a219e8c219fb80eae865e489ba5e4d08de318ee37f138",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.streaming_response",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "응답이 흐르는 중",
+      "en": "Streaming response"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2390fac04a65157df0ed23072ae93bc7ff9c2ac0bf159cee771eff0acd4fae73",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.trace_committed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Trace 저장 완료",
+      "en": "Trace committed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "8b643d9fa261d3b5465180b16632b07205341e6afe60146731c15f7c29395b87",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.failed",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Provider 호출 실패",
+      "en": "Provider call failed"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "7dc4b1d50e397177e8919af43b9927f1e7c7be462ef2cf0c33378f677f923965",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.cacheHit",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "context cache hit",
+      "en": "context cache hit"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "2a3bc6d0ec1ad83a7dcb300fc6a0f5aeb2f2b601333db8ddba36b0bbe5a99504",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.cacheMiss",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "context cache miss",
+      "en": "context cache miss"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "bde07027f2cce0922a907c4d2b1734889d6a78cdbfd468c96932aad8b1066e58",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.timeToFirstTokenSuffix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "첫 토큰",
+      "en": "first token"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f5c9a212d9ec562ecd01bdc0bafb9c967d508a87842920fc473dbd380a00c807",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.tokensPerSecondSuffix",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "tokens/sec",
+      "en": "tokens/sec"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5abe1e656d01b11527dc429964e2e666c4d1ee78e90f8101653d9c4d0011eed7",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.waitingBody",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "사용자의 prompt는 graph에 반영됐고, 모델 응답을 기다리는 중입니다.",
+      "en": "The prompt is already reflected in the graph. Waiting for the model response."
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "659d7430c7d528a9ba00b56a4d88d4e3bc97180aa1c4f43469e44e17f6ce639e",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
+  },
+  {
+    "key": "solve.runtime.idle",
+    "domain": "solve",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "대기",
+      "en": "Idle"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "cd3a0c433f1185313afc4aeb1c7c95b8f37e0fe5255aa7e0ac85991dc96505ec",
+    "updatedAt": "2026-06-07T15:13:24.037Z"
   }
 ]

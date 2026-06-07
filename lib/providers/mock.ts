@@ -83,6 +83,7 @@ export const mockProvider: ModelProvider = {
   id: "mock",
   async complete(request: ProviderRequest): Promise<ProviderResponse> {
     const startedAt = Date.now();
+    const requestStartedAt = new Date(startedAt).toISOString();
     const message = buildMockReply(request);
     const usageInputTokens = Math.ceil(
       (
@@ -103,6 +104,73 @@ export const mockProvider: ModelProvider = {
         usageInputTokens,
         usageOutputTokens,
         estimatedCostUsd: 0,
+        requestStartedAt,
+        completedAt: new Date().toISOString(),
+      },
+    };
+  },
+  async *stream(request: ProviderRequest) {
+    const startedAt = Date.now();
+    const requestStartedAt = new Date(startedAt).toISOString();
+    const id = crypto.randomUUID();
+    const message = buildMockReply(request);
+    const usageInputTokens = Math.ceil(
+      (
+        (request.systemPrompt?.length ?? 0) +
+        (request.contextMessage?.length ?? 0) +
+        request.messages.reduce((sum, item) => sum + item.content.length + buildAttachmentContext(item.attachments).length, 0)
+      ) / 4,
+    );
+    const usageOutputTokens = Math.ceil(message.length / 4);
+    let firstTokenAt: string | undefined;
+    let emittedChars = 0;
+
+    yield {
+      type: "ready",
+      modelRun: {
+        id,
+        provider: "mock",
+        model: request.model || "mock-orchestrator",
+        latencyMs: Date.now() - startedAt,
+        usageInputTokens,
+        estimatedCostUsd: 0,
+        requestStartedAt,
+      },
+    };
+
+    const chunks = message.match(/[\s\S]{1,34}/g) ?? [message];
+    for (const chunk of chunks) {
+      await new Promise((resolve) => setTimeout(resolve, 18));
+      if (!firstTokenAt) {
+        firstTokenAt = new Date().toISOString();
+      }
+      emittedChars += chunk.length;
+      yield {
+        type: "delta",
+        delta: chunk,
+      };
+    }
+
+    const completedAt = new Date().toISOString();
+    const latencyMs = Date.now() - startedAt;
+    const tokensPerSecond = latencyMs > 0 ? Number((usageOutputTokens / (latencyMs / 1000)).toFixed(2)) : undefined;
+
+    yield {
+      type: "done",
+      message: message.slice(0, emittedChars).trim(),
+      modelRun: {
+        id,
+        provider: "mock",
+        model: request.model || "mock-orchestrator",
+        latencyMs,
+        usageInputTokens,
+        usageOutputTokens,
+        estimatedCostUsd: 0,
+        requestStartedAt,
+        firstTokenAt,
+        completedAt,
+        timeToFirstTokenMs: firstTokenAt ? new Date(firstTokenAt).getTime() - new Date(requestStartedAt).getTime() : undefined,
+        tokensPerSecond,
       },
     };
   },

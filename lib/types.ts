@@ -132,6 +132,11 @@ export interface TraceEvent {
   usageInputTokens?: number;
   usageOutputTokens?: number;
   estimatedCostUsd?: number;
+  requestStartedAt?: string;
+  firstTokenAt?: string;
+  completedAt?: string;
+  timeToFirstTokenMs?: number;
+  tokensPerSecond?: number;
   attachments?: AttemptAttachment[];
   sourceTraceEventId?: string;
   branchId?: string;
@@ -145,6 +150,11 @@ export interface ModelRun {
   usageInputTokens?: number;
   usageOutputTokens?: number;
   estimatedCostUsd?: number;
+  requestStartedAt?: string;
+  firstTokenAt?: string;
+  completedAt?: string;
+  timeToFirstTokenMs?: number;
+  tokensPerSecond?: number;
 }
 
 export interface ChatMessage {

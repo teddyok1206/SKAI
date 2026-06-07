@@ -51,10 +51,56 @@ import { GraphStateTransitionView } from "@/components/graph-state-transition-vi
 import { useLanguagePreference } from "@/components/language-toggle";
 import { MarkdownContent } from "@/components/markdown-content";
 import { ScoreReportCard } from "@/components/score-report-card";
+import { SkaiMark } from "@/components/skai-mark";
 import { getCopy } from "@/lib/i18n";
 
 const materialDragDataType = "application/x-skai-material-id";
 type SkaiActivity = "ready" | "primed" | "busy" | "structured";
+type ChatRuntimeStatus =
+  | "idle"
+  | "context_compiling"
+  | "context_compiled"
+  | "waiting_first_token"
+  | "streaming_response"
+  | "trace_committed"
+  | "failed";
+
+interface ChatRuntimeMeta {
+  cacheHit?: boolean;
+  timeToFirstTokenMs?: number;
+  tokensPerSecond?: number;
+}
+
+type ChatStreamEnvelope =
+  | {
+      type: "context";
+      compiledContext?: {
+        cacheHit?: boolean;
+      };
+    }
+  | {
+      type: "ready";
+      modelRun: ModelRun;
+      compiledContext?: {
+        cacheHit?: boolean;
+      };
+    }
+  | {
+      type: "delta";
+      delta: string;
+    }
+  | {
+      type: "done";
+      message: string;
+      modelRun: ModelRun;
+      compiledContext?: {
+        cacheHit?: boolean;
+      };
+    }
+  | {
+      type: "error";
+      error: string;
+    };
 
 function formatUsd(value: number) {
   if (value === 0) {
@@ -119,6 +165,11 @@ function makeTraceEvent(input: {
     usageInputTokens: input.modelRun?.usageInputTokens,
     usageOutputTokens: input.modelRun?.usageOutputTokens,
     estimatedCostUsd: input.modelRun?.estimatedCostUsd,
+    requestStartedAt: input.modelRun?.requestStartedAt,
+    firstTokenAt: input.modelRun?.firstTokenAt,
+    completedAt: input.modelRun?.completedAt,
+    timeToFirstTokenMs: input.modelRun?.timeToFirstTokenMs,
+    tokensPerSecond: input.modelRun?.tokensPerSecond,
     attachments: input.attachments,
     sourceTraceEventId: input.sourceTraceEventId,
     branchId: input.branchId,
@@ -147,6 +198,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
   const [copiedTraceEventId, setCopiedTraceEventId] = useState("");
   const [workspaceTab, setWorkspaceTab] = useState<"chat" | "graph">("chat");
   const [showOperatorPlaybook, setShowOperatorPlaybook] = useState(false);
+  const [streamingAssistant, setStreamingAssistant] = useState<{ content: string; provider: ProviderId; model: string } | null>(null);
+  const [runtimeStatus, setRuntimeStatus] = useState<ChatRuntimeStatus>("idle");
+  const [runtimeMeta, setRuntimeMeta] = useState<ChatRuntimeMeta>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedSolvingMode = useMemo(() => getSolvingMode(solvingModeId), [solvingModeId]);
@@ -302,6 +356,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setShareUrl("");
     setShareNotice("");
     setSelectedAttachments([]);
+    setStreamingAssistant(null);
+    setRuntimeStatus("idle");
+    setRuntimeMeta({});
     saveAttempt(next);
   }
 
@@ -446,6 +503,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       return;
     }
 
+    const activeProvider = provider;
+    const activeModel = model;
+
     if (attempt.trace.filter((event) => event.role === "user").length >= budgetGuardrails.maxTurnsPerAttempt) {
       setInput(t("solve.notice.turnLimitReached"));
       return;
@@ -458,8 +518,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       problemId: problem.id,
       role: "user",
       content: clippedInput,
-      provider,
-      model,
+      provider: activeProvider,
+      model: activeModel,
       attachments: selectedAttachments,
       sourceTraceEventId,
       branchId: attempt.branch?.id,
@@ -467,8 +527,8 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     const nextTrace = [...attempt.trace, userEvent];
     const nextAttempt = {
       ...attempt,
-      provider,
-      model,
+      provider: activeProvider,
+      model: activeModel,
       trace: nextTrace,
       counterfactualReport: undefined,
       updatedAt: new Date().toISOString(),
@@ -476,6 +536,13 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     updateAttempt(nextAttempt);
     setInput("");
     setIsLoading(true);
+    setRuntimeStatus("context_compiling");
+    setRuntimeMeta({});
+    setStreamingAssistant({
+      content: "",
+      provider: activeProvider,
+      model: activeModel,
+    });
 
     try {
       const response = await fetch("/api/chat", {
@@ -483,8 +550,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           problemId: problem.id,
-          provider,
-          model,
+          provider: activeProvider,
+          model: activeModel,
+          stream: true,
           branch: attempt.branch,
           messages: nextTrace.map((event) => ({
             role: event.role,
@@ -500,15 +568,106 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         throw new Error(await response.text());
       }
 
-      const data = (await response.json()) as { message: string; modelRun: ModelRun };
+      if (!response.body) {
+        throw new Error("Streaming response body is empty.");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let finalMessage = "";
+      const streamResult: { completed?: { message: string; modelRun: ModelRun } } = {};
+
+      async function handleEnvelope(envelope: ChatStreamEnvelope) {
+        if (envelope.type === "context") {
+          setRuntimeStatus("context_compiled");
+          setRuntimeMeta((current) => ({
+            ...current,
+            cacheHit: envelope.compiledContext?.cacheHit,
+          }));
+          return;
+        }
+
+        if (envelope.type === "ready") {
+          setRuntimeStatus("waiting_first_token");
+          setRuntimeMeta((current) => ({
+            ...current,
+            cacheHit: envelope.compiledContext?.cacheHit,
+          }));
+          return;
+        }
+
+        if (envelope.type === "delta") {
+          if (!envelope.delta) {
+            return;
+          }
+
+          finalMessage += envelope.delta;
+          setRuntimeStatus("streaming_response");
+          setStreamingAssistant((current) => ({
+            content: `${current?.content ?? ""}${envelope.delta}`,
+            provider: activeProvider,
+            model: activeModel,
+          }));
+          return;
+        }
+
+        if (envelope.type === "done") {
+          finalMessage = envelope.message;
+          streamResult.completed = {
+            message: envelope.message,
+            modelRun: envelope.modelRun,
+          };
+          setRuntimeMeta((current) => ({
+            ...current,
+            cacheHit: envelope.compiledContext?.cacheHit,
+            timeToFirstTokenMs: envelope.modelRun.timeToFirstTokenMs,
+            tokensPerSecond: envelope.modelRun.tokensPerSecond,
+          }));
+          return;
+        }
+
+        throw new Error(envelope.error);
+      }
+
+      while (true) {
+        const { value, done } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split(/\r?\n/);
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) {
+            continue;
+          }
+          await handleEnvelope(JSON.parse(trimmed) as ChatStreamEnvelope);
+        }
+      }
+
+      const tail = buffer.trim();
+      if (tail) {
+        await handleEnvelope(JSON.parse(tail) as ChatStreamEnvelope);
+      }
+
+      const completed = streamResult.completed;
+      if (!completed || !finalMessage.trim()) {
+        throw new Error("Provider stream ended before a complete assistant response was received.");
+      }
+
       const assistantEvent = makeTraceEvent({
         attemptId: attempt.id,
         problemId: problem.id,
         role: "assistant",
-        content: data.message,
-        provider: data.modelRun.provider,
-        model: data.modelRun.model,
-        modelRun: data.modelRun,
+        content: completed.message,
+        provider: completed.modelRun.provider,
+        model: completed.modelRun.model,
+        modelRun: completed.modelRun,
         branchId: attempt.branch?.id,
       });
 
@@ -517,8 +676,15 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
         trace: [...nextTrace, assistantEvent],
         updatedAt: new Date().toISOString(),
       });
+      setRuntimeStatus("trace_committed");
+      setStreamingAssistant(null);
+      window.setTimeout(() => {
+        setRuntimeStatus((current) => (current === "trace_committed" ? "idle" : current));
+      }, 1400);
       setSelectedAttachments([]);
     } catch (error) {
+      setRuntimeStatus("failed");
+      setStreamingAssistant(null);
       setAttachmentNotice(`${t("solve.notice.modelCallFailed")} ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsLoading(false);
@@ -645,6 +811,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setSelectedAttachments([]);
     setAttachmentNotice("");
     setWorkspaceTab("chat");
+    setStreamingAssistant(null);
+    setRuntimeStatus("idle");
+    setRuntimeMeta({});
   }
 
   function branchFromTraceEvent(traceEventId: string) {
@@ -668,6 +837,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setShareUrl("");
     setShareNotice("");
     setSelectedAttachments([]);
+    setStreamingAssistant(null);
+    setRuntimeStatus("idle");
+    setRuntimeMeta({});
   }
 
   function loadLastAttempt() {
@@ -680,6 +852,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
       restoreAttemptRuntime(saved);
       setAttempt(saved);
       setFinalAnswer(saved.finalAnswer ?? "");
+      setStreamingAssistant(null);
+      setRuntimeStatus("idle");
+      setRuntimeMeta({});
     }
   }
 
@@ -699,6 +874,9 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
     setSelectedAttachments([]);
     setAttachmentNotice("");
     setWorkspaceTab("chat");
+    setStreamingAssistant(null);
+    setRuntimeStatus("idle");
+    setRuntimeMeta({});
   }
 
   async function runCounterfactualJudge() {
@@ -1066,9 +1244,27 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
           ) : null}
         </div>
 
+        {runtimeStatus !== "idle" ? (
+          <div className="runtime-status-pill" data-status={runtimeStatus}>
+            <span className="runtime-loader-mark" aria-hidden="true">
+              <SkaiMark size={24} />
+            </span>
+            <span>{t(`solve.runtime.${runtimeStatus}`)}</span>
+            {typeof runtimeMeta.cacheHit === "boolean" ? (
+              <small>{runtimeMeta.cacheHit ? t("solve.runtime.cacheHit") : t("solve.runtime.cacheMiss")}</small>
+            ) : null}
+            {typeof runtimeMeta.timeToFirstTokenMs === "number" ? (
+              <small>{runtimeMeta.timeToFirstTokenMs}ms {t("solve.runtime.timeToFirstTokenSuffix")}</small>
+            ) : null}
+            {typeof runtimeMeta.tokensPerSecond === "number" ? (
+              <small>{runtimeMeta.tokensPerSecond} {t("solve.runtime.tokensPerSecondSuffix")}</small>
+            ) : null}
+          </div>
+        ) : null}
+
         {workspaceTab === "chat" ? (
           <div className="chat-log" aria-live="polite">
-            {attempt.trace.length === 0 ? (
+            {attempt.trace.length === 0 && !streamingAssistant ? (
               <div className="empty">
                 <div>
                   <p>
@@ -1078,43 +1274,60 @@ export function ProblemSolver({ problem }: { problem: Problem }) {
                 </div>
               </div>
             ) : (
-              attempt.trace.map((event, index) => (
-                <article className={`message ${event.role}`} key={event.id}>
-                  <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile?.label ?? "Model"}`}</strong>
-                  {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
-                    <span className="trace-warning breakpoint">
-                      <GitBranch size={14} /> breakpoint
-                    </span>
-                  ) : null}
-                  <MarkdownContent content={event.content} />
-                  {event.attachments && event.attachments.length > 0 ? (
-                    <div className="attachment-row">
-                      {event.attachments.map((attachment) => (
-                        <span className="attachment-chip" key={attachment.id}>
-                          <Paperclip size={14} />
-                          {attachment.name}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                  <div className="actions">
-                    {event.role === "assistant" ? (
-                      <button
-                        className="button quiet message-copy-button"
-                        onClick={() => void copyTraceEventContent(event)}
-                        title={t("solve.chat.copyAnswerTitle")}
-                        type="button"
-                      >
-                        {copiedTraceEventId === event.id ? <Check size={15} /> : <Copy size={15} />}
-                        {copiedTraceEventId === event.id ? t("solve.action.copied") : t("solve.action.copyAnswer")}
-                      </button>
+              <>
+                {attempt.trace.map((event, index) => (
+                  <article className={`message ${event.role}`} key={event.id}>
+                    <strong>{event.role === "user" ? "You" : `${event.provider ?? providerProfile?.label ?? "Model"}`}</strong>
+                    {attempt.branch?.parentTraceEventId === event.sourceTraceEventId ? (
+                      <span className="trace-warning breakpoint">
+                        <GitBranch size={14} /> breakpoint
+                      </span>
                     ) : null}
-                    <button className="button" onClick={() => branchFrom(index)} title={t("solve.branch.createFromHereTitle")}>
-                      <GitBranch size={15} /> Branch
-                    </button>
-                  </div>
-                </article>
-              ))
+                    <MarkdownContent content={event.content} />
+                    {event.attachments && event.attachments.length > 0 ? (
+                      <div className="attachment-row">
+                        {event.attachments.map((attachment) => (
+                          <span className="attachment-chip" key={attachment.id}>
+                            <Paperclip size={14} />
+                            {attachment.name}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="actions">
+                      {event.role === "assistant" ? (
+                        <button
+                          className="button quiet message-copy-button"
+                          onClick={() => void copyTraceEventContent(event)}
+                          title={t("solve.chat.copyAnswerTitle")}
+                          type="button"
+                        >
+                          {copiedTraceEventId === event.id ? <Check size={15} /> : <Copy size={15} />}
+                          {copiedTraceEventId === event.id ? t("solve.action.copied") : t("solve.action.copyAnswer")}
+                        </button>
+                      ) : null}
+                      <button className="button" onClick={() => branchFrom(index)} title={t("solve.branch.createFromHereTitle")}>
+                        <GitBranch size={15} /> Branch
+                      </button>
+                    </div>
+                  </article>
+                ))}
+                {streamingAssistant ? (
+                  <article className="message assistant streaming">
+                    <strong>{providerUiProfiles[streamingAssistant.provider]?.label ?? streamingAssistant.provider}</strong>
+                    <span className="runtime-inline">
+                      <SkaiMark size={20} />
+                      {t(`solve.runtime.${runtimeStatus}`)}
+                    </span>
+                    {streamingAssistant.content ? (
+                      <MarkdownContent content={streamingAssistant.content} />
+                    ) : (
+                      <p className="muted">{t("solve.runtime.waitingBody")}</p>
+                    )}
+                    <span className="streaming-cursor" aria-hidden="true" />
+                  </article>
+                ) : null}
+              </>
             )}
           </div>
         ) : (

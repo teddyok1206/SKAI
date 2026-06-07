@@ -43,6 +43,10 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Mock provider는 API key 없이 동작한다.
 - OpenAI-compatible provider adapter가 있다.
 - 내부적으로 OpenAI, Groq, xAI, Gemini, OpenRouter provider adapter를 지원한다.
+- `/api/chat`은 기존 JSON completion 경로를 유지하면서 `stream: true` NDJSON streaming 경로를 지원한다.
+- OpenAI-compatible provider와 mock provider는 streaming 응답을 지원한다. Streaming partial은 UI runtime buffer로만 보이고, 완료된 `done` 이벤트만 canonical assistant trace로 저장된다.
+- prompt 전송 후 solver는 `context_compiling -> context_compiled -> waiting_first_token -> streaming_response -> trace_committed` runtime 상태를 보여주고, SKAI mark 기반 packet-flow loader를 사용한다.
+- context compiler는 trace/attachment shape 기반 cache key를 기록하고, modelRun에는 `timeToFirstTokenMs`와 `tokensPerSecond` 같은 optional latency metadata가 저장된다.
 - 모델 선택에는 visible default가 없다. 사용자는 풀이 시작 전 정확히 하나의 모델을 명시적으로 선택해야 하며, Gemini Flash-Lite와 OpenAI cheap baseline `gpt-4.1-nano`는 병렬적인 선택 가능한 provider option이다. OpenAI option/pricing은 nano 기준이며, provider 실패는 mock 응답으로 자동 대체하지 않고 runtime notice로 표면화한다.
 - `npm run smoke:live`로 local `/api/chat` live provider smoke를 반복 실행할 수 있다.
 - 2026-06-02 smoke에서 `gemini-2.5-flash-lite`가 `ambiguous-research-brief` Turn 1을 live route로 성공 처리했다.

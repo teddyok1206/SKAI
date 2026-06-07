@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProblem } from "@/data/problems";
 import { operationGuardrails } from "@/lib/constants";
-import { compileProviderContext } from "@/lib/context-compiler";
-import { completeProviderRequest } from "@/lib/providers";
+import { compileProviderContextCached } from "@/lib/context-compiler";
+import { completeProviderRequest, streamProviderRequest } from "@/lib/providers";
 
 const attachmentSchema = z.object({
   id: z.string().min(1).max(120),
@@ -21,6 +21,7 @@ const chatSchema = z.object({
   problemId: z.string().min(1).max(120),
   provider: z.enum(["mock", "openai", "groq", "xai", "openrouter", "gemini"]),
   model: z.string().min(1).max(operationGuardrails.maxModelNameChars),
+  stream: z.boolean().optional(),
   branch: z.object({
     id: z.string().min(1).max(120),
     mode: z.enum(["breakpoint_replay"]),
@@ -67,10 +68,62 @@ export async function POST(request: Request) {
   }
 
   try {
-    const compiledContext = compileProviderContext({
+    const compiledContext = compileProviderContextCached({
       messages: parsed.data.messages,
       branch: parsed.data.branch,
     });
+
+    if (parsed.data.stream) {
+      const encoder = new TextEncoder();
+
+      const stream = new ReadableStream({
+        async start(controller) {
+          function send(payload: unknown) {
+            controller.enqueue(encoder.encode(`${JSON.stringify(payload)}\n`));
+          }
+
+          try {
+            send({
+              type: "context",
+              compiledContext: compiledContext.metadata,
+            });
+
+            for await (const event of streamProviderRequest({
+              provider: parsed.data.provider,
+              model: parsed.data.model,
+              problem,
+              messages: compiledContext.messages,
+            })) {
+              if (event.type === "ready" || event.type === "done") {
+                send({
+                  ...event,
+                  compiledContext: compiledContext.metadata,
+                });
+                continue;
+              }
+
+              send(event);
+            }
+          } catch (error) {
+            send({
+              type: "error",
+              error: error instanceof Error ? error.message : "Provider stream failed.",
+            });
+          } finally {
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          "Content-Type": "application/x-ndjson; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+          "X-Accel-Buffering": "no",
+        },
+      });
+    }
+
     const response = await completeProviderRequest({
       provider: parsed.data.provider,
       model: parsed.data.model,

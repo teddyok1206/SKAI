@@ -1904,6 +1904,120 @@ h3 {
   align-self: flex-start;
 }
 
+.message.assistant.streaming {
+  position: relative;
+  border-color: color-mix(in srgb, var(--provider-accent) 34%, var(--line));
+  background: color-mix(in srgb, var(--provider-surface) 82%, var(--provider-soft));
+}
+
+.runtime-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-muted) 70%, var(--surface));
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 18px;
+}
+
+.runtime-status-pill small {
+  border: 1px solid color-mix(in srgb, var(--provider-accent) 18%, var(--line));
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 7px;
+}
+
+.runtime-loader-mark,
+.runtime-inline .skai-mark {
+  color: var(--provider-accent-strong);
+}
+
+.runtime-loader-mark {
+  display: inline-grid;
+  width: 42px;
+  height: 28px;
+  place-items: center;
+}
+
+.runtime-loader-mark .skai-mark-packet,
+.runtime-inline .skai-mark-packet {
+  display: block;
+  animation: skai-packet-flow 820ms ease-in-out infinite;
+}
+
+.runtime-loader-mark .skai-mark-packet-bottom,
+.runtime-inline .skai-mark-packet-bottom {
+  animation-name: skai-packet-flow-bottom;
+  animation-delay: 140ms;
+}
+
+.runtime-loader-mark .skai-mark-packet-secondary,
+.runtime-inline .skai-mark-packet-secondary,
+.runtime-loader-mark .skai-mark-spark,
+.runtime-inline .skai-mark-spark,
+.runtime-loader-mark .skai-mark-artifact-halo,
+.runtime-inline .skai-mark-artifact-halo {
+  display: block;
+}
+
+.runtime-loader-mark .skai-mark-spark,
+.runtime-inline .skai-mark-spark {
+  animation: skai-spark-jump 680ms ease-in-out infinite;
+}
+
+.runtime-loader-mark .skai-mark-artifact-halo,
+.runtime-inline .skai-mark-artifact-halo {
+  animation: skai-artifact-pulse 1500ms ease-in-out infinite;
+}
+
+.runtime-status-pill[data-status="trace_committed"] .runtime-loader-mark .skai-mark-packet,
+.runtime-status-pill[data-status="failed"] .runtime-loader-mark .skai-mark-packet {
+  animation-duration: 1500ms;
+}
+
+.runtime-status-pill[data-status="failed"] {
+  color: var(--red);
+}
+
+.runtime-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 7px 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.streaming-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  margin-left: 2px;
+  border-radius: 2px;
+  background: var(--provider-accent);
+  animation: streaming-cursor-blink 900ms steps(2, start) infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes streaming-cursor-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .markdown-content {
   overflow-wrap: anywhere;
   line-height: 1.6;

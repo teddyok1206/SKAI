@@ -15,7 +15,23 @@ export interface ProviderResponse {
   modelRun: ModelRun;
 }
 
+export type ProviderStreamEvent =
+  | {
+      type: "ready";
+      modelRun: ModelRun;
+    }
+  | {
+      type: "delta";
+      delta: string;
+    }
+  | {
+      type: "done";
+      message: string;
+      modelRun: ModelRun;
+    };
+
 export interface ModelProvider {
   id: ProviderId;
   complete(request: ProviderRequest): Promise<ProviderResponse>;
+  stream?(request: ProviderRequest): AsyncGenerator<ProviderStreamEvent>;
 }
