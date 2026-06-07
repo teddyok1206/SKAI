@@ -291,6 +291,11 @@ export type JudgeEvidenceSignalKind =
   | "deliverable_contract"
   | "decomposition"
   | "material_instruction"
+  | "material_cross_reference"
+  | "claim_source_linkage"
+  | "context_boundary"
+  | "harness_fit"
+  | "branch_topology"
   | "verification"
   | "assumption_separation"
   | "human_decision_boundary"
@@ -318,6 +323,25 @@ export interface JudgeGraphSignal {
   label: string;
   value: number | string;
   targetIds: string[];
+}
+
+export type JudgeDerivedSignalStatus = "strong" | "partial" | "weak" | "absent" | "not_applicable" | "risky";
+
+export interface JudgeDerivedSignal {
+  status: JudgeDerivedSignalStatus;
+  materialIds?: string[];
+  pairIds?: string[];
+  traceEventIds: string[];
+  confidence: number;
+  summary: string;
+}
+
+export interface JudgeDerivedSignals {
+  materialCrossReference: JudgeDerivedSignal;
+  claimSourceLinkage: JudgeDerivedSignal;
+  contextBoundary: JudgeDerivedSignal;
+  harnessFit: JudgeDerivedSignal;
+  branchTopology: JudgeDerivedSignal;
 }
 
 export interface JudgeEvidenceItem {
@@ -360,6 +384,7 @@ export interface JudgeEvidencePacket {
     finalAnswerCoverage: number;
     repeatedContextBurden: number;
   };
+  derivedSignals?: JudgeDerivedSignals;
   materialCoverage: JudgeMaterialCoverage[];
   graphSignals: JudgeGraphSignal[];
   evidenceItems: JudgeEvidenceItem[];
@@ -373,6 +398,9 @@ export type ConversationGraphAnnotationKind =
   | "decomposition"
   | "delegation"
   | "material_grounding"
+  | "security_boundary"
+  | "harness_fit"
+  | "branch_topology"
   | "verification"
   | "adaptation"
   | "context_drift"
@@ -412,6 +440,9 @@ export type GraphOverlayLayer =
   | "review"
   | "verification"
   | "materialGrounding"
+  | "contextBoundary"
+  | "harnessFit"
+  | "branchTopology"
   | "recovery"
   | "modelBehavior"
   | "costEfficiency";
@@ -423,6 +454,9 @@ export type GraphOverlaySignal =
   | "recovery"
   | "verification"
   | "material_grounding"
+  | "context_boundary"
+  | "harness_fit"
+  | "branch_topology"
   | "model_drift"
   | "cost_anomaly"
   | "neutral";

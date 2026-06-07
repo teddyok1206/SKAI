@@ -92,7 +92,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Materials-heavy Live Gemini judge watchpoint는 `club-budget-workflow`에서 수행했다. Clean full triplet run `docs/technical/judge_calibration/2026-06-07T09-40-35-468Z_judge_calibration.md`에서 weak < average < strong ordering, 세 level LLM judge succeeded, graph target hit rate 1, duplicate finding rate 0을 확인했다.
 - Live watchpoint 중 발견된 schema fragility를 보정했다. LLM이 severity vocabulary, nullable/long optional field, targetKind/finding kind enum label을 조금 다르게 내도 normalize하고, attempt-level/unknown-target finding은 첫 user trace pair로 낮은-confidence fallback anchor를 만든다.
 - Judge disagreement와 uncertainty notes는 `needsHumanReview=true`로 표면화한다. 이는 LLM judge의 자신감보다 founder calibration loop를 우선하는 방향이다.
-- Judge research corpus 재검토 결과, 공개 rubric axis는 당장 늘리지 않는다. Material/context grounding, harness fit, security/permission boundary, branch/replay topology는 새 점수축이 아니라 graph-anchored evidence lens와 overlay layer로 먼저 접목한다. 세부 결론은 `docs/technical/judge_research/001_synthesis_for_skai_judge.md`의 `2026-06-08 Reintegration Review`에 있다.
+- Judge research corpus 재검토 결과, 공개 rubric axis는 당장 늘리지 않는다. Material/context grounding, harness fit, security/permission boundary, branch/replay topology는 새 점수축이 아니라 graph-anchored evidence lens와 overlay layer로 접목했다. `JudgeEvidencePacket.derivedSignals`와 Graph overlay `contextBoundary` / `harnessFit` / `branchTopology` layer가 1차 구현이다. 세부 결론은 `docs/technical/judge_research/001_synthesis_for_skai_judge.md`의 `2026-06-08 Reintegration Review`에 있다.
 - Founder review dashboard에는 local calibration label, expected score, human review signal, graph annotation count가 들어갔다. Local-first save는 유지하되 `supabase/migrations/012_founder_review_notes.sql`과 `/api/founder/review-notes`를 통해 Supabase-backed reviewer/attempt note sync도 가능해졌다.
 - `.skai` extension viewer는 judge confidence, judge prompt version, finding kind, evidence ids를 보여준다. Graph overlay에는 낮은 confidence나 human-source annotation을 위한 `review` layer가 추가됐다.
 - Score report에는 judge run summary와 judge disagreement metadata를 저장할 수 있다.
@@ -297,7 +297,7 @@ SKAI는 사용자가 불명확한 현실 문제를 정의하고, 세분화하고
 - Gemini LLM judge prompt V2와 graph target guide를 고정한다. (완료)
 - founder dashboard에 local calibration label을 추가한다. (완료)
 - viewer/graph overlay에서 judge confidence, evidence, review layer를 읽을 수 있게 한다. (완료)
-- 연구 corpus 재검토 결과를 다음 judge evidence slice에 반영한다: `materialCrossReference`, `claimSourceLinkage`, `contextBoundary`, `harnessFit` 같은 optional derived signals를 추가하되 public score axis는 그대로 유지한다.
+- 연구 corpus 재검토 결과를 judge evidence slice에 반영했다: `materialCrossReference`, `claimSourceLinkage`, `contextBoundary`, `harnessFit`, `branchTopology` optional derived signals를 추가하되 public score axis는 그대로 유지했다. 후속은 이 signal들이 founder-labeled fixture와 실제 smoke trace에서 학습 효과를 갖는지 calibration하는 것이다.
 - `SKAI_JUDGE_MODE=llm` 또는 `ensemble`으로 실제 judge provider를 켠다.
 - heuristic report와 LLM judge report를 비교한다. (heuristic baseline과 schema/prompt 준비 완료, live Gemini 비교 후속)
 - malformed JSON, provider failure, judge disagreement를 기록한다.

@@ -204,9 +204,9 @@ Tree/Graph of Thoughts, Reflexion, PromptChainer는 문제 해결이 선형 prom
 다음 judge/coaching 개발에서는 아래 순서가 가장 안전하다.
 
 1. 공개 rubric axis는 당장 늘리지 않는다.
-2. `JudgeEvidencePacket`에 `materialCrossReference`, `claimSourceLinkage`, `contextBoundary`, `harnessFit` 같은 optional derived signals를 추가한다.
-3. 각 signal은 반드시 graph id, trace event id, material id 중 하나에 anchored 되게 한다.
-4. Unified `.skai` viewer에는 새 점수표가 아니라 overlay layer로 먼저 노출한다.
-5. Founder-labeled fixture에서 실제 학습 효과가 보일 때만 public copy나 score axis로 승격한다.
+2. `JudgeEvidencePacket`에 `materialCrossReference`, `claimSourceLinkage`, `contextBoundary`, `harnessFit`, `branchTopology` 같은 optional derived signals를 추가한다. (1차 구현 완료: `docs/technical/plan/104_research_lens_signals.md`)
+3. 각 signal은 반드시 graph id, trace event id, material id 중 하나에 anchored 되게 한다. (1차 구현 완료)
+4. Unified `.skai` viewer에는 새 점수표가 아니라 overlay layer로 먼저 노출한다. (Graph overlay 1차 구현 완료)
+5. Founder-labeled fixture에서 실제 학습 효과가 보일 때만 public copy나 score axis로 승격한다. (후속 calibration)
 
 이 결론은 SKAI를 prompt trick 평가기가 아니라, 실제 문제를 다루는 context/harness orchestration 훈련 시스템으로 유지하기 위한 장치다.

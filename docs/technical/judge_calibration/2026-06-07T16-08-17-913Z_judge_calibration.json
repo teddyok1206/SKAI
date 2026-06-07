@@ -1,0 +1,1319 @@
+{
+  "startedAt": "2026-06-07T16:08:17.913Z",
+  "baseUrl": "http://127.0.0.1:3000",
+  "status": "needs_review",
+  "graphMetrics": {
+    "annotationCount": 38,
+    "validTargetCount": 38,
+    "lowConfidenceAnchorCount": 0,
+    "duplicateCount": 0,
+    "targetHitRate": 1,
+    "lowConfidenceAnchorRate": 0,
+    "duplicateFindingRate": 0
+  },
+  "results": [
+    {
+      "sampleId": "golden-ambiguous-research-brief-weak",
+      "problemId": "ambiguous-research-brief",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 48,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "missing_verification_step",
+        "possible_one_shot_process"
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 1,
+          "totalScore": 48
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 2,
+      "graphMetrics": {
+        "annotationCount": 2,
+        "validTargetCount": 2,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:golden-ambiguous-research-brief-weak-u1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "너무 넓은 지시",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "heuristic_judge"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-weak-u1:golden-ambiguous-research-brief-weak-a1",
+          "kind": "harness_fit",
+          "severity": "info",
+          "axis": "efficiency",
+          "confidence": 0.56,
+          "title": "Partial harness fit",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-weak-u1"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 46,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 45,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 47,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 50,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 44,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 62,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 50,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-average",
+      "problemId": "ambiguous-research-brief",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 66,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": false,
+      "uncertaintyNotes": [],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 66
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 2,
+      "graphMetrics": {
+        "annotationCount": 2,
+        "validTargetCount": 2,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2:golden-ambiguous-research-brief-average-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u2:golden-ambiguous-research-brief-average-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-average-u1:golden-ambiguous-research-brief-average-a1",
+          "kind": "harness_fit",
+          "severity": "positive",
+          "axis": "efficiency",
+          "confidence": 0.66,
+          "title": "Harness fits the problem",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-average-u1",
+            "golden-ambiguous-research-brief-average-u2"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 79,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 47,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 80,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 52,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 76,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 68,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 62,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-ambiguous-research-brief-strong",
+      "problemId": "ambiguous-research-brief",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 93,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": false,
+      "uncertaintyNotes": [],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 1,
+          "totalScore": 93
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 6,
+      "graphMetrics": {
+        "annotationCount": 6,
+        "validTargetCount": 6,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1:golden-ambiguous-research-brief-strong-u1:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u2:golden-ambiguous-research-brief-strong-a2:golden-ambiguous-research-brief-strong-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u2:golden-ambiguous-research-brief-strong-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3:golden-ambiguous-research-brief-strong-u3:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u3"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:adaptation:pair:pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3:golden-ambiguous-research-brief-strong-u3:adaptation",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u3:golden-ambiguous-research-brief-strong-a3",
+          "kind": "adaptation",
+          "severity": "info",
+          "axis": "adaptation",
+          "confidence": 0.68,
+          "title": "Course correction",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u3"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4:golden-ambiguous-research-brief-strong-u4:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u4:golden-ambiguous-research-brief-strong-a4",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u4"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1:pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-ambiguous-research-brief-strong-u1:golden-ambiguous-research-brief-strong-a1",
+          "kind": "harness_fit",
+          "severity": "positive",
+          "axis": "efficiency",
+          "confidence": 0.66,
+          "title": "Harness fits the problem",
+          "evidenceTraceEventIds": [
+            "golden-ambiguous-research-brief-strong-u1",
+            "golden-ambiguous-research-brief-strong-u2",
+            "golden-ambiguous-research-brief-strong-u3",
+            "golden-ambiguous-research-brief-strong-u4"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 100,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 86,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 100,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 89,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 100,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 76,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 95,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-weak",
+      "problemId": "club-budget-workflow",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 48,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "required_materials_not_attached",
+        "missing_verification_step",
+        "possible_one_shot_process",
+        "some_problem_materials_unused",
+        "material_cross_reference_weak"
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 48
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 6,
+      "graphMetrics": {
+        "annotationCount": 6,
+        "validTargetCount": 6,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:golden-club-budget-workflow-weak-u1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "너무 넓은 지시",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "heuristic_judge"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:missing-material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Available materials not used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:material-cross-reference",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.68,
+          "title": "Weak material cross-reference",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-a1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:claim-source-linkage",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.58,
+          "title": "Weak claim-source linkage",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-a1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:security_boundary:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:context-boundary",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "security_boundary",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.58,
+          "title": "Weak context boundary",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-a1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-weak-u1:golden-club-budget-workflow-weak-a1",
+          "kind": "harness_fit",
+          "severity": "info",
+          "axis": "efficiency",
+          "confidence": 0.56,
+          "title": "Partial harness fit",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-weak-u1"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 46,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 45,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 47,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 50,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 40,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 62,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 50,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-average",
+      "problemId": "club-budget-workflow",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 64,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "required_materials_not_attached",
+        "missing_verification_step",
+        "some_problem_materials_unused"
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 64
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 6,
+      "graphMetrics": {
+        "annotationCount": 6,
+        "validTargetCount": 6,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-club-budget-workflow-average-u2:golden-club-budget-workflow-average-a2:golden-club-budget-workflow-average-u2",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u2:golden-club-budget-workflow-average-a2",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "너무 넓은 지시",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u2"
+          ],
+          "source": "heuristic_judge"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:missing-material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "material_grounding",
+          "severity": "watch",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Available materials not used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:material-cross-reference",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "material_grounding",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.78,
+          "title": "Material cross-reference",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:claim-source-linkage",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "material_grounding",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.7,
+          "title": "Claim-source linkage",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:security_boundary:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:context-boundary",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "security_boundary",
+          "severity": "info",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Partial permission boundary",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-average-u1:golden-club-budget-workflow-average-a1",
+          "kind": "harness_fit",
+          "severity": "info",
+          "axis": "efficiency",
+          "confidence": 0.56,
+          "title": "Partial harness fit",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-average-u1",
+            "golden-club-budget-workflow-average-u2"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 53,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 59,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 82,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 57,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 58,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 66,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 76,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-club-budget-workflow-strong",
+      "problemId": "club-budget-workflow",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 80,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": false,
+      "uncertaintyNotes": [],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 80
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 8,
+      "graphMetrics": {
+        "annotationCount": 8,
+        "validTargetCount": 8,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:golden-club-budget-workflow-strong-u1:material",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "material_grounding",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.96,
+          "title": "Material used",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:golden-club-budget-workflow-strong-u1:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2:golden-club-budget-workflow-strong-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u2:golden-club-budget-workflow-strong-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4:golden-club-budget-workflow-strong-u4:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u4:golden-club-budget-workflow-strong-a4",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u4"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:material-cross-reference",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "material_grounding",
+          "severity": "info",
+          "axis": "verification",
+          "confidence": 0.68,
+          "title": "Partial material cross-reference",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:material_grounding:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:claim-source-linkage",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "material_grounding",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.7,
+          "title": "Claim-source linkage",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:security_boundary:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:context-boundary",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "security_boundary",
+          "severity": "info",
+          "axis": "verification",
+          "confidence": 0.64,
+          "title": "Partial permission boundary",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-club-budget-workflow-strong-u1:golden-club-budget-workflow-strong-a1",
+          "kind": "harness_fit",
+          "severity": "positive",
+          "axis": "efficiency",
+          "confidence": 0.66,
+          "title": "Harness fits the problem",
+          "evidenceTraceEventIds": [
+            "golden-club-budget-workflow-strong-u1",
+            "golden-club-budget-workflow-strong-u2",
+            "golden-club-budget-workflow-strong-u3",
+            "golden-club-budget-workflow-strong-u4"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 68,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 95,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 93,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 61,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 96,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 64,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 78,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-weak",
+      "problemId": "counterfactual-product-review",
+      "level": "weak",
+      "expectedRank": 0,
+      "totalScore": 50,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "missing_verification_step",
+        "possible_one_shot_process"
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 50
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 2,
+      "graphMetrics": {
+        "annotationCount": 2,
+        "validTargetCount": 2,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-counterfactual-product-review-weak-u1:golden-counterfactual-product-review-weak-a1:golden-counterfactual-product-review-weak-u1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-weak-u1:golden-counterfactual-product-review-weak-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "너무 넓은 지시",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-weak-u1"
+          ],
+          "source": "heuristic_judge"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-counterfactual-product-review-weak-u1:golden-counterfactual-product-review-weak-a1:pair:golden-counterfactual-product-review-weak-u1:golden-counterfactual-product-review-weak-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-weak-u1:golden-counterfactual-product-review-weak-a1",
+          "kind": "harness_fit",
+          "severity": "info",
+          "axis": "efficiency",
+          "confidence": 0.56,
+          "title": "Partial harness fit",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-weak-u1"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 53,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 45,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 47,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 50,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 44,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 69,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 50,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-average",
+      "problemId": "counterfactual-product-review",
+      "level": "average",
+      "expectedRank": 1,
+      "totalScore": 55,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": true,
+      "uncertaintyNotes": [
+        "missing_verification_step"
+      ],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 55
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 2,
+      "graphMetrics": {
+        "annotationCount": 2,
+        "validTargetCount": 2,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:bottleneck:pair:pair:golden-counterfactual-product-review-average-u1:golden-counterfactual-product-review-average-a1:golden-counterfactual-product-review-average-u1",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-average-u1:golden-counterfactual-product-review-average-a1",
+          "kind": "bottleneck",
+          "severity": "watch",
+          "confidence": 0.88,
+          "title": "너무 넓은 지시",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-average-u1"
+          ],
+          "source": "heuristic_judge"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-counterfactual-product-review-average-u1:golden-counterfactual-product-review-average-a1:pair:golden-counterfactual-product-review-average-u1:golden-counterfactual-product-review-average-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-average-u1:golden-counterfactual-product-review-average-a1",
+          "kind": "harness_fit",
+          "severity": "positive",
+          "axis": "efficiency",
+          "confidence": 0.66,
+          "title": "Harness fits the problem",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-average-u1",
+            "golden-counterfactual-product-review-average-u2"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [
+        "너무 넓은 지시",
+        "검증 프롬프트 부재"
+      ],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 59,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 47,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 49,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 61,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 53,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 68,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 56,
+          "evidenceIds": []
+        }
+      ]
+    },
+    {
+      "sampleId": "golden-counterfactual-product-review-strong",
+      "problemId": "counterfactual-product-review",
+      "level": "strong",
+      "expectedRank": 2,
+      "totalScore": 75,
+      "judgeMode": "heuristic",
+      "judgeProvider": "mock",
+      "judgeModel": "heuristic-coach-v0",
+      "judgePromptVersion": "heuristic-evidence-v1",
+      "rubricVersion": "rubric.research-v1",
+      "confidence": 0.66,
+      "needsHumanReview": false,
+      "uncertaintyNotes": [],
+      "judgeRuns": [
+        {
+          "judgeKind": "heuristic",
+          "status": "succeeded",
+          "judgeProvider": "mock",
+          "judgeModel": "heuristic-coach-v0",
+          "latencyMs": 0,
+          "totalScore": 75
+        }
+      ],
+      "judgeDisagreement": [],
+      "graphAnnotationCount": 4,
+      "graphMetrics": {
+        "annotationCount": 4,
+        "validTargetCount": 4,
+        "targetHitRate": 1,
+        "lowConfidenceAnchorCount": 0,
+        "lowConfidenceAnchorRate": 0,
+        "duplicateCount": 0,
+        "duplicateFindingRate": 0
+      },
+      "graphAnnotations": [
+        {
+          "id": "annotation:verification:pair:pair:golden-counterfactual-product-review-strong-u1:golden-counterfactual-product-review-strong-a1:golden-counterfactual-product-review-strong-u1:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-strong-u1:golden-counterfactual-product-review-strong-a1",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-strong-u1"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-counterfactual-product-review-strong-u2:golden-counterfactual-product-review-strong-a2:golden-counterfactual-product-review-strong-u2:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-strong-u2:golden-counterfactual-product-review-strong-a2",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-strong-u2"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:verification:pair:pair:golden-counterfactual-product-review-strong-u3:golden-counterfactual-product-review-strong-a3:golden-counterfactual-product-review-strong-u3:verification",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-strong-u3:golden-counterfactual-product-review-strong-a3",
+          "kind": "verification",
+          "severity": "positive",
+          "axis": "verification",
+          "confidence": 0.82,
+          "title": "Verification move",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-strong-u3"
+          ],
+          "source": "deterministic"
+        },
+        {
+          "id": "annotation:harness_fit:pair:pair:golden-counterfactual-product-review-strong-u1:golden-counterfactual-product-review-strong-a1:pair:golden-counterfactual-product-review-strong-u1:golden-counterfactual-product-review-strong-a1:harness-fit",
+          "targetKind": "pair",
+          "targetId": "pair:golden-counterfactual-product-review-strong-u1:golden-counterfactual-product-review-strong-a1",
+          "kind": "harness_fit",
+          "severity": "positive",
+          "axis": "efficiency",
+          "confidence": 0.66,
+          "title": "Harness fits the problem",
+          "evidenceTraceEventIds": [
+            "golden-counterfactual-product-review-strong-u1",
+            "golden-counterfactual-product-review-strong-u2",
+            "golden-counterfactual-product-review-strong-u3"
+          ],
+          "source": "deterministic"
+        }
+      ],
+      "bottlenecks": [],
+      "axisScores": [
+        {
+          "axis": "problem_definition",
+          "score": 66,
+          "evidenceIds": []
+        },
+        {
+          "axis": "decomposition",
+          "score": 57,
+          "evidenceIds": []
+        },
+        {
+          "axis": "instruction_clarity",
+          "score": 73,
+          "evidenceIds": []
+        },
+        {
+          "axis": "adaptation",
+          "score": 68,
+          "evidenceIds": []
+        },
+        {
+          "axis": "verification",
+          "score": 100,
+          "evidenceIds": []
+        },
+        {
+          "axis": "efficiency",
+          "score": 72,
+          "evidenceIds": []
+        },
+        {
+          "axis": "final_quality",
+          "score": 85,
+          "evidenceIds": []
+        }
+      ]
+    }
+  ],
+  "orderingChecks": [
+    {
+      "problemId": "ambiguous-research-brief",
+      "passed": true,
+      "gapPassed": true,
+      "annotationPassed": true,
+      "scores": {
+        "weak": 48,
+        "average": 66,
+        "strong": 93
+      },
+      "gaps": {
+        "weakAverage": 18,
+        "averageStrong": 27
+      }
+    },
+    {
+      "problemId": "club-budget-workflow",
+      "passed": true,
+      "gapPassed": true,
+      "annotationPassed": true,
+      "scores": {
+        "weak": 48,
+        "average": 64,
+        "strong": 80
+      },
+      "gaps": {
+        "weakAverage": 16,
+        "averageStrong": 16
+      }
+    },
+    {
+      "problemId": "counterfactual-product-review",
+      "passed": true,
+      "gapPassed": false,
+      "annotationPassed": true,
+      "scores": {
+        "weak": 50,
+        "average": 55,
+        "strong": 75
+      },
+      "gaps": {
+        "weakAverage": 5,
+        "averageStrong": 20
+      }
+    }
+  ],
+  "errors": []
+}

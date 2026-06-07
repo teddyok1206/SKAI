@@ -165,6 +165,9 @@ const graphAnnotationKindValues = [
   "decomposition",
   "delegation",
   "material_grounding",
+  "security_boundary",
+  "harness_fit",
+  "branch_topology",
   "verification",
   "adaptation",
   "context_drift",
@@ -1284,9 +1287,10 @@ function withJudgeRuns(report: ScoreReport, mode: JudgeMode, runs: JudgeRunInter
   };
 }
 
-function withGraphAnnotations(input: JudgeInput, report: ScoreReport): ScoreReport {
+function withGraphAnnotations(input: JudgeInput, report: ScoreReport, evidence?: JudgeEvidencePacket): ScoreReport {
   const graph = buildConversationGraph(input.trace, report, undefined, {
     problemMaterialCount: input.problem.materials.length,
+    evidencePacket: evidence,
   });
 
   return {
@@ -1310,7 +1314,7 @@ export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
   const mode = getJudgeMode();
 
   if (mode === "heuristic") {
-    return withGraphAnnotations(input, withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []));
+    return withGraphAnnotations(input, withJudgeRuns(heuristicRun.report as ScoreReport, "heuristic", [heuristicRun], []), evidence);
   }
 
   const llmRuns = await Promise.all(getLlmJudgeConfigs(mode).map((config) => runLlmJudge(input, config, evidence)));
@@ -1326,6 +1330,7 @@ export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
           ? "LLM judge가 실패해 heuristic judge 결과를 사용했습니다."
           : "LLM judge failed, so the heuristic judge result was used.",
       ]),
+      evidence,
     );
   }
 
@@ -1333,5 +1338,5 @@ export async function judgeAttempt(input: JudgeInput): Promise<ScoreReport> {
     mode === "ensemble" ? aggregateReports(input, successfulReports) : successfulLlmReports[0];
   const disagreement = detectDisagreement(successfulReports, input.locale);
 
-  return withGraphAnnotations(input, withJudgeRuns(report, mode, allRuns, disagreement));
+  return withGraphAnnotations(input, withJudgeRuns(report, mode, allRuns, disagreement), evidence);
 }

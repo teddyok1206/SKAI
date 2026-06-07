@@ -7,6 +7,8 @@ import type {
   ConversationGraphBranch,
   ConversationGraphNode,
   ConversationGraphPair,
+  JudgeDerivedSignal,
+  JudgeEvidencePacket,
   ScoreAxis,
   ScoreReport,
   TraceEvent,
@@ -27,6 +29,7 @@ type AnnotationInput = {
   scoreReport?: ScoreReport;
   branch?: ConversationGraphBranch;
   problemMaterialCount?: number;
+  evidencePacket?: JudgeEvidencePacket;
 };
 
 type AnnotationDraft = Omit<ConversationGraphAnnotation, "id" | "attemptId" | "graphSchemaVersion" | "createdAt"> & {
@@ -130,6 +133,74 @@ function pairAnnotation(input: {
     scoreImpact: input.scoreImpact,
     idSeed: input.idSeed,
   };
+}
+
+function firstPairForTraceIds(pairsByTraceEventId: Record<string, ConversationGraphPair>, traceEventIds: string[]) {
+  for (const traceEventId of traceEventIds) {
+    const pair = pairsByTraceEventId[traceEventId];
+
+    if (pair) {
+      return pair;
+    }
+  }
+
+  return undefined;
+}
+
+function derivedSignalSeverity(signal: JudgeDerivedSignal): ConversationGraphAnnotationSeverity {
+  if (signal.status === "strong") {
+    return "positive";
+  }
+
+  if (signal.status === "partial") {
+    return "info";
+  }
+
+  if (signal.status === "risky") {
+    return "critical";
+  }
+
+  if (signal.status === "weak" || signal.status === "absent") {
+    return "watch";
+  }
+
+  return "info";
+}
+
+function derivedSignalScoreImpact(signal: JudgeDerivedSignal, positive = 3) {
+  if (signal.status === "strong") {
+    return positive;
+  }
+
+  if (signal.status === "partial") {
+    return Math.max(1, Math.round(positive / 2));
+  }
+
+  if (signal.status === "risky") {
+    return -Math.max(6, positive * 2);
+  }
+
+  if (signal.status === "weak" || signal.status === "absent") {
+    return -positive;
+  }
+
+  return 0;
+}
+
+function derivedSignalTitle(input: { strong: string; partial: string; weak: string; risky?: string }, signal: JudgeDerivedSignal) {
+  if (signal.status === "strong") {
+    return input.strong;
+  }
+
+  if (signal.status === "partial") {
+    return input.partial;
+  }
+
+  if (signal.status === "risky") {
+    return input.risky ?? input.weak;
+  }
+
+  return input.weak;
 }
 
 export function buildDeterministicGraphAnnotations(input: AnnotationInput): ConversationGraphAnnotation[] {
@@ -302,6 +373,109 @@ export function buildDeterministicGraphAnnotations(input: AnnotationInput): Conv
         idSeed: `${firstPair.id}:missing-material`,
       }),
     );
+  }
+
+  if (input.evidencePacket?.derivedSignals) {
+    const derivedConfigs: Array<{
+      signal: JudgeDerivedSignal;
+      kind: ConversationGraphAnnotationKind;
+      axis: ScoreAxis;
+      title: Parameters<typeof derivedSignalTitle>[0];
+      idSeed: string;
+      positiveScoreImpact: number;
+    }> = [
+      {
+        signal: input.evidencePacket.derivedSignals.materialCrossReference,
+        kind: "material_grounding",
+        axis: "verification",
+        title: {
+          strong: "Material cross-reference",
+          partial: "Partial material cross-reference",
+          weak: "Weak material cross-reference",
+        },
+        idSeed: "material-cross-reference",
+        positiveScoreImpact: 3,
+      },
+      {
+        signal: input.evidencePacket.derivedSignals.claimSourceLinkage,
+        kind: "material_grounding",
+        axis: "verification",
+        title: {
+          strong: "Claim-source linkage",
+          partial: "Partial claim-source linkage",
+          weak: "Weak claim-source linkage",
+        },
+        idSeed: "claim-source-linkage",
+        positiveScoreImpact: 3,
+      },
+      {
+        signal: input.evidencePacket.derivedSignals.contextBoundary,
+        kind: "security_boundary",
+        axis: "verification",
+        title: {
+          strong: "Context boundary set",
+          partial: "Partial permission boundary",
+          weak: "Weak context boundary",
+          risky: "Risky context boundary",
+        },
+        idSeed: "context-boundary",
+        positiveScoreImpact: 4,
+      },
+      {
+        signal: input.evidencePacket.derivedSignals.harnessFit,
+        kind: "harness_fit",
+        axis: "efficiency",
+        title: {
+          strong: "Harness fits the problem",
+          partial: "Partial harness fit",
+          weak: "Harness fit needs review",
+          risky: "Risky harness fit",
+        },
+        idSeed: "harness-fit",
+        positiveScoreImpact: 3,
+      },
+      {
+        signal: input.evidencePacket.derivedSignals.branchTopology,
+        kind: "branch_topology",
+        axis: "adaptation",
+        title: {
+          strong: "Branch topology anchored",
+          partial: "Partial branch topology",
+          weak: "No branch topology",
+        },
+        idSeed: "branch-topology",
+        positiveScoreImpact: 2,
+      },
+    ];
+
+    for (const config of derivedConfigs) {
+      if (config.signal.status === "not_applicable") {
+        continue;
+      }
+
+      const pairFromSignal = config.signal.pairIds?.map((pairId) => input.pairs.find((pair) => pair.id === pairId)).find(Boolean);
+      const pair = pairFromSignal ?? firstPairForTraceIds(pairForTraceEvent, config.signal.traceEventIds) ?? input.pairs[0];
+
+      if (!pair) {
+        continue;
+      }
+
+      drafts.push(
+        pairAnnotation({
+          pair,
+          kind: config.kind,
+          severity: derivedSignalSeverity(config.signal),
+          title: derivedSignalTitle(config.title, config.signal),
+          explanation: config.signal.summary,
+          evidenceTraceEventIds: config.signal.traceEventIds,
+          source: "deterministic",
+          confidence: config.signal.confidence,
+          axis: config.axis,
+          scoreImpact: derivedSignalScoreImpact(config.signal, config.positiveScoreImpact),
+          idSeed: `${pair.id}:${config.idSeed}`,
+        }),
+      );
+    }
   }
 
   const seen = new Set<string>();

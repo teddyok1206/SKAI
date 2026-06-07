@@ -21,6 +21,9 @@ export const graphOverlayLayerOrder: GraphOverlayLayer[] = [
   "recovery",
   "verification",
   "materialGrounding",
+  "contextBoundary",
+  "harnessFit",
+  "branchTopology",
   "modelBehavior",
   "costEfficiency",
 ];
@@ -33,6 +36,9 @@ export const defaultGraphOverlayControls: GraphOverlayControls = {
     review: true,
     verification: false,
     materialGrounding: false,
+    contextBoundary: false,
+    harnessFit: false,
+    branchTopology: false,
     recovery: true,
     modelBehavior: false,
     costEfficiency: false,
@@ -45,6 +51,9 @@ export const graphOverlayLayerLabels: Record<GraphOverlayLayer, string> = {
   review: "검토 필요",
   verification: "검증",
   materialGrounding: "자료 사용",
+  contextBoundary: "맥락 경계",
+  harnessFit: "Harness fit",
+  branchTopology: "Branch topology",
   recovery: "회복",
   modelBehavior: "모델 행동",
   costEfficiency: "비용",
@@ -130,6 +139,18 @@ function firstOverlayMapping(annotation: ConversationGraphAnnotation): {
 
   if (annotation.kind === "material_grounding") {
     return { layer: "materialGrounding", signal: "material_grounding", severity };
+  }
+
+  if (annotation.kind === "security_boundary") {
+    return { layer: "contextBoundary", signal: "context_boundary", severity };
+  }
+
+  if (annotation.kind === "harness_fit") {
+    return { layer: "harnessFit", signal: "harness_fit", severity };
+  }
+
+  if (annotation.kind === "branch_topology") {
+    return { layer: "branchTopology", signal: "branch_topology", severity };
   }
 
   if (annotation.kind === "recovery" || annotation.kind === "adaptation") {

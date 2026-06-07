@@ -3661,6 +3661,58 @@
     "updatedAt": "2026-06-05T00:00:00.000Z"
   },
   {
+    "key": "graph.overlay.contextBoundary",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "맥락 경계",
+      "en": "Context boundary"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "81eabc24d34781811a47d99909e0816d04298f3901ee5c01fd906fb9595382bb",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.harnessFit",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Harness"
+    ],
+    "values": {
+      "ko": "Harness fit",
+      "en": "Harness fit"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc02446ce7106fce2682ac7ccb7042f20b6ab8e4c491bd2b70f90c5f73bb9d10",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "key": "graph.overlay.branchTopology",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "Branch topology",
+      "en": "Branch topology"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f4d0cec5fdbf22d77ffe89f5d7626ce20c63c38ec63a1d351c7ed93b6ec9a34f",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
     "key": "graph.overlay.modelBehavior",
     "domain": "graph",
     "sourceLocale": "ko",
@@ -3944,6 +3996,58 @@
     },
     "sourceChecksum": "5aec9d6b2b947d3da37ae4a6ae08d08ac1af8f8381ae19f53dd60ec0221fab50",
     "updatedAt": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.security_boundary",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [],
+    "values": {
+      "ko": "Context boundary",
+      "en": "Context boundary"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "5bc6b86e7763017ae281b1e5551f3791d5c6e77fec77bf5c368fb13c885a55f3",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.harness_fit",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Harness"
+    ],
+    "values": {
+      "ko": "Harness fit",
+      "en": "Harness fit"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "dc02446ce7106fce2682ac7ccb7042f20b6ab8e4c491bd2b70f90c5f73bb9d10",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "key": "graph.annotation.branch_topology",
+    "domain": "graph",
+    "sourceLocale": "ko",
+    "protectedTerms": [
+      "Branch"
+    ],
+    "values": {
+      "ko": "Branch topology",
+      "en": "Branch topology"
+    },
+    "status": {
+      "ko": "approved",
+      "en": "approved"
+    },
+    "sourceChecksum": "f4d0cec5fdbf22d77ffe89f5d7626ce20c63c38ec63a1d351c7ed93b6ec9a34f",
+    "updatedAt": "2026-06-08T00:00:00.000Z"
   },
   {
     "key": "graph.annotation.verification",

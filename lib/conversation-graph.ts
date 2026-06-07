@@ -9,6 +9,7 @@ import type {
   ConversationGraphPair,
   ConversationTaskStatus,
   Bottleneck,
+  JudgeEvidencePacket,
   ScoreReport,
   TraceEvent,
 } from "@/lib/types";
@@ -16,6 +17,7 @@ import { buildDeterministicGraphAnnotations } from "@/lib/graph-annotations";
 
 export type ConversationGraphBuildOptions = {
   problemMaterialCount?: number;
+  evidencePacket?: JudgeEvidencePacket;
 };
 
 function compact(value: string, limit = 120) {
@@ -473,6 +475,7 @@ export function buildConversationGraph(
     scoreReport,
     branch: branchGraph,
     problemMaterialCount: options.problemMaterialCount,
+    evidencePacket: options.evidencePacket,
   });
   const annotations = dedupeAnnotations([...deterministicAnnotations, ...(scoreReport?.graphAnnotations ?? [])]);
   annotations.forEach((annotation) => addAnnotationToIndex(index, annotation));

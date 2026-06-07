@@ -1,6 +1,8 @@
 import type {
   ConversationGraph,
   ConversationTaskStatus,
+  JudgeDerivedSignal,
+  JudgeDerivedSignals,
   JudgeEvidenceItem,
   JudgeEvidencePacket,
   JudgeEvidenceSignalKind,
@@ -17,9 +19,24 @@ const keywordGroups = {
   deliverable: ["출력", "형식", "표", "json", "템플릿", "보고서", "브리프", "체크리스트", "deliverable", "format", "schema", "template"],
   decomposition: ["task", "태스크", "단계", "하위", "분해", "역할", "workflow", "순서", "입력", "출력", "pipeline", "subtask"],
   material: ["자료", "첨부", "파일", "영수증", "엑셀", "csv", "근거", "대조", "비교", "기반", "material", "attachment", "source", "evidence", "compare", "ground"],
+  crossReference: ["대조", "교차", "상호", "비교", "불일치", "cross", "compare", "reconcile", "match", "mismatch"],
   verification: ["검증", "확인", "출처", "근거", "오류", "한계", "반례", "환각", "verify", "validate", "source", "evidence", "counterexample", "risk"],
+  sourceLinkage: ["출처", "근거", "인용", "어느 자료", "파일명", "자료 id", "source", "citation", "cite", "evidence", "provenance"],
   assumption: ["가정", "사실", "불확실", "확정", "모르는", "누락", "unknown", "assumption", "uncertain", "known", "missing"],
   humanDecision: ["내가 판단", "사람", "사용자", "최종 결정", "승인", "검토자", "human", "i will decide", "approval", "reviewer"],
+  contextBoundary: [
+    "자료 안의 지시",
+    "자료의 지시",
+    "따르지 말",
+    "데이터로만",
+    "명령으로 취급하지",
+    "untrusted",
+    "data not instruction",
+    "do not follow",
+    "ignore instructions",
+    "permission",
+    "approval",
+  ],
   adaptation: ["위", "앞서", "이전", "방금", "응답", "수정", "반영", "다시", "변경", "revise", "reflect", "based on", "previous", "instead"],
 };
 
@@ -171,6 +188,343 @@ function finalAnswerCoverage(problem: Problem, finalAnswer: string) {
   return Math.round((covered.length / problem.deliverables.length) * 100) / 100;
 }
 
+function signalStatus(input: Pick<JudgeDerivedSignal, "status" | "traceEventIds" | "confidence" | "summary"> & {
+  materialIds?: string[];
+  pairIds?: string[];
+}): JudgeDerivedSignal {
+  return {
+    status: input.status,
+    materialIds: input.materialIds,
+    pairIds: input.pairIds,
+    traceEventIds: unique(input.traceEventIds),
+    confidence: input.confidence,
+    summary: input.summary,
+  };
+}
+
+function materialsUsedOrInstructed(materialCoverage: JudgeMaterialCoverage[]) {
+  return materialCoverage.filter((material) => material.status === "attached" || material.status === "instructed");
+}
+
+function materialInstructionTraceIds(materialCoverage: JudgeMaterialCoverage[]) {
+  return unique(materialCoverage.flatMap((material) => material.instructionTraceEventIds));
+}
+
+function usedMaterialTraceIds(materialCoverage: JudgeMaterialCoverage[]) {
+  return unique(
+    materialCoverage.flatMap((material) => [
+      ...material.attachedTraceEventIds,
+      ...material.referencedTraceEventIds,
+      ...material.instructionTraceEventIds,
+    ]),
+  );
+}
+
+function materialCrossReferenceSignal(input: {
+  problem: Problem;
+  trace: TraceEvent[];
+  materialCoverage: JudgeMaterialCoverage[];
+}): JudgeDerivedSignal {
+  if (input.problem.materials.length < 2) {
+    return signalStatus({
+      status: "not_applicable",
+      traceEventIds: [],
+      confidence: 0.9,
+      summary: "Cross-reference is not applicable because the problem has fewer than two official materials.",
+    });
+  }
+
+  const userText = contentOf(userEvents(input.trace));
+  const used = materialsUsedOrInstructed(input.materialCoverage);
+  const usedIds = used.map((material) => material.materialId);
+  const traceEventIds = usedMaterialTraceIds(used);
+  const hasCrossReferenceLanguage = includesAny(userText, keywordGroups.crossReference);
+
+  if (used.length >= 2 && hasCrossReferenceLanguage) {
+    return signalStatus({
+      status: "strong",
+      materialIds: usedIds,
+      traceEventIds,
+      confidence: 0.78,
+      summary: "The trace uses multiple materials with comparison or reconciliation language.",
+    });
+  }
+
+  if (used.length >= 2) {
+    return signalStatus({
+      status: "partial",
+      materialIds: usedIds,
+      traceEventIds,
+      confidence: 0.68,
+      summary: "The trace uses multiple materials, but cross-reference intent is not explicit.",
+    });
+  }
+
+  if (used.length === 1) {
+    return signalStatus({
+      status: "weak",
+      materialIds: usedIds,
+      traceEventIds,
+      confidence: 0.68,
+      summary: "Only one official material appears to be used in a multi-material problem.",
+    });
+  }
+
+  return signalStatus({
+    status: "absent",
+    traceEventIds: [],
+    confidence: 0.72,
+    summary: "The multi-material problem has no visible material cross-reference behavior.",
+  });
+}
+
+function claimSourceLinkageSignal(input: {
+  problem: Problem;
+  trace: TraceEvent[];
+  materialCoverage: JudgeMaterialCoverage[];
+  finalAnswer: string;
+}): JudgeDerivedSignal {
+  if (input.problem.materials.length === 0) {
+    return signalStatus({
+      status: "not_applicable",
+      traceEventIds: [],
+      confidence: 0.9,
+      summary: "Claim-source linkage is not applicable because the problem has no official materials.",
+    });
+  }
+
+  const userText = contentOf(userEvents(input.trace));
+  const answerText = input.finalAnswer;
+  const linkedMaterials = input.materialCoverage.filter((material) => {
+    const materialMentionedInFinal = [material.materialId, material.title, material.fileName].some((value) =>
+      normalize(answerText).includes(normalize(value)),
+    );
+
+    return material.instructionTraceEventIds.length > 0 || materialMentionedInFinal;
+  });
+  const traceEventIds = unique([...materialInstructionTraceIds(input.materialCoverage), ...usedMaterialTraceIds(linkedMaterials)]);
+  const hasSourceLanguage = includesAny(`${userText}\n${answerText}`, keywordGroups.sourceLinkage);
+
+  if (linkedMaterials.length > 0 && hasSourceLanguage) {
+    return signalStatus({
+      status: "strong",
+      materialIds: linkedMaterials.map((material) => material.materialId),
+      traceEventIds,
+      confidence: 0.7,
+      summary: "The trace or final answer asks for source/evidence linkage while grounding work in materials.",
+    });
+  }
+
+  if (linkedMaterials.length > 0) {
+    return signalStatus({
+      status: "partial",
+      materialIds: linkedMaterials.map((material) => material.materialId),
+      traceEventIds,
+      confidence: 0.62,
+      summary: "Material use is visible, but explicit claim-source linkage remains approximate.",
+    });
+  }
+
+  if (materialsUsedOrInstructed(input.materialCoverage).length > 0) {
+    return signalStatus({
+      status: "weak",
+      materialIds: materialsUsedOrInstructed(input.materialCoverage).map((material) => material.materialId),
+      traceEventIds: usedMaterialTraceIds(input.materialCoverage),
+      confidence: 0.58,
+      summary: "Materials were used, but the trace does not clearly connect claims to source materials.",
+    });
+  }
+
+  return signalStatus({
+    status: "absent",
+    traceEventIds: [],
+    confidence: 0.68,
+    summary: "No visible source linkage behavior appears in the trace.",
+  });
+}
+
+function materialLooksInstructionLike(material: Problem["materials"][number]) {
+  return includesAny(material.extractedText, [
+    "ignore previous",
+    "ignore all",
+    "system prompt",
+    "developer message",
+    "follow this instruction",
+    "do not tell",
+    "이전 지시",
+    "시스템 프롬프트",
+    "이 지시를 따르",
+    "말하지 마",
+  ]);
+}
+
+function contextBoundarySignal(input: {
+  problem: Problem;
+  trace: TraceEvent[];
+  materialCoverage: JudgeMaterialCoverage[];
+}): JudgeDerivedSignal {
+  if (input.problem.materials.length === 0 && !input.trace.some((event) => (event.attachments?.length ?? 0) > 0)) {
+    return signalStatus({
+      status: "not_applicable",
+      traceEventIds: [],
+      confidence: 0.88,
+      summary: "Context boundary is not applicable because no external materials or uploads are present.",
+    });
+  }
+
+  const userText = contentOf(userEvents(input.trace));
+  const boundaryEvents = userEvents(input.trace).filter((event) => includesAny(event.content, keywordGroups.contextBoundary));
+  const hasInstructionLikeMaterial = input.problem.materials.some(materialLooksInstructionLike);
+  const anyMaterialUsed = materialsUsedOrInstructed(input.materialCoverage).length > 0;
+
+  if (boundaryEvents.length > 0) {
+    return signalStatus({
+      status: "strong",
+      traceEventIds: boundaryEvents.map((event) => event.id),
+      confidence: 0.8,
+      summary: "The user explicitly separates material data from executable instructions or permission boundaries.",
+    });
+  }
+
+  if (hasInstructionLikeMaterial && anyMaterialUsed) {
+    return signalStatus({
+      status: "risky",
+      materialIds: input.problem.materials.filter(materialLooksInstructionLike).map((material) => material.id),
+      traceEventIds: usedMaterialTraceIds(input.materialCoverage),
+      confidence: 0.72,
+      summary: "Instruction-like material appears in context without an explicit data/instruction boundary.",
+    });
+  }
+
+  if (includesAny(userText, keywordGroups.humanDecision)) {
+    return signalStatus({
+      status: "partial",
+      traceEventIds: userEvents(input.trace)
+        .filter((event) => includesAny(event.content, keywordGroups.humanDecision))
+        .map((event) => event.id),
+      confidence: 0.64,
+      summary: "The user mentions human approval or decision boundaries, but does not clearly separate data from instructions.",
+    });
+  }
+
+  return signalStatus({
+    status: anyMaterialUsed ? "weak" : "absent",
+    traceEventIds: usedMaterialTraceIds(input.materialCoverage),
+    confidence: 0.58,
+    summary: anyMaterialUsed
+      ? "External material enters the model context without an explicit trust or permission boundary."
+      : "No visible context boundary behavior appears in the trace.",
+  });
+}
+
+function harnessFitSignal(input: {
+  problem: Problem;
+  trace: TraceEvent[];
+  materialCoverage: JudgeMaterialCoverage[];
+  signals: JudgeEvidencePacket["signals"];
+  counts: JudgeEvidencePacket["counts"];
+}): JudgeDerivedSignal {
+  const users = userEvents(input.trace);
+  const hasMaterials = input.problem.materials.length > 0;
+  const hasUsedMaterial = materialsUsedOrInstructed(input.materialCoverage).length > 0;
+  const oneShot = input.counts.userTurnCount <= 1;
+  const hasWorkflow = input.signals.hasDecomposition || input.signals.hasVerification || input.signals.hasAdaptationReference;
+  const tooMuchRepeat = input.signals.repeatedContextBurden >= 0.5;
+  const allUserTraceIds = users.map((event) => event.id);
+
+  if (hasMaterials && oneShot && !hasUsedMaterial) {
+    return signalStatus({
+      status: "weak",
+      traceEventIds: allUserTraceIds,
+      confidence: 0.76,
+      summary: "The harness is too thin for a material-grounded problem: one-shot flow without visible material use.",
+    });
+  }
+
+  if (tooMuchRepeat) {
+    return signalStatus({
+      status: "risky",
+      traceEventIds: allUserTraceIds,
+      confidence: 0.68,
+      summary: "Repeated context burden suggests the harness is not preserving task state efficiently.",
+    });
+  }
+
+  if (hasWorkflow && (!hasMaterials || hasUsedMaterial)) {
+    return signalStatus({
+      status: "strong",
+      traceEventIds: allUserTraceIds,
+      confidence: 0.66,
+      summary: "The attempt shows a problem-appropriate harness: workflow signals align with the available context.",
+    });
+  }
+
+  if (users.length > 0) {
+    return signalStatus({
+      status: "partial",
+      traceEventIds: allUserTraceIds,
+      confidence: 0.56,
+      summary: "The harness is usable, but workflow, material use, or verification signals remain incomplete.",
+    });
+  }
+
+  return signalStatus({
+    status: "absent",
+    traceEventIds: [],
+    confidence: 0.7,
+    summary: "No user orchestration trace is available to evaluate harness fit.",
+  });
+}
+
+function branchTopologySignal(input: { trace: TraceEvent[]; graph: ConversationGraph }): JudgeDerivedSignal {
+  const branchPairs = input.graph.pairs.filter((pair) => pair.isBreakpoint);
+  const branchTraceEvents = input.trace.filter((event) => Boolean(event.branchId || event.sourceTraceEventId));
+
+  if (branchPairs.length > 0) {
+    return signalStatus({
+      status: "strong",
+      pairIds: branchPairs.map((pair) => pair.id),
+      traceEventIds: unique(branchPairs.flatMap((pair) => [pair.promptTraceEventId, pair.responseTraceEventId].filter((id): id is string => Boolean(id)))),
+      confidence: 0.88,
+      summary: "The graph contains an explicit breakpoint replay topology anchored to prompt-response pairs.",
+    });
+  }
+
+  if (branchTraceEvents.length > 0) {
+    return signalStatus({
+      status: "partial",
+      traceEventIds: branchTraceEvents.map((event) => event.id),
+      confidence: 0.72,
+      summary: "Branch metadata appears in trace events, but no pair-level breakpoint topology is visible.",
+    });
+  }
+
+  return signalStatus({
+    status: "not_applicable",
+    traceEventIds: [],
+    confidence: 0.86,
+    summary: "No branch/replay topology is present in this attempt.",
+  });
+}
+
+function buildDerivedSignals(input: {
+  problem: Problem;
+  trace: TraceEvent[];
+  materialCoverage: JudgeMaterialCoverage[];
+  finalAnswer: string;
+  graph: ConversationGraph;
+  signals: JudgeEvidencePacket["signals"];
+  counts: JudgeEvidencePacket["counts"];
+}): JudgeDerivedSignals {
+  return {
+    materialCrossReference: materialCrossReferenceSignal(input),
+    claimSourceLinkage: claimSourceLinkageSignal(input),
+    contextBoundary: contextBoundarySignal(input),
+    harnessFit: harnessFitSignal(input),
+    branchTopology: branchTopologySignal(input),
+  };
+}
+
 function pairStatusDistribution(graph: ConversationGraph) {
   return graph.pairs.reduce<Record<ConversationTaskStatus, number>>(
     (acc, pair) => {
@@ -291,6 +645,7 @@ function buildEvidenceItems(input: {
   trace: TraceEvent[];
   materialCoverage: JudgeMaterialCoverage[];
   signals: JudgeEvidencePacket["signals"];
+  derivedSignals: JudgeDerivedSignals;
 }): JudgeEvidenceItem[] {
   const users = userEvents(input.trace);
   const items = [
@@ -422,6 +777,92 @@ function buildEvidenceItems(input: {
     );
   }
 
+  const derivedItems: Array<{
+    key: keyof JudgeDerivedSignals;
+    signal: JudgeEvidenceSignalKind;
+    axis: ScoreAxis;
+    targetKind: JudgeEvidenceItem["targetKind"];
+    targetId: string;
+    positiveSummary: string;
+    gapSummary: string;
+  }> = [
+    {
+      key: "materialCrossReference",
+      signal: "material_cross_reference",
+      axis: "verification",
+      targetKind: input.derivedSignals.materialCrossReference.materialIds?.[0] ? "material" : "attempt",
+      targetId: input.derivedSignals.materialCrossReference.materialIds?.[0] ?? input.attemptId,
+      positiveSummary: "The trace shows material cross-reference behavior.",
+      gapSummary: "The trace lacks material cross-reference behavior where it may matter.",
+    },
+    {
+      key: "claimSourceLinkage",
+      signal: "claim_source_linkage",
+      axis: "verification",
+      targetKind: input.derivedSignals.claimSourceLinkage.materialIds?.[0] ? "material" : "attempt",
+      targetId: input.derivedSignals.claimSourceLinkage.materialIds?.[0] ?? input.attemptId,
+      positiveSummary: "The trace links claims or final output expectations to source/evidence behavior.",
+      gapSummary: "The trace does not clearly connect claims to source materials.",
+    },
+    {
+      key: "contextBoundary",
+      signal: "context_boundary",
+      axis: "verification",
+      targetKind: input.derivedSignals.contextBoundary.materialIds?.[0] ? "material" : "attempt",
+      targetId: input.derivedSignals.contextBoundary.materialIds?.[0] ?? input.attemptId,
+      positiveSummary: "The trace separates material data, instructions, and permission boundaries.",
+      gapSummary: "The trace does not clearly separate external data from executable instructions.",
+    },
+    {
+      key: "harnessFit",
+      signal: "harness_fit",
+      axis: "efficiency",
+      targetKind: "attempt",
+      targetId: input.attemptId,
+      positiveSummary: "The orchestration harness appears proportionate to the problem context.",
+      gapSummary: "The orchestration harness appears too thin, repetitive, or incomplete for the problem.",
+    },
+    {
+      key: "branchTopology",
+      signal: "branch_topology",
+      axis: "adaptation",
+      targetKind: input.derivedSignals.branchTopology.pairIds?.[0] ? "pair" : "attempt",
+      targetId: input.derivedSignals.branchTopology.pairIds?.[0] ?? input.attemptId,
+      positiveSummary: "The attempt has branch/replay topology anchored to the graph.",
+      gapSummary: "No branch/replay topology is present in this attempt.",
+    },
+  ];
+
+  for (const item of derivedItems) {
+    const derived = input.derivedSignals[item.key];
+
+    if (derived.status === "not_applicable") {
+      continue;
+    }
+
+    items.push(
+      evidenceItem({
+        id: `evidence:${item.signal}`,
+        kind:
+          derived.status === "strong" || derived.status === "partial"
+            ? "positive"
+            : derived.status === "risky"
+              ? "risk"
+              : "gap",
+        signal: item.signal,
+        axis: item.axis,
+        targetKind: item.targetKind,
+        targetId: item.targetId,
+        evidenceTraceEventIds: derived.traceEventIds,
+        confidence: derived.confidence,
+        summary:
+          derived.status === "strong" || derived.status === "partial"
+            ? `${item.positiveSummary} ${derived.summary}`
+            : `${item.gapSummary} ${derived.summary}`,
+      }),
+    );
+  }
+
   return items;
 }
 
@@ -429,6 +870,7 @@ function warningList(input: {
   materialCoverage: JudgeMaterialCoverage[];
   signals: JudgeEvidencePacket["signals"];
   counts: JudgeEvidencePacket["counts"];
+  derivedSignals: JudgeDerivedSignals;
 }) {
   const warnings: string[] = [];
 
@@ -450,6 +892,18 @@ function warningList(input: {
 
   if (input.materialCoverage.some((material) => material.status === "unused")) {
     warnings.push("some_problem_materials_unused");
+  }
+
+  if (input.derivedSignals.contextBoundary.status === "risky") {
+    warnings.push("context_boundary_risky");
+  }
+
+  if (input.derivedSignals.harnessFit.status === "risky" || input.derivedSignals.harnessFit.status === "weak") {
+    warnings.push("harness_fit_needs_review");
+  }
+
+  if (input.derivedSignals.materialCrossReference.status === "absent" || input.derivedSignals.materialCrossReference.status === "weak") {
+    warnings.push("material_cross_reference_weak");
   }
 
   return warnings;
@@ -501,6 +955,15 @@ export function buildJudgeEvidencePacket(input: {
     requiredMaterialCount: input.problem.materials.length,
     attachedRequiredMaterialCount: attachedRequiredMaterialIds.length,
   };
+  const derivedSignals = buildDerivedSignals({
+    problem: input.problem,
+    trace: input.trace,
+    materialCoverage,
+    finalAnswer: input.finalAnswer,
+    graph: input.graph,
+    signals,
+    counts,
+  });
 
   return {
     schemaVersion: "skai.judge.evidence.v1",
@@ -509,6 +972,7 @@ export function buildJudgeEvidencePacket(input: {
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     counts,
     signals,
+    derivedSignals,
     materialCoverage,
     graphSignals: buildGraphSignals(input.graph),
     evidenceItems: buildEvidenceItems({
@@ -516,11 +980,13 @@ export function buildJudgeEvidencePacket(input: {
       trace: input.trace,
       materialCoverage,
       signals,
+      derivedSignals,
     }),
     warnings: warningList({
       materialCoverage,
       signals,
       counts,
+      derivedSignals,
     }),
   };
 }
@@ -530,6 +996,7 @@ export function formatJudgeEvidenceForContext(packet: JudgeEvidencePacket) {
     schemaVersion: packet.schemaVersion,
     counts: packet.counts,
     signals: packet.signals,
+    derivedSignals: packet.derivedSignals,
     materialCoverage: packet.materialCoverage.map((material) => ({
       materialId: material.materialId,
       title: material.title,
@@ -539,7 +1006,7 @@ export function formatJudgeEvidenceForContext(packet: JudgeEvidencePacket) {
       instructionTraceEventIds: material.instructionTraceEventIds,
     })),
     graphSignals: packet.graphSignals,
-    evidenceItems: packet.evidenceItems.slice(0, 12),
+    evidenceItems: packet.evidenceItems.slice(0, 18),
     warnings: packet.warnings,
   };
 
